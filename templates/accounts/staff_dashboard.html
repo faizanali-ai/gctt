@@ -12,6 +12,10 @@
       <a href="{% url 'admin:accounts_user_changelist' %}" class="rounded-sm bg-brand px-5 py-3 font-semibold text-paper transition hover:bg-accent">Users &amp; roles</a>
     {% endif %}
   </div>
+  <p class="mt-2 text-sm">
+    <a href="{% url 'security' %}" class="font-semibold text-brand hover:text-accent">Two-factor authentication</a>
+    {% if user.is_verified %}<span class="text-brand">· on</span>{% else %}<span class="text-accent">· off</span>{% endif %}
+  </p>
 
   {% include "staff/_nav.html" %}
 

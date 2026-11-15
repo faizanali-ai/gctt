@@ -42,3 +42,11 @@ uv run ruff check .
 Media files go to R2 only when `R2_BUCKET` is set; otherwise they stay on local disk.
 Email stays on the console backend until `EMAIL_BACKEND` is set to SMTP.
 
+## Operations
+
+- **Staff two-factor auth** — each staff member opens `/accounts/security/` once and scans the QR code with an authenticator app. After everyone has enrolled, set `REQUIRE_STAFF_2FA=1`; staff pages then require a verified session.
+- **Audit log** — staff actions (application/registration/enquiry status, job publishing, programme toggles, certificates) are recorded and visible read-only in Django Admin → Audit log entries.
+- **Error monitoring** — set `SENTRY_DSN` to report exceptions.
+- **Backups** — enable point-in-time recovery on Neon, enable object versioning on the R2 bucket, and take a periodic dump: `pg_dump "$DATABASE_URL" > backup-$(date +%F).sql`.
+
+

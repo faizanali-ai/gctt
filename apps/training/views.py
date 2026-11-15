@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
+from apps.accounts.audit import log_action
 from config.emails import notify_certificate, notify_registration
 
 from .certificates import generate_certificate_pdf
@@ -153,6 +154,12 @@ def staff_programme_toggle(request, pk):
     if field in ("published", "registration_open"):
         setattr(programme, field, not getattr(programme, field))
         programme.save(update_fields=[field])
+        log_action(
+            request,
+            f"programme.{field}",
+            programme.title,
+            f"{field}={getattr(programme, field)}",
+        )
         messages.success(request, f"{programme.title}: {field.replace('_', ' ')} updated.")
     return redirect("staff_programmes")
 
@@ -200,8 +207,12 @@ def staff_registration_status(request, pk):
     registration = get_object_or_404(Registration, pk=pk)
     status = request.POST.get("status", "")
     if status in STAFF_STATUSES:
+        previous = registration.status
         registration.status = status
         registration.save(update_fields=["status"])
+        log_action(
+            request, "registration.status", f"{registration.pk}", f"{previous} → {status}"
+        )
         messages.success(request, "Status updated.")
     return redirect("staff_registrations")
 
@@ -213,10 +224,12 @@ def staff_registration_certificate(request, pk):
     registration = get_object_or_404(Registration, pk=pk)
     if request.POST.get("action") == "revoke":
         registration.revoke_certificate()
+        log_action(request, "certificate.revoke", registration.certificate_ref or "")
         messages.success(request, "Certificate revoked.")
     elif registration.status == Registration.Status.COMPLETED:
         registration.issue_certificate()
         notify_certificate(registration, request)
+        log_action(request, "certificate.issue", registration.certificate_ref, registration.programme.title)
         messages.success(request, f"Certificate issued: {registration.certificate_ref}")
     else:
         messages.error(request, "Set the registration to Completed before issuing a certificate.")

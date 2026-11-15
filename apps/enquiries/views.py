@@ -7,6 +7,7 @@ from django.urls import NoReverseMatch, reverse
 from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
+from apps.accounts.audit import log_action
 from config.emails import notify_enquiry
 
 from .forms import EnquiryForm
@@ -85,7 +86,9 @@ def staff_enquiry_status(request, pk):
     enquiry = get_object_or_404(Enquiry, pk=pk)
     status = request.POST.get("status", "")
     if status in Enquiry.Status.values:
+        previous = enquiry.status
         enquiry.status = status
         enquiry.save(update_fields=["status"])
+        log_action(request, "enquiry.status", f"{enquiry.pk}", f"{previous} → {status}")
         messages.success(request, "Enquiry updated.")
     return redirect("staff_enquiries")

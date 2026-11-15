@@ -9,6 +9,7 @@ urlpatterns = [
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("verify/<uidb64>/<token>/", views.verify_email, name="verify_email"),
     path("verify/resend/", views.resend_verification, name="resend_verification"),
+    path("security/", views.security, name="security"),
     path(
         "password-change/",
         auth_views.PasswordChangeView.as_view(

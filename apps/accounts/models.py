@@ -73,3 +73,21 @@ class TeamProfile(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.get_section_display()})"
+
+
+class AuditLog(models.Model):
+    actor = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name="audit_entries"
+    )
+    action = models.CharField(max_length=80, db_index=True)
+    target = models.CharField(max_length=200, blank=True)
+    details = models.TextField(blank=True)
+    ip = models.CharField(max_length=45, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "audit log entry"
+
+    def __str__(self):
+        return f"{self.actor or 'system'} · {self.action} · {self.target}"

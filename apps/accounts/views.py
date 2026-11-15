@@ -1,12 +1,19 @@
+import io
+
+import qrcode
+import qrcode.image.svg
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.http import require_POST
+from django_otp import login as otp_login
 from django_ratelimit.decorators import ratelimit
 
 from apps.enquiries.models import Enquiry
@@ -116,3 +123,56 @@ def profile_edit(request):
         messages.success(request, "Profile saved.")
         return redirect("profile")
     return render(request, "accounts/profile_edit.html", {"form": form})
+
+
+def _qr_svg(url):
+    image = qrcode.make(url, image_factory=qrcode.image.svg.SvgPathImage)
+    buffer = io.BytesIO()
+    image.save(buffer)
+    return buffer.getvalue().decode()
+
+
+@login_required
+def security(request):
+    user = request.user
+    if not user.is_staff:
+        raise PermissionDenied
+
+    device = user.totpdevice_set.filter(confirmed=True).first()
+    if request.method == "POST":
+        action = request.POST.get("action", "")
+        if action == "disable":
+            if user.check_password(request.POST.get("password", "")):
+                user.totpdevice_set.all().delete()
+                messages.success(request, "Two-factor authentication disabled.")
+            else:
+                messages.error(request, "Password incorrect.")
+            return redirect("security")
+        target = device or user.totpdevice_set.filter(confirmed=False).last()
+        if target and target.verify_token(request.POST.get("token", "").strip()):
+            if not target.confirmed:
+                target.confirmed = True
+                target.save(update_fields=["confirmed"])
+            otp_login(request, target)
+            messages.success(request, "Two-factor authentication is active.")
+        else:
+            messages.error(request, "That code is not valid. Try again.")
+        return redirect("security")
+
+    qr_svg = secret = None
+    if not device:
+        pending = user.totpdevice_set.filter(confirmed=False).last()
+        if pending is None:
+            pending = user.totpdevice_set.create(name="default", confirmed=False)
+        qr_svg = _qr_svg(pending.config_url)
+        secret = pending.bin_key.hex().upper()
+    return render(
+        request,
+        "accounts/security.html",
+        {
+            "device": device,
+            "qr_svg": qr_svg,
+            "secret": secret,
+            "required": settings.REQUIRE_STAFF_2FA,
+        },
+    )

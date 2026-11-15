@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
+from apps.accounts.audit import log_action
 from config.emails import notify_application
 
 from .forms import ApplicationForm
@@ -111,6 +112,7 @@ def staff_job_publish(request, pk):
     job = get_object_or_404(Job, pk=pk)
     job.published = not job.published
     job.save(update_fields=["published"])
+    log_action(request, "job.publish", job.title, f"published={job.published}")
     messages.success(request, f"'{job.title}' is now {'published' if job.published else 'a draft'}.")
     return redirect("staff_jobs")
 
@@ -158,7 +160,9 @@ def staff_application_status(request, pk):
     application = get_object_or_404(Application, pk=pk)
     status = request.POST.get("status", "")
     if status in STAFF_STATUSES:
+        previous = application.status
         application.status = status
         application.save(update_fields=["status"])
+        log_action(request, "application.status", f"{application.pk}", f"{previous} → {status}")
         messages.success(request, "Status updated.")
     return redirect("staff_applications")
