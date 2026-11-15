@@ -167,8 +167,14 @@ elif SUPABASE_URL:
     AWS_DEFAULT_ACL = None
     AWS_QUERYSTRING_AUTH = True
     AWS_QUERYSTRING_EXPIRE = 600
-    AWS_S3_FILE_OVERWRITE = False
+    # Supabase answers HEAD on a missing key with 400 (not 404), which breaks
+    # django-storages' existence probe. Our names are UUIDs, so overwrite is safe.
+    AWS_S3_FILE_OVERWRITE = True
     STORAGES["default"] = {"BACKEND": "storages.backends.s3.S3Storage"}
+
+if TESTING:
+    # Tests must never touch remote storage, whatever the environment says.
+    STORAGES["default"] = {"BACKEND": "django.core.files.storage.FileSystemStorage"}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
