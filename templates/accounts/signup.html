@@ -34,11 +34,26 @@
         </div>
       {% endfor %}
 
-      <button type="submit" class="btn btn-primary mt-2 w-full justify-center">
-        Create Candidate &amp; Student Account
+      <button type="submit" id="signup-submit" class="btn btn-primary mt-2 w-full justify-center">
+        Create account
       </button>
     </form>
   </div>
+
+  <script>
+    (function () {
+      var button = document.getElementById("signup-submit");
+      var radios = document.querySelectorAll('input[name="account_type"]');
+      function sync() {
+        var picked = document.querySelector('input[name="account_type"]:checked');
+        if (!picked) return;
+        var label = picked.value === "student" ? "student" : "candidate";
+        button.textContent = "Create " + label + " account";
+      }
+      radios.forEach(function (radio) { radio.addEventListener("change", sync); });
+      sync();
+    })();
+  </script>
 
   <p class="mt-6 text-center text-xs text-ink-muted reveal delay-2">
     Already hold an active account?
