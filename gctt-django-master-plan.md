@@ -872,7 +872,7 @@ class Command(BaseCommand):
             },
         )
         if created:
-            user.set_password("AdminSecurePassword2026!")
+            user.set_password(os.environ["DJANGO_SUPER_ADMIN_PASSWORD"])
             user.save()
             AdminRole.objects.create(user=user, role="super_admin")
             self.stdout.write(self.style.SUCCESS(f"Created Super Admin: {email}"))
