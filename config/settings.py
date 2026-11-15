@@ -93,9 +93,9 @@ DATABASES = {
     )
 }
 
-# Rate-limit keys use the real client IP behind the platform proxy.
-if not DEBUG and not TESTING:
-    RATELIMIT_IP_META_KEY = "HTTP_X_FORWARDED_FOR"
+# Rate-limit keys use the real client IP. Cloudflare/Render send a
+# comma-separated X-Forwarded-For list, so a resolver picks the first address.
+RATELIMIT_IP_META_KEY = "config.ratelimit.client_ip"
 
 # Shared cache for rate-limit counters: Redis when provided, database cache in
 # production (multiple workers), per-process memory in local development.

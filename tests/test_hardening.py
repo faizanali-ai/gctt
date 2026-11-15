@@ -50,3 +50,33 @@ class AdminLoginThrottleTests(TestCase):
             self.client.post("/admin/login/", payload, REMOTE_ADDR="203.0.113.7")
         response = self.client.post("/admin/login/", payload, REMOTE_ADDR="203.0.113.7")
         self.assertEqual(response.status_code, 403)
+
+    def test_forwarded_for_list_is_handled(self):
+        """Cloudflare + Render send 'client, edge, internal' — must not 500."""
+        payload = {"login": "nobody@example.com", "password": "wrong", "next": "/dashboard/"}
+        response = self.client.post(
+            "/accounts/login/",
+            payload,
+            HTTP_X_FORWARDED_FOR="198.51.100.24, 104.23.160.220, 10.31.96.9",
+        )
+        self.assertNotEqual(response.status_code, 500)
+
+
+class ClientIpTests(TestCase):
+    def test_first_forwarded_address_wins(self):
+        from django.test import RequestFactory
+
+        from config.ratelimit import client_ip
+
+        request = RequestFactory().get(
+            "/", HTTP_X_FORWARDED_FOR="198.51.100.24, 104.23.160.220, 10.31.96.9"
+        )
+        self.assertEqual(client_ip(request), "198.51.100.24")
+
+    def test_falls_back_to_remote_addr(self):
+        from django.test import RequestFactory
+
+        from config.ratelimit import client_ip
+
+        request = RequestFactory().get("/", REMOTE_ADDR="192.0.2.10")
+        self.assertEqual(client_ip(request), "192.0.2.10")
