@@ -143,12 +143,27 @@ STORAGES = {
 
 # Cloudflare R2 (S3-compatible) when configured. Bucket stays private; media
 # URLs are time-signed so resumes are not publicly readable.
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
 if os.environ.get("R2_BUCKET"):
     AWS_ACCESS_KEY_ID = os.environ["R2_ACCESS_KEY_ID"]
     AWS_SECRET_ACCESS_KEY = os.environ["R2_SECRET_ACCESS_KEY"]
     AWS_STORAGE_BUCKET_NAME = os.environ["R2_BUCKET"]
     AWS_S3_ENDPOINT_URL = os.environ["R2_ENDPOINT"]
     AWS_S3_REGION_NAME = "auto"
+    AWS_DEFAULT_ACL = None
+    AWS_QUERYSTRING_AUTH = True
+    AWS_QUERYSTRING_EXPIRE = 600
+    AWS_S3_FILE_OVERWRITE = False
+    STORAGES["default"] = {"BACKEND": "storages.backends.s3.S3Storage"}
+elif SUPABASE_URL:
+    # Supabase Storage via its S3-compatible endpoint (free tier, no card).
+    AWS_ACCESS_KEY_ID = os.environ["SUPABASE_ACCESS_KEY_ID"]
+    AWS_SECRET_ACCESS_KEY = os.environ["SUPABASE_SECRET_ACCESS_KEY"]
+    AWS_STORAGE_BUCKET_NAME = os.environ["SUPABASE_BUCKET"]
+    AWS_S3_ENDPOINT_URL = f"{SUPABASE_URL.rstrip('/')}/storage/v1/s3"
+    AWS_S3_REGION_NAME = os.environ.get("SUPABASE_REGION", "us-east-1")
+    AWS_S3_ADDRESSING_STYLE = "path"
+    AWS_S3_SIGNATURE_VERSION = "s3v4"
     AWS_DEFAULT_ACL = None
     AWS_QUERYSTRING_AUTH = True
     AWS_QUERYSTRING_EXPIRE = 600
