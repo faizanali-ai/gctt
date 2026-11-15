@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 from apps.accounts import views as accounts_views
+from apps.jobs import views as jobs_views
 from apps.training import views as training_views
 
 from . import views
@@ -36,6 +37,13 @@ urlpatterns = [
     path("enquiries/", include("apps.enquiries.urls")),
     path("accounts/", include("apps.accounts.urls")),
     path("dashboard/", accounts_views.dashboard, name="dashboard"),
+    path("dashboard/jobs/new/", jobs_views.job_create, name="employer_job_new"),
+    path("dashboard/jobs/<slug:slug>/edit/", jobs_views.job_edit, name="employer_job_edit"),
+    path(
+        "dashboard/applications/<int:pk>/status/",
+        jobs_views.application_status,
+        name="employer_application_status",
+    ),
     path("profile/", accounts_views.profile_edit, name="profile"),
     path("admin/", admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

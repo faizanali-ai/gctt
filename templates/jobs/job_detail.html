@@ -19,6 +19,9 @@
       {% if applied %}
         <p class="text-ink/70">You've already applied to this role. Our team will be in touch if there's a match.</p>
         <a href="{% url 'dashboard' %}" class="mt-4 inline-block font-semibold text-brand hover:text-accent">View your applications →</a>
+      {% elif user.is_employer %}
+        <p class="text-ink/70">You're signed in as an employer. Manage your own listings from your dashboard.</p>
+        <a href="{% url 'dashboard' %}" class="mt-4 inline-block font-semibold text-brand hover:text-accent">Go to employer dashboard →</a>
       {% elif user.is_authenticated %}
         <h2 class="font-display text-lg font-semibold">Apply for this role</h2>
         <form method="post" action="{% url 'job_apply' job.slug %}" enctype="multipart/form-data" class="mt-4 space-y-4">

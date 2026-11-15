@@ -13,6 +13,14 @@ class Job(models.Model):
 
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=220, unique=True, blank=True)
+    employer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="jobs",
+        limit_choices_to={"account_type": "employer"},
+    )
     location = models.CharField(max_length=200)
     employment_type = models.CharField(
         max_length=20, choices=EmploymentType.choices, default=EmploymentType.FULL_TIME

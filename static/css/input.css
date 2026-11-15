@@ -14,10 +14,17 @@
   ::selection {
     background: #d9482b33;
   }
-  input:not([type="hidden"]):not([type="submit"]):not([type="file"]),
+  input:not([type="hidden"]):not([type="submit"]):not([type="file"]):not([type="radio"]):not([type="checkbox"]),
   select,
   textarea {
     @apply w-full rounded-sm border border-line bg-white px-4 py-2.5 text-ink;
+  }
+  input[type="radio"],
+  input[type="checkbox"] {
+    @apply w-auto accent-brand;
+  }
+  ul:has(input[type="radio"]) {
+    @apply space-y-1.5;
   }
   input:focus,
   select:focus,

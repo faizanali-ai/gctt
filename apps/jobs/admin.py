@@ -12,10 +12,11 @@ class ApplicationInline(admin.TabularInline):
 
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
-    list_display = ("title", "location", "employment_type", "published", "created_at")
+    list_display = ("title", "employer", "location", "employment_type", "published", "created_at")
     list_filter = ("published", "employment_type")
-    search_fields = ("title", "description", "location")
+    search_fields = ("title", "description", "location", "employer__email")
     list_editable = ("published",)
+    list_select_related = ("employer",)
     prepopulated_fields = {"slug": ("title",)}
     inlines = [ApplicationInline]
 

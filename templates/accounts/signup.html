@@ -3,7 +3,7 @@
 {% block content %}
 <section class="mx-auto max-w-md px-6 py-16 md:py-24">
   <h1 class="font-display text-3xl">Create your account</h1>
-  <p class="mt-2 text-ink/70">Apply for jobs and register for training programmes.</p>
+  <p class="mt-2 text-ink/70">Apply for jobs, register for training, or post roles as an employer.</p>
   <form method="post" class="mt-8 space-y-4">
     {% csrf_token %}
     {% if form.non_field_errors %}<p class="text-sm text-accent">{{ form.non_field_errors.0 }}</p>{% endif %}
