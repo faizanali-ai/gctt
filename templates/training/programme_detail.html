@@ -4,7 +4,7 @@
 {% include "partials/_hero.html" with eyebrow="Training" title=programme.title intro=programme.description|truncatewords:30 %}
 
 <section class="mx-auto max-w-6xl px-6 py-16 md:py-24">
-  <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr]">
+  <div class="grid items-start gap-12 lg:grid-cols-[1.4fr_1fr]">
     <div>
       <p class="text-sm text-ink/60">
         {{ programme.get_delivery_mode_display }}{% if programme.duration %} · {{ programme.duration }}{% endif %}{% if programme.schedule %} · {{ programme.schedule }}{% endif %}

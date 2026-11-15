@@ -8,19 +8,19 @@
       <p class="text-xs font-semibold uppercase tracking-[0.2em] text-paper/50">Services</p>
       <ul class="mt-4 space-y-2 text-sm text-paper/80">
         {% for service in SERVICES %}
-          <li><a href="{{ service.url }}" class="hover:text-accent">{{ service.title }}</a></li>
+          <li><a href="{{ service.url }}" class="hover:underline">{{ service.title }}</a></li>
         {% endfor %}
       </ul>
     </div>
     <div>
       <p class="text-xs font-semibold uppercase tracking-[0.2em] text-paper/50">Company</p>
       <ul class="mt-4 space-y-2 text-sm text-paper/80">
-        <li><a href="{% url 'about' %}" class="hover:text-accent">About</a></li>
-        <li><a href="{% url 'careers' %}" class="hover:text-accent">Careers</a></li>
-        <li><a href="{% url 'employers' %}" class="hover:text-accent">For Employers</a></li>
-        <li><a href="{% url 'contact' %}" class="hover:text-accent">Contact</a></li>
-        <li><a href="{% url 'privacy' %}" class="hover:text-accent">Privacy</a></li>
-        <li><a href="{% url 'terms' %}" class="hover:text-accent">Terms</a></li>
+        <li><a href="{% url 'about' %}" class="hover:underline">About</a></li>
+        <li><a href="{% url 'careers' %}" class="hover:underline">Careers</a></li>
+        <li><a href="{% url 'employers' %}" class="hover:underline">For Employers</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:underline">Contact</a></li>
+        <li><a href="{% url 'privacy' %}" class="hover:underline">Privacy</a></li>
+        <li><a href="{% url 'terms' %}" class="hover:underline">Terms</a></li>
       </ul>
     </div>
   </div>

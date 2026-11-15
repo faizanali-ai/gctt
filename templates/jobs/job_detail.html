@@ -4,7 +4,7 @@
 {% include "partials/_hero.html" with eyebrow="Careers" title=job.title intro=job.location %}
 
 <section class="mx-auto max-w-6xl px-6 py-16 md:py-24">
-  <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr]">
+  <div class="grid items-start gap-12 lg:grid-cols-[1.4fr_1fr]">
     <div>
       <p class="text-sm text-ink/60">{{ job.get_employment_type_display }} · Posted {{ job.created_at|date:"F j, Y" }}</p>
       <div class="mt-6 whitespace-pre-line text-lg text-ink/80">{{ job.description }}</div>
