@@ -29,7 +29,7 @@
         <tr>
           <th class="px-4 py-3 font-semibold">Applicant</th>
           <th class="px-4 py-3 font-semibold">Role</th>
-          <th class="px-4 py-3 font-semibold">Applied</th>
+          <th class="hidden px-4 py-3 font-semibold sm:table-cell">Applied</th>
           <th class="px-4 py-3 font-semibold">Resume</th>
           <th class="px-4 py-3 font-semibold">Status</th>
         </tr>
@@ -43,7 +43,7 @@
               {% if application.message %}<span class="mt-1 block max-w-md text-xs text-ink/60">{{ application.message|truncatewords:30 }}</span>{% endif %}
             </td>
             <td class="px-4 py-3">{{ application.job.title }}</td>
-            <td class="px-4 py-3">{{ application.created_at|date:"M j, Y" }}</td>
+            <td class="hidden px-4 py-3 sm:table-cell">{{ application.created_at|date:"M j, Y" }}</td>
             <td class="px-4 py-3"><a href="{{ application.resume.url }}" class="font-semibold text-brand hover:text-accent" target="_blank" rel="noopener">View</a></td>
             <td class="px-4 py-3">
               <form method="post" action="{% url 'staff_application_status' application.pk %}" class="flex items-center gap-2">

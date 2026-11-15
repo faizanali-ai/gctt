@@ -29,7 +29,7 @@
         <tr>
           <th class="px-4 py-3 font-semibold">Student</th>
           <th class="px-4 py-3 font-semibold">Programme</th>
-          <th class="px-4 py-3 font-semibold">Registered</th>
+          <th class="hidden px-4 py-3 font-semibold sm:table-cell">Registered</th>
           <th class="px-4 py-3 font-semibold">Status</th>
           <th class="px-4 py-3 font-semibold">Certificate</th>
         </tr>
@@ -43,7 +43,7 @@
               {% if registration.message %}<span class="mt-1 block max-w-md text-xs text-ink/60">{{ registration.message|truncatewords:30 }}</span>{% endif %}
             </td>
             <td class="px-4 py-3">{{ registration.programme.title }}</td>
-            <td class="px-4 py-3">{{ registration.created_at|date:"M j, Y" }}</td>
+            <td class="hidden px-4 py-3 sm:table-cell">{{ registration.created_at|date:"M j, Y" }}</td>
             <td class="px-4 py-3">
               <form method="post" action="{% url 'staff_registration_status' registration.pk %}" class="flex items-center gap-2">
                 {% csrf_token %}

@@ -2,20 +2,26 @@
 {% block title %}Your profile — GCTT{% endblock %}
 {% block content %}
 <section class="mx-auto max-w-md px-6 py-16 md:py-24">
-  <h1 class="font-display text-3xl">Your profile</h1>
-  <p class="mt-2 text-ink/60">{{ user.email }}</p>
-  <form method="post" class="mt-8 space-y-4">
-    {% csrf_token %}
-    {% for field in form %}
-      <label class="block">
-        <span class="mb-1 block text-sm font-medium">{{ field.label }}</span>
-        {{ field }}
-        {% if field.errors %}<span class="mt-1 block text-sm text-accent">{{ field.errors.0 }}</span>{% endif %}
-      </label>
-    {% endfor %}
-    <button type="submit" class="w-full rounded-sm bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Save</button>
-  </form>
-  <p class="mt-6 text-sm"><a href="{% url 'password_change' %}" class="font-semibold text-brand hover:text-accent">Change password</a></p>
-  <p class="mt-2 text-sm"><a href="{% url 'dashboard' %}" class="font-semibold text-brand hover:text-accent">← Back to dashboard</a></p>
+  <h1 class="display-lg">Your profile</h1>
+  <p class="mt-2 text-sm text-ink/60">{{ user.email }}</p>
+
+  <div class="mt-8 rounded-sm border border-line bg-white p-6 md:p-8">
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+      {% for field in form %}
+        <label class="block">
+          <span class="mb-1 block text-sm font-medium">{{ field.label }}</span>
+          {{ field }}
+          {% if field.errors %}<span class="mt-1 block text-sm text-accent">{{ field.errors.0 }}</span>{% endif %}
+        </label>
+      {% endfor %}
+      <button type="submit" class="w-full rounded-sm bg-accent px-6 py-3 font-semibold text-paper hover:bg-brand">Save</button>
+    </form>
+  </div>
+
+  <div class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+    <a href="{% url 'password_change' %}" class="font-semibold text-brand hover:text-accent">Change password</a>
+    <a href="{% url 'dashboard' %}" class="font-semibold text-brand hover:text-accent">Back to dashboard</a>
+  </div>
 </section>
 {% endblock %}

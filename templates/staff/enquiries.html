@@ -30,7 +30,7 @@
           <th class="px-4 py-3 font-semibold">From</th>
           <th class="px-4 py-3 font-semibold">Category</th>
           <th class="px-4 py-3 font-semibold">Message</th>
-          <th class="px-4 py-3 font-semibold">Received</th>
+          <th class="hidden px-4 py-3 font-semibold sm:table-cell">Received</th>
           <th class="px-4 py-3 font-semibold">Status</th>
         </tr>
       </thead>
@@ -43,7 +43,7 @@
             </td>
             <td class="px-4 py-3">{{ enquiry.get_category_display }}</td>
             <td class="px-4 py-3"><span class="block max-w-md text-ink/70">{{ enquiry.message|truncatewords:25 }}</span></td>
-            <td class="px-4 py-3">{{ enquiry.created_at|date:"M j, Y" }}</td>
+            <td class="hidden px-4 py-3 sm:table-cell">{{ enquiry.created_at|date:"M j, Y" }}</td>
             <td class="px-4 py-3">
               <form method="post" action="{% url 'staff_enquiry_status' enquiry.pk %}" class="flex items-center gap-2">
                 {% csrf_token %}
