@@ -143,7 +143,9 @@ STORAGES = {
 
 # Cloudflare R2 (S3-compatible) when configured. Bucket stays private; media
 # URLs are time-signed so resumes are not publicly readable.
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "").strip().rstrip("/")
+# Accept either the base host or the full endpoint shown in the Supabase UI.
+SUPABASE_URL = SUPABASE_URL.removesuffix("/storage/v1/s3")
 if os.environ.get("R2_BUCKET"):
     AWS_ACCESS_KEY_ID = os.environ["R2_ACCESS_KEY_ID"]
     AWS_SECRET_ACCESS_KEY = os.environ["R2_SECRET_ACCESS_KEY"]
