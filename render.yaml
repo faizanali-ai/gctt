@@ -6,7 +6,9 @@ services:
     region: oregon
     autoDeploy: true
     healthCheckPath: /healthz/
-    buildCommand: pip install uv && uv sync --frozen --no-dev
+    buildCommand: >-
+      pip install uv && uv sync --frozen --no-dev &&
+      DATABASE_URL=sqlite:///buildtest.db uv run python manage.py test tests
     startCommand: >-
       uv run python manage.py migrate --noinput &&
       uv run python manage.py createcachetable &&
