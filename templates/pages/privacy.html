@@ -4,9 +4,35 @@
 {% include "partials/_hero.html" with eyebrow="Legal" title="Privacy Policy" %}
 
 <section class="mx-auto max-w-3xl px-6 py-16 md:py-24">
-  <div class="space-y-4 text-lg text-ink/70">
-    <p>Our Privacy Policy is being finalised and will be published here.</p>
-    <p>For any questions in the meantime, contact us at {{ COMPANY.email }}.</p>
-  </div>
+  <p class="text-sm text-ink/60">Effective date: November 15, 2026</p>
+
+  <p class="mt-6 leading-relaxed text-ink/75">Global Center for Technology &amp; Training (<strong>“GCTT”</strong>, “we”, “us”, or “our”), located at 2612 Laramie St, Irving, TX 75062, respects your privacy and is committed to protecting the personal data of our candidates, training students, and employer clients.</p>
+
+  <h2 class="mt-10 text-xl font-semibold">1. Information we collect</h2>
+  <ul class="mt-3 list-disc space-y-2 pl-5 leading-relaxed text-ink/75">
+    <li><strong>Candidate data:</strong> full name, email address, phone number, and the resume or CV files you upload through our careers pages.</li>
+    <li><strong>Student data:</strong> contact details, course registrations, training progress, and certificate records.</li>
+    <li><strong>Employer and client data:</strong> contact name, corporate email, phone number, and the hiring requirements you submit.</li>
+    <li><strong>Technical data:</strong> IP address and browser headers collected for rate limiting, security, and fraud prevention.</li>
+  </ul>
+
+  <h2 class="mt-10 text-xl font-semibold">2. How we use your information</h2>
+  <p class="mt-3 leading-relaxed text-ink/75">We use your information to:</p>
+  <ul class="mt-3 list-disc space-y-2 pl-5 leading-relaxed text-ink/75">
+    <li>Assess candidate qualifications and match professionals with employer requirements.</li>
+    <li>Administer training programmes and issue verifiable completion certificates.</li>
+    <li>Respond to employer and general enquiries.</li>
+    <li>Maintain the security and integrity of the platform.</li>
+  </ul>
+  <p class="mt-4 leading-relaxed text-ink/75"><strong>We do not sell, rent, or trade your personal data to third parties or data brokers.</strong></p>
+
+  <h2 class="mt-10 text-xl font-semibold">3. Data retention and security</h2>
+  <p class="mt-3 leading-relaxed text-ink/75">Data is transmitted over encrypted connections (TLS) and stored in access-controlled systems. Resume files are available only to GCTT staff; where cloud object storage is enabled, downloads are provided through time-limited signed links. Candidates may withdraw an application from their dashboard or request deletion of their data by contacting {{ COMPANY.email }}.</p>
+
+  <h2 class="mt-10 text-xl font-semibold">4. Your rights (Texas Data Privacy and Security Act)</h2>
+  <p class="mt-3 leading-relaxed text-ink/75">Where the Act applies to us, you have the right to access, correct, or request deletion of the personal information we hold about you. To exercise these rights, email <a href="mailto:{{ COMPANY.email }}" class="link">{{ COMPANY.email }}</a>.</p>
+
+  <h2 class="mt-10 text-xl font-semibold">5. Contact</h2>
+  <p class="mt-3 leading-relaxed text-ink/75">Questions about this policy can be sent to <a href="mailto:{{ COMPANY.email }}" class="link">{{ COMPANY.email }}</a> or by mail to 2612 Laramie St, Irving, TX 75062.</p>
 </section>
 {% endblock %}
