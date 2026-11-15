@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
-from apps.accounts.models import TeamProfile, User
+from apps.accounts.models import AuditLog, TeamProfile, User
 from apps.jobs.models import Application, Job
 from apps.training.models import Programme, Registration
 
@@ -259,6 +259,9 @@ class ApplicationRuleTests(TestCase):
         response = self.client.post(reverse("withdraw_application", args=[application.pk]))
         self.assertRedirects(response, reverse("dashboard"))
         self.assertFalse(Application.objects.exists())
+        audit = AuditLog.objects.get(action="application.withdraw")
+        self.assertEqual(audit.actor, user)
+        self.assertEqual(audit.details, "Dev")
 
     def test_cannot_withdraw_someone_elses_application(self):
         owner = User.objects.create_user(email="o@example.com", password="test-pass-12345")

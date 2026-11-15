@@ -97,6 +97,7 @@ def job_apply(request, slug):
 def withdraw_application(request, pk):
     application = get_object_or_404(Application, pk=pk, applicant=request.user)
     role = application.job.title
+    log_action(request, "application.withdraw", f"{application.pk}", role)
     application.delete()
     messages.success(request, f"Your application for {role} was withdrawn.")
     return redirect("dashboard")
