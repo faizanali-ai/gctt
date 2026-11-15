@@ -11,17 +11,17 @@
       {% if required %}Staff pages require a code each session.{% endif %}
     </p>
     {% if not user.is_verified %}
-      <form method="post" class="mt-8 space-y-4 rounded-sm border border-line bg-white p-6">
+      <form method="post" class="mt-8 space-y-4 rounded-md border border-line bg-surface p-6">
         {% csrf_token %}
         <input type="hidden" name="action" value="verify">
         <label class="block">
           <span class="mb-1 block text-sm font-medium">Enter the 6-digit code from your app</span>
           <input type="text" name="token" inputmode="numeric" autocomplete="one-time-code" required>
         </label>
-        <button type="submit" class="rounded-sm bg-accent px-6 py-3 font-semibold text-paper hover:bg-brand">Verify</button>
+        <button type="submit" class="rounded-md bg-accent px-6 py-3 font-semibold text-paper hover:bg-brand">Verify</button>
       </form>
     {% endif %}
-    <form method="post" class="mt-8 space-y-4 rounded-sm border border-line bg-white p-6">
+    <form method="post" class="mt-8 space-y-4 rounded-md border border-line bg-surface p-6">
       {% csrf_token %}
       <input type="hidden" name="action" value="disable">
       <p class="text-sm text-ink/60">Disable two-factor authentication (requires your password).</p>
@@ -29,18 +29,18 @@
         <span class="mb-1 block text-sm font-medium">Password</span>
         <input type="password" name="password" required autocomplete="current-password">
       </label>
-      <button type="submit" class="rounded-sm border border-accent px-6 py-3 font-semibold text-accent hover:bg-accent hover:text-paper">Disable</button>
+      <button type="submit" class="rounded-md border border-accent px-6 py-3 font-semibold text-accent hover:bg-accent hover:text-paper">Disable</button>
     </form>
   {% else %}
     <p class="mt-3 text-ink/70">
       Scan this code with an authenticator app (Google Authenticator, 1Password, Authy), then enter the 6-digit code to finish.
     </p>
     {% if required %}
-      <p class="mt-2 rounded-sm border border-accent/40 bg-accent/5 p-3 text-sm text-accent">
+      <p class="mt-2 rounded-md border border-accent/40 bg-accent/5 p-3 text-sm text-accent">
         Two-factor authentication is required for staff accounts.
       </p>
     {% endif %}
-    <div class="mt-6 rounded-sm border border-line bg-white p-6 text-center">
+    <div class="mt-6 rounded-md border border-line bg-surface p-6 text-center">
       <div class="mx-auto w-48 [&_svg]:h-full [&_svg]:w-full">{{ qr_svg|safe }}</div>
       <p class="mt-4 text-xs text-ink/50">Can't scan? Enter this key manually:</p>
       <p class="mt-1 font-mono text-sm tracking-wider">{{ secret }}</p>
@@ -52,7 +52,7 @@
         <span class="mb-1 block text-sm font-medium">Enter the 6-digit code from your app</span>
         <input type="text" name="token" inputmode="numeric" autocomplete="one-time-code" required>
       </label>
-      <button type="submit" class="rounded-sm bg-accent px-6 py-3 font-semibold text-paper hover:bg-brand">Enable two-factor</button>
+      <button type="submit" class="rounded-md bg-accent px-6 py-3 font-semibold text-paper hover:bg-brand">Enable two-factor</button>
     </form>
   {% endif %}
 

@@ -3,10 +3,10 @@
 {% block content %}
 {% include "partials/_hero.html" with eyebrow="Careers" title=job.title intro=job.location %}
 {% if not job.published %}
-  <p class="mx-auto max-w-6xl px-6 pt-6 text-sm font-semibold text-accent">Draft preview — this job is not visible to the public.</p>
+  <p class="mx-auto max-w-7xl px-6 pt-6 text-sm font-semibold text-accent">Draft preview — this job is not visible to the public.</p>
 {% endif %}
 
-<section class="mx-auto max-w-6xl px-6 py-16 md:py-24">
+<section class="mx-auto max-w-7xl px-6 py-16 md:py-24">
   <div class="grid items-start gap-12 lg:grid-cols-[1.4fr_1fr]">
     <div>
       <p class="text-sm text-ink/60">{{ job.get_employment_type_display }} · Posted {{ job.created_at|date:"F j, Y" }}</p>
@@ -18,7 +18,7 @@
       <a href="{% url 'careers' %}" class="mt-10 inline-block font-semibold text-brand hover:text-accent">← All opportunities</a>
     </div>
 
-    <div class="rounded-sm border border-line bg-white p-6">
+    <div class="rounded-md border border-line bg-surface p-6">
       {% if applied %}
         <p class="text-ink/70">You've already applied to this role. Our team will be in touch if there's a match.</p>
         <a href="{% url 'dashboard' %}" class="mt-4 inline-block font-semibold text-brand hover:text-accent">View your applications →</a>
@@ -40,11 +40,11 @@
             {{ form.message }}
             {% if form.message.errors %}<span class="mt-1 block text-sm text-accent">{{ form.message.errors.0 }}</span>{% endif %}
           </label>
-          <button type="submit" class="rounded-sm bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Submit application</button>
+          <button type="submit" class="rounded-md bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Submit application</button>
         </form>
       {% else %}
         <p class="text-ink/70">Create a free account to apply for this role.</p>
-        <a href="{% url 'signup' %}" class="mt-4 inline-block rounded-sm bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Create account</a>
+        <a href="{% url 'signup' %}" class="mt-4 inline-block rounded-md bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Create account</a>
         <p class="mt-3 text-sm text-ink/60">Already have an account? <a href="{% url 'login' %}" class="font-semibold text-brand hover:text-accent">Log in</a></p>
       {% endif %}
     </div>

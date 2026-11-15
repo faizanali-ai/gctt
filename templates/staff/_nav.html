@@ -1,18 +1,18 @@
 <nav class="mt-8 flex flex-wrap gap-2 border-b border-line pb-4 text-sm font-semibold" aria-label="Staff sections">
-  <a href="{% url 'dashboard' %}" class="rounded-sm px-3 py-1.5 hover:bg-white">Overview</a>
+  <a href="{% url 'dashboard' %}" class="rounded-md px-3 py-1.5 hover:bg-surface">Overview</a>
   {% if perms.enquiries.view_enquiry %}
-    <a href="{% url 'staff_enquiries' %}" class="rounded-sm px-3 py-1.5 hover:bg-white">Enquiries</a>
+    <a href="{% url 'staff_enquiries' %}" class="rounded-md px-3 py-1.5 hover:bg-surface">Enquiries</a>
   {% endif %}
   {% if perms.jobs.view_job %}
-    <a href="{% url 'staff_jobs' %}" class="rounded-sm px-3 py-1.5 hover:bg-white">Jobs</a>
+    <a href="{% url 'staff_jobs' %}" class="rounded-md px-3 py-1.5 hover:bg-surface">Jobs</a>
   {% endif %}
   {% if perms.jobs.view_application %}
-    <a href="{% url 'staff_applications' %}" class="rounded-sm px-3 py-1.5 hover:bg-white">Applications</a>
+    <a href="{% url 'staff_applications' %}" class="rounded-md px-3 py-1.5 hover:bg-surface">Applications</a>
   {% endif %}
   {% if perms.training.view_programme %}
-    <a href="{% url 'staff_programmes' %}" class="rounded-sm px-3 py-1.5 hover:bg-white">Programmes</a>
+    <a href="{% url 'staff_programmes' %}" class="rounded-md px-3 py-1.5 hover:bg-surface">Programmes</a>
   {% endif %}
   {% if perms.training.view_registration %}
-    <a href="{% url 'staff_registrations' %}" class="rounded-sm px-3 py-1.5 hover:bg-white">Registrations</a>
+    <a href="{% url 'staff_registrations' %}" class="rounded-md px-3 py-1.5 hover:bg-surface">Registrations</a>
   {% endif %}
 </nav>

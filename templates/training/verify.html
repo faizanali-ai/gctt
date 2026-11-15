@@ -6,11 +6,11 @@
 <section class="mx-auto max-w-3xl px-6 py-16 md:py-24">
   <form method="get" action="{% url 'verify_certificate_form' %}" class="flex flex-col gap-3 sm:flex-row">
     <input type="text" name="ref" value="{{ ref }}" placeholder="Certificate ID, e.g. GCTT-1A2B3C4D" aria-label="Certificate ID">
-    <button type="submit" class="rounded-sm bg-brand px-6 py-2.5 font-semibold text-paper transition hover:bg-accent sm:w-40">Verify</button>
+    <button type="submit" class="rounded-md bg-brand px-6 py-2.5 font-semibold text-paper transition hover:bg-accent sm:w-40">Verify</button>
   </form>
 
   {% if registration %}
-    <div class="mt-8 rounded-sm border border-brand/30 bg-brand/5 p-6">
+    <div class="mt-8 rounded-md border border-brand/30 bg-brand/5 p-6">
       <p class="text-sm font-semibold uppercase tracking-[0.2em] text-brand">Valid certificate</p>
       <dl class="mt-4 space-y-2 text-sm">
         <div class="flex justify-between gap-4"><dt class="text-ink/60">Learner</dt><dd class="font-medium">{{ registration.student.display_name }}</dd></div>
@@ -20,7 +20,7 @@
       </dl>
     </div>
   {% elif ref %}
-    <div class="mt-8 rounded-sm border border-accent/40 bg-accent/5 p-6">
+    <div class="mt-8 rounded-md border border-accent/40 bg-accent/5 p-6">
       <p class="text-sm font-semibold uppercase tracking-[0.2em] text-accent">Not found</p>
       <p class="mt-2 text-ink/70">No issued certificate matches “{{ ref }}”. Check the reference and try again, or contact {{ COMPANY.email }}.</p>
     </div>

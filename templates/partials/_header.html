@@ -1,36 +1,36 @@
 {% load static %}
-<header class="border-b border-line bg-paper">
-  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
-    <a href="{% url 'home' %}" class="flex items-center gap-3">
-      <img src="{% static 'images/logo-small.webp' %}" alt="GCTT — Global Center for Technology & Training" class="h-10 w-auto">
+<header class="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
+  <div class="mx-auto flex h-16 max-w-7xl items-center gap-6 px-6">
+    <a href="{% url 'home' %}" class="flex shrink-0 items-center gap-2">
+      <img src="{% static 'images/logo-small.webp' %}" alt="GCTT — Global Center for Technology & Training" class="h-9 w-auto">
     </a>
 
-    <nav class="hidden items-center gap-6 text-sm font-medium lg:flex" aria-label="Main">
+    <nav class="hidden flex-1 items-center gap-6 text-sm font-medium text-ink/70 lg:flex" aria-label="Main">
       {% for item in NAV_ITEMS %}
-        <a href="{{ item.url }}" class="transition hover:text-accent {% if request.path == item.url %}text-accent{% endif %}" {% if request.path == item.url %}aria-current="page"{% endif %}>{{ item.label }}</a>
+        <a href="{{ item.url }}" class="hover:text-ink {% if request.path == item.url %}text-accent{% endif %}" {% if request.path == item.url %}aria-current="page"{% endif %}>{{ item.label }}</a>
       {% endfor %}
     </nav>
 
-    <div class="hidden items-center gap-4 text-sm font-medium lg:flex">
+    <div class="ml-auto hidden items-center gap-3 text-sm font-medium lg:flex">
       {% if user.is_authenticated %}
-        <a href="{% url 'dashboard' %}" class="hover:text-accent">Dashboard</a>
+        <a href="{% url 'dashboard' %}" class="text-ink/70 hover:text-ink">Dashboard</a>
         <form method="post" action="{% url 'logout' %}">
           {% csrf_token %}
-          <button type="submit" class="hover:text-accent">Log out</button>
+          <button type="submit" class="text-ink/70 hover:text-ink">Log out</button>
         </form>
       {% else %}
-        <a href="{% url 'login' %}" class="hover:text-accent">Log in</a>
-        <a href="{% url 'employers' %}" class="rounded-sm bg-accent px-4 py-2 text-paper transition hover:bg-brand">Hire Talent</a>
+        <a href="{% url 'login' %}" class="text-ink/70 hover:text-ink">Log in</a>
+        <a href="{% url 'employers' %}" class="btn btn-primary py-2.5 text-sm">Hire Talent</a>
       {% endif %}
     </div>
 
-    <details class="lg:hidden">
-      <summary class="cursor-pointer list-none rounded-sm border border-line px-3 py-2 text-sm font-medium">Menu</summary>
-      <nav class="absolute left-0 right-0 z-20 mt-2 space-y-1 border-y border-line bg-paper px-6 py-4" aria-label="Mobile">
+    <details class="ml-auto lg:hidden">
+      <summary class="cursor-pointer list-none rounded-md border border-line px-3 py-2 text-sm font-medium">Menu</summary>
+      <nav class="absolute inset-x-0 top-16 space-y-1 border-b border-line bg-paper px-6 py-4 shadow-sm" aria-label="Mobile">
         {% for item in NAV_ITEMS %}
-          <a href="{{ item.url }}" class="block py-1.5 hover:text-accent">{{ item.label }}</a>
+          <a href="{{ item.url }}" class="block rounded-md px-2 py-2 text-sm hover:bg-surface {% if request.path == item.url %}font-semibold text-accent{% endif %}">{{ item.label }}</a>
         {% endfor %}
-        <div class="mt-3 flex gap-4 border-t border-line pt-3">
+        <div class="mt-3 flex flex-wrap gap-4 border-t border-line pt-3 text-sm font-medium">
           {% if user.is_authenticated %}
             <a href="{% url 'dashboard' %}" class="hover:text-accent">Dashboard</a>
             <form method="post" action="{% url 'logout' %}">

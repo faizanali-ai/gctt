@@ -3,16 +3,16 @@
 {% block content %}
 {% include "partials/_hero.html" with eyebrow="Services" title="Talent, hiring and training under one roof" %}
 
-<section class="mx-auto max-w-6xl px-6 py-16 md:py-24">
-  <div class="grid gap-px overflow-hidden rounded-sm border border-line bg-line md:grid-cols-2">
+<section class="mx-auto max-w-7xl px-6 py-16 md:py-24">
+  <div class="grid gap-4 md:grid-cols-2">
     {% for service in SERVICES %}
-      <a href="{{ service.url }}" class="group block bg-paper p-7 hover:bg-white">
-        <h2 class="font-display text-xl font-semibold">{{ service.title }}</h2>
+      <a href="{{ service.url }}" class="group card hover:border-brand">
+        <h2 class="text-lg font-semibold">{{ service.title }}</h2>
         <p class="mt-2 text-ink/70">{{ service.text }}</p>
       </a>
     {% endfor %}
-    <a href="{% url 'sap_scrum' %}" class="group block bg-paper p-7 hover:bg-white">
-      <h2 class="font-display text-xl font-semibold">SAP &amp; Scrum</h2>
+    <a href="{% url 'sap_scrum' %}" class="group card hover:border-brand">
+      <h2 class="text-lg font-semibold">SAP &amp; Scrum</h2>
       <p class="mt-2 text-ink/70">Enquiries across SAP modules and Scrum and Agile roles.</p>
     </a>
   </div>

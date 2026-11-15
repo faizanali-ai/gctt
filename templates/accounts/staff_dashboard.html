@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Staff dashboard — GCTT{% endblock %}
 {% block content %}
-<section class="mx-auto max-w-6xl px-6 py-16 md:py-20">
+<section class="mx-auto max-w-7xl px-6 py-16 md:py-20">
   <p class="eyebrow">GCTT Staff</p>
   <div class="mt-3 flex flex-wrap items-end justify-between gap-4">
     <div>
@@ -9,7 +9,7 @@
       <p class="mt-1 text-ink/60">{{ user.email }}{% if is_ceo %} · CEO{% endif %}</p>
     </div>
     {% if is_ceo %}
-      <a href="{% url 'admin:accounts_user_changelist' %}" class="rounded-sm bg-brand px-5 py-3 font-semibold text-paper transition hover:bg-accent">Users &amp; roles</a>
+      <a href="{% url 'admin:accounts_user_changelist' %}" class="rounded-md bg-brand px-5 py-3 font-semibold text-paper transition hover:bg-accent">Users &amp; roles</a>
     {% endif %}
   </div>
   <p class="mt-2 text-sm">
@@ -21,7 +21,7 @@
 
   <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     {% for section in sections %}
-      <a href="{% url section.url %}" class="rounded-sm border border-line bg-white p-6 transition hover:border-accent">
+      <a href="{% url section.url %}" class="rounded-md border border-line bg-surface p-6 transition hover:border-accent">
         <p class="text-sm text-ink/60">{{ section.label }}</p>
         <p class="mt-1 font-display text-4xl">{{ section.count }}</p>
         {% if section.note %}<p class="mt-1 text-xs text-accent">{{ section.note }}</p>{% endif %}
@@ -30,7 +30,7 @@
   </div>
 
   {% if not sections %}
-    <p class="mt-8 rounded-sm border border-dashed border-line bg-white/60 p-6 text-ink/60">
+    <p class="mt-8 rounded-md border border-dashed border-line bg-surface p-6 text-ink/60">
       Your account has staff access but no role yet. Ask the CEO to add you to a role group in Django Admin.
     </p>
   {% endif %}

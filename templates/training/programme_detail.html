@@ -3,10 +3,10 @@
 {% block content %}
 {% include "partials/_hero.html" with eyebrow="Training" title=programme.title intro=programme.description|truncatewords:30 %}
 {% if not programme.published %}
-  <p class="mx-auto max-w-6xl px-6 pt-6 text-sm font-semibold text-accent">Draft preview — this programme is not visible to the public.</p>
+  <p class="mx-auto max-w-7xl px-6 pt-6 text-sm font-semibold text-accent">Draft preview — this programme is not visible to the public.</p>
 {% endif %}
 
-<section class="mx-auto max-w-6xl px-6 py-16 md:py-24">
+<section class="mx-auto max-w-7xl px-6 py-16 md:py-24">
   <div class="grid items-start gap-12 lg:grid-cols-[1.4fr_1fr]">
     <div>
       <p class="text-sm text-ink/60">
@@ -15,12 +15,12 @@
       </p>
       <div class="mt-6 whitespace-pre-line text-lg text-ink/80">{{ programme.description }}</div>
       {% if programme.image_url %}
-        <img src="{{ programme.image_url }}" alt="" class="mt-8 w-full rounded-sm border border-line object-cover" loading="lazy">
+        <img src="{{ programme.image_url }}" alt="" class="mt-8 w-full rounded-md border border-line object-cover" loading="lazy">
       {% endif %}
       <a href="{% url 'training' %}" class="mt-8 inline-block font-semibold text-brand hover:text-accent">← All programmes</a>
     </div>
 
-    <div class="rounded-sm border border-line bg-white p-6">
+    <div class="rounded-md border border-line bg-surface p-6">
       {% if registered %}
         <p class="text-ink/70">You're registered for this programme. We'll be in touch with the next steps.</p>
         <a href="{% url 'dashboard' %}" class="mt-4 inline-block font-semibold text-brand hover:text-accent">View your dashboard →</a>
@@ -35,11 +35,11 @@
             {{ form.message }}
             {% if form.message.errors %}<span class="mt-1 block text-sm text-accent">{{ form.message.errors.0 }}</span>{% endif %}
           </label>
-          <button type="submit" class="rounded-sm bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Register</button>
+          <button type="submit" class="rounded-md bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Register</button>
         </form>
       {% else %}
         <p class="text-ink/70">Create a free account to register for this programme.</p>
-        <a href="{% url 'signup' %}" class="mt-4 inline-block rounded-sm bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Create account</a>
+        <a href="{% url 'signup' %}" class="mt-4 inline-block rounded-md bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Create account</a>
         <p class="mt-3 text-sm text-ink/60">Already have an account? <a href="{% url 'login' %}" class="font-semibold text-brand hover:text-accent">Log in</a></p>
       {% endif %}
     </div>

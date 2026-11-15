@@ -1,7 +1,7 @@
 {% if programmes %}
   <div class="grid gap-4 md:grid-cols-2">
     {% for programme in programmes %}
-      <a href="{% url 'programme_detail' programme.slug %}" class="overflow-hidden rounded-sm border border-line bg-paper transition hover:border-accent hover:bg-white">
+      <a href="{% url 'programme_detail' programme.slug %}" class="overflow-hidden rounded-md border border-line bg-paper transition hover:border-accent hover:bg-surface">
         {% if programme.image_url %}
           <img src="{{ programme.image_url }}" alt="" class="h-40 w-full object-cover" loading="lazy">
         {% endif %}
@@ -17,9 +17,9 @@
     {% endfor %}
   </div>
 {% else %}
-  <div class="rounded-sm border border-dashed border-line bg-white/60 p-10 text-center">
+  <div class="rounded-md border border-dashed border-line bg-surface p-10 text-center">
     <h2 class="display-lg text-2xl">Programmes are being finalised</h2>
     <p class="mx-auto mt-2 max-w-md text-ink/60">New cohorts are announced here. Send an enquiry and we'll let you know when dates open.</p>
-    <a href="#enquiry" class="mt-5 inline-block rounded-sm bg-accent px-6 py-3 font-semibold text-paper hover:bg-brand">Send an enquiry</a>
+    <a href="#enquiry" class="mt-5 inline-block rounded-md bg-accent px-6 py-3 font-semibold text-paper hover:bg-brand">Send an enquiry</a>
   </div>
 {% endif %}
