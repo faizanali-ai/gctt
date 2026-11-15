@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Career Restart — GCTT{% endblock %}
+{% block content %}
+{% include "partials/_hero.html" with eyebrow="Career Restart" title="Your career journey can start again." intro="Had a break in your career? GCTT welcomes professionals who are ready to explore new opportunities and build their next chapter." %}
+
+<section class="mx-auto max-w-6xl px-6 py-16 md:py-24">
+  <div class="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
+    <div class="space-y-4 text-lg text-ink/70">
+      <p>Tell us about your skills, experience and the kind of role you're looking for — including any career break you'd like to explain.</p>
+      <p>We'll keep your details on file and contact you when a relevant opportunity comes up.</p>
+    </div>
+    <div class="rounded-sm border border-line bg-white p-6 md:p-8">
+      {% include "enquiries/_form.html" %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f7f4ee;
+  --color-ink: #14181d;
+  --color-brand: #14324f;
+  --color-accent: #d9482b;
+  --color-line: #e2dcd2;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: Georgia, "Times New Roman", serif;
+}
+
+@layer base {
+  ::selection {
+    background: #d9482b33;
+  }
+  input:not([type="hidden"]):not([type="submit"]):not([type="file"]),
+  select,
+  textarea {
+    @apply w-full rounded-sm border border-line bg-white px-4 py-2.5 text-ink;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    @apply border-brand outline-none ring-1 ring-brand/20;
+  }
+  input[type="file"] {
+    @apply w-full rounded-sm border border-line bg-white px-4 py-2.5 text-sm;
+  }
+  input[type="checkbox"] {
+    @apply w-auto;
+  }
+}

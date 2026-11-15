@@ -1,0 +1,20 @@
+class SecurityHeadersMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        response["X-Frame-Options"] = "DENY"
+        response["X-Content-Type-Options"] = "nosniff"
+        response["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        # shortcut: 'unsafe-inline' kept for inline toast/script snippets, tighten with nonces later
+        response["Content-Security-Policy"] = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline'; "
+            "style-src 'self' 'unsafe-inline'; "
+            "font-src 'self'; "
+            "img-src 'self' data:; "
+            "frame-ancestors 'none';"
+        )
+        return response

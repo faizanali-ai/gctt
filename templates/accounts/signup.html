@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Sign up — GCTT{% endblock %}
+{% block content %}
+<section class="mx-auto max-w-md px-6 py-16 md:py-24">
+  <h1 class="font-display text-3xl">Create your account</h1>
+  <p class="mt-2 text-ink/70">Apply for jobs and register for training programmes.</p>
+  <form method="post" class="mt-8 space-y-4">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<p class="text-sm text-accent">{{ form.non_field_errors.0 }}</p>{% endif %}
+    {% for field in form %}
+      <label class="block">
+        <span class="mb-1 block text-sm font-medium">{{ field.label }}</span>
+        {{ field }}
+        {% if field.errors %}<span class="mt-1 block text-sm text-accent">{{ field.errors.0 }}</span>{% endif %}
+        {% if field.help_text %}<span class="mt-1 block text-xs text-ink/50">{{ field.help_text|safe }}</span>{% endif %}
+      </label>
+    {% endfor %}
+    <button type="submit" class="w-full rounded-sm bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Sign up</button>
+  </form>
+  <p class="mt-6 text-sm text-ink/60">Already have an account? <a href="{% url 'login' %}" class="font-semibold text-brand hover:text-accent">Log in</a></p>
+</section>
+{% endblock %}

@@ -1,0 +1,72 @@
+from django.conf import settings
+from django.core.validators import FileExtensionValidator
+from django.db import models
+from django.utils.text import slugify
+
+
+class Job(models.Model):
+    class EmploymentType(models.TextChoices):
+        FULL_TIME = "full_time", "Full-time"
+        PART_TIME = "part_time", "Part-time"
+        CONTRACT = "contract", "Contract"
+        INTERNSHIP = "internship", "Internship"
+
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=220, unique=True, blank=True)
+    location = models.CharField(max_length=200)
+    employment_type = models.CharField(
+        max_length=20, choices=EmploymentType.choices, default=EmploymentType.FULL_TIME
+    )
+    description = models.TextField()
+    requirements = models.TextField(blank=True)
+    published = models.BooleanField(default=False, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base = slugify(self.title)[:200] or "job"
+            slug, n = base, 1
+            while Job.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                n += 1
+                slug = f"{base}-{n}"
+            self.slug = slug
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+
+class Application(models.Model):
+    class Status(models.TextChoices):
+        SUBMITTED = "submitted", "Submitted"
+        UNDER_REVIEW = "under_review", "Under Review"
+        SHORTLISTED = "shortlisted", "Shortlisted"
+        REJECTED = "rejected", "Rejected"
+        SELECTED = "selected", "Selected"
+
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="applications")
+    applicant = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="applications"
+    )
+    resume = models.FileField(
+        upload_to="resumes/",
+        validators=[FileExtensionValidator(["pdf", "doc", "docx"])],
+    )
+    message = models.TextField(max_length=4000, blank=True)
+    status = models.CharField(
+        max_length=20, choices=Status.choices, default=Status.SUBMITTED, db_index=True
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(fields=["job", "applicant"], name="one_application_per_job_user")
+        ]
+
+    def __str__(self):
+        return f"{self.applicant} → {self.job}"

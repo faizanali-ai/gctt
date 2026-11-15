@@ -1,0 +1,20 @@
+[project]
+name = "gctt"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "django==5.2.*",
+    "django-ratelimit==4.*",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17.5",
+]
+
+[tool.ruff]
+exclude = ["*/migrations/*"]
+
+[tool.ruff.lint]
+# Django's Meta/admin config attributes are intentionally mutable class attrs
+ignore = ["RUF012"]

@@ -1,0 +1,49 @@
+{% load static %}
+<header class="border-b border-line bg-paper">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
+    <a href="{% url 'home' %}" class="flex items-center gap-3">
+      <img src="{% static 'images/logo-small.webp' %}" alt="GCTT logo" class="h-9 w-auto">
+      <span class="hidden font-display text-lg font-semibold tracking-tight sm:inline">{{ COMPANY.name }}</span>
+    </a>
+
+    <nav class="hidden items-center gap-6 text-sm font-medium lg:flex" aria-label="Main">
+      {% for item in NAV_ITEMS %}
+        <a href="{{ item.url }}" class="transition hover:text-accent {% if request.path == item.url %}text-accent{% endif %}">{{ item.label }}</a>
+      {% endfor %}
+    </nav>
+
+    <div class="hidden items-center gap-4 text-sm font-medium lg:flex">
+      {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}" class="hover:text-accent">Dashboard</a>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="hover:text-accent">Log out</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}" class="hover:text-accent">Log in</a>
+        <a href="{% url 'employers' %}" class="rounded-sm bg-accent px-4 py-2 text-paper transition hover:bg-brand">Hire Talent</a>
+      {% endif %}
+    </div>
+
+    <details class="lg:hidden">
+      <summary class="cursor-pointer list-none rounded-sm border border-line px-3 py-2 text-sm font-medium">Menu</summary>
+      <nav class="absolute left-0 right-0 z-20 mt-2 space-y-1 border-y border-line bg-paper px-6 py-4" aria-label="Mobile">
+        {% for item in NAV_ITEMS %}
+          <a href="{{ item.url }}" class="block py-1.5 hover:text-accent">{{ item.label }}</a>
+        {% endfor %}
+        <div class="mt-3 flex gap-4 border-t border-line pt-3">
+          {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="hover:text-accent">Dashboard</a>
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="hover:text-accent">Log out</button>
+            </form>
+          {% else %}
+            <a href="{% url 'login' %}" class="hover:text-accent">Log in</a>
+            <a href="{% url 'signup' %}" class="hover:text-accent">Sign up</a>
+          {% endif %}
+        </div>
+      </nav>
+    </details>
+  </div>
+</header>

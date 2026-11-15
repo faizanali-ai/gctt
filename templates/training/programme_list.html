@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Training and Development — GCTT{% endblock %}
+{% block content %}
+{% include "partials/_hero.html" with eyebrow="Training and Development" title="Build the skills for your next role" intro="GCTT offers online and in-person training. Certificates are awarded upon successful completion." %}
+
+<section class="mx-auto max-w-6xl px-6 py-16 md:py-24">
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="rounded-sm border border-line bg-white p-6">
+      <h2 class="font-display text-lg font-semibold">Online training</h2>
+      <p class="mt-1 text-ink/70">Learn from wherever you are.</p>
+    </div>
+    <div class="rounded-sm border border-line bg-white p-6">
+      <h2 class="font-display text-lg font-semibold">In-person training</h2>
+      <p class="mt-1 text-ink/70">Learn face to face.</p>
+    </div>
+    <div class="rounded-sm border border-line bg-white p-6">
+      <h2 class="font-display text-lg font-semibold">Certificates</h2>
+      <p class="mt-1 text-ink/70">Awarded on successful completion.</p>
+    </div>
+  </div>
+
+  <h2 class="mb-5 mt-14 font-display text-2xl font-semibold md:text-3xl">Programmes</h2>
+  {% include "training/_programmes.html" %}
+</section>
+
+<section class="border-t border-line bg-white/60">
+  <div class="mx-auto max-w-6xl px-6 py-16 md:py-24">
+    <h2 class="mb-6 font-display text-2xl font-semibold md:text-3xl">Training enquiry</h2>
+    <div class="max-w-xl rounded-sm border border-line bg-white p-6 md:p-8">
+      {% include "enquiries/_form.html" %}
+    </div>
+  </div>
+</section>
+{% endblock %}

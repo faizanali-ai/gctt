@@ -1,0 +1,33 @@
+<footer class="mt-24 border-t border-line bg-brand text-paper">
+  <div class="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-4">
+    <div class="md:col-span-2">
+      <p class="font-display text-2xl">{{ COMPANY.name }}</p>
+      <p class="mt-3 max-w-sm text-paper/70">{{ COMPANY.legal_name }}. Bridging talent and opportunity through staffing, recruitment and training.</p>
+    </div>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-paper/50">Services</p>
+      <ul class="mt-4 space-y-2 text-sm text-paper/80">
+        {% for service in SERVICES %}
+          <li><a href="{{ service.url }}" class="hover:text-accent">{{ service.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-paper/50">Company</p>
+      <ul class="mt-4 space-y-2 text-sm text-paper/80">
+        <li><a href="{% url 'about' %}" class="hover:text-accent">About</a></li>
+        <li><a href="{% url 'careers' %}" class="hover:text-accent">Careers</a></li>
+        <li><a href="{% url 'employers' %}" class="hover:text-accent">For Employers</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:text-accent">Contact</a></li>
+        <li><a href="{% url 'privacy' %}" class="hover:text-accent">Privacy</a></li>
+        <li><a href="{% url 'terms' %}" class="hover:text-accent">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-paper/15">
+    <div class="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-5 text-xs text-paper/60 sm:flex-row sm:justify-between">
+      <p>&copy; {% now "Y" %} GCTT. All rights reserved.</p>
+      <p>{{ COMPANY.email }} · {{ COMPANY.address }}</p>
+    </div>
+  </div>
+</footer>

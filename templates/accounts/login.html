@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Log in — GCTT{% endblock %}
+{% block content %}
+<section class="mx-auto max-w-md px-6 py-16 md:py-24">
+  <h1 class="font-display text-3xl">Log in</h1>
+  <form method="post" class="mt-8 space-y-4">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<p class="text-sm text-accent">{{ form.non_field_errors.0 }}</p>{% endif %}
+    {% for field in form %}
+      <label class="block">
+        <span class="mb-1 block text-sm font-medium">{{ field.label }}</span>
+        {{ field }}
+        {% if field.errors %}<span class="mt-1 block text-sm text-accent">{{ field.errors.0 }}</span>{% endif %}
+      </label>
+    {% endfor %}
+    <button type="submit" class="w-full rounded-sm bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Log in</button>
+  </form>
+  <div class="mt-6 space-y-2 text-sm text-ink/60">
+    <p>New here? <a href="{% url 'signup' %}" class="font-semibold text-brand hover:text-accent">Create an account</a></p>
+    <p><a href="{% url 'password_reset' %}" class="font-semibold text-brand hover:text-accent">Forgot your password?</a></p>
+  </div>
+</section>
+{% endblock %}

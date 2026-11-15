@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Request Talent — GCTT{% endblock %}
+{% block content %}
+{% include "partials/_hero.html" with eyebrow="For Employers" title="Request Talent" intro="Tell GCTT about the people your company needs." %}
+
+<section class="mx-auto max-w-6xl px-6 py-16 md:py-24">
+  <div class="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
+    <div class="space-y-4 text-lg text-ink/70">
+      <p>Looking for IT staffing, recruitment or talent acquisition support? Share your requirements, including any SAP or Scrum and Agile areas.</p>
+      <p>Your enquiry is reviewed by our team, not a self-service board.</p>
+    </div>
+    <div class="rounded-sm border border-line bg-white p-6 md:p-8">
+      {% include "enquiries/_form.html" %}
+    </div>
+  </div>
+</section>
+{% endblock %}

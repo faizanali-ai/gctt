@@ -1,0 +1,20 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ COMPANY.name }} — {{ COMPANY.legal_name }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ COMPANY.tagline }} IT staffing, recruitment, talent acquisition and training."{% endblock %}">
+  <meta property="og:title" content="{{ COMPANY.name }}">
+  <meta property="og:description" content="{{ COMPANY.tagline }}">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="{% static 'images/logo-small.webp' %}">
+  <link rel="stylesheet" href="{% static 'css/output.css' %}">
+</head>
+<body class="min-h-screen bg-paper font-sans text-ink">
+  {% include "partials/_header.html" %}
+  {% include "partials/_messages.html" %}
+  <main>{% block content %}{% endblock %}</main>
+  {% include "partials/_footer.html" %}
+</body>
+</html>

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Terms and Conditions — GCTT{% endblock %}
+{% block content %}
+{% include "partials/_hero.html" with eyebrow="Legal" title="Terms and Conditions" %}
+
+<section class="mx-auto max-w-3xl px-6 py-16 md:py-24">
+  <div class="space-y-4 text-lg text-ink/70">
+    <p>Our Terms and Conditions are being finalised and will be published here.</p>
+    <p>For any questions in the meantime, contact us at {{ COMPANY.email }}.</p>
+  </div>
+</section>
+{% endblock %}

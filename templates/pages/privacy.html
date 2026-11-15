@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy — GCTT{% endblock %}
+{% block content %}
+{% include "partials/_hero.html" with eyebrow="Legal" title="Privacy Policy" %}
+
+<section class="mx-auto max-w-3xl px-6 py-16 md:py-24">
+  <div class="space-y-4 text-lg text-ink/70">
+    <p>Our Privacy Policy is being finalised and will be published here.</p>
+    <p>For any questions in the meantime, contact us at {{ COMPANY.email }}.</p>
+  </div>
+</section>
+{% endblock %}

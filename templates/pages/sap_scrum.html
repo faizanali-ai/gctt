@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}SAP and Scrum — GCTT{% endblock %}
+{% block content %}
+{% include "partials/_hero.html" with eyebrow="Areas of interest" title="SAP and Scrum & Agile" intro="Whether you're hiring, looking for work or interested in training, let us know if SAP or Scrum & Agile is your area of interest." %}
+
+<section class="mx-auto max-w-6xl px-6 py-16 md:py-24">
+  <h2 class="font-display text-2xl font-semibold md:text-3xl">SAP and Scrum programmes</h2>
+  <div class="mt-6">
+    {% include "training/_programmes.html" %}
+  </div>
+</section>
+
+<section class="border-t border-line bg-white/60">
+  <div class="mx-auto max-w-6xl px-6 py-16 md:py-24">
+    <h2 class="mb-6 font-display text-2xl font-semibold md:text-3xl">Send an enquiry</h2>
+    <div class="max-w-xl rounded-sm border border-line bg-white p-6 md:p-8">
+      {% include "enquiries/_form.html" %}
+    </div>
+  </div>
+</section>
+{% endblock %}

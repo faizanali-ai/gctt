@@ -1,0 +1,18 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+
+# Env
+.env
+
+# Tailwind standalone binary (re-download from tailwindcss releases)
+tailwindcss
+
+# OS
+.DS_Store

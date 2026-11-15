@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ job.title }} — GCTT Careers{% endblock %}
+{% block content %}
+{% include "partials/_hero.html" with eyebrow="Careers" title=job.title intro=job.location %}
+
+<section class="mx-auto max-w-6xl px-6 py-16 md:py-24">
+  <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr]">
+    <div>
+      <p class="text-sm text-ink/60">{{ job.get_employment_type_display }} · Posted {{ job.created_at|date:"F j, Y" }}</p>
+      <div class="mt-6 whitespace-pre-line text-lg text-ink/80">{{ job.description }}</div>
+      {% if job.requirements %}
+        <h2 class="mt-10 font-display text-2xl font-semibold">Requirements</h2>
+        <div class="mt-3 whitespace-pre-line text-lg text-ink/80">{{ job.requirements }}</div>
+      {% endif %}
+      <a href="{% url 'careers' %}" class="mt-10 inline-block font-semibold text-brand hover:text-accent">← All opportunities</a>
+    </div>
+
+    <div class="rounded-sm border border-line bg-white p-6">
+      {% if applied %}
+        <p class="text-ink/70">You've already applied to this role. Our team will be in touch if there's a match.</p>
+        <a href="{% url 'dashboard' %}" class="mt-4 inline-block font-semibold text-brand hover:text-accent">View your applications →</a>
+      {% elif user.is_authenticated %}
+        <h2 class="font-display text-lg font-semibold">Apply for this role</h2>
+        <form method="post" action="{% url 'job_apply' job.slug %}" enctype="multipart/form-data" class="mt-4 space-y-4">
+          {% csrf_token %}
+          <label class="block">
+            <span class="mb-1 block text-sm font-medium">Resume (PDF, DOC or DOCX — max 5 MB)</span>
+            {{ form.resume }}
+            {% if form.resume.errors %}<span class="mt-1 block text-sm text-accent">{{ form.resume.errors.0 }}</span>{% endif %}
+          </label>
+          <label class="block">
+            <span class="mb-1 block text-sm font-medium">Message (optional)</span>
+            {{ form.message }}
+            {% if form.message.errors %}<span class="mt-1 block text-sm text-accent">{{ form.message.errors.0 }}</span>{% endif %}
+          </label>
+          <button type="submit" class="rounded-sm bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Submit application</button>
+        </form>
+      {% else %}
+        <p class="text-ink/70">Create a free account to apply for this role.</p>
+        <a href="{% url 'signup' %}" class="mt-4 inline-block rounded-sm bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Create account</a>
+        <p class="mt-3 text-sm text-ink/60">Already have an account? <a href="{% url 'login' %}" class="font-semibold text-brand hover:text-accent">Log in</a></p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}
