@@ -1,7 +1,16 @@
+import uuid
+from pathlib import Path
+
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.text import slugify
+
+
+def resume_upload_to(instance, filename):
+    # Opaque filenames: resumes are private and never guessable.
+    suffix = Path(filename).suffix.lower()[:10]
+    return f"resumes/{uuid.uuid4().hex}{suffix}"
 
 
 class Job(models.Model):
@@ -53,7 +62,7 @@ class Application(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="applications"
     )
     resume = models.FileField(
-        upload_to="resumes/",
+        upload_to=resume_upload_to,
         validators=[FileExtensionValidator(["pdf", "doc", "docx"])],
     )
     message = models.TextField(max_length=4000, blank=True)

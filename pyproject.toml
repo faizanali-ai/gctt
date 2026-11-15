@@ -9,6 +9,7 @@ dependencies = [
     "django-storages[boto3]>=1.14.6",
     "gunicorn>=27.0.1",
     "psycopg[binary]>=3.3.9",
+    "redis>=8.1.0",
     "weasyprint>=70.0",
     "whitenoise>=6.12.0",
 ]

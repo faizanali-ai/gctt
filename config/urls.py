@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 from django.views.generic import TemplateView
+from django_ratelimit.decorators import ratelimit
 
 from apps.accounts import views as accounts_views
 from apps.enquiries import views as enquiries_views
@@ -12,6 +13,11 @@ from apps.training import views as training_views
 
 from . import views
 from .sitemaps import JobSitemap, ProgrammeSitemap, StaticSitemap
+
+# Throttle the admin login before admin.site.urls builds its URL patterns.
+admin.site.login = ratelimit(key="ip", rate="10/m", method="POST", block=True)(
+    admin.site.login
+)
 
 sitemaps = {
     "static": StaticSitemap,
@@ -88,6 +94,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
     path("healthz/", views.healthz, name="healthz"),
+    path("health/", views.healthz),
     path(
         "robots.txt",
         TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),

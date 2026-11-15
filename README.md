@@ -4,11 +4,13 @@ Marketing site, careers, training registrations and enquiries for GCTT.
 
 ## Run
 
+Debug is off by default; enable it for local development:
+
 ```bash
 uv sync
-uv run python manage.py migrate
-uv run python manage.py createsuperuser
-uv run python manage.py runserver
+DJANGO_DEBUG=1 uv run python manage.py migrate
+DJANGO_DEBUG=1 uv run python manage.py createsuperuser
+DJANGO_DEBUG=1 uv run python manage.py runserver
 ```
 
 CSS is precompiled to `static/css/output.css`. Rebuild after template/style changes:

@@ -1,14 +1,19 @@
 import os
+import sys
 from pathlib import Path
 
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
+TESTING = "test" in sys.argv
+
+# Safe default: debug is OFF unless explicitly enabled for local development.
+DEBUG = os.environ.get("DJANGO_DEBUG", "").lower() in ("1", "true", "yes")
+
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-insecure-key-change-me")
-if not DEBUG and SECRET_KEY == "dev-only-insecure-key-change-me":
-    raise RuntimeError("Set DJANGO_SECRET_KEY before running with DJANGO_DEBUG=0")
+if not DEBUG and not TESTING and SECRET_KEY.startswith("dev-only"):
+    raise RuntimeError("Set DJANGO_SECRET_KEY before running with DJANGO_DEBUG off")
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -67,11 +72,38 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+DATABASE_URL = os.environ.get("DATABASE_URL", "")
+if not DEBUG and not TESTING and not DATABASE_URL:
+    # Never fall back to ephemeral SQLite in production.
+    raise RuntimeError("DATABASE_URL is required when DJANGO_DEBUG is off")
+
 DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}", conn_max_age=600
     )
 }
+
+# Rate-limit keys use the real client IP behind the platform proxy.
+if not DEBUG and not TESTING:
+    RATELIMIT_IP_META_KEY = "HTTP_X_FORWARDED_FOR"
+
+# Shared cache for rate-limit counters: Redis when provided, database cache in
+# production (multiple workers), per-process memory in local development.
+REDIS_URL = os.environ.get("REDIS_URL", "")
+if REDIS_URL:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": REDIS_URL,
+        }
+    }
+elif not DEBUG and not TESTING:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+            "LOCATION": "ratelimit_cache",
+        }
+    }
 
 AUTH_USER_MODEL = "accounts.User"
 
@@ -99,7 +131,8 @@ STORAGES = {
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
 }
 
-# Cloudflare R2 (S3-compatible) when configured; local disk otherwise.
+# Cloudflare R2 (S3-compatible) when configured. Bucket stays private; media
+# URLs are time-signed so resumes are not publicly readable.
 if os.environ.get("R2_BUCKET"):
     AWS_ACCESS_KEY_ID = os.environ["R2_ACCESS_KEY_ID"]
     AWS_SECRET_ACCESS_KEY = os.environ["R2_SECRET_ACCESS_KEY"]
@@ -107,8 +140,9 @@ if os.environ.get("R2_BUCKET"):
     AWS_S3_ENDPOINT_URL = os.environ["R2_ENDPOINT"]
     AWS_S3_REGION_NAME = "auto"
     AWS_DEFAULT_ACL = None
-    AWS_QUERYSTRING_AUTH = False
-    MEDIA_URL = os.environ["R2_PUBLIC_URL"]
+    AWS_QUERYSTRING_AUTH = True
+    AWS_QUERYSTRING_EXPIRE = 600
+    AWS_S3_FILE_OVERWRITE = False
     STORAGES["default"] = {"BACKEND": "storages.backends.s3.S3Storage"}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -126,8 +160,9 @@ EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = True
+EMAIL_TIMEOUT = 10
 
-if not DEBUG:
+if not DEBUG and not TESTING:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
