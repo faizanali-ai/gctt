@@ -75,7 +75,12 @@ class Command(BaseCommand):
             qa = get_user_model().objects.filter(
                 email__in=["qa.smoke@example.com", "qa.apply@example.com"]
             ).delete()[0]
-            self.stdout.write(self.style.SUCCESS(f"Removed {enquiries} enquiry row(s), {qa} QA user(s)."))
+            probes = (
+                get_user_model()
+                .objects.filter(email__startswith="zq", email__endswith="@example.net")
+                .delete()[0]
+            )
+            self.stdout.write(self.style.SUCCESS(f"Removed {enquiries} enquiry row(s), {qa + probes} QA user(s)."))
             return
 
         for name in ("SAP", "Scrum & Agile"):
