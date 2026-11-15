@@ -1,4 +1,21 @@
 {% load static %}
+<div class="hidden bg-brand text-paper md:block">
+  <div class="mx-auto flex h-9 max-w-7xl items-center justify-between px-6 text-xs">
+    <div class="flex items-center gap-5 text-paper/70">
+      <span>{{ COMPANY.address }}</span>
+      <a href="mailto:{{ COMPANY.jobs_email }}" class="hover:text-paper">{{ COMPANY.jobs_email }}</a>
+      <a href="mailto:{{ COMPANY.email }}" class="hover:text-paper">{{ COMPANY.email }}</a>
+    </div>
+    <div class="flex items-center gap-5">
+      <a href="{% url 'careers' %}" class="text-paper/70 hover:text-paper">Job seekers</a>
+      <a href="{% url 'employers' %}" class="text-paper/70 hover:text-paper">Employers</a>
+      {% if not user.is_authenticated %}
+        <a href="{% url 'login' %}" class="font-semibold text-paper hover:text-white">Portal login</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
 <header class="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
   <div class="mx-auto flex h-16 max-w-7xl items-center gap-6 px-6">
     <a href="{% url 'home' %}" class="flex shrink-0 items-center gap-2">
@@ -6,9 +23,21 @@
     </a>
 
     <nav class="hidden flex-1 items-center gap-6 text-sm font-medium text-ink/70 lg:flex" aria-label="Main">
-      {% for item in NAV_ITEMS %}
-        <a href="{{ item.url }}" class="hover:text-ink {% if request.path == item.url %}text-accent{% endif %}" {% if request.path == item.url %}aria-current="page"{% endif %}>{{ item.label }}</a>
-      {% endfor %}
+      <a href="{% url 'about' %}" class="hover:text-ink {% if request.path == '/about/' %}text-accent{% endif %}">About</a>
+      <details class="group relative">
+        <summary class="flex cursor-pointer list-none items-center gap-1 hover:text-ink">Services <span class="text-[10px]">▾</span></summary>
+        <div class="absolute left-0 top-full z-30 mt-3 w-64 rounded-md border border-line bg-paper p-2 shadow-lg">
+          {% for service in SERVICES %}
+            <a href="{{ service.url }}" class="block rounded-md px-3 py-2 text-sm hover:bg-surface">{{ service.title }}</a>
+          {% endfor %}
+          <a href="{% url 'sap_scrum' %}" class="block rounded-md px-3 py-2 text-sm hover:bg-surface">SAP &amp; Scrum</a>
+        </div>
+      </details>
+      <a href="{% url 'training' %}" class="hover:text-ink {% if request.path == '/training/' %}text-accent{% endif %}">Training</a>
+      <a href="{% url 'careers' %}" class="hover:text-ink {% if request.path == '/careers/' %}text-accent{% endif %}">Careers</a>
+      <a href="{% url 'career_restart' %}" class="hover:text-ink {% if request.path == '/career-restart/' %}text-accent{% endif %}">Career Restart</a>
+      <a href="{% url 'employers' %}" class="hover:text-ink {% if request.path == '/employers/' %}text-accent{% endif %}">For Employers</a>
+      <a href="{% url 'contact' %}" class="hover:text-ink {% if request.path == '/contact/' %}text-accent{% endif %}">Contact</a>
     </nav>
 
     <div class="ml-auto hidden items-center gap-3 text-sm font-medium lg:flex">
@@ -27,9 +56,17 @@
     <details class="ml-auto lg:hidden">
       <summary class="cursor-pointer list-none rounded-md border border-line px-3 py-2 text-sm font-medium">Menu</summary>
       <nav class="absolute inset-x-0 top-16 space-y-1 border-b border-line bg-paper px-6 py-4 shadow-sm" aria-label="Mobile">
-        {% for item in NAV_ITEMS %}
-          <a href="{{ item.url }}" class="block rounded-md px-2 py-2 text-sm hover:bg-surface {% if request.path == item.url %}font-semibold text-accent{% endif %}">{{ item.label }}</a>
+        <a href="{% url 'about' %}" class="block rounded-md px-2 py-2 text-sm hover:bg-surface">About</a>
+        <p class="mt-2 px-2 text-xs font-semibold uppercase tracking-[0.1em] text-ink/40">Services</p>
+        {% for service in SERVICES %}
+          <a href="{{ service.url }}" class="block rounded-md px-4 py-2 text-sm hover:bg-surface">{{ service.title }}</a>
         {% endfor %}
+        <a href="{% url 'sap_scrum' %}" class="block rounded-md px-4 py-2 text-sm hover:bg-surface">SAP &amp; Scrum</a>
+        <a href="{% url 'training' %}" class="block rounded-md px-2 py-2 text-sm hover:bg-surface">Training</a>
+        <a href="{% url 'careers' %}" class="block rounded-md px-2 py-2 text-sm hover:bg-surface">Careers</a>
+        <a href="{% url 'career_restart' %}" class="block rounded-md px-2 py-2 text-sm hover:bg-surface">Career Restart</a>
+        <a href="{% url 'employers' %}" class="block rounded-md px-2 py-2 text-sm hover:bg-surface">For Employers</a>
+        <a href="{% url 'contact' %}" class="block rounded-md px-2 py-2 text-sm hover:bg-surface">Contact</a>
         <div class="mt-3 flex flex-wrap gap-4 border-t border-line pt-3 text-sm font-medium">
           {% if user.is_authenticated %}
             <a href="{% url 'dashboard' %}" class="hover:text-accent">Dashboard</a>
