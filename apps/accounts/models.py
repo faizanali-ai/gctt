@@ -22,7 +22,6 @@ class User(AbstractUser):
     class AccountType(models.TextChoices):
         CANDIDATE = "candidate", "Candidate"
         STUDENT = "student", "Training Student"
-        EMPLOYER = "employer", "Employer"
 
     username = None
     email = models.EmailField("email address", unique=True)
@@ -30,7 +29,6 @@ class User(AbstractUser):
     account_type = models.CharField(
         max_length=20, choices=AccountType.choices, default=AccountType.CANDIDATE
     )
-    company_name = models.CharField(max_length=120, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -51,7 +49,3 @@ class User(AbstractUser):
     @property
     def is_student(self):
         return self.account_type == self.AccountType.STUDENT
-
-    @property
-    def is_employer(self):
-        return self.account_type == self.AccountType.EMPLOYER

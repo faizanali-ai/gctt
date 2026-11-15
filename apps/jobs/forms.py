@@ -1,16 +1,6 @@
 from django import forms
 
-from .models import Application, Job
-
-
-class JobForm(forms.ModelForm):
-    class Meta:
-        model = Job
-        fields = ("title", "location", "employment_type", "description", "requirements")
-        widgets = {
-            "description": forms.Textarea(attrs={"rows": 8}),
-            "requirements": forms.Textarea(attrs={"rows": 5}),
-        }
+from .models import Application
 
 
 class ApplicationForm(forms.ModelForm):

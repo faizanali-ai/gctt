@@ -1,17 +1,15 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.db import IntegrityError, transaction
-from django.db.models import Count, Q
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
-from apps.accounts.decorators import employer_required
-
-from .forms import ApplicationForm, JobForm
+from .forms import ApplicationForm
 from .models import Application, Job
 
-EMPLOYER_STATUSES = {
+STAFF_STATUSES = {
     Application.Status.UNDER_REVIEW,
     Application.Status.SHORTLISTED,
     Application.Status.REJECTED,
@@ -47,9 +45,6 @@ def job_detail(request, slug):
 @ratelimit(key="user", rate="20/h", method="POST", block=True)
 def job_apply(request, slug):
     job = get_object_or_404(Job, slug=slug, published=True)
-    if request.user.is_employer:
-        messages.error(request, "Employer accounts can't apply to jobs.")
-        return redirect("job_detail", slug=job.slug)
     form = ApplicationForm(request.POST, request.FILES)
     if form.is_valid():
         application = form.save(commit=False)
@@ -69,57 +64,46 @@ def job_apply(request, slug):
     )
 
 
-@employer_required
-def employer_dashboard(request):
-    jobs = request.user.jobs.annotate(applications_count=Count("applications"))
-    applications = Application.objects.filter(job__employer=request.user).select_related(
-        "job", "applicant"
-    )
+@login_required
+@permission_required("jobs.view_job", raise_exception=True)
+def staff_jobs(request):
+    return render(request, "staff/jobs.html", {"jobs": Job.objects.all()})
+
+
+@login_required
+@permission_required("jobs.change_job", raise_exception=True)
+@require_POST
+def staff_job_publish(request, pk):
+    job = get_object_or_404(Job, pk=pk)
+    job.published = not job.published
+    job.save(update_fields=["published"])
+    messages.success(request, f"'{job.title}' is now {'published' if job.published else 'a draft'}.")
+    return redirect("staff_jobs")
+
+
+@login_required
+@permission_required("jobs.view_application", raise_exception=True)
+def staff_applications(request):
     return render(
         request,
-        "jobs/employer_dashboard.html",
+        "staff/applications.html",
         {
-            "jobs": jobs,
-            "live_count": jobs.filter(published=True).count(),
-            "applications": applications,
+            "applications": Application.objects.select_related("job", "applicant"),
             "statuses": [
-                choice for choice in Application.Status.choices if choice[0] in EMPLOYER_STATUSES
+                choice for choice in Application.Status.choices if choice[0] in STAFF_STATUSES
             ],
         },
     )
 
 
-@employer_required
-def job_create(request):
-    form = JobForm(request.POST or None)
-    if request.method == "POST" and form.is_valid():
-        job = form.save(commit=False)
-        job.employer = request.user
-        job.published = False
-        job.save()
-        messages.success(request, "Job submitted — our team reviews and publishes it.")
-        return redirect("dashboard")
-    return render(request, "jobs/employer_job_form.html", {"form": form, "job": None})
-
-
-@employer_required
-def job_edit(request, slug):
-    job = get_object_or_404(Job, slug=slug, employer=request.user)
-    form = JobForm(request.POST or None, instance=job)
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        messages.success(request, "Job updated.")
-        return redirect("dashboard")
-    return render(request, "jobs/employer_job_form.html", {"form": form, "job": job})
-
-
-@employer_required
+@login_required
+@permission_required("jobs.change_application", raise_exception=True)
 @require_POST
-def application_status(request, pk):
-    application = get_object_or_404(Application, pk=pk, job__employer=request.user)
+def staff_application_status(request, pk):
+    application = get_object_or_404(Application, pk=pk)
     status = request.POST.get("status", "")
-    if status in EMPLOYER_STATUSES:
+    if status in STAFF_STATUSES:
         application.status = status
         application.save(update_fields=["status"])
         messages.success(request, "Status updated.")
-    return redirect("dashboard")
+    return redirect("staff_applications")

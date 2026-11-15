@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 from apps.accounts import views as accounts_views
+from apps.enquiries import views as enquiries_views
 from apps.jobs import views as jobs_views
 from apps.training import views as training_views
 
@@ -37,13 +38,38 @@ urlpatterns = [
     path("enquiries/", include("apps.enquiries.urls")),
     path("accounts/", include("apps.accounts.urls")),
     path("dashboard/", accounts_views.dashboard, name="dashboard"),
-    path("dashboard/jobs/new/", jobs_views.job_create, name="employer_job_new"),
-    path("dashboard/jobs/<slug:slug>/edit/", jobs_views.job_edit, name="employer_job_edit"),
-    path(
-        "dashboard/applications/<int:pk>/status/",
-        jobs_views.application_status,
-        name="employer_application_status",
-    ),
     path("profile/", accounts_views.profile_edit, name="profile"),
+    path("staff/enquiries/", enquiries_views.staff_enquiries, name="staff_enquiries"),
+    path(
+        "staff/enquiries/<int:pk>/status/",
+        enquiries_views.staff_enquiry_status,
+        name="staff_enquiry_status",
+    ),
+    path("staff/jobs/", jobs_views.staff_jobs, name="staff_jobs"),
+    path(
+        "staff/jobs/<int:pk>/publish/",
+        jobs_views.staff_job_publish,
+        name="staff_job_publish",
+    ),
+    path("staff/applications/", jobs_views.staff_applications, name="staff_applications"),
+    path(
+        "staff/applications/<int:pk>/status/",
+        jobs_views.staff_application_status,
+        name="staff_application_status",
+    ),
+    path("staff/programmes/", training_views.staff_programmes, name="staff_programmes"),
+    path(
+        "staff/programmes/<int:pk>/toggle/",
+        training_views.staff_programme_toggle,
+        name="staff_programme_toggle",
+    ),
+    path(
+        "staff/registrations/", training_views.staff_registrations, name="staff_registrations"
+    ),
+    path(
+        "staff/registrations/<int:pk>/status/",
+        training_views.staff_registration_status,
+        name="staff_registration_status",
+    ),
     path("admin/", admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

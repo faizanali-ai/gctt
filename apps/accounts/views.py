@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
@@ -7,11 +7,9 @@ from django_ratelimit.decorators import ratelimit
 
 from apps.enquiries.models import Enquiry
 from apps.jobs.models import Application, Job
-from apps.training.models import Registration
+from apps.training.models import Programme, Registration
 
 from .forms import ProfileForm, SignupForm
-
-User = get_user_model()
 
 
 def signup(request):
@@ -33,10 +31,6 @@ def login_view(request, *args, **kwargs):
 def dashboard(request):
     if request.user.is_staff:
         return _staff_dashboard(request)
-    if request.user.is_employer:
-        from apps.jobs.views import employer_dashboard
-
-        return employer_dashboard(request)
     return render(
         request,
         "accounts/dashboard.html",
@@ -48,23 +42,31 @@ def dashboard(request):
 
 
 def _staff_dashboard(request):
+    user = request.user
+    sections = []
+
+    def add(label, url_name, perm, count, note=""):
+        if user.has_perm(perm):
+            sections.append({"label": label, "url": url_name, "count": count, "note": note})
+
+    add("Enquiries", "staff_enquiries", "enquiries.view_enquiry",
+        Enquiry.objects.filter(status=Enquiry.Status.NEW).count(), "new")
+    add("Jobs", "staff_jobs", "jobs.view_job",
+        Job.objects.count(), f"{Job.objects.filter(published=False).count()} awaiting review")
+    add("Applications", "staff_applications", "jobs.view_application",
+        Application.objects.count())
+    add("Programmes", "staff_programmes", "training.view_programme",
+        Programme.objects.count(), f"{Programme.objects.filter(published=False).count()} drafts")
+    add("Registrations", "staff_registrations", "training.view_registration",
+        Registration.objects.count())
+
     return render(
         request,
         "accounts/staff_dashboard.html",
         {
-            "counts": {
-                "candidates": User.objects.filter(account_type=User.AccountType.CANDIDATE).count(),
-                "students": User.objects.filter(account_type=User.AccountType.STUDENT).count(),
-                "employers": User.objects.filter(account_type=User.AccountType.EMPLOYER).count(),
-                "jobs": Job.objects.filter(published=True).count(),
-                "drafts": Job.objects.filter(published=False).count(),
-                "applications": Application.objects.count(),
-                "registrations": Registration.objects.count(),
-                "new_enquiries": Enquiry.objects.filter(status=Enquiry.Status.NEW).count(),
-            },
-            "latest_enquiries": Enquiry.objects.all()[:5],
-            "latest_applications": Application.objects.select_related("job", "applicant")[:5],
-            "latest_registrations": Registration.objects.select_related("programme", "student")[:5],
+            "sections": sections,
+            "is_ceo": user.is_superuser,
+            "can_use_admin": user.is_superuser or user.has_perm("jobs.delete_job"),
         },
     )
 
