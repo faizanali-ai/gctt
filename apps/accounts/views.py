@@ -6,10 +6,13 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect, render
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.http import require_POST
@@ -123,6 +126,138 @@ def profile_edit(request):
         messages.success(request, "Profile saved.")
         return redirect("profile")
     return render(request, "accounts/profile_edit.html", {"form": form})
+
+
+def _require_user_manager(request):
+    if not request.user.can_manage_users:
+        raise PermissionDenied
+
+
+@login_required
+def manage_users(request):
+    _require_user_manager(request)
+    users = User.objects.exclude(role=User.Role.OWNER).select_related()
+    q = request.GET.get("q", "").strip()
+    role = request.GET.get("role", "")
+    if q:
+        users = users.filter(
+            Q(email__icontains=q)
+            | Q(first_name__icontains=q)
+            | Q(last_name__icontains=q)
+        )
+    if role:
+        users = users.filter(role=role)
+    page_obj = Paginator(users.order_by("role", "email"), 25).get_page(request.GET.get("page"))
+    return render(
+        request,
+        "portals/users.html",
+        {
+            "page_obj": page_obj,
+            "q": q,
+            "role": role,
+            "roles": [choice for choice in User.Role.choices if choice[0] != User.Role.OWNER],
+        },
+    )
+
+
+@login_required
+def manage_user_create(request):
+    _require_user_manager(request)
+    assignable = request.user.assignable_roles()
+    if request.method == "POST":
+        email = request.POST.get("email", "").strip().lower()
+        role = request.POST.get("role", "")
+        first_name = request.POST.get("first_name", "").strip()
+        last_name = request.POST.get("last_name", "").strip()
+        group_name = request.POST.get("group", "")
+        password = request.POST.get("password", "")
+        error = None
+        if role not in [value for value, _ in assignable]:
+            error = "You cannot assign that role."
+        elif not email:
+            error = "Email is required."
+        elif User.objects.filter(email=email).exists():
+            error = "A user with that email already exists."
+        elif len(password) < 8:
+            error = "Set a temporary password of at least 8 characters."
+        if error:
+            messages.error(request, error)
+        else:
+            user = User.objects.create_user(
+                email=email,
+                password=password,
+                first_name=first_name,
+                last_name=last_name,
+                role=role,
+                is_staff=True,
+            )
+            if role == User.Role.STAFF and group_name:
+                user.groups.set(Group.objects.filter(name=group_name))
+            elif role != User.Role.STAFF:
+                # CEO and superadmins get full business permissions.
+                user.groups.set(Group.objects.filter(name="Admin"))
+            messages.success(
+                request, f"{email} added as {user.get_role_display()}."
+            )
+            return redirect("manage_users")
+    return render(
+        request,
+        "portals/user_form.html",
+        {
+            "mode": "create",
+            "assignable": assignable,
+            "groups": Group.objects.all(),
+        },
+    )
+
+
+@login_required
+def manage_user_edit(request, pk):
+    _require_user_manager(request)
+    target = get_object_or_404(User.objects.exclude(role=User.Role.OWNER), pk=pk)
+    if not request.user.can_manage_account(target):
+        raise PermissionDenied
+    assignable = [
+        choice
+        for choice in request.user.assignable_roles()
+        if choice[0] != target.role or True
+    ]
+    if target.role not in [value for value, _ in assignable]:
+        assignable.append((target.role, target.get_role_display()))
+    if request.method == "POST":
+        role = request.POST.get("role", target.role)
+        if role not in [value for value, _ in assignable]:
+            messages.error(request, "You cannot assign that role.")
+        elif target == request.user and request.POST.get("is_active") != "on":
+            messages.error(request, "You cannot deactivate your own account.")
+        else:
+            target.first_name = request.POST.get("first_name", "").strip()
+            target.last_name = request.POST.get("last_name", "").strip()
+            target.phone = request.POST.get("phone", "").strip()
+            target.role = role
+            target.is_active = request.POST.get("is_active") == "on"
+            target.is_staff = True
+            target.save()
+            if role == User.Role.STAFF:
+                target.groups.set(Group.objects.filter(name=request.POST.get("group", "")))
+            else:
+                target.groups.set(Group.objects.filter(name="Admin"))
+            new_password = request.POST.get("password", "").strip()
+            if len(new_password) >= 8:
+                target.set_password(new_password)
+                target.save(update_fields=["password"])
+            messages.success(request, "User updated.")
+            return redirect("manage_users")
+    return render(
+        request,
+        "portals/user_form.html",
+        {
+            "mode": "edit",
+            "target": target,
+            "assignable": assignable,
+            "groups": Group.objects.all(),
+        },
+    )
 
 
 def _qr_svg(url):

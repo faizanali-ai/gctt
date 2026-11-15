@@ -1,0 +1,94 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}GCTT{% endblock %}</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="{% static 'images/logo-small.webp' %}">
+  <link rel="stylesheet" href="{% static 'css/output.css' %}">
+</head>
+<body class="min-h-screen bg-surface font-sans text-ink antialiased">
+  <div class="flex min-h-screen">
+    <aside class="hidden w-64 shrink-0 flex-col bg-brand text-paper lg:flex">
+      <a href="{% url 'dashboard' %}" class="flex h-16 items-center gap-2 border-b border-paper/10 px-5">
+        <img src="{% static 'images/logo-small.webp' %}" alt="GCTT" class="h-8 w-auto">
+        <span class="text-sm font-semibold tracking-wide">{% if user.is_staff %}{{ user.get_role_display }}{% else %}Portal{% endif %}</span>
+      </a>
+      <nav class="flex-1 space-y-1 px-3 py-5 text-sm" aria-label="Portal">
+        <a href="{% url 'dashboard' %}" class="block rounded-md px-3 py-2 hover:bg-paper/10 {% if request.path == '/dashboard/' %}bg-paper/10 font-semibold{% endif %}">Dashboard</a>
+        {% if perms.enquiries.view_enquiry %}
+          <a href="{% url 'staff_enquiries' %}" class="block rounded-md px-3 py-2 hover:bg-paper/10">Enquiries</a>
+        {% endif %}
+        {% if perms.jobs.view_job %}
+          <a href="{% url 'staff_jobs' %}" class="block rounded-md px-3 py-2 hover:bg-paper/10">Jobs</a>
+        {% endif %}
+        {% if perms.jobs.view_application %}
+          <a href="{% url 'staff_applications' %}" class="block rounded-md px-3 py-2 hover:bg-paper/10">Applications</a>
+        {% endif %}
+        {% if perms.training.view_programme %}
+          <a href="{% url 'staff_programmes' %}" class="block rounded-md px-3 py-2 hover:bg-paper/10">Programmes</a>
+        {% endif %}
+        {% if perms.training.view_registration %}
+          <a href="{% url 'staff_registrations' %}" class="block rounded-md px-3 py-2 hover:bg-paper/10">Registrations</a>
+        {% endif %}
+        {% if user.can_manage_users %}
+          <p class="mt-5 px-3 text-xs font-semibold uppercase tracking-[0.1em] text-paper/40">Administration</p>
+          <a href="{% url 'manage_users' %}" class="block rounded-md px-3 py-2 hover:bg-paper/10">Users &amp; roles</a>
+        {% endif %}
+        {% if user.is_owner %}
+          <a href="{% url 'admin:index' %}" class="block rounded-md px-3 py-2 hover:bg-paper/10">Database admin</a>
+        {% endif %}
+        {% if user.is_staff %}
+          <p class="mt-5 px-3 text-xs font-semibold uppercase tracking-[0.1em] text-paper/40">Account</p>
+          <a href="{% url 'security' %}" class="block rounded-md px-3 py-2 hover:bg-paper/10">Two-factor</a>
+        {% endif %}
+      </nav>
+      <div class="border-t border-paper/10 p-4 text-xs">
+        <p class="truncate text-paper/70">{{ user.email }}</p>
+        <p class="mt-0.5 text-paper/40">{% if user.is_staff %}{{ user.get_role_display }}{% endif %}</p>
+        <form method="post" action="{% url 'logout' %}" class="mt-3">
+          {% csrf_token %}
+          <button type="submit" class="font-semibold text-paper hover:text-white">Log out</button>
+        </form>
+      </div>
+    </aside>
+
+    <div class="flex min-h-screen flex-1 flex-col">
+      <header class="flex h-16 items-center justify-between border-b border-line bg-paper px-4 lg:px-8">
+        <div class="flex items-center gap-3">
+          <details class="lg:hidden">
+            <summary class="cursor-pointer list-none rounded-md border border-line px-3 py-2 text-sm font-medium">Menu</summary>
+            <nav class="absolute left-0 right-0 top-16 z-30 space-y-1 border-b border-line bg-paper px-4 py-4 text-sm shadow-sm">
+              <a href="{% url 'dashboard' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Dashboard</a>
+              {% if perms.enquiries.view_enquiry %}<a href="{% url 'staff_enquiries' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Enquiries</a>{% endif %}
+              {% if perms.jobs.view_job %}<a href="{% url 'staff_jobs' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Jobs</a>{% endif %}
+              {% if perms.jobs.view_application %}<a href="{% url 'staff_applications' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Applications</a>{% endif %}
+              {% if perms.training.view_programme %}<a href="{% url 'staff_programmes' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Programmes</a>{% endif %}
+              {% if perms.training.view_registration %}<a href="{% url 'staff_registrations' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Registrations</a>{% endif %}
+              {% if user.can_manage_users %}<a href="{% url 'manage_users' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Users &amp; roles</a>{% endif %}
+              {% if user.is_staff %}<a href="{% url 'security' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Two-factor</a>{% endif %}
+              <form method="post" action="{% url 'logout' %}" class="px-3 pt-2">{% csrf_token %}<button type="submit" class="font-semibold hover:text-accent">Log out</button></form>
+            </nav>
+          </details>
+          <p class="text-sm font-semibold">{% block portal_title %}Portal{% endblock %}</p>
+        </div>
+        <div class="flex items-center gap-3 text-sm">
+          <a href="{% url 'home' %}" class="text-ink/60 hover:text-ink">View site</a>
+          <a href="{% url 'profile' %}" class="text-ink/60 hover:text-ink">Profile</a>
+        </div>
+      </header>
+      <main class="flex-1 px-4 py-8 lg:px-8">
+        {% if messages %}
+          <div class="mb-6 space-y-2">
+            {% for message in messages %}
+              <p class="rounded-md border px-4 py-3 text-sm {% if message.tags == 'success' %}border-brand/25 bg-paper text-brand{% else %}border-accent/30 bg-accent/5 text-accent{% endif %}">{{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+</body>
+</html>

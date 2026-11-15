@@ -24,12 +24,19 @@ class User(AbstractUser):
         CANDIDATE = "candidate", "Candidate"
         STUDENT = "student", "Training Student"
 
+    class Role(models.TextChoices):
+        OWNER = "owner", "Owner"
+        SUPERADMIN = "superadmin", "Superadmin"
+        CEO = "ceo", "CEO"
+        STAFF = "staff", "Staff"
+
     username = None
     email = models.EmailField("email address", unique=True)
     phone = models.CharField(max_length=40, blank=True)
     account_type = models.CharField(
         max_length=20, choices=AccountType.choices, default=AccountType.CANDIDATE
     )
+    role = models.CharField(max_length=20, choices=Role.choices, default=Role.STAFF)
     email_verified = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"
@@ -51,6 +58,49 @@ class User(AbstractUser):
     @property
     def is_student(self):
         return self.account_type == self.AccountType.STUDENT
+
+    @property
+    def is_owner(self):
+        return self.role == self.Role.OWNER and self.is_active
+
+    @property
+    def is_superadmin(self):
+        return self.role == self.Role.SUPERADMIN and self.is_active
+
+    @property
+    def is_ceo(self):
+        return self.role == self.Role.CEO and self.is_active
+
+    @property
+    def is_portal_staff(self):
+        return self.is_staff
+
+    @property
+    def can_manage_users(self):
+        return self.role in (self.Role.OWNER, self.Role.SUPERADMIN, self.Role.CEO)
+
+    def assignable_roles(self):
+        """(value, label) pairs this account may grant to someone else."""
+        if self.role == self.Role.OWNER:
+            roles = [self.Role.SUPERADMIN, self.Role.CEO, self.Role.STAFF]
+        elif self.role == self.Role.SUPERADMIN:
+            roles = [self.Role.CEO, self.Role.STAFF]
+        elif self.role == self.Role.CEO:
+            roles = [self.Role.STAFF]
+        else:
+            roles = []
+        return [(role.value, role.label) for role in roles]
+
+    def can_manage_account(self, other):
+        if other.role == self.Role.OWNER:
+            return False
+        if self.role == self.Role.OWNER:
+            return True
+        if self.role == self.Role.SUPERADMIN:
+            return other.role != self.Role.SUPERADMIN
+        if self.role == self.Role.CEO:
+            return other.role == self.Role.STAFF
+        return False
 
 
 class TeamProfile(models.Model):

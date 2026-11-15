@@ -17,6 +17,10 @@ from .sitemaps import JobSitemap, ProgrammeSitemap, StaticSitemap
 admin.site.site_header = "GCTT Administration"
 admin.site.site_title = "GCTT Admin"
 admin.site.index_title = "Operations"
+# Only the Owner uses raw Django Admin; everyone else works in the portal.
+admin.site.has_permission = lambda request: (
+    request.user.is_active and request.user.is_superuser and request.user.is_owner
+)
 
 # Throttle the admin login before admin.site.urls builds its URL patterns.
 admin.site.login = ratelimit(key="ip", rate="10/m", method="POST", block=True)(
@@ -63,6 +67,9 @@ urlpatterns = [
         name="withdraw_application",
     ),
     path("profile/", accounts_views.profile_edit, name="profile"),
+    path("manage/users/", accounts_views.manage_users, name="manage_users"),
+    path("manage/users/new/", accounts_views.manage_user_create, name="manage_user_create"),
+    path("manage/users/<int:pk>/", accounts_views.manage_user_edit, name="manage_user_edit"),
     path("staff/enquiries/", enquiries_views.staff_enquiries, name="staff_enquiries"),
     path(
         "staff/enquiries/<int:pk>/status/",
