@@ -39,6 +39,5 @@ NAV_ITEMS = [
     {"label": "Training", "url": "/training/"},
     {"label": "Careers", "url": "/careers/"},
     {"label": "Career Restart", "url": "/career-restart/"},
-    {"label": "For Employers", "url": "/employers/"},
     {"label": "Contact", "url": "/contact/"},
 ]

@@ -4,7 +4,7 @@
 {% block content %}
 
 <section class="bg-brand text-paper">
-  <div class="mx-auto grid max-w-7xl items-center gap-10 px-6 py-16 md:py-24 lg:grid-cols-[1.05fr_1fr]">
+  <div class="mx-auto grid max-w-7xl gap-10 px-6 py-16 md:py-24 lg:grid-cols-[1.05fr_1fr]">
     <div>
       <p class="text-xs font-semibold uppercase tracking-[0.1em] text-paper/60">{{ COMPANY.tagline }}</p>
       <h1 class="rise mt-5 display-xl">Had a break in your career?</h1>
@@ -28,8 +28,8 @@
         </div>
       </dl>
     </div>
-    <div class="relative">
-      <img src="{% static 'images/hero-office.jpg' %}" alt="Professional walking through an office building" class="h-64 w-full rounded-lg object-cover md:h-96" fetchpriority="high">
+    <div class="relative min-h-[260px] overflow-hidden rounded-lg lg:min-h-0">
+      <img src="{% static 'images/hero-office.jpg' %}" alt="Professional walking through an office building" class="absolute inset-0 h-full w-full object-cover object-[72%_center]" fetchpriority="high">
     </div>
   </div>
 </section>

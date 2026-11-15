@@ -25,6 +25,10 @@ class EnquiryForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.setdefault("class", INPUT)
+        self.fields["name"].widget.attrs.setdefault("autocomplete", "name")
+        self.fields["email"].widget.attrs.setdefault("autocomplete", "email")
+        self.fields["phone"].widget.attrs.setdefault("autocomplete", "tel")
+        self.fields["company"].widget.attrs.setdefault("autocomplete", "organization")
 
     def clean_website(self):
         if self.cleaned_data.get("website"):

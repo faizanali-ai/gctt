@@ -18,6 +18,11 @@ class SignupForm(UserCreationForm):
         for name, field in self.fields.items():
             if name != "account_type":
                 field.widget.attrs.setdefault("class", INPUT)
+        self.fields["email"].widget.attrs.setdefault("autocomplete", "email")
+        self.fields["first_name"].widget.attrs.setdefault("autocomplete", "given-name")
+        self.fields["last_name"].widget.attrs.setdefault("autocomplete", "family-name")
+        self.fields["password1"].widget.attrs.setdefault("autocomplete", "new-password")
+        self.fields["password2"].widget.attrs.setdefault("autocomplete", "new-password")
 
 
 class ProfileForm(forms.ModelForm):
