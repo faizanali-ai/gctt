@@ -20,6 +20,7 @@ from .models import User
 INPUT = "w-full rounded-sm border border-line bg-white px-4 py-2.5"
 
 
+@ratelimit(key="ip", rate="10/h", method="POST", block=True)
 def signup(request):
     form = SignupForm(request.POST or None)
     if request.method == "POST" and form.is_valid():

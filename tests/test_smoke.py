@@ -36,6 +36,11 @@ class SmokeTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse("login"), response.url)
 
+    def test_healthz(self):
+        response = self.client.get("/healthz/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"ok")
+
     def test_slug_collisions_get_suffix(self):
         first = Job.objects.create(title="Duplicate Title", location="x", description="x")
         second = Job.objects.create(title="Duplicate Title", location="x", description="x")

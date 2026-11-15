@@ -1,6 +1,11 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from apps.accounts.models import TeamProfile
+
+
+def healthz(request):
+    return HttpResponse("ok", content_type="text/plain")
 
 
 def page(request, template):

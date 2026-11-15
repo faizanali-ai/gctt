@@ -1,12 +1,25 @@
 import os
 from pathlib import Path
 
+import dj_database_url
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# shortcut: single settings file, split base/production when Railway deploy lands
+DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-insecure-key-change-me")
-DEBUG = True
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+if not DEBUG and SECRET_KEY == "dev-only-insecure-key-change-me":
+    raise RuntimeError("Set DJANGO_SECRET_KEY before running with DJANGO_DEBUG=0")
+
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+    if host.strip()
+]
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
+    if origin.strip()
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -24,6 +37,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -54,10 +68,9 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}", conn_max_age=600
+    )
 }
 
 AUTH_USER_MODEL = "accounts.User"
@@ -76,9 +89,27 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-# shortcut: local disk uploads, switch to Cloudflare R2/django-storages at deploy
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
+}
+
+# Cloudflare R2 (S3-compatible) when configured; local disk otherwise.
+if os.environ.get("R2_BUCKET"):
+    AWS_ACCESS_KEY_ID = os.environ["R2_ACCESS_KEY_ID"]
+    AWS_SECRET_ACCESS_KEY = os.environ["R2_SECRET_ACCESS_KEY"]
+    AWS_STORAGE_BUCKET_NAME = os.environ["R2_BUCKET"]
+    AWS_S3_ENDPOINT_URL = os.environ["R2_ENDPOINT"]
+    AWS_S3_REGION_NAME = "auto"
+    AWS_DEFAULT_ACL = None
+    AWS_QUERYSTRING_AUTH = False
+    MEDIA_URL = os.environ["R2_PUBLIC_URL"]
+    STORAGES["default"] = {"BACKEND": "storages.backends.s3.S3Storage"}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -86,8 +117,7 @@ LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "home"
 
-DEFAULT_FROM_EMAIL = "Accounts@gctekton.com"
-# shortcut: console backend by default; set EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend + host/user/pass for Resend
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Accounts@gctekton.com")
 EMAIL_BACKEND = os.environ.get(
     "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
 )
@@ -96,3 +126,12 @@ EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = True
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
