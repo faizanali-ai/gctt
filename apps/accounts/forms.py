@@ -24,6 +24,14 @@ class SignupForm(UserCreationForm):
         self.fields["password1"].widget.attrs.setdefault("autocomplete", "new-password")
         self.fields["password2"].widget.attrs.setdefault("autocomplete", "new-password")
 
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip().lower()
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError(
+                "An account with this email already exists. Use the log-in page instead."
+            )
+        return email
+
 
 class ProfileForm(forms.ModelForm):
     class Meta:
