@@ -251,6 +251,23 @@ class ApplicationRuleTests(TestCase):
         )
         self.assertTrue(Application.objects.exists())
 
+    def test_storage_failure_shows_friendly_message(self):
+        from unittest.mock import patch
+
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        user = User.objects.create_user(email="f@example.com", password="test-pass-12345")
+        job = Job.objects.create(title="Dev", location="x", description="x", published=True)
+        self.client.force_login(user)
+        with patch.object(Application, "save", side_effect=OSError("storage down")):
+            response = self.client.post(
+                reverse("job_apply", args=[job.slug]),
+                {"resume": SimpleUploadedFile("cv.pdf", b"%PDF-1.4"), "message": "Keen"},
+                follow=True,
+            )
+        self.assertContains(response, "couldn&#x27;t store your application")
+        self.assertFalse(Application.objects.exists())
+
     def test_candidate_can_withdraw_own_application(self):
         user = User.objects.create_user(email="w@example.com", password="test-pass-12345")
         job = Job.objects.create(title="Dev", location="x", description="x", published=True)

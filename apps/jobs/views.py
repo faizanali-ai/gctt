@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
@@ -24,6 +26,8 @@ STAFF_STATUSES = {
     Application.Status.REJECTED,
     Application.Status.SELECTED,
 }
+
+logger = logging.getLogger(__name__)
 
 
 def job_list(request):
@@ -84,6 +88,14 @@ def job_apply(request, slug):
             notify_staff_new_application(application)
         except IntegrityError:
             messages.error(request, "You have already applied to this job.")
+        except Exception:
+            # Storage or DB failure: never surface a 500 with a lost submission.
+            logger.exception("Application submission failed for job %s", job.pk)
+            messages.error(
+                request,
+                "We couldn't store your application just now. Please try again in a "
+                "moment, or email Jobs@gctekton.com.",
+            )
         return redirect("job_detail", slug=job.slug)
     return render(
         request,
