@@ -11,8 +11,15 @@ class EnquiryForm(forms.ModelForm):
 
     class Meta:
         model = Enquiry
-        fields = ("name", "email", "phone", "category", "message")
+        fields = ("name", "email", "phone", "company", "area", "how_heard", "message")
         widgets = {"message": forms.Textarea(attrs={"rows": 4})}
+        labels = {
+            "company": "Company (optional)",
+            "area": "Area of interest (optional)",
+            "how_heard": "How did you hear about us? (optional)",
+            "phone": "Contact number (optional)",
+            "message": "Message",
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

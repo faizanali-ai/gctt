@@ -33,6 +33,7 @@ class Programme(models.Model):
     )
     schedule = models.CharField(max_length=200, blank=True)
     duration = models.CharField(max_length=100, blank=True)
+    image_url = models.URLField(blank=True)
     description = models.TextField()
     registration_open = models.BooleanField(default=False)
     published = models.BooleanField(default=False, db_index=True)

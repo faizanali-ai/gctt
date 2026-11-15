@@ -24,6 +24,10 @@
         <a href="{% url 'dashboard' %}" class="mt-4 inline-block font-semibold text-brand hover:text-accent">View your applications →</a>
       {% elif user.is_authenticated %}
         <h2 class="font-display text-lg font-semibold">Apply for this role</h2>
+        <p class="mt-2 text-sm text-ink/60">
+          Applying as {{ user.display_name }} · {{ user.email }}{% if user.phone %} · {{ user.phone }}{% endif %}
+          — <a href="{% url 'profile' %}" class="font-semibold text-brand hover:text-accent">edit profile</a>
+        </p>
         <form method="post" action="{% url 'job_apply' job.slug %}" enctype="multipart/form-data" class="mt-4 space-y-4">
           {% csrf_token %}
           <label class="block">
@@ -32,7 +36,7 @@
             {% if form.resume.errors %}<span class="mt-1 block text-sm text-accent">{{ form.resume.errors.0 }}</span>{% endif %}
           </label>
           <label class="block">
-            <span class="mb-1 block text-sm font-medium">Message (optional)</span>
+            <span class="mb-1 block text-sm font-medium">Your experience and why this role suits you</span>
             {{ form.message }}
             {% if form.message.errors %}<span class="mt-1 block text-sm text-accent">{{ form.message.errors.0 }}</span>{% endif %}
           </label>

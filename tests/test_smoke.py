@@ -60,7 +60,10 @@ class SmokeTests(TestCase):
 
         response = self.client.post(
             reverse("job_apply", args=[self.job.slug]),
-            {"resume": SimpleUploadedFile("cv.pdf", b"%PDF-1.4")},
+            {
+                "resume": SimpleUploadedFile("cv.pdf", b"%PDF-1.4"),
+                "message": "I'm keen",
+            },
             follow=True,
         )
         self.assertEqual(Application.objects.count(), 1)

@@ -7,7 +7,11 @@ class ApplicationForm(forms.ModelForm):
     class Meta:
         model = Application
         fields = ("resume", "message")
-        widgets = {"message": forms.Textarea(attrs={"rows": 4})}
+        widgets = {"message": forms.Textarea(attrs={"rows": 4, "placeholder": "Your experience and why this role suits you"})}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["message"].required = True
 
     def clean_resume(self):
         resume = self.cleaned_data["resume"]

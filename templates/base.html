@@ -5,11 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ COMPANY.name }} — {{ COMPANY.legal_name }}{% endblock %}</title>
   <meta name="description" content="{% block description %}{{ COMPANY.tagline }} IT staffing, recruitment, talent acquisition and training."{% endblock %}">
-  <meta property="og:title" content="{{ COMPANY.name }}">
-  <meta property="og:description" content="{{ COMPANY.tagline }}">
+  <meta property="og:title" content="{% block og_title %}{{ COMPANY.name }} — {{ COMPANY.legal_name }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{{ COMPANY.tagline }} IT staffing, recruitment, talent acquisition and training.{% endblock %}">
   <meta property="og:type" content="website">
+  <meta property="og:image" content="{{ COMPANY.url }}{% static 'images/og-gctt-v2.jpg' %}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{{ COMPANY.url }}{% static 'images/og-gctt-v2.jpg' %}">
+  <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
   <link rel="icon" href="{% static 'images/logo-small.webp' %}">
   <link rel="stylesheet" href="{% static 'css/output.css' %}">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "{{ COMPANY.name|escapejs }}",
+    "legalName": "{{ COMPANY.legal_name|escapejs }}",
+    "url": "{{ COMPANY.url|escapejs }}",
+    "email": "{{ COMPANY.email|escapejs }}",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "2612 Laramie St",
+      "addressLocality": "Irving",
+      "addressRegion": "TX",
+      "postalCode": "75062",
+      "addressCountry": "US"
+    }
+  }
+  </script>
 </head>
 <body class="min-h-screen bg-paper font-sans text-ink">
   {% include "partials/_header.html" %}

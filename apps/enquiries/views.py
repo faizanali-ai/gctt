@@ -20,12 +20,26 @@ def _safe_next(name):
         return reverse("home")
 
 
+CATEGORY_BY_PAGE = {
+    "it_staffing": Enquiry.Category.IT_STAFFING,
+    "recruitment": Enquiry.Category.RECRUITMENT,
+    "talent_acquisition": Enquiry.Category.TALENT_ACQUISITION,
+    "career_restart": Enquiry.Category.CAREER_RESTART,
+    "employers": Enquiry.Category.EMPLOYER_INTAKE,
+    "training": Enquiry.Category.TRAINING,
+}
+
+
 @require_POST
 @ratelimit(key="ip", rate="10/h", method="POST", block=True)
 def submit_enquiry(request):
     form = EnquiryForm(request.POST)
     if form.is_valid():
-        enquiry = form.save()
+        enquiry = form.save(commit=False)
+        enquiry.category = CATEGORY_BY_PAGE.get(
+            request.POST.get("next", ""), Enquiry.Category.GENERAL
+        )
+        enquiry.save()
         notify_enquiry(enquiry)
         messages.success(request, "Thank you — we'll be in touch shortly.")
     else:

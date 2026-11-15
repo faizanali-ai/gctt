@@ -1,7 +1,9 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
+from django.views.generic import TemplateView
 
 from apps.accounts import views as accounts_views
 from apps.enquiries import views as enquiries_views
@@ -9,6 +11,13 @@ from apps.jobs import views as jobs_views
 from apps.training import views as training_views
 
 from . import views
+from .sitemaps import JobSitemap, ProgrammeSitemap, StaticSitemap
+
+sitemaps = {
+    "static": StaticSitemap,
+    "jobs": JobSitemap,
+    "programmes": ProgrammeSitemap,
+}
 
 urlpatterns = [
     path("", views.page, {"template": "home"}, name="home"),
@@ -77,4 +86,10 @@ urlpatterns = [
         name="staff_registration_certificate",
     ),
     path("admin/", admin.site.urls),
+    path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
+    path(
+        "robots.txt",
+        TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
+        name="robots",
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

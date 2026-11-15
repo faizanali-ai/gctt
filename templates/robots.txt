@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /dashboard/
+Disallow: /staff/
+Disallow: /profile/
+Disallow: /enquiries/
+
+Sitemap: https://gctekton.com/sitemap.xml

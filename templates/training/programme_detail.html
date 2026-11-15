@@ -14,6 +14,9 @@
         {% if programme.category %} · {{ programme.category.name }}{% endif %}
       </p>
       <div class="mt-6 whitespace-pre-line text-lg text-ink/80">{{ programme.description }}</div>
+      {% if programme.image_url %}
+        <img src="{{ programme.image_url }}" alt="" class="mt-8 w-full rounded-sm border border-line object-cover" loading="lazy">
+      {% endif %}
       <a href="{% url 'training' %}" class="mt-8 inline-block font-semibold text-brand hover:text-accent">← All programmes</a>
     </div>
 

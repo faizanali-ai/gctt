@@ -68,7 +68,10 @@ class NotificationTests(TestCase):
 
         self.client.post(
             reverse("job_apply", args=[job.slug]),
-            {"resume": SimpleUploadedFile("cv.pdf", b"%PDF-1.4")},
+            {
+                "resume": SimpleUploadedFile("cv.pdf", b"%PDF-1.4"),
+                "message": "I'm keen",
+            },
         )
         self.assertTrue(Application.objects.exists())
         self.assertEqual(len(mail.outbox), 1)
@@ -189,3 +192,65 @@ class TeamProfileTests(TestCase):
         response = self.client.get(reverse("about"))
         self.assertContains(response, "Visible Person")
         self.assertNotContains(response, "Hidden Person")
+
+
+class EnquiryCategoryTests(TestCase):
+    def test_category_and_details_inferred_from_page(self):
+        from apps.enquiries.models import Enquiry
+
+        self.client.post(
+            reverse("submit_enquiry"),
+            {
+                "name": "Acme HR",
+                "email": "hr@acme.com",
+                "company": "Acme",
+                "area": "SAP",
+                "how_heard": "LinkedIn",
+                "message": "We need two SAP consultants.",
+                "next": "employers",
+            },
+        )
+        enquiry = Enquiry.objects.get()
+        self.assertEqual(enquiry.category, Enquiry.Category.EMPLOYER_INTAKE)
+        self.assertEqual(enquiry.company, "Acme")
+        self.assertEqual(enquiry.area, "SAP")
+        self.assertEqual(enquiry.how_heard, "LinkedIn")
+
+
+class ApplicationRuleTests(TestCase):
+    def test_message_is_required(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        user = User.objects.create_user(email="a@example.com", password="test-pass-12345")
+        job = Job.objects.create(title="Dev", location="x", description="x", published=True)
+        self.client.force_login(user)
+        self.client.post(
+            reverse("job_apply", args=[job.slug]),
+            {"resume": SimpleUploadedFile("cv.pdf", b"%PDF-1.4")},
+        )
+        self.assertFalse(Application.objects.exists())
+        self.client.post(
+            reverse("job_apply", args=[job.slug]),
+            {"resume": SimpleUploadedFile("cv.pdf", b"%PDF-1.4"), "message": "Keen"},
+        )
+        self.assertTrue(Application.objects.exists())
+
+
+class SeoTests(TestCase):
+    def test_sitemap_lists_static_and_job_urls(self):
+        job = Job.objects.create(title="Seo Job", location="x", description="x", published=True)
+        response = self.client.get("/sitemap.xml")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "/careers/")
+        self.assertContains(response, f"/careers/{job.slug}/")
+
+    def test_robots_points_to_sitemap(self):
+        response = self.client.get("/robots.txt")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Sitemap:")
+
+    def test_home_has_structured_data_and_og_image(self):
+        response = self.client.get("/")
+        self.assertContains(response, '"@type": "Organization"')
+        self.assertContains(response, "og-gctt-v2.jpg")
+        self.assertContains(response, 'rel="canonical"')
