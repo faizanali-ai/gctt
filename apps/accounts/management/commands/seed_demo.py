@@ -72,7 +72,9 @@ class Command(BaseCommand):
             enquiries = Enquiry.objects.filter(name="Deploy Smoke Test").delete()[0]
             from django.contrib.auth import get_user_model
 
-            qa = get_user_model().objects.filter(email="qa.smoke@example.com").delete()[0]
+            qa = get_user_model().objects.filter(
+                email__in=["qa.smoke@example.com", "qa.apply@example.com"]
+            ).delete()[0]
             self.stdout.write(self.style.SUCCESS(f"Removed {enquiries} enquiry row(s), {qa} QA user(s)."))
             return
 
