@@ -26,7 +26,9 @@ services:
       - key: DATABASE_URL
         sync: false
       - key: EMAIL_BACKEND
-        value: django.core.mail.backends.smtp.EmailBackend
+        # console until Resend is verified; then switch to
+        # django.core.mail.backends.smtp.EmailBackend and set EMAIL_HOST_PASSWORD
+        value: django.core.mail.backends.console.EmailBackend
       - key: EMAIL_HOST
         value: smtp.resend.com
       - key: EMAIL_PORT
