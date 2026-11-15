@@ -1,9 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import NoReverseMatch, reverse
 from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
+
+from config.emails import notify_enquiry
 
 from .forms import EnquiryForm
 from .models import Enquiry
@@ -21,7 +25,8 @@ def _safe_next(name):
 def submit_enquiry(request):
     form = EnquiryForm(request.POST)
     if form.is_valid():
-        form.save()
+        enquiry = form.save()
+        notify_enquiry(enquiry)
         messages.success(request, "Thank you — we'll be in touch shortly.")
     else:
         # shortcut: redirect drops partially-typed values, inline errors when forms move to HTMX
@@ -32,10 +37,30 @@ def submit_enquiry(request):
 @login_required
 @permission_required("enquiries.view_enquiry", raise_exception=True)
 def staff_enquiries(request):
+    enquiries = Enquiry.objects.all()
+    q = request.GET.get("q", "").strip()
+    status = request.GET.get("status", "")
+    category = request.GET.get("category", "")
+    if q:
+        enquiries = enquiries.filter(
+            Q(name__icontains=q) | Q(email__icontains=q) | Q(message__icontains=q)
+        )
+    if status:
+        enquiries = enquiries.filter(status=status)
+    if category:
+        enquiries = enquiries.filter(category=category)
+    page_obj = Paginator(enquiries, 25).get_page(request.GET.get("page"))
     return render(
         request,
         "staff/enquiries.html",
-        {"enquiries": Enquiry.objects.all(), "statuses": Enquiry.Status.choices},
+        {
+            "page_obj": page_obj,
+            "q": q,
+            "status": status,
+            "category": category,
+            "statuses": Enquiry.Status.choices,
+            "categories": Enquiry.Category.choices,
+        },
     )
 
 

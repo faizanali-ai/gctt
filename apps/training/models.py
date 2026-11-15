@@ -1,3 +1,5 @@
+import uuid
+
 from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
@@ -70,6 +72,9 @@ class Registration(models.Model):
     status = models.CharField(
         max_length=20, choices=Status.choices, default=Status.SUBMITTED, db_index=True
     )
+    certificate_issued = models.BooleanField(default=False)
+    certificate_ref = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    certificate_issued_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -80,3 +85,18 @@ class Registration(models.Model):
 
     def __str__(self):
         return f"{self.student} → {self.programme}"
+
+    def issue_certificate(self):
+        from django.utils import timezone
+
+        if not self.certificate_ref:
+            self.certificate_ref = f"GCTT-{uuid.uuid4().hex[:8].upper()}"
+        self.certificate_issued = True
+        self.certificate_issued_at = timezone.now()
+        self.save(update_fields=["certificate_issued", "certificate_ref", "certificate_issued_at"])
+
+    def revoke_certificate(self):
+        self.certificate_issued = False
+        self.certificate_ref = None
+        self.certificate_issued_at = None
+        self.save(update_fields=["certificate_issued", "certificate_ref", "certificate_issued_at"])

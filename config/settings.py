@@ -86,5 +86,12 @@ LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "home"
 
 DEFAULT_FROM_EMAIL = "Accounts@gctekton.com"
-# shortcut: console email backend, swap to Resend/django-anymail at deploy
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# shortcut: console backend by default; set EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend + host/user/pass for Resend
+EMAIL_BACKEND = os.environ.get(
+    "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
+)
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = True

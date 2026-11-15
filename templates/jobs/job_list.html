@@ -6,11 +6,17 @@
 <section class="mx-auto max-w-6xl px-6 py-16 md:py-24">
   <form method="get" class="flex flex-col gap-3 sm:flex-row">
     <input type="search" name="q" value="{{ q }}" placeholder="Search jobs by title, location or keyword" aria-label="Search jobs">
-    <button type="submit" class="rounded-sm bg-brand px-6 py-2.5 font-semibold text-paper transition hover:bg-accent sm:w-40">Search</button>
+    <select name="type" aria-label="Employment type" class="sm:w-44">
+      <option value="">All types</option>
+      {% for value, label in types %}
+        <option value="{{ value }}" {% if type == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="rounded-sm bg-brand px-6 py-2.5 font-semibold text-paper transition hover:bg-accent sm:w-32">Search</button>
   </form>
 
   <div class="mt-8 grid gap-4">
-    {% for job in jobs %}
+    {% for job in page_obj %}
       <a href="{% url 'job_detail' job.slug %}" class="rounded-sm border border-line bg-paper p-6 transition hover:border-accent hover:bg-white">
         <h2 class="font-display text-xl font-semibold">{{ job.title }}</h2>
         <p class="mt-1 text-sm text-ink/60">{{ job.location }} · {{ job.get_employment_type_display }}</p>
@@ -18,7 +24,7 @@
       </a>
     {% empty %}
       <div class="rounded-sm border border-dashed border-line bg-white/60 p-8 text-center">
-        {% if q %}
+        {% if q or type %}
           <p class="text-ink/70">No jobs match your search.</p>
           <a href="{% url 'careers' %}" class="mt-3 inline-block font-semibold text-brand hover:text-accent">Clear search</a>
         {% else %}
@@ -28,5 +34,7 @@
       </div>
     {% endfor %}
   </div>
+
+  {% include "partials/_pagination.html" %}
 </section>
 {% endblock %}

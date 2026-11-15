@@ -12,7 +12,7 @@ from . import views
 
 urlpatterns = [
     path("", views.page, {"template": "home"}, name="home"),
-    path("about/", views.page, {"template": "about"}, name="about"),
+    path("about/", views.about, name="about"),
     path("services/", views.page, {"template": "services"}, name="services"),
     path("it-staffing/", views.page, {"template": "it_staffing"}, name="it_staffing"),
     path("recruitment/", views.page, {"template": "recruitment"}, name="recruitment"),
@@ -70,6 +70,11 @@ urlpatterns = [
         "staff/registrations/<int:pk>/status/",
         training_views.staff_registration_status,
         name="staff_registration_status",
+    ),
+    path(
+        "staff/registrations/<int:pk>/certificate/",
+        training_views.staff_registration_certificate,
+        name="staff_registration_certificate",
     ),
     path("admin/", admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

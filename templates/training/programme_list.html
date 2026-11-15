@@ -15,12 +15,13 @@
     </div>
     <div class="rounded-sm border border-line bg-white p-6">
       <h2 class="font-display text-lg font-semibold">Certificates</h2>
-      <p class="mt-1 text-ink/70">Awarded on successful completion.</p>
+      <p class="mt-1 text-ink/70">Awarded on successful completion — <a href="{% url 'verify_certificate_form' %}" class="font-semibold text-brand hover:text-accent">verify a certificate</a>.</p>
     </div>
   </div>
 
   <h2 class="mb-5 mt-14 font-display text-2xl font-semibold md:text-3xl">Programmes</h2>
-  {% include "training/_programmes.html" %}
+  {% with programmes=page_obj %}{% include "training/_programmes.html" %}{% endwith %}
+  {% include "partials/_pagination.html" %}
 </section>
 
 <section class="border-t border-line bg-white/60">

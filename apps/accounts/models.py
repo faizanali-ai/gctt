@@ -15,6 +15,7 @@ class UserManager(DjangoUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("email_verified", True)
         return self.create_user(email, password, **extra_fields)
 
 
@@ -29,6 +30,7 @@ class User(AbstractUser):
     account_type = models.CharField(
         max_length=20, choices=AccountType.choices, default=AccountType.CANDIDATE
     )
+    email_verified = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -49,3 +51,25 @@ class User(AbstractUser):
     @property
     def is_student(self):
         return self.account_type == self.AccountType.STUDENT
+
+
+class TeamProfile(models.Model):
+    class Section(models.TextChoices):
+        TEAM = "team", "Team"
+        NETWORK = "network", "Network"
+
+    section = models.CharField(max_length=20, choices=Section.choices, default=Section.TEAM)
+    name = models.CharField(max_length=120)
+    designation = models.CharField(max_length=120, blank=True)
+    bio = models.TextField(blank=True)
+    linkedin_url = models.URLField(blank=True)
+    # shortcut: photo as URL instead of upload; switch to ImageField + R2 at deploy
+    photo_url = models.URLField(blank=True)
+    order = models.PositiveIntegerField(default=0)
+    published = models.BooleanField(default=False, db_index=True)
+
+    class Meta:
+        ordering = ["section", "order", "name"]
+
+    def __str__(self):
+        return f"{self.name} ({self.get_section_display()})"

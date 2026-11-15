@@ -1,10 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
 from django.db.models import Q
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
+
+from config.emails import notify_application
 
 from .forms import ApplicationForm
 from .models import Application, Job
@@ -20,15 +24,32 @@ STAFF_STATUSES = {
 def job_list(request):
     jobs = Job.objects.filter(published=True)
     q = request.GET.get("q", "").strip()
+    employment_type = request.GET.get("type", "")
     if q:
         jobs = jobs.filter(
             Q(title__icontains=q) | Q(location__icontains=q) | Q(description__icontains=q)
         )
-    return render(request, "jobs/job_list.html", {"jobs": jobs, "q": q})
+    if employment_type:
+        jobs = jobs.filter(employment_type=employment_type)
+    page_obj = Paginator(jobs, 10).get_page(request.GET.get("page"))
+    return render(
+        request,
+        "jobs/job_list.html",
+        {
+            "page_obj": page_obj,
+            "q": q,
+            "type": employment_type,
+            "types": Job.EmploymentType.choices,
+        },
+    )
 
 
 def job_detail(request, slug):
-    job = get_object_or_404(Job, slug=slug, published=True)
+    job = get_object_or_404(Job, slug=slug)
+    if not job.published and not (
+        request.user.is_staff and request.user.has_perm("jobs.view_job")
+    ):
+        raise Http404
     applied = (
         request.user.is_authenticated
         and job.applications.filter(applicant=request.user).exists()
@@ -54,6 +75,7 @@ def job_apply(request, slug):
             with transaction.atomic():
                 application.save()
             messages.success(request, "Your application has been sent.")
+            notify_application(application)
         except IntegrityError:
             messages.error(request, "You have already applied to this job.")
         return redirect("job_detail", slug=job.slug)
@@ -67,7 +89,19 @@ def job_apply(request, slug):
 @login_required
 @permission_required("jobs.view_job", raise_exception=True)
 def staff_jobs(request):
-    return render(request, "staff/jobs.html", {"jobs": Job.objects.all()})
+    jobs = Job.objects.all()
+    q = request.GET.get("q", "").strip()
+    published = request.GET.get("published", "")
+    if q:
+        jobs = jobs.filter(Q(title__icontains=q) | Q(location__icontains=q))
+    if published in ("true", "false"):
+        jobs = jobs.filter(published=published == "true")
+    page_obj = Paginator(jobs, 25).get_page(request.GET.get("page"))
+    return render(
+        request,
+        "staff/jobs.html",
+        {"page_obj": page_obj, "q": q, "published": published},
+    )
 
 
 @login_required
@@ -84,14 +118,35 @@ def staff_job_publish(request, pk):
 @login_required
 @permission_required("jobs.view_application", raise_exception=True)
 def staff_applications(request):
+    applications = Application.objects.select_related("job", "applicant")
+    q = request.GET.get("q", "").strip()
+    status = request.GET.get("status", "")
+    job = request.GET.get("job", "")
+    if q:
+        applications = applications.filter(
+            Q(applicant__email__icontains=q)
+            | Q(applicant__first_name__icontains=q)
+            | Q(applicant__last_name__icontains=q)
+            | Q(job__title__icontains=q)
+        )
+    if status:
+        applications = applications.filter(status=status)
+    if job:
+        applications = applications.filter(job_id=job)
+    page_obj = Paginator(applications, 25).get_page(request.GET.get("page"))
     return render(
         request,
         "staff/applications.html",
         {
-            "applications": Application.objects.select_related("job", "applicant"),
+            "page_obj": page_obj,
+            "q": q,
+            "status": status,
+            "job": job,
+            "jobs": Job.objects.all(),
             "statuses": [
                 choice for choice in Application.Status.choices if choice[0] in STAFF_STATUSES
             ],
+            "all_statuses": Application.Status.choices,
         },
     )
 
