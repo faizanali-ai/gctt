@@ -6,20 +6,14 @@
 <section class="mx-auto max-w-6xl px-6 py-16 md:py-24">
   <div class="grid gap-px overflow-hidden rounded-sm border border-line bg-line md:grid-cols-2">
     {% for service in SERVICES %}
-      <a href="{{ service.url }}" class="group flex items-start justify-between gap-4 bg-paper p-7 transition hover:bg-white">
-        <div>
-          <h2 class="font-display text-xl font-semibold">{{ service.title }}</h2>
-          <p class="mt-2 text-ink/70">{{ service.text }}</p>
-        </div>
-        <span class="mt-1 text-brand transition group-hover:translate-x-1 group-hover:text-accent">→</span>
+      <a href="{{ service.url }}" class="group block bg-paper p-7 hover:bg-white">
+        <h2 class="font-display text-xl font-semibold">{{ service.title }}</h2>
+        <p class="mt-2 text-ink/70">{{ service.text }}</p>
       </a>
     {% endfor %}
-    <a href="{% url 'sap_scrum' %}" class="group flex items-start justify-between gap-4 bg-paper p-7 transition hover:bg-white">
-      <div>
-        <h2 class="font-display text-xl font-semibold">SAP &amp; Scrum</h2>
-        <p class="mt-2 text-ink/70">Enquiries across SAP modules and Scrum and Agile roles.</p>
-      </div>
-      <span class="mt-1 text-brand transition group-hover:translate-x-1 group-hover:text-accent">→</span>
+    <a href="{% url 'sap_scrum' %}" class="group block bg-paper p-7 hover:bg-white">
+      <h2 class="font-display text-xl font-semibold">SAP &amp; Scrum</h2>
+      <p class="mt-2 text-ink/70">Enquiries across SAP modules and Scrum and Agile roles.</p>
     </a>
   </div>
 </section>

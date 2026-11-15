@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | GCTT Admin{% endblock %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <style>
+    :root {
+      --primary: #14324f;
+      --secondary: #0f263c;
+      --accent: #c2410c;
+      --link-fg: #14324f;
+      --link-hover-color: #c2410c;
+      --button-bg: #14324f;
+      --button-hover-bg: #c2410c;
+    }
+    #header {
+      background: #14324f;
+    }
+    #branding h1,
+    #branding h1 a:link,
+    #branding h1 a:visited {
+      color: #f7f4ee;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+    .module h2,
+    .module caption,
+    .inline-group h2 {
+      background: #14324f;
+    }
+  </style>
+{% endblock %}
+
+{% block branding %}
+  <div id="site-name">
+    <a href="{% url 'admin:index' %}">GCTT administration</a>
+  </div>
+{% endblock %}

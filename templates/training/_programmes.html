@@ -17,7 +17,9 @@
     {% endfor %}
   </div>
 {% else %}
-  <p class="rounded-sm border border-dashed border-line bg-white/60 p-6 text-ink/60">
-    No programmes are published right now. Send us an enquiry and we'll let you know when new dates are announced.
-  </p>
+  <div class="rounded-sm border border-dashed border-line bg-white/60 p-10 text-center">
+    <h2 class="display-lg text-2xl">Programmes are being finalised</h2>
+    <p class="mx-auto mt-2 max-w-md text-ink/60">New cohorts are announced here. Send an enquiry and we'll let you know when dates open.</p>
+    <a href="#enquiry" class="mt-5 inline-block rounded-sm bg-accent px-6 py-3 font-semibold text-paper hover:bg-brand">Send an enquiry</a>
+  </div>
 {% endif %}

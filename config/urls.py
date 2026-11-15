@@ -14,6 +14,10 @@ from apps.training import views as training_views
 from . import views
 from .sitemaps import JobSitemap, ProgrammeSitemap, StaticSitemap
 
+admin.site.site_header = "GCTT Administration"
+admin.site.site_title = "GCTT Admin"
+admin.site.index_title = "Operations"
+
 # Throttle the admin login before admin.site.urls builds its URL patterns.
 admin.site.login = ratelimit(key="ip", rate="10/m", method="POST", block=True)(
     admin.site.login
