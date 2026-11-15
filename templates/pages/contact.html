@@ -1,26 +1,38 @@
 {% extends "base.html" %}
-{% block title %}Contact GCTT{% endblock %}
+{% block title %}Corporate Contact & Headquarters — GCTT{% endblock %}
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Contact Us" title="Let's talk" %}
+{% include "partials/_hero.html" with eyebrow="Executive Contact" title="Connect with our practice leads." intro="Direct communications for corporate clients, enterprise partnerships, and candidate inquiries." %}
 
-<section class="mx-auto max-w-7xl px-6 py-16 md:py-24">
-  <div class="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
-    <ul class="space-y-6">
-      <li>
-        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-ink/50">Enquiries</p>
-        <p class="mt-1 text-lg">{{ COMPANY.jobs_email }}</p>
-      </li>
-      <li>
-        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-ink/50">Company</p>
-        <p class="mt-1 text-lg">{{ COMPANY.email }}</p>
-      </li>
-      <li>
-        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-ink/50">Office</p>
-        <p class="mt-1 text-lg">{{ COMPANY.address }}</p>
-      </li>
-    </ul>
-    <div class="rounded-md border border-line bg-surface p-6 md:p-8">
-      {% include "enquiries/_form.html" %}
+<section class="mx-auto max-w-7xl px-6 py-16 lg:py-24">
+  <div class="grid gap-16 lg:grid-cols-[1fr_1.3fr] lg:items-start">
+    <div class="space-y-8 reveal">
+      <div>
+        <p class="eyebrow text-2xs">Headquarters</p>
+        <p class="mt-2 font-display text-xl font-bold text-ink">{{ COMPANY.name }} — {{ COMPANY.legal_name }}</p>
+        <p class="mt-1 text-sm text-ink-muted">{{ COMPANY.address }}</p>
+      </div>
+
+      <div class="border-t border-line/60 pt-6 space-y-6">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-accent">Client &amp; Employer Requisitions</p>
+          <a href="mailto:{{ COMPANY.email }}" class="mt-1 block font-display text-lg font-bold text-ink hover:text-accent transition-colors">{{ COMPANY.email }}</a>
+          <p class="text-xs text-ink-muted">For staffing partnerships, SOW inquiries, and enterprise accounts.</p>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-accent">Candidate &amp; Career Inquiries</p>
+          <a href="mailto:{{ COMPANY.jobs_email }}" class="mt-1 block font-display text-lg font-bold text-ink hover:text-accent transition-colors">{{ COMPANY.jobs_email }}</a>
+          <p class="text-xs text-ink-muted">For resume submissions, application tracking, and recruiter connect.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-md p-8 sm:p-10 reveal delay-1">
+      <h3 class="font-display text-xl font-bold text-ink">Send a Message</h3>
+      <p class="mt-1 text-xs text-ink-muted">Fill out the brief below and our Irving team will follow up directly.</p>
+      <div class="mt-6 border-t border-line/60 pt-6">
+        {% include "enquiries/_form.html" %}
+      </div>
     </div>
   </div>
 </section>

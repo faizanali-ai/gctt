@@ -1,16 +1,38 @@
 {% extends "base.html" %}
-{% block title %}Career Restart — GCTT{% endblock %}
+{% block title %}Career Restart Initiative — GCTT{% endblock %}
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Career Restart" title="Your career journey can start again." intro="Had a break in your career? GCTT welcomes professionals who are ready to explore new opportunities and build their next chapter." %}
+{% include "partials/_hero.html" with eyebrow="Workforce Re-entry" title="Your next chapter begins here." intro="Had an extended break in your technical career? GCTT provides structured workforce re-entry, technical upskilling, and direct placement with welcoming enterprise employers." %}
 
-<section class="mx-auto max-w-7xl px-6 py-16 md:py-24">
-  <div class="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
-    <div class="space-y-4 text-lg text-ink/70">
-      <p>Tell us about your skills, experience and the kind of role you're looking for — including any career break you'd like to explain.</p>
-      <p>We'll keep your details on file and contact you when a relevant opportunity comes up.</p>
+<section class="mx-auto max-w-7xl px-6 py-16 lg:py-24">
+  <div class="grid gap-16 lg:grid-cols-[1fr_1.3fr] lg:items-start">
+    <div class="space-y-6 text-base leading-relaxed text-ink-muted sm:text-lg reveal">
+      <p class="font-display text-2xl font-bold text-ink">We value your experience, not the gap on your timeline.</p>
+      <p>Whether you stepped away for family care, health reasons, relocation, or personal growth, your foundational engineering, project management, or analyst background remains valuable. We partner with enlightened corporate clients who appreciate maturity, perspective, and dedication.</p>
+      
+      <div class="space-y-4 border-t border-line/60 pt-6 text-sm text-ink">
+        <div class="flex items-start gap-3">
+          <svg class="h-5 w-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <div>
+            <p class="font-bold text-ink">Technical Refresher &amp; Cohort Retooling</p>
+            <p class="text-xs text-ink-muted">Access SAP, Agile, and modern cloud refresher modules to restore confidence and update tooling fluency.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <svg class="h-5 w-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <div>
+            <p class="font-bold text-ink">Supportive Client Requisitions</p>
+            <p class="text-xs text-ink-muted">Direct introductions to hiring managers actively committed to return-to-work and workforce re-entry programs.</p>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="rounded-md border border-line bg-surface p-6 md:p-8">
-      {% include "enquiries/_form.html" %}
+
+    <div class="card shadow-md p-8 sm:p-10 reveal delay-1">
+      <h3 class="font-display text-xl font-bold text-ink">Register Your Interest</h3>
+      <p class="mt-1 text-xs text-ink-muted">Tell us about your background, previous domain expertise, and target trajectory.</p>
+      <div class="mt-6 border-t border-line/60 pt-6">
+        {% include "enquiries/_form.html" %}
+      </div>
     </div>
   </div>
 </section>

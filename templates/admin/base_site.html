@@ -7,33 +7,35 @@
   {{ block.super }}
   <style>
     :root {
-      --primary: #14324f;
-      --secondary: #0f263c;
-      --accent: #c2410c;
-      --link-fg: #14324f;
-      --link-hover-color: #c2410c;
-      --button-bg: #14324f;
-      --button-hover-bg: #c2410c;
+      --primary: #0c1e36;
+      --secondary: #162e4e;
+      --accent: #9e6534;
+      --link-fg: #0c1e36;
+      --link-hover-color: #9e6534;
+      --button-bg: #0c1e36;
+      --button-hover-bg: #9e6534;
     }
     #header {
-      background: #14324f;
+      background: #0c1e36;
+      border-bottom: 2px solid #9e6534;
     }
     #branding h1,
     #branding h1 a:link,
     #branding h1 a:visited {
-      color: #f7f4ee;
-      font-family: Georgia, "Times New Roman", serif;
+      color: #faf9f6;
+      font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+      letter-spacing: 0.02em;
     }
     .module h2,
     .module caption,
     .inline-group h2 {
-      background: #14324f;
+      background: #0c1e36;
     }
   </style>
 {% endblock %}
 
 {% block branding %}
   <div id="site-name">
-    <a href="{% url 'admin:index' %}">GCTT administration</a>
+    <a href="{% url 'admin:index' %}">GCTT Corporate Administration</a>
   </div>
 {% endblock %}

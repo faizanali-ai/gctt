@@ -1,64 +1,102 @@
 {% extends "portals/base_portal.html" %}
-{% block title %}{% if mode == "edit" %}Edit user{% else %}Add user{% endif %} — GCTT{% endblock %}
-{% block portal_title %}{% if mode == "edit" %}Edit user{% else %}Add user{% endif %}{% endblock %}
+{% block title %}{% if mode == "edit" %}Edit User: {{ target.email }}{% else %}Provision User{% endif %} — GCTT Portal{% endblock %}
+{% block portal_title %}{% if mode == "edit" %}Edit User Account{% else %}Provision New User{% endif %}{% endblock %}
 {% block content %}
-<div class="mx-auto max-w-xl">
-  <h1 class="display-lg">{% if mode == "edit" %}Edit {{ target.email }}{% else %}Add a user{% endif %}</h1>
-  <p class="mt-1 text-sm text-ink/60">
-    {% if mode == "edit" %}Change their role, group or account status.{% else %}They can log in as soon as you save. Share the temporary password securely.{% endif %}
-  </p>
+<section class="mx-auto max-w-xl py-6 sm:py-10">
+  <div class="border-b border-line pb-4">
+    <p class="eyebrow text-2xs">RBAC Administration</p>
+    <h1 class="mt-1 font-display text-2xl font-bold text-ink sm:text-3xl">
+      {% if mode == "edit" %}Modify Account: {{ target.display_name }}{% else %}Provision User Account{% endif %}
+    </h1>
+    <p class="mt-1.5 text-xs text-ink-muted">
+      {% if mode == "edit" %}Adjust role assignments, group permissions, or toggle account activation.{% else %}Account will become immediately active. Share temporary password through secure channels.{% endif %}
+    </p>
+  </div>
 
-  <form method="post" class="mt-6 space-y-4 rounded-md border border-line bg-paper p-6">
-    {% csrf_token %}
-    {% if mode == "create" %}
-      <label class="block">
-        <span class="mb-1 block text-sm font-medium">Email</span>
-        <input type="email" name="email" required autocomplete="off">
-      </label>
-    {% endif %}
-    <div class="grid gap-4 sm:grid-cols-2">
-      <label class="block">
-        <span class="mb-1 block text-sm font-medium">First name</span>
-        <input type="text" name="first_name" value="{{ target.first_name|default:'' }}">
-      </label>
-      <label class="block">
-        <span class="mb-1 block text-sm font-medium">Last name</span>
-        <input type="text" name="last_name" value="{{ target.last_name|default:'' }}">
-      </label>
-    </div>
-    <div class="grid gap-4 sm:grid-cols-2">
-      <label class="block">
-        <span class="mb-1 block text-sm font-medium">Role</span>
-        <select name="role">
-          {% for value, label in assignable %}
-            <option value="{{ value }}" {% if target.role == value %}selected{% endif %}>{{ label }}</option>
-          {% endfor %}
-        </select>
-      </label>
-      <label class="block">
-        <span class="mb-1 block text-sm font-medium">Group (staff only)</span>
-        <select name="group">
-          <option value="">—</option>
-          {% for group in groups %}
-            <option value="{{ group.name }}" {% if group in target.groups.all %}selected{% endif %}>{{ group.name }}</option>
-          {% endfor %}
-        </select>
-      </label>
-    </div>
-    {% if mode == "edit" %}
-      <label class="flex items-center gap-2 text-sm">
-        <input type="checkbox" name="is_active" {% if target.is_active %}checked{% endif %}>
-        Active account
-      </label>
-    {% endif %}
-    <label class="block">
-      <span class="mb-1 block text-sm font-medium">{% if mode == "edit" %}New password (optional){% else %}Temporary password{% endif %}</span>
-      <input type="text" name="password" autocomplete="new-password" {% if mode == "create" %}required minlength="8"{% endif %} placeholder="At least 8 characters">
-    </label>
-    <div class="flex items-center gap-3">
-      <button type="submit" class="btn btn-primary">{% if mode == "edit" %}Save changes{% else %}Create user{% endif %}</button>
-      <a href="{% url 'manage_users' %}" class="text-sm font-semibold text-ink/60 hover:text-ink">Cancel</a>
-    </div>
-  </form>
-</div>
+  <div class="mt-8 rounded-lg border border-line bg-card p-6 shadow-xs sm:p-8">
+    <form method="post" class="space-y-5">
+      {% csrf_token %}
+      {% if mode == "create" %}
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-ink">Work Email Address</label>
+          <div class="mt-1.5">
+            <input type="email" name="email" required autocomplete="off" placeholder="user@gctekton.com">
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-ink">First Name</label>
+          <div class="mt-1.5">
+            <input type="text" name="first_name" value="{{ target.first_name|default:'' }}" placeholder="First name">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-ink">Last Name</label>
+          <div class="mt-1.5">
+            <input type="text" name="last_name" value="{{ target.last_name|default:'' }}" placeholder="Last name">
+          </div>
+        </div>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-ink">Assigned Role</label>
+          <div class="mt-1.5">
+            <select name="role">
+              {% for value, label in assignable %}
+                <option value="{{ value }}" {% if target.role == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-ink">Staff Group (Perms)</label>
+          <div class="mt-1.5">
+            <select name="group">
+              <option value="">— None (Read Only) —</option>
+              {% for group in groups %}
+                <option value="{{ group.name }}" {% if group in target.groups.all %}selected{% endif %}>{{ group.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {% if mode == "edit" %}
+        <div class="rounded-md border border-line bg-surface p-3.5">
+          <label class="flex items-center gap-2.5 text-xs font-semibold text-ink cursor-pointer">
+            <input type="checkbox" name="is_active" {% if target.is_active %}checked{% endif %} class="h-4 w-4 rounded border-line text-brand">
+            Active Account (Permit login and portal access)
+          </label>
+        </div>
+      {% endif %}
+
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-ink">
+          {% if mode == "edit" %}Reset Password (Leave blank to keep unchanged){% else %}Initial Temporary Password{% endif %}
+        </label>
+        <div class="mt-1.5">
+          <input
+            type="text"
+            name="password"
+            autocomplete="new-password"
+            {% if mode == "create" %}required minlength="8"{% endif %}
+            placeholder="At least 8 characters"
+          >
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 pt-3">
+        <button type="submit" class="btn btn-primary text-xs">
+          {% if mode == "edit" %}Save Account Changes{% else %}Create &amp; Provision User{% endif %}
+        </button>
+        <a href="{% url 'manage_users' %}" class="btn btn-secondary text-xs">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</section>
 {% endblock %}

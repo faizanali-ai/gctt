@@ -1,40 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --color-paper: #ffffff;
-  --color-surface: #f3f6f9;
-  --color-ink: #0d1b2a;
-  --color-brand: #0f2a44;
-  --color-brand-2: #16395c;
-  --color-accent: #8a1c2b;
-  --color-line: #dde4ea;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-  --font-display: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  --color-paper: #faf9f6;
+  --color-surface: #f3f1ec;
+  --color-card: #ffffff;
+  --color-ink: #111827;
+  --color-ink-muted: #4b5563;
+  --color-ink-subtle: #9ca3af;
+  --color-brand: #0c1e36;
+  --color-brand-2: #162e4e;
+  --color-accent: #9e6534;
+  --color-accent-hover: #835227;
+  --color-line: #e5e0d8;
+  --color-line-subtle: #f0ede8;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
 }
 
 @layer components {
   .eyebrow {
     font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-accent);
+    font-family: var(--font-sans);
   }
   .display-xl {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(2.35rem, 1.5rem + 3.4vw, 3.9rem);
-    line-height: 1.03;
+    font-size: clamp(2.35rem, 1.5rem + 3.4vw, 3.85rem);
+    line-height: 1.05;
     letter-spacing: -0.025em;
+    color: var(--color-ink);
   }
   .display-lg {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(1.7rem, 1.2rem + 1.9vw, 2.4rem);
-    line-height: 1.12;
+    font-size: clamp(1.75rem, 1.2rem + 1.9vw, 2.5rem);
+    line-height: 1.15;
     letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+  .display-md {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.35rem, 1.1rem + 1vw, 1.75rem);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
   }
   .btn {
     display: inline-flex;
@@ -42,45 +57,92 @@
     justify-content: center;
     gap: 0.5rem;
     border-radius: 0.375rem;
-    padding: 0.75rem 1.25rem;
+    padding: 0.75rem 1.35rem;
     font-size: 0.9375rem;
     font-weight: 600;
+    font-family: var(--font-sans);
+    transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
   }
   .btn-primary {
     background: var(--color-accent);
-    color: var(--color-paper);
+    color: #ffffff;
+    box-shadow: 0 1px 2px rgba(158, 101, 52, 0.2);
   }
   .btn-primary:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(158, 101, 52, 0.25);
+  }
+  .btn-brand {
     background: var(--color-brand);
+    color: #ffffff;
+  }
+  .btn-brand:hover {
+    background: var(--color-brand-2);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(12, 30, 54, 0.2);
   }
   .btn-secondary {
     border: 1px solid var(--color-line);
-    background: var(--color-paper);
+    background: var(--color-card);
     color: var(--color-ink);
   }
   .btn-secondary:hover {
     border-color: var(--color-brand);
+    background: var(--color-surface);
   }
   .btn-inverse {
-    border: 1px solid rgb(255 255 255 / 0.35);
-    color: var(--color-paper);
+    border: 1px solid rgb(255 255 255 / 0.25);
+    background: transparent;
+    color: #ffffff;
   }
   .btn-inverse:hover {
     background: rgb(255 255 255 / 0.1);
+    border-color: rgb(255 255 255 / 0.5);
   }
   .card {
     border: 1px solid var(--color-line);
     border-radius: 0.5rem;
-    background: var(--color-paper);
+    background: var(--color-card);
     padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(17, 24, 39, 0.03);
+  }
+  .card-hover {
+    border: 1px solid var(--color-line);
+    border-radius: 0.5rem;
+    background: var(--color-card);
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(17, 24, 39, 0.03);
+    transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1), border-color 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .card-hover:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-accent);
+    box-shadow: 0 10px 25px -5px rgba(12, 30, 54, 0.08);
   }
   .link {
     font-weight: 600;
     color: var(--color-brand);
+    transition: color 150ms ease;
   }
   .link:hover {
     color: var(--color-accent);
   }
+
+  /* GPU-Accelerated Scroll Reveals */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1), transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .delay-1 { transition-delay: 80ms; }
+  .delay-2 { transition-delay: 160ms; }
+  .delay-3 { transition-delay: 240ms; }
 }
 
 @keyframes rise {
@@ -121,8 +183,12 @@ details[open] > nav {
 
 @media (prefers-reduced-motion: reduce) {
   .rise,
+  .reveal,
   details[open] > nav {
-    animation: none;
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 
@@ -137,12 +203,13 @@ details[open] > nav {
       opacity 150ms ease;
   }
   ::selection {
-    background: #8a1c2b22;
+    background: #9e653428;
+    color: #111827;
   }
   input:not([type="hidden"]):not([type="submit"]):not([type="file"]):not([type="radio"]):not([type="checkbox"]),
   select,
   textarea {
-    @apply w-full rounded-md border border-line bg-paper px-4 py-2.5 text-ink;
+    @apply w-full rounded-md border border-line bg-card px-4 py-2.5 text-ink shadow-xs;
   }
   input:focus,
   select:focus,
@@ -150,7 +217,7 @@ details[open] > nav {
     @apply border-brand outline-none ring-2 ring-brand/15;
   }
   input[type="file"] {
-    @apply w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm;
+    @apply w-full rounded-md border border-line bg-card px-4 py-2.5 text-sm;
   }
   input[type="radio"],
   input[type="checkbox"] {

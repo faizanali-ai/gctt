@@ -1,13 +1,13 @@
-<form method="post" action="{% url 'submit_enquiry' %}" class="space-y-4">
+<form method="post" action="{% url 'submit_enquiry' %}" class="space-y-5">
   {% csrf_token %}
   <input type="hidden" name="next" value="{{ request.resolver_match.url_name }}">
   {{ enquiry_form.website }}
   {% for field in enquiry_form.visible_fields %}
     <label class="block">
-      <span class="mb-1 block text-sm font-medium">{{ field.label }}</span>
+      <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-ink-muted">{{ field.label }}</span>
       {{ field }}
-      {% if field.errors %}<span class="mt-1 block text-sm text-accent">{{ field.errors.0 }}</span>{% endif %}
+      {% if field.errors %}<span class="mt-1.5 block text-xs font-medium text-accent">{{ field.errors.0 }}</span>{% endif %}
     </label>
   {% endfor %}
-  <button type="submit" class="rounded-md bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Send enquiry</button>
+  <button type="submit" class="btn btn-primary w-full py-3.5 text-sm uppercase tracking-wider font-bold">Transmit Inquiry &rarr;</button>
 </form>

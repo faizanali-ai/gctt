@@ -1,27 +1,46 @@
 {% extends "portals/base_portal.html" %}
-{% block title %}Your profile — GCTT{% endblock %}
+{% block title %}Account Profile — GCTT Portal{% endblock %}
+{% block portal_title %}Candidate &amp; Staff Profile{% endblock %}
 {% block content %}
-<section class="mx-auto max-w-md px-6 py-16 md:py-24">
-  <h1 class="display-lg">Your profile</h1>
-  <p class="mt-2 text-sm text-ink/60">{{ user.email }}</p>
+<section class="mx-auto max-w-lg py-6 sm:py-10">
+  <div class="border-b border-line pb-4">
+    <p class="eyebrow text-2xs">Account Settings</p>
+    <h1 class="mt-1 font-display text-2xl font-bold text-ink sm:text-3xl">Profile Details</h1>
+    <p class="mt-1.5 text-xs text-ink-muted">Registered contact email: <span class="font-semibold text-ink">{{ user.email }}</span></p>
+  </div>
 
-  <div class="mt-8 rounded-md border border-line bg-paper p-6 md:p-8">
+  <div class="mt-8 rounded-lg border border-line bg-card p-6 shadow-xs sm:p-8">
     <form method="post" class="space-y-4">
       {% csrf_token %}
       {% for field in form %}
-        <label class="block">
-          <span class="mb-1 block text-sm font-medium">{{ field.label }}</span>
-          {{ field }}
-          {% if field.errors %}<span class="mt-1 block text-sm text-accent">{{ field.errors.0 }}</span>{% endif %}
-        </label>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-ink">
+            {{ field.label }}
+          </label>
+          <div class="mt-1.5">
+            {{ field }}
+          </div>
+          {% if field.errors %}
+            <p class="mt-1 text-xs font-semibold text-rose-600">{{ field.errors.0 }}</p>
+          {% endif %}
+        </div>
       {% endfor %}
-      <button type="submit" class="w-full rounded-md bg-accent px-6 py-3 font-semibold text-paper hover:bg-brand">Save</button>
+
+      <div class="pt-2">
+        <button type="submit" class="btn btn-primary w-full justify-center">
+          Save Profile Changes
+        </button>
+      </div>
     </form>
   </div>
 
-  <div class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-    <a href="{% url 'password_change' %}" class="font-semibold text-brand hover:text-accent">Change password</a>
-    <a href="{% url 'dashboard' %}" class="font-semibold text-brand hover:text-accent">Back to dashboard</a>
+  <div class="mt-6 flex flex-wrap items-center justify-between gap-4 text-xs">
+    <a href="{% url 'password_change' %}" class="font-semibold text-brand hover:text-accent">
+      Change Account Password →
+    </a>
+    <a href="{% url 'dashboard' %}" class="text-ink-muted hover:text-ink">
+      Return to Dashboard
+    </a>
   </div>
 </section>
 {% endblock %}

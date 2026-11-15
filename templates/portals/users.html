@@ -1,61 +1,105 @@
 {% extends "portals/base_portal.html" %}
-{% block title %}Users &amp; roles — GCTT{% endblock %}
-{% block portal_title %}Users &amp; roles{% endblock %}
+{% block title %}User Directory &amp; RBAC — GCTT Portal{% endblock %}
+{% block portal_title %}Access Administration: Users &amp; Roles{% endblock %}
 {% block content %}
-<div class="flex flex-wrap items-end justify-between gap-4">
-  <div>
-    <h1 class="display-lg">Users &amp; roles</h1>
-    <p class="mt-1 text-sm text-ink/60">Add employees, assign roles and deactivate accounts.</p>
+<section class="mx-auto max-w-7xl py-4 sm:py-6">
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <p class="eyebrow text-2xs">Security &amp; Governance</p>
+      <h1 class="mt-1 font-display text-2xl font-bold text-ink sm:text-3xl">User Accounts &amp; Access Roles</h1>
+      <p class="mt-1 text-xs text-ink-muted">Provision staff accounts, assign granular role-based permissions (RBAC), and manage status.</p>
+    </div>
+    <a href="{% url 'manage_user_create' %}" class="btn btn-primary text-xs">
+      + Provision New User
+    </a>
   </div>
-  <a href="{% url 'manage_user_create' %}" class="btn btn-primary">Add user</a>
-</div>
 
-<form method="get" class="mt-6 flex flex-col gap-3 sm:flex-row">
-  <input type="search" name="q" value="{{ q }}" placeholder="Search name or email">
-  <select name="role" class="sm:w-48" aria-label="Role filter">
-    <option value="">All roles</option>
-    {% for value, label in roles %}
-      <option value="{{ value }}" {% if role == value %}selected{% endif %}>{{ label }}</option>
-    {% endfor %}
-  </select>
-  <button type="submit" class="btn btn-secondary sm:w-32">Filter</button>
-</form>
+  <!-- Filter Ribbon -->
+  <div class="mt-6 rounded-lg border border-line bg-card p-4 shadow-xs">
+    <form method="get" class="flex flex-col gap-3 sm:flex-row">
+      <input
+        type="search"
+        name="q"
+        value="{{ q }}"
+        placeholder="Search user by name, email, or role..."
+        class="flex-1"
+      >
+      <div class="sm:w-52">
+        <select name="role" aria-label="Role filter">
+          <option value="">All system roles</option>
+          {% for value, label in roles %}
+            <option value="{{ value }}" {% if role == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-secondary text-xs sm:w-28">
+        Filter
+      </button>
+      {% if q or role %}
+        <a href="{% url 'manage_users' %}" class="btn btn-secondary text-xs sm:w-24">Clear</a>
+      {% endif %}
+    </form>
+  </div>
 
-<div class="mt-6 overflow-x-auto rounded-md border border-line bg-paper">
-  <table class="w-full text-left text-sm">
-    <thead class="bg-brand text-paper">
-      <tr>
-        <th class="px-4 py-3 font-semibold">User</th>
-        <th class="px-4 py-3 font-semibold">Role</th>
-        <th class="px-4 py-3 font-semibold">Group</th>
-        <th class="px-4 py-3 font-semibold">Status</th>
-        <th class="px-4 py-3 font-semibold"></th>
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-line">
-      {% for item in page_obj %}
-        <tr>
-          <td class="px-4 py-3">
-            <span class="font-medium">{{ item.display_name }}</span>
-            <span class="block text-xs text-ink/50">{{ item.email }}</span>
-          </td>
-          <td class="px-4 py-3">{{ item.get_role_display }}</td>
-          <td class="px-4 py-3">{% for group in item.groups.all %}{{ group.name }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}</td>
-          <td class="px-4 py-3">
-            {% if item.is_active %}<span class="rounded-full bg-brand/10 px-2.5 py-0.5 text-xs font-semibold text-brand">Active</span>
-            {% else %}<span class="rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-semibold text-accent">Inactive</span>{% endif %}
-          </td>
-          <td class="px-4 py-3 text-right">
-            {% if True %}
-              <a href="{% url 'manage_user_edit' item.pk %}" class="link text-xs">Edit</a>
-            {% endif %}
-          </td>
-        </tr>
-      {% empty %}
-        <tr><td colspan="5" class="px-4 py-6 text-ink/60">No users match these filters.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-{% include "partials/_pagination.html" %}
+  <!-- Users Table -->
+  <div class="mt-6 overflow-hidden rounded-lg border border-line bg-card shadow-xs">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead class="border-b border-brand-2/50 bg-brand text-paper">
+          <tr>
+            <th class="px-5 py-3.5 font-semibold uppercase tracking-wider">Identity &amp; Email</th>
+            <th class="px-4 py-3.5 font-semibold uppercase tracking-wider">Assigned Role</th>
+            <th class="px-4 py-3.5 font-semibold uppercase tracking-wider">Staff Group</th>
+            <th class="px-4 py-3.5 font-semibold uppercase tracking-wider">Account State</th>
+            <th class="px-5 py-3.5 font-semibold uppercase tracking-wider text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-line-subtle">
+          {% for item in page_obj %}
+            <tr class="transition-colors hover:bg-surface/50">
+              <td class="px-5 py-4">
+                <span class="font-display text-sm font-bold text-ink">{{ item.display_name }}</span>
+                <span class="block text-2xs text-ink-muted">{{ item.email }}</span>
+              </td>
+              <td class="px-4 py-4">
+                <span class="font-medium text-ink">{{ item.get_role_display }}</span>
+              </td>
+              <td class="px-4 py-4 text-ink-muted">
+                {% for group in item.groups.all %}
+                  <span class="inline-block rounded bg-surface px-2 py-0.5 text-2xs font-semibold text-ink border border-line">{{ group.name }}</span>
+                {% empty %}
+                  <span class="text-ink-subtle">—</span>
+                {% endfor %}
+              </td>
+              <td class="px-4 py-4">
+                {% if item.is_active %}
+                  <span class="inline-flex items-center rounded bg-emerald-50 px-2 py-0.5 text-2xs font-semibold text-emerald-800 border border-emerald-200">
+                    Active
+                  </span>
+                {% else %}
+                  <span class="inline-flex items-center rounded bg-rose-50 px-2 py-0.5 text-2xs font-semibold text-rose-800 border border-rose-200">
+                    Deactivated
+                  </span>
+                {% endif %}
+              </td>
+              <td class="px-5 py-4 text-right">
+                <a href="{% url 'manage_user_edit' item.pk %}" class="btn btn-secondary text-2xs py-1 px-3">
+                  Edit
+                </a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" class="px-5 py-8 text-center text-ink-muted">
+                No user records match the specified search parameters.
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% include "partials/_pagination.html" %}
+</section>
 {% endblock %}

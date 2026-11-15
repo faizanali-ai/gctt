@@ -1,28 +1,94 @@
 {% extends "base.html" %}
-{% block title %}Certificate verification — GCTT{% endblock %}
+{% block title %}Verify Training Certificate — GCTT{% endblock %}
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Certificates" title="Verify a certificate" intro="Enter or check a GCTT certificate reference. Every issued certificate is listed against its learner and programme." %}
+{% include "partials/_hero.html" with eyebrow="Credential Assurance" title="Certificate Verification" intro="Verify the authenticity of professional development certificates and corporate training credentials issued by GCTT." %}
 
-<section class="mx-auto max-w-3xl px-6 py-16 md:py-24">
-  <form method="get" action="{% url 'verify_certificate_form' %}" class="flex flex-col gap-3 sm:flex-row">
-    <input type="text" name="ref" value="{{ ref }}" placeholder="Certificate ID, e.g. GCTT-1A2B3C4D" aria-label="Certificate ID">
-    <button type="submit" class="rounded-md bg-brand px-6 py-2.5 font-semibold text-paper transition hover:bg-accent sm:w-40">Verify</button>
-  </form>
+<section class="mx-auto max-w-2xl px-6 py-12 md:py-20">
+  <div class="rounded-lg border border-line bg-card p-6 sm:p-8 shadow-xs reveal">
+    <p class="eyebrow text-2xs">Credential Lookup</p>
+    <h2 class="mt-1 font-display text-xl font-bold text-ink">Enter Certificate Reference</h2>
+    <p class="mt-2 text-xs leading-relaxed text-ink-muted">
+      Every certificate issued by GCTT carries a unique alphanumeric identifier (e.g. <span class="font-mono font-medium text-ink">GCTT-1A2B3C4D</span>) printed at the bottom edge of the official document.
+    </p>
+
+    <form method="get" action="{% url 'verify_certificate_form' %}" class="mt-6 flex flex-col gap-3 sm:flex-row">
+      <input
+        type="text"
+        name="ref"
+        value="{{ ref }}"
+        placeholder="e.g. GCTT-1A2B3C4D"
+        aria-label="Certificate ID"
+        required
+        class="font-mono text-sm uppercase flex-1"
+      >
+      <button type="submit" class="btn btn-primary sm:w-36">
+        Verify Record
+      </button>
+    </form>
+  </div>
 
   {% if registration %}
-    <div class="mt-8 rounded-md border border-brand/30 bg-brand/5 p-6">
-      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-brand">Valid certificate</p>
-      <dl class="mt-4 space-y-2 text-sm">
-        <div class="flex justify-between gap-4"><dt class="text-ink/60">Learner</dt><dd class="font-medium">{{ registration.student.display_name }}</dd></div>
-        <div class="flex justify-between gap-4"><dt class="text-ink/60">Programme</dt><dd class="font-medium">{{ registration.programme.title }}</dd></div>
-        <div class="flex justify-between gap-4"><dt class="text-ink/60">Issued</dt><dd class="font-medium">{{ registration.certificate_issued_at|date:"F j, Y" }}</dd></div>
-        <div class="flex justify-between gap-4"><dt class="text-ink/60">Certificate ID</dt><dd class="font-mono text-xs">{{ registration.certificate_ref }}</dd></div>
-      </dl>
+    <div class="mt-8 overflow-hidden rounded-lg border-2 border-brand/20 bg-card shadow-md reveal">
+      <div class="border-b border-brand/10 bg-brand px-6 py-4 text-white">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white">
+              <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+              </svg>
+            </span>
+            <span class="text-xs font-bold uppercase tracking-wider text-paper">Valid certificate · Authenticated Credential</span>
+          </div>
+          <span class="font-mono text-xs text-paper/70">{{ registration.certificate_ref }}</span>
+        </div>
+      </div>
+
+      <div class="p-6 sm:p-8">
+        <div class="text-center sm:text-left">
+          <p class="text-2xs font-semibold uppercase tracking-widest text-accent">Presented to</p>
+          <h3 class="mt-1 font-display text-2xl font-bold text-ink sm:text-3xl">
+            {{ registration.student.display_name }}
+          </h3>
+          <p class="mt-3 text-sm text-ink-muted">
+            For successful completion of the executive curriculum:
+          </p>
+          <p class="mt-1 font-display text-lg font-semibold text-brand">
+            {{ registration.programme.title }}
+          </p>
+        </div>
+
+        <dl class="mt-8 grid gap-4 border-t border-line-subtle pt-6 text-xs sm:grid-cols-2">
+          <div>
+            <dt class="text-ink-subtle uppercase tracking-wider text-2xs">Issue Date</dt>
+            <dd class="mt-0.5 font-semibold text-ink">{{ registration.certificate_issued_at|date:"F j, Y" }}</dd>
+          </div>
+          <div>
+            <dt class="text-ink-subtle uppercase tracking-wider text-2xs">Issuing Authority</dt>
+            <dd class="mt-0.5 font-semibold text-ink">{{ COMPANY.name }} (Irving, TX)</dd>
+          </div>
+          <div>
+            <dt class="text-ink-subtle uppercase tracking-wider text-2xs">Verification Status</dt>
+            <dd class="mt-0.5 font-semibold text-emerald-700">Verified &amp; Active</dd>
+          </div>
+          <div>
+            <dt class="text-ink-subtle uppercase tracking-wider text-2xs">Record ID</dt>
+            <dd class="mt-0.5 font-mono text-ink">{{ registration.certificate_ref }}</dd>
+          </div>
+        </dl>
+      </div>
     </div>
+
   {% elif ref %}
-    <div class="mt-8 rounded-md border border-accent/40 bg-accent/5 p-6">
-      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-accent">Not found</p>
-      <p class="mt-2 text-ink/70">No issued certificate matches “{{ ref }}”. Check the reference and try again, or contact {{ COMPANY.email }}.</p>
+    <div class="mt-8 rounded-lg border border-rose-200 bg-rose-50/60 p-6 text-sm reveal">
+      <div class="flex items-center gap-2 font-semibold text-rose-900">
+        <svg class="h-5 w-5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        Not found: Certificate Record
+      </div>
+      <p class="mt-2 text-xs leading-relaxed text-rose-800">
+        No issued certificate matches “{{ ref }}”. Please double-check the reference ID or contact <a href="mailto:{{ COMPANY.email }}" class="underline">{{ COMPANY.email }}</a> for human credential verification.
+      </p>
     </div>
   {% endif %}
 </section>

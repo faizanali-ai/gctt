@@ -1,118 +1,200 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}GCTT — IT Staffing, Recruitment & Training{% endblock %}
+{% block title %}GCTT — Executive IT Staffing, Recruitment & Training{% endblock %}
 {% block content %}
 
-<section class="border-b border-line bg-paper">
-  <div class="mx-auto grid max-w-7xl gap-12 px-6 py-16 md:py-24 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-    <div>
-      <p class="text-xs font-semibold uppercase tracking-[0.12em] text-accent">Bridging talent. Connecting opportunities.</p>
-      <h1 class="mt-5 display-xl text-brand">Had a break in your career?</h1>
-      <p class="mt-5 max-w-xl text-lg leading-relaxed text-ink/65">Your next opportunity starts here. We connect employers with IT professionals, and professionals with the training that moves them forward.</p>
-      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a href="{% url 'careers' %}" class="btn btn-primary">Explore opportunities</a>
-        <a href="{% url 'employers' %}" class="btn btn-secondary">Hire talent</a>
+<!-- Hero: Executive Editorial Split -->
+<section class="border-b border-line bg-paper py-16 sm:py-20 lg:py-28">
+  <div class="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+    <div class="reveal">
+      <p class="eyebrow flex items-center gap-2">
+        <span class="inline-block h-px w-6 bg-accent"></span>
+        Bridging Talent. Connecting Opportunities.
+      </p>
+      <h1 class="mt-5 display-xl font-display">
+        Bespoke IT staffing &amp; enterprise talent solutions.
+      </h1>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-ink-muted sm:text-xl font-sans">
+        We connect leading enterprises with high-caliber technology professionals, and empower talent with world-class SAP and Agile workforce development.
+      </p>
+      <div class="mt-9 flex flex-col gap-3.5 sm:flex-row">
+        <a href="{% url 'employers' %}" class="btn btn-primary">Request Vetted Talent</a>
+        <a href="{% url 'careers' %}" class="btn btn-secondary">Explore Open Roles</a>
+      </div>
+      <div class="mt-10 flex flex-wrap items-center gap-6 border-t border-line/80 pt-6 text-xs text-ink-muted">
+        <span class="flex items-center gap-1.5 font-medium">
+          <svg class="h-4 w-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          Direct W2 &amp; Contract Staffing
+        </span>
+        <span class="flex items-center gap-1.5 font-medium">
+          <svg class="h-4 w-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          SAP Practice &amp; Scrum Training
+        </span>
+        <span class="flex items-center gap-1.5 font-medium">
+          <svg class="h-4 w-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          Irving, Texas Tech Hub
+        </span>
       </div>
     </div>
-    <div class="relative">
-      <div class="absolute -left-4 -top-4 hidden h-full w-full border border-brand/20 lg:block"></div>
-      <img src="{% static 'images/hero-office.jpg' %}" alt="Professional walking through an office building" class="relative h-72 w-full object-cover object-[68%_center] md:h-[420px]">
+
+    <!-- Editorial Architectural Visual -->
+    <div class="relative reveal delay-1">
+      <div class="absolute -inset-2.5 rounded-lg border border-accent/25 -rotate-1 hidden sm:block"></div>
+      <div class="relative overflow-hidden rounded-md border border-line bg-card shadow-lg">
+        <img src="{% static 'images/hero-office.jpg' %}" alt="Professional consulting environment" class="h-80 w-full object-cover object-[65%_center] sm:h-96 lg:h-[460px]">
+        <div class="absolute bottom-4 left-4 right-4 rounded border border-line/90 bg-card/95 p-4 backdrop-blur shadow-sm">
+          <div class="flex items-center justify-between text-xs">
+            <div>
+              <p class="font-bold text-ink font-display">Texas &amp; Nationwide Placement</p>
+              <p class="text-ink-muted">Headquartered at 2612 Laramie St, Irving TX</p>
+            </div>
+            <span class="inline-flex items-center rounded bg-brand/10 px-2 py-1 font-semibold text-brand text-2xs">Enterprise Hub</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="border-b border-line bg-surface">
-  <div class="mx-auto grid max-w-7xl divide-y divide-line px-6 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-    <div class="py-6 sm:pr-8">
-      <p class="text-xs font-semibold uppercase tracking-[0.1em] text-ink/40">Focus</p>
-      <p class="mt-1 text-sm font-semibold">IT staffing &amp; SAP roles</p>
+<!-- Credential & Specialization Strip -->
+<section class="border-b border-line bg-surface/75 py-8">
+  <div class="mx-auto grid max-w-7xl divide-y divide-line/75 px-6 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+    <div class="py-4 sm:pr-8 reveal">
+      <p class="eyebrow text-2xs">Practice Area</p>
+      <p class="mt-1 text-base font-bold text-ink font-display">IT Staffing &amp; SAP Systems</p>
+      <p class="mt-0.5 text-xs text-ink-muted">Contract, Contract-to-Hire &amp; Direct Hire</p>
     </div>
-    <div class="py-6 sm:px-8">
-      <p class="text-xs font-semibold uppercase tracking-[0.1em] text-ink/40">Training</p>
-      <p class="mt-1 text-sm font-semibold">Online and in-person</p>
+    <div class="py-4 sm:px-8 reveal delay-1">
+      <p class="eyebrow text-2xs">Workforce Academy</p>
+      <p class="mt-1 text-base font-bold text-ink font-display">SAP &amp; Agile Cohorts</p>
+      <p class="mt-0.5 text-xs text-ink-muted">Instructor-led online and hands-on cohorts</p>
     </div>
-    <div class="py-6 sm:pl-8">
-      <p class="text-xs font-semibold uppercase tracking-[0.1em] text-ink/40">Certificates</p>
-      <p class="mt-1 text-sm font-semibold">Verifiable on completion</p>
+    <div class="py-4 sm:pl-8 reveal delay-2">
+      <p class="eyebrow text-2xs">Credentials</p>
+      <p class="mt-1 text-base font-bold text-ink font-display">Verifiable Certificates</p>
+      <p class="mt-0.5 text-xs text-ink-muted">Digital verification for corporate sponsors</p>
     </div>
   </div>
 </section>
 
-<section class="mx-auto max-w-7xl px-6 py-16 md:py-24">
-  <div class="grid gap-10 md:grid-cols-2 md:items-end">
+<!-- About & Core Practice Areas -->
+<section class="mx-auto max-w-7xl px-6 py-20 lg:py-28">
+  <div class="grid gap-12 lg:grid-cols-2 lg:items-end reveal">
     <div>
-      <p class="text-xs font-semibold uppercase tracking-[0.12em] text-accent">About GCTT</p>
-      <h2 class="mt-3 display-lg text-brand">Your bridge between talent and opportunity.</h2>
+      <p class="eyebrow flex items-center gap-2">
+        <span class="inline-block h-px w-6 bg-accent"></span>
+        Enterprise Positioning
+      </p>
+      <h2 class="mt-4 display-lg">Your bridge between exceptional talent and corporate growth.</h2>
     </div>
-    <div class="leading-relaxed text-ink/65">
-      <p>GCTT provides IT staffing, recruitment, talent acquisition, and training and development — serving employers, job seekers and training students across Texas and beyond.</p>
-      <a href="{% url 'about' %}" class="link mt-4 inline-block">Learn more about us</a>
+    <div class="text-base leading-relaxed text-ink-muted sm:text-lg">
+      <p>GCTT delivers consultative IT staffing, specialized executive recruitment, and enterprise workforce upskilling. We empower employers with vetted technical capabilities while guiding ambitious professionals to their next chapter.</p>
+      <a href="{% url 'about' %}" class="link mt-4 inline-flex items-center gap-1.5 font-semibold text-accent hover:text-accent-hover">
+        Discover our advisory model &rarr;
+      </a>
     </div>
   </div>
 
-  <div class="mt-14 grid gap-px border border-line bg-line md:grid-cols-2">
+  <!-- Capabilities Grid -->
+  <div class="mt-16 grid gap-px border border-line bg-line/80 shadow-xs sm:grid-cols-2">
     {% for service in SERVICES %}
-      <a href="{{ service.url }}" class="group bg-paper p-8 transition hover:bg-surface">
+      <a href="{{ service.url }}" class="group bg-card p-8 transition-colors hover:bg-surface/80 sm:p-10">
         <div class="flex items-start justify-between gap-4">
           <div>
-            <h3 class="text-xl font-semibold text-brand">{{ service.title }}</h3>
-            <p class="mt-2 max-w-md text-sm leading-relaxed text-ink/65">{{ service.text }}</p>
+            <p class="text-2xs font-semibold uppercase tracking-wider text-accent">0{{ forloop.counter }}</p>
+            <h3 class="mt-2 text-xl font-bold text-ink font-display group-hover:text-accent transition-colors">{{ service.title }}</h3>
+            <p class="mt-3 max-w-md text-sm leading-relaxed text-ink-muted">{{ service.text }}</p>
           </div>
-          <span class="mt-1 text-lg text-accent">↗</span>
+          <span class="mt-1 text-xl text-accent transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">&nearr;</span>
         </div>
       </a>
     {% empty %}
     {% endfor %}
-    <a href="{% url 'sap_scrum' %}" class="group bg-paper p-8 transition hover:bg-surface md:col-span-2">
+    <a href="{% url 'sap_scrum' %}" class="group bg-card p-8 transition-colors hover:bg-surface/80 sm:col-span-2 sm:p-10">
       <div class="flex items-start justify-between gap-4">
         <div>
-          <h3 class="text-xl font-semibold text-brand">SAP &amp; Scrum</h3>
-          <p class="mt-2 max-w-xl text-sm leading-relaxed text-ink/65">Enquiries across SAP modules and Scrum and Agile roles.</p>
+          <p class="text-2xs font-semibold uppercase tracking-wider text-accent">Specialized Practice</p>
+          <h3 class="mt-2 text-xl font-bold text-ink font-display group-hover:text-accent transition-colors">SAP Enterprise &amp; Agile Transformation</h3>
+          <p class="mt-3 max-w-2xl text-sm leading-relaxed text-ink-muted">Dedicated recruitment and professional cohort training covering core SAP functional modules (MM, FICO, SD) and Scrum/Agile project delivery framework.</p>
         </div>
-        <span class="mt-1 text-lg text-accent">↗</span>
+        <span class="mt-1 text-xl text-accent transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">&nearr;</span>
       </div>
     </a>
   </div>
 </section>
 
-<section class="border-y border-line bg-brand text-paper">
-  <div class="mx-auto grid max-w-7xl gap-10 px-6 py-16 md:grid-cols-3 md:py-20">
-    <div>
-      <p class="text-xs font-semibold uppercase tracking-[0.1em] text-paper/50">Career Restart</p>
-      <h3 class="mt-3 text-xl font-semibold">Returning after a break?</h3>
-      <p class="mt-2 text-sm leading-relaxed text-paper/70">We welcome professionals ready for their next chapter.</p>
-      <a href="{% url 'career_restart' %}" class="mt-5 inline-block text-sm font-semibold text-paper underline decoration-accent decoration-2 underline-offset-4">Restart your career</a>
-    </div>
-    <div class="md:border-l md:border-paper/15 md:pl-10">
-      <p class="text-xs font-semibold uppercase tracking-[0.1em] text-paper/50">For Employers</p>
-      <h3 class="mt-3 text-xl font-semibold">Need people, not paperwork?</h3>
-      <p class="mt-2 text-sm leading-relaxed text-paper/70">Share your staffing, recruitment or talent needs with our team.</p>
-      <a href="{% url 'employers' %}" class="mt-5 inline-block text-sm font-semibold text-paper underline decoration-accent decoration-2 underline-offset-4">Request talent</a>
-    </div>
-    <div class="md:border-l md:border-paper/15 md:pl-10">
-      <p class="text-xs font-semibold uppercase tracking-[0.1em] text-paper/50">For Job Seekers</p>
-      <h3 class="mt-3 text-xl font-semibold">Find your next role</h3>
-      <p class="mt-2 text-sm leading-relaxed text-paper/70">Explore opportunities published by GCTT and register your interest.</p>
-      <a href="{% url 'careers' %}" class="mt-5 inline-block text-sm font-semibold text-paper underline decoration-accent decoration-2 underline-offset-4">Explore opportunities</a>
+<!-- Dual Pathway & Audience Banner -->
+<section class="border-y border-brand-2/60 bg-brand text-paper py-20 lg:py-24">
+  <div class="mx-auto max-w-7xl px-6">
+    <div class="grid gap-12 lg:grid-cols-3">
+      <div class="reveal">
+        <p class="text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Workforce Re-entry</p>
+        <h3 class="mt-3 font-display text-2xl font-bold text-white">Career Restart</h3>
+        <p class="mt-3 text-sm leading-relaxed text-paper/70">Returning after a planned career break? We provide structured pathways, technical retooling, and client opportunities for returning professionals.</p>
+        <a href="{% url 'career_restart' %}" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-accent transition-colors hover:text-white">Learn about Restart &rarr;</a>
+      </div>
+      <div class="border-t border-paper/15 pt-8 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0 reveal delay-1">
+        <p class="text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Enterprise Hiring</p>
+        <h3 class="mt-3 font-display text-2xl font-bold text-white">For Employers</h3>
+        <p class="mt-3 text-sm leading-relaxed text-paper/70">Need pre-vetted engineers, architects, or scrum leads? Submit your requisition and speak directly with our Texas recruitment partners.</p>
+        <a href="{% url 'employers' %}" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-accent transition-colors hover:text-white">Submit Hiring Requisition &rarr;</a>
+      </div>
+      <div class="border-t border-paper/15 pt-8 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0 reveal delay-2">
+        <p class="text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Technical Talent</p>
+        <h3 class="mt-3 font-display text-2xl font-bold text-white">For Job Seekers</h3>
+        <p class="mt-3 text-sm leading-relaxed text-paper/70">Explore genuine W2 and contract positions with vetted clients. Submit your resume directly to our recruiting specialists.</p>
+        <a href="{% url 'careers' %}" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-accent transition-colors hover:text-white">Browse Active Openings &rarr;</a>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="mx-auto max-w-7xl px-6 py-16 md:py-24">
-  <div class="grid gap-12 lg:grid-cols-[1fr_1.2fr]">
-    <div>
-      <p class="text-xs font-semibold uppercase tracking-[0.12em] text-accent">Contact</p>
-      <h2 class="mt-3 display-lg text-brand">Get in touch</h2>
-      <p class="mt-3 leading-relaxed text-ink/65">Tell us what you need and our team will respond directly.</p>
-      <ul class="mt-6 space-y-2 text-sm text-ink/70">
-        <li>{{ COMPANY.jobs_email }}</li>
-        <li>{{ COMPANY.email }}</li>
-        <li>{{ COMPANY.address }}</li>
-      </ul>
+<!-- Direct Intake & Corporate Contact -->
+<section class="mx-auto max-w-7xl px-6 py-20 lg:py-28">
+  <div class="grid gap-16 lg:grid-cols-[1fr_1.25fr] lg:items-start">
+    <div class="reveal">
+      <p class="eyebrow flex items-center gap-2">
+        <span class="inline-block h-px w-6 bg-accent"></span>
+        Direct Advisory
+      </p>
+      <h2 class="mt-4 display-lg">Initiate a conversation with our leadership.</h2>
+      <p class="mt-4 text-base leading-relaxed text-ink-muted">
+        Whether you are evaluating staffing partners for an enterprise rollout or exploring training cohorts, our Irving team responds directly.
+      </p>
+      <div class="mt-8 space-y-4 rounded-md border border-line bg-surface/60 p-6 text-sm text-ink font-medium">
+        <div class="flex items-start gap-3">
+          <svg class="h-5 w-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          <div>
+            <p class="font-bold text-ink">Global Center for Technology &amp; Training</p>
+            <p class="text-xs text-ink-muted">{{ COMPANY.address }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <svg class="h-5 w-5 text-accent shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <div>
+            <p class="text-xs text-ink-muted">Corporate Accounts &amp; Employer Requisitions</p>
+            <a href="mailto:{{ COMPANY.email }}" class="font-semibold text-accent hover:underline">{{ COMPANY.email }}</a>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <svg class="h-5 w-5 text-accent shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <div>
+            <p class="text-xs text-ink-muted">Candidate &amp; Career Submissions</p>
+            <a href="mailto:{{ COMPANY.jobs_email }}" class="font-semibold text-accent hover:underline">{{ COMPANY.jobs_email }}</a>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="border border-line bg-paper p-6 md:p-8">
-      {% include "enquiries/_form.html" %}
+
+    <!-- Clean Requisition / Enquiry Card -->
+    <div class="card shadow-md p-8 sm:p-10 reveal delay-1">
+      <h3 class="font-display text-xl font-bold text-ink">Submit an Inquiry</h3>
+      <p class="mt-1 text-xs text-ink-muted">Complete the brief below and a GCTT associate will follow up within 24 hours.</p>
+      <div class="mt-6 border-t border-line/60 pt-6">
+        {% include "enquiries/_form.html" %}
+      </div>
     </div>
   </div>
 </section>
+
 {% endblock %}

@@ -1,16 +1,45 @@
 {% extends "base.html" %}
-{% block title %}IT Staffing — GCTT{% endblock %}
+{% block title %}IT Staffing Solutions — GCTT{% endblock %}
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Service" title="IT Staffing" intro="Skilled IT professionals for your technology teams." %}
+{% include "partials/_hero.html" with eyebrow="Staffing Practice" title="Enterprise IT Staffing" intro="Scalable, technically vetted talent pipelines engineered for high-growth enterprise initiatives and mission-critical systems." %}
 
-<section class="mx-auto max-w-7xl px-6 py-16 md:py-24">
-  <div class="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
-    <div class="space-y-4 text-lg text-ink/70">
-      <p>Whether you need to grow a project team or fill a specific technical role, GCTT helps you connect with IT professionals.</p>
-      <p>Tell us what you need and our team will be in touch.</p>
+<section class="mx-auto max-w-7xl px-6 py-16 lg:py-24">
+  <div class="grid gap-16 lg:grid-cols-[1fr_1.3fr] lg:items-start">
+    <div class="space-y-6 text-base leading-relaxed text-ink-muted sm:text-lg reveal">
+      <p class="font-display text-2xl font-bold text-ink">Precision technical staffing without operational friction.</p>
+      <p>Whether you need to augment an in-flight implementation team or source specialized niche architects, GCTT identifies, screens, and deploys seasoned IT professionals across Texas and nationally.</p>
+      
+      <div class="space-y-4 border-t border-line/60 pt-6 text-sm text-ink">
+        <div class="flex items-start gap-3">
+          <svg class="h-5 w-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <div>
+            <p class="font-bold text-ink">Direct W2, Contract &amp; Contract-to-Hire</p>
+            <p class="text-xs text-ink-muted">Flexible engagement models designed around your quarterly delivery deadlines and budget parameters.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <svg class="h-5 w-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <div>
+            <p class="font-bold text-ink">Rigorous Technical Evaluation</p>
+            <p class="text-xs text-ink-muted">Every candidate is screened for hands-on architectural competence, domain expertise, and enterprise culture fit.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <svg class="h-5 w-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <div>
+            <p class="font-bold text-ink">Irving, TX Corporate Oversight</p>
+            <p class="text-xs text-ink-muted">Direct executive accountability from our Dallas-Fort Worth headquarters with rapid turnaround.</p>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="rounded-md border border-line bg-surface p-6 md:p-8">
-      {% include "enquiries/_form.html" %}
+
+    <div class="card shadow-md p-8 sm:p-10 reveal delay-1">
+      <h3 class="font-display text-xl font-bold text-ink">Request Staffing Consultation</h3>
+      <p class="mt-1 text-xs text-ink-muted">Specify your technical requirements below. Our staffing directors follow up within 24 hours.</p>
+      <div class="mt-6 border-t border-line/60 pt-6">
+        {% include "enquiries/_form.html" %}
+      </div>
     </div>
   </div>
 </section>

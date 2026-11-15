@@ -1,10 +1,10 @@
 {% load static %}<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ COMPANY.name }} — {{ COMPANY.legal_name }}{% endblock %}</title>
-  <meta name="description" content="{% block description %}{{ COMPANY.tagline }} IT staffing, recruitment, talent acquisition and training."{% endblock %}">
+  <meta name="description" content="{% block description %}{{ COMPANY.tagline }} IT staffing, recruitment, talent acquisition and training.{% endblock %}">
   <meta property="og:title" content="{% block og_title %}{{ COMPANY.name }} — {{ COMPANY.legal_name }}{% endblock %}">
   <meta property="og:description" content="{% block og_description %}{{ COMPANY.tagline }} IT staffing, recruitment, talent acquisition and training.{% endblock %}">
   <meta property="og:type" content="website">
@@ -15,6 +15,12 @@
   <meta name="twitter:image" content="{{ COMPANY.url }}{% static 'images/og-gctt-v2.jpg' %}">
   <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
   <link rel="icon" href="{% static 'images/logo-small.webp' %}">
+
+  <!-- Typography: Google Fonts Preconnect & Stylesheets -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="{% static 'css/output.css' %}">
   <script type="application/ld+json">
   {
@@ -35,11 +41,30 @@
   }
   </script>
 </head>
-<body class="min-h-screen bg-paper font-sans text-ink antialiased">
-  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-brand focus:px-4 focus:py-2 focus:font-semibold focus:text-paper">Skip to content</a>
+<body class="min-h-screen bg-paper font-sans text-ink antialiased selection:bg-accent/15 selection:text-ink">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-brand focus:px-4 focus:py-2 focus:font-semibold focus:text-white">Skip to content</a>
   {% include "partials/_header.html" %}
   {% include "partials/_messages.html" %}
   <main id="main">{% block content %}{% endblock %}</main>
   {% include "partials/_footer.html" %}
+
+  <!-- Micro Motion: Viewport Intersection Observer -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (!("IntersectionObserver" in window)) {
+        document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in-view"); });
+        return;
+      }
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: "0px 0px -40px 0px", threshold: 0.1 });
+      document.querySelectorAll(".reveal").forEach(function (el) { observer.observe(el); });
+    });
+  </script>
 </body>
 </html>

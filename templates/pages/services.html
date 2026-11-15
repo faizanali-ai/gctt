@@ -1,19 +1,33 @@
 {% extends "base.html" %}
-{% block title %}Services — GCTT{% endblock %}
+{% block title %}Enterprise Services — GCTT{% endblock %}
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Services" title="Talent, hiring and training under one roof" %}
+{% include "partials/_hero.html" with eyebrow="Core Capabilities" title="Enterprise IT staffing, talent acquisition & technical workforce development" intro="Comprehensive workforce solutions engineered for enterprise scale, compliance rigor, and rapid technical delivery." %}
 
-<section class="mx-auto max-w-7xl px-6 py-16 md:py-24">
-  <div class="grid gap-4 md:grid-cols-2">
+<section class="mx-auto max-w-7xl px-6 py-16 lg:py-24">
+  <div class="grid gap-8 md:grid-cols-2">
     {% for service in SERVICES %}
-      <a href="{{ service.url }}" class="group card hover:border-brand">
-        <h2 class="text-lg font-semibold">{{ service.title }}</h2>
-        <p class="mt-2 text-ink/70">{{ service.text }}</p>
+      <a href="{{ service.url }}" class="card-hover reveal group p-8 sm:p-10">
+        <div class="flex items-start justify-between">
+          <p class="eyebrow text-2xs">Practice 0{{ forloop.counter }}</p>
+          <span class="text-xl text-accent transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">&nearr;</span>
+        </div>
+        <h2 class="mt-4 font-display text-2xl font-bold text-ink group-hover:text-accent transition-colors">{{ service.title }}</h2>
+        <p class="mt-3 text-base leading-relaxed text-ink-muted">{{ service.text }}</p>
+        <div class="mt-6 border-t border-line/60 pt-4 text-xs font-semibold uppercase tracking-wider text-accent">
+          Explore Practice Details &rarr;
+        </div>
       </a>
     {% endfor %}
-    <a href="{% url 'sap_scrum' %}" class="group card hover:border-brand md:col-span-2">
-      <h2 class="text-lg font-semibold">SAP &amp; Scrum</h2>
-      <p class="mt-2 text-ink/70">Enquiries across SAP modules and Scrum and Agile roles.</p>
+    <a href="{% url 'sap_scrum' %}" class="card-hover reveal group p-8 sm:p-10 md:col-span-2 bg-gradient-to-br from-card to-surface/60">
+      <div class="flex items-start justify-between">
+        <p class="eyebrow text-2xs">Specialized Center of Excellence</p>
+        <span class="text-xl text-accent transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">&nearr;</span>
+      </div>
+      <h2 class="mt-4 font-display text-2xl font-bold text-ink group-hover:text-accent transition-colors sm:text-3xl">SAP &amp; Scrum Transformation Practice</h2>
+      <p class="mt-3 max-w-3xl text-base leading-relaxed text-ink-muted">In-depth technical staffing and workforce upskilling across SAP functional domains (MM, FICO, SD) and Agile delivery frameworks. Connect with vetted ERP consultants or sponsor team training.</p>
+      <div class="mt-6 border-t border-line/60 pt-4 text-xs font-semibold uppercase tracking-wider text-accent">
+        View SAP &amp; Agile Offerings &rarr;
+      </div>
     </a>
   </div>
 </section>

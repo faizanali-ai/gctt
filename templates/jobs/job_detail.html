@@ -1,52 +1,156 @@
 {% extends "base.html" %}
-{% block title %}{{ job.title }} — GCTT Careers{% endblock %}
+{% block title %}{{ job.title }} — Careers — GCTT{% endblock %}
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Careers" title=job.title intro=job.location %}
+{% include "partials/_hero.html" with eyebrow="Direct Mandate" title=job.title intro=job.location %}
+
 {% if not job.published %}
-  <p class="mx-auto max-w-7xl px-6 pt-6 text-sm font-semibold text-accent">Draft preview — this job is not visible to the public.</p>
+  <div class="border-b border-accent/30 bg-accent/10 px-6 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-accent">
+    Draft preview — this mandate is internal and unlisted from public search.
+  </div>
 {% endif %}
 
-<section class="mx-auto max-w-7xl px-6 py-16 md:py-24">
-  <div class="grid items-start gap-12 lg:grid-cols-[1.4fr_1fr]">
-    <div>
-      <p class="text-sm text-ink/60">{{ job.get_employment_type_display }} · Posted {{ job.created_at|date:"F j, Y" }}</p>
-      <div class="mt-6 whitespace-pre-line text-lg text-ink/80">{{ job.description }}</div>
+<section class="mx-auto max-w-7xl px-6 py-12 md:py-16">
+  <div class="grid items-start gap-12 lg:grid-cols-[1.5fr_1fr]">
+    <!-- Left Column: Mandate Specification -->
+    <div class="space-y-8 reveal">
+      <a href="{% url 'careers' %}" class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-accent transition-colors hover:text-accent-hover">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to all career opportunities
+      </a>
+
+      <!-- Role Metadata Bar -->
+      <div class="flex flex-wrap items-center gap-4 rounded-lg border border-line bg-card p-4 text-xs font-medium text-ink-muted">
+        <div>
+          <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Employment Type</span>
+          <span class="font-semibold text-ink">{{ job.get_employment_type_display }}</span>
+        </div>
+        <div class="h-6 w-px bg-line"></div>
+        <div>
+          <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Location</span>
+          <span class="font-semibold text-ink">{{ job.location }}</span>
+        </div>
+        <div class="h-6 w-px bg-line"></div>
+        <div>
+          <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Date Published</span>
+          <span class="font-semibold text-ink">{{ job.created_at|date:"F j, Y" }}</span>
+        </div>
+      </div>
+
+      <!-- Mandate Overview -->
+      <div class="rounded-lg border border-line bg-card p-6 sm:p-8">
+        <h2 class="font-display text-xl font-bold text-ink sm:text-2xl">Role Overview &amp; Scope</h2>
+        <div class="mt-4 whitespace-pre-line text-base leading-relaxed text-ink-muted">
+          {{ job.description }}
+        </div>
+      </div>
+
+      <!-- Requirements & Qualifications -->
       {% if job.requirements %}
-        <h2 class="mt-10 font-display text-2xl font-semibold">Requirements</h2>
-        <div class="mt-3 whitespace-pre-line text-lg text-ink/80">{{ job.requirements }}</div>
+        <div class="rounded-lg border border-line bg-surface p-6 sm:p-8">
+          <h2 class="font-display text-xl font-bold text-ink sm:text-2xl">Requirements &amp; Technical Qualifications</h2>
+          <div class="mt-4 whitespace-pre-line text-base leading-relaxed text-ink-muted">
+            {{ job.requirements }}
+          </div>
+        </div>
       {% endif %}
-      <a href="{% url 'careers' %}" class="mt-10 inline-block font-semibold text-brand hover:text-accent">← All opportunities</a>
+
+      <div class="pt-4">
+        <a href="{% url 'careers' %}" class="btn btn-secondary text-xs">
+          ← View All Opportunities
+        </a>
+      </div>
     </div>
 
-    <div class="rounded-md border border-line bg-surface p-6">
-      {% if applied %}
-        <p class="text-ink/70">You've already applied to this role. Our team will be in touch if there's a match.</p>
-        <a href="{% url 'dashboard' %}" class="mt-4 inline-block font-semibold text-brand hover:text-accent">View your applications →</a>
-      {% elif user.is_authenticated %}
-        <h2 class="font-display text-lg font-semibold">Apply for this role</h2>
-        <p class="mt-2 text-sm text-ink/60">
-          Applying as {{ user.display_name }} · {{ user.email }}{% if user.phone %} · {{ user.phone }}{% endif %}
-          — <a href="{% url 'profile' %}" class="font-semibold text-brand hover:text-accent">edit profile</a>
-        </p>
-        <form method="post" action="{% url 'job_apply' job.slug %}" enctype="multipart/form-data" class="mt-4 space-y-4">
-          {% csrf_token %}
-          <label class="block">
-            <span class="mb-1 block text-sm font-medium">Resume (PDF, DOC or DOCX — max 5 MB)</span>
-            {{ form.resume }}
-            {% if form.resume.errors %}<span class="mt-1 block text-sm text-accent">{{ form.resume.errors.0 }}</span>{% endif %}
-          </label>
-          <label class="block">
-            <span class="mb-1 block text-sm font-medium">Your experience and why this role suits you</span>
-            {{ form.message }}
-            {% if form.message.errors %}<span class="mt-1 block text-sm text-accent">{{ form.message.errors.0 }}</span>{% endif %}
-          </label>
-          <button type="submit" class="rounded-md bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Submit application</button>
-        </form>
-      {% else %}
-        <p class="text-ink/70">Create a free account to apply for this role.</p>
-        <a href="{% url 'signup' %}" class="mt-4 inline-block rounded-md bg-accent px-6 py-3 font-semibold text-paper transition hover:bg-brand">Create account</a>
-        <p class="mt-3 text-sm text-ink/60">Already have an account? <a href="{% url 'login' %}" class="font-semibold text-brand hover:text-accent">Log in</a></p>
-      {% endif %}
+    <!-- Right Column: Application Drawer -->
+    <div class="lg:sticky lg:top-24 reveal delay-1">
+      <div class="rounded-lg border border-line bg-card p-6 sm:p-8 shadow-sm">
+        <div class="border-b border-line-subtle pb-4">
+          <p class="eyebrow">Candidate Submission</p>
+          <h3 class="mt-1 font-display text-xl font-bold text-ink">Apply for this Role</h3>
+        </div>
+
+        {% if applied %}
+          <div class="mt-6 rounded-md border border-emerald-200 bg-emerald-50/60 p-5 text-sm">
+            <div class="flex items-center gap-2 font-semibold text-emerald-900">
+              <svg class="h-5 w-5 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              You have already applied for this role.
+            </div>
+            <p class="mt-2 text-xs leading-relaxed text-emerald-800">
+              Your credentials and resume are registered with our technical recruiting partners. Track review status or update your file from your candidate dashboard.
+            </p>
+            <a href="{% url 'dashboard' %}" class="btn btn-primary mt-4 w-full text-xs">
+              Open Candidate Dashboard →
+            </a>
+          </div>
+
+        {% elif user.is_authenticated %}
+          <div class="mt-5 rounded-md border border-line bg-surface p-3.5 text-xs text-ink-muted">
+            <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Submitting as</span>
+            <p class="mt-0.5 font-semibold text-ink">
+              {{ user.display_name }} · <span class="font-mono font-normal">{{ user.email }}</span>
+            </p>
+            <a href="{% url 'profile' %}" class="mt-1 inline-block text-accent hover:underline">
+              Edit contact details
+            </a>
+          </div>
+
+          <form method="post" action="{% url 'job_apply' job.slug %}" enctype="multipart/form-data" class="mt-5 space-y-4">
+            {% csrf_token %}
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-ink">
+                Resume / Curriculum Vitae
+                <span class="font-normal lowercase text-ink-subtle">(PDF, DOC, DOCX — max 5 MB)</span>
+              </label>
+              <div class="mt-1.5">
+                {{ form.resume }}
+              </div>
+              {% if form.resume.errors %}
+                <p class="mt-1.5 text-xs font-semibold text-rose-600">{{ form.resume.errors.0 }}</p>
+              {% endif %}
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-ink">
+                Executive Summary / Cover Note
+                <span class="font-normal lowercase text-ink-subtle">(optional)</span>
+              </label>
+              <div class="mt-1.5">
+                {{ form.message }}
+              </div>
+              {% if form.message.errors %}
+                <p class="mt-1.5 text-xs font-semibold text-rose-600">{{ form.message.errors.0 }}</p>
+              {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full justify-center">
+              Submit Direct Application
+            </button>
+            <p class="text-center text-2xs text-ink-subtle">
+              Direct submission to GCTT practice leads. Subject to confidentiality standards.
+            </p>
+          </form>
+
+        {% else %}
+          <div class="mt-6 space-y-4 text-sm">
+            <p class="text-ink-muted">
+              To apply directly for confidential client mandates, access your GCTT candidate account or create one in seconds.
+            </p>
+            <a href="{% url 'signup' %}" class="btn btn-primary w-full justify-center">
+              Create Candidate Account
+            </a>
+            <div class="rounded-md border border-line bg-surface p-4 text-xs text-ink-muted">
+              <span>Already registered in our candidate network?</span>
+              <a href="{% url 'login' %}?next={{ request.path }}" class="mt-1 block font-semibold text-brand hover:text-accent">
+                Sign in to your account →
+              </a>
+            </div>
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </section>

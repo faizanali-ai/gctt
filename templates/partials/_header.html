@@ -1,82 +1,102 @@
 {% load static %}
-<div class="hidden bg-brand text-paper md:block">
-  <div class="mx-auto flex h-9 max-w-7xl items-center justify-between px-6 text-xs">
-    <div class="flex items-center gap-5 text-paper/70">
-      <span>{{ COMPANY.address }}</span>
-      <a href="mailto:{{ COMPANY.jobs_email }}" class="hover:text-paper">{{ COMPANY.jobs_email }}</a>
-      <a href="mailto:{{ COMPANY.email }}" class="hover:text-paper">{{ COMPANY.email }}</a>
+<!-- Top Executive Utility Bar -->
+<div class="hidden border-b border-brand-2/60 bg-brand text-paper md:block">
+  <div class="mx-auto flex h-9 max-w-7xl items-center justify-between px-6 text-xs tracking-wide">
+    <div class="flex items-center gap-6 text-paper/70">
+      <span class="flex items-center gap-1.5">
+        <svg class="h-3 w-3 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        {{ COMPANY.address }}
+      </span>
+      <span class="text-paper/20">|</span>
+      <a href="mailto:{{ COMPANY.jobs_email }}" class="transition-colors hover:text-white">{{ COMPANY.jobs_email }}</a>
+      <span class="text-paper/20">|</span>
+      <a href="mailto:{{ COMPANY.email }}" class="transition-colors hover:text-white">{{ COMPANY.email }}</a>
     </div>
-    <div class="flex items-center gap-5">
-      <a href="{% url 'careers' %}" class="text-paper/70 hover:text-paper">Job seekers</a>
-      <a href="{% url 'employers' %}" class="text-paper/70 hover:text-paper">Employers</a>
+    <div class="flex items-center gap-5 text-xs">
+      <a href="{% url 'careers' %}" class="text-paper/70 transition-colors hover:text-white">Job Seekers</a>
+      <a href="{% url 'employers' %}" class="text-paper/70 transition-colors hover:text-white">Employers</a>
       {% if not user.is_authenticated %}
-        <a href="{% url 'login' %}" class="font-semibold text-paper hover:text-white">Portal login</a>
+        <span class="text-paper/20">|</span>
+        <a href="{% url 'login' %}" class="font-semibold text-accent transition-colors hover:text-white">Staff / Portal Login</a>
       {% endif %}
     </div>
   </div>
 </div>
 
-<header class="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
-  <div class="mx-auto flex h-16 max-w-7xl items-center gap-6 px-6">
-    <a href="{% url 'home' %}" class="flex shrink-0 items-center gap-2">
-      <img src="{% static 'images/logo-small.webp' %}" alt="GCTT — Global Center for Technology & Training" class="h-9 w-auto">
+<!-- Main Executive Sticky Navigation -->
+<header class="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur-md transition-shadow">
+  <div class="mx-auto flex h-18 max-w-7xl items-center gap-6 px-6">
+    <a href="{% url 'home' %}" class="group flex shrink-0 items-center gap-3">
+      <img src="{% static 'images/logo-small.webp' %}" alt="GCTT — Global Center for Technology & Training" class="h-9.5 w-auto transition-transform group-hover:scale-102">
     </a>
 
-    <nav class="hidden flex-1 items-center gap-6 text-sm font-medium text-ink/70 lg:flex" aria-label="Main">
-      <a href="{% url 'about' %}" class="hover:text-ink {% if request.path == '/about/' %}text-accent{% endif %}">About</a>
+    <nav class="hidden flex-1 items-center gap-7 text-sm font-medium text-ink-muted lg:flex" aria-label="Main">
+      <a href="{% url 'about' %}" class="transition-colors hover:text-ink {% if request.path == '/about/' %}font-semibold text-accent{% endif %}">About</a>
+      
       <details class="group relative">
-        <summary class="flex cursor-pointer list-none items-center gap-1 hover:text-ink">Services <span class="text-[10px]">▾</span></summary>
-        <div class="absolute left-0 top-full z-30 mt-3 w-64 rounded-md border border-line bg-paper p-2 shadow-lg">
+        <summary class="flex cursor-pointer list-none items-center gap-1.5 transition-colors hover:text-ink {% if '/services/' in request.path or '/it-staffing/' in request.path or '/recruitment/' in request.path or '/talent-acquisition/' in request.path or '/sap-scrum/' in request.path %}font-semibold text-accent{% endif %}">
+          Services
+          <svg class="h-3.5 w-3.5 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="absolute left-0 top-full z-30 mt-3 w-72 rounded-md border border-line bg-card p-2.5 shadow-xl ring-1 ring-black/5 animate-in fade-in slide-in-from-top-1">
+          <div class="px-3 py-1.5 text-2xs font-semibold uppercase tracking-[0.1em] text-accent">Core Capabilities</div>
           {% for service in SERVICES %}
-            <a href="{{ service.url }}" class="block rounded-md px-3 py-2 text-sm hover:bg-surface">{{ service.title }}</a>
+            <a href="{{ service.url }}" class="block rounded px-3 py-2 text-sm text-ink transition-colors hover:bg-surface hover:text-accent">
+              <span class="font-medium">{{ service.title }}</span>
+            </a>
           {% endfor %}
-          <a href="{% url 'sap_scrum' %}" class="block rounded-md px-3 py-2 text-sm hover:bg-surface">SAP &amp; Scrum</a>
+          <div class="my-1 border-t border-line"></div>
+          <a href="{% url 'sap_scrum' %}" class="block rounded px-3 py-2 text-sm text-ink transition-colors hover:bg-surface hover:text-accent">
+            <span class="font-medium">SAP &amp; Scrum Specialization</span>
+          </a>
         </div>
       </details>
-      <a href="{% url 'training' %}" class="hover:text-ink {% if request.path == '/training/' %}text-accent{% endif %}">Training</a>
-      <a href="{% url 'careers' %}" class="hover:text-ink {% if request.path == '/careers/' %}text-accent{% endif %}">Careers</a>
-      <a href="{% url 'career_restart' %}" class="hover:text-ink {% if request.path == '/career-restart/' %}text-accent{% endif %}">Career Restart</a>
-      <a href="{% url 'employers' %}" class="hover:text-ink {% if request.path == '/employers/' %}text-accent{% endif %}">For Employers</a>
-      <a href="{% url 'contact' %}" class="hover:text-ink {% if request.path == '/contact/' %}text-accent{% endif %}">Contact</a>
+
+      <a href="{% url 'training' %}" class="transition-colors hover:text-ink {% if request.path == '/training/' %}font-semibold text-accent{% endif %}">Training</a>
+      <a href="{% url 'careers' %}" class="transition-colors hover:text-ink {% if request.path == '/careers/' %}font-semibold text-accent{% endif %}">Careers</a>
+      <a href="{% url 'career_restart' %}" class="transition-colors hover:text-ink {% if request.path == '/career-restart/' %}font-semibold text-accent{% endif %}">Career Restart</a>
+      <a href="{% url 'employers' %}" class="transition-colors hover:text-ink {% if request.path == '/employers/' %}font-semibold text-accent{% endif %}">For Employers</a>
+      <a href="{% url 'contact' %}" class="transition-colors hover:text-ink {% if request.path == '/contact/' %}font-semibold text-accent{% endif %}">Contact</a>
     </nav>
 
-    <div class="ml-auto hidden items-center gap-3 text-sm font-medium lg:flex">
+    <div class="ml-auto hidden items-center gap-4 text-sm font-medium lg:flex">
       {% if user.is_authenticated %}
-        <a href="{% url 'dashboard' %}" class="text-ink/70 hover:text-ink">Dashboard</a>
+        <a href="{% url 'dashboard' %}" class="text-ink-muted transition-colors hover:text-ink">Dashboard</a>
         <form method="post" action="{% url 'logout' %}">
           {% csrf_token %}
-          <button type="submit" class="text-ink/70 hover:text-ink">Log out</button>
+          <button type="submit" class="text-ink-muted transition-colors hover:text-accent">Log out</button>
         </form>
       {% else %}
-        <a href="{% url 'login' %}" class="text-ink/70 hover:text-ink">Log in</a>
+        <a href="{% url 'login' %}" class="text-ink-muted transition-colors hover:text-ink">Log in</a>
         <a href="{% url 'employers' %}" class="btn btn-primary py-2.5 text-sm">Hire Talent</a>
       {% endif %}
     </div>
 
+    <!-- Mobile Drawer Summary -->
     <details class="ml-auto lg:hidden">
-      <summary class="cursor-pointer list-none rounded-md border border-line px-3 py-2 text-sm font-medium">Menu</summary>
-      <nav class="absolute inset-x-0 top-16 space-y-1 border-b border-line bg-paper px-6 py-4 shadow-sm" aria-label="Mobile">
-        <a href="{% url 'about' %}" class="block rounded-md px-2 py-2 text-sm hover:bg-surface">About</a>
-        <p class="mt-2 px-2 text-xs font-semibold uppercase tracking-[0.1em] text-ink/40">Services</p>
+      <summary class="cursor-pointer list-none rounded-md border border-line bg-card px-3.5 py-2 text-sm font-semibold text-ink shadow-xs">Menu</summary>
+      <nav class="absolute inset-x-0 top-18 z-50 space-y-1 border-b border-line bg-card px-6 py-5 shadow-xl" aria-label="Mobile">
+        <a href="{% url 'about' %}" class="block rounded-md px-3 py-2.5 text-sm text-ink hover:bg-surface">About</a>
+        <p class="mt-3 px-3 text-2xs font-semibold uppercase tracking-[0.12em] text-accent">Services</p>
         {% for service in SERVICES %}
-          <a href="{{ service.url }}" class="block rounded-md px-4 py-2 text-sm hover:bg-surface">{{ service.title }}</a>
+          <a href="{{ service.url }}" class="block rounded-md px-5 py-2 text-sm text-ink hover:bg-surface">{{ service.title }}</a>
         {% endfor %}
-        <a href="{% url 'sap_scrum' %}" class="block rounded-md px-4 py-2 text-sm hover:bg-surface">SAP &amp; Scrum</a>
-        <a href="{% url 'training' %}" class="block rounded-md px-2 py-2 text-sm hover:bg-surface">Training</a>
-        <a href="{% url 'careers' %}" class="block rounded-md px-2 py-2 text-sm hover:bg-surface">Careers</a>
-        <a href="{% url 'career_restart' %}" class="block rounded-md px-2 py-2 text-sm hover:bg-surface">Career Restart</a>
-        <a href="{% url 'employers' %}" class="block rounded-md px-2 py-2 text-sm hover:bg-surface">For Employers</a>
-        <a href="{% url 'contact' %}" class="block rounded-md px-2 py-2 text-sm hover:bg-surface">Contact</a>
-        <div class="mt-3 flex flex-wrap gap-4 border-t border-line pt-3 text-sm font-medium">
+        <a href="{% url 'sap_scrum' %}" class="block rounded-md px-5 py-2 text-sm text-ink hover:bg-surface">SAP &amp; Scrum</a>
+        <a href="{% url 'training' %}" class="block rounded-md px-3 py-2.5 text-sm text-ink hover:bg-surface">Training</a>
+        <a href="{% url 'careers' %}" class="block rounded-md px-3 py-2.5 text-sm text-ink hover:bg-surface">Careers</a>
+        <a href="{% url 'career_restart' %}" class="block rounded-md px-3 py-2.5 text-sm text-ink hover:bg-surface">Career Restart</a>
+        <a href="{% url 'employers' %}" class="block rounded-md px-3 py-2.5 text-sm text-ink hover:bg-surface">For Employers</a>
+        <a href="{% url 'contact' %}" class="block rounded-md px-3 py-2.5 text-sm text-ink hover:bg-surface">Contact</a>
+        <div class="mt-4 flex flex-wrap items-center gap-4 border-t border-line pt-4 text-sm font-medium">
           {% if user.is_authenticated %}
-            <a href="{% url 'dashboard' %}" class="hover:text-accent">Dashboard</a>
-            <form method="post" action="{% url 'logout' %}">
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary flex-1 py-2 text-center text-xs">Dashboard</a>
+            <form method="post" action="{% url 'logout' %}" class="flex-1">
               {% csrf_token %}
-              <button type="submit" class="hover:text-accent">Log out</button>
+              <button type="submit" class="btn btn-secondary w-full py-2 text-center text-xs">Log out</button>
             </form>
           {% else %}
-            <a href="{% url 'login' %}" class="hover:text-accent">Log in</a>
-            <a href="{% url 'signup' %}" class="hover:text-accent">Sign up</a>
+            <a href="{% url 'login' %}" class="btn btn-secondary flex-1 py-2 text-center text-xs">Log in</a>
+            <a href="{% url 'signup' %}" class="btn btn-primary flex-1 py-2 text-center text-xs">Register</a>
           {% endif %}
         </div>
       </nav>

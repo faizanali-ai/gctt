@@ -1,18 +1,30 @@
-<nav class="mt-8 flex flex-wrap gap-2 border-b border-line pb-4 text-sm font-semibold" aria-label="Staff sections">
-  <a href="{% url 'dashboard' %}" class="rounded-md px-3 py-1.5 hover:bg-surface">Overview</a>
+<nav class="mt-6 flex flex-wrap items-center gap-1.5 border-b border-line pb-3 text-xs font-semibold" aria-label="Staff practice areas">
+  <a href="{% url 'dashboard' %}" class="rounded-md px-3 py-1.5 transition-colors {% if request.path == '/dashboard/' %}bg-brand text-white shadow-xs{% else %}text-ink-muted hover:bg-card hover:text-ink border border-transparent hover:border-line{% endif %}">
+    Overview
+  </a>
   {% if perms.enquiries.view_enquiry %}
-    <a href="{% url 'staff_enquiries' %}" class="rounded-md px-3 py-1.5 hover:bg-surface">Enquiries</a>
+    <a href="{% url 'staff_enquiries' %}" class="rounded-md px-3 py-1.5 transition-colors {% if '/staff/enquiries/' in request.path %}bg-brand text-white shadow-xs{% else %}text-ink-muted hover:bg-card hover:text-ink border border-transparent hover:border-line{% endif %}">
+      Enquiries
+    </a>
   {% endif %}
   {% if perms.jobs.view_job %}
-    <a href="{% url 'staff_jobs' %}" class="rounded-md px-3 py-1.5 hover:bg-surface">Jobs</a>
+    <a href="{% url 'staff_jobs' %}" class="rounded-md px-3 py-1.5 transition-colors {% if '/staff/jobs/' in request.path %}bg-brand text-white shadow-xs{% else %}text-ink-muted hover:bg-card hover:text-ink border border-transparent hover:border-line{% endif %}">
+      Mandates &amp; Jobs
+    </a>
   {% endif %}
   {% if perms.jobs.view_application %}
-    <a href="{% url 'staff_applications' %}" class="rounded-md px-3 py-1.5 hover:bg-surface">Applications</a>
+    <a href="{% url 'staff_applications' %}" class="rounded-md px-3 py-1.5 transition-colors {% if '/staff/applications/' in request.path %}bg-brand text-white shadow-xs{% else %}text-ink-muted hover:bg-card hover:text-ink border border-transparent hover:border-line{% endif %}">
+      Applications
+    </a>
   {% endif %}
   {% if perms.training.view_programme %}
-    <a href="{% url 'staff_programmes' %}" class="rounded-md px-3 py-1.5 hover:bg-surface">Programmes</a>
+    <a href="{% url 'staff_programmes' %}" class="rounded-md px-3 py-1.5 transition-colors {% if '/staff/programmes/' in request.path %}bg-brand text-white shadow-xs{% else %}text-ink-muted hover:bg-card hover:text-ink border border-transparent hover:border-line{% endif %}">
+      Programmes
+    </a>
   {% endif %}
   {% if perms.training.view_registration %}
-    <a href="{% url 'staff_registrations' %}" class="rounded-md px-3 py-1.5 hover:bg-surface">Registrations</a>
+    <a href="{% url 'staff_registrations' %}" class="rounded-md px-3 py-1.5 transition-colors {% if '/staff/registrations/' in request.path %}bg-brand text-white shadow-xs{% else %}text-ink-muted hover:bg-card hover:text-ink border border-transparent hover:border-line{% endif %}">
+      Registrations
+    </a>
   {% endif %}
 </nav>

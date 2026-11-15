@@ -2,53 +2,128 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <title>Certificate of Completion — {{ reg.student.display_name }}</title>
   <style>
     @page { size: A4 landscape; margin: 0; }
     html, body { margin: 0; padding: 0; }
     body {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      color: #0d1b2a;
+      font-family: "Georgia", "Times New Roman", serif;
+      color: #111827;
+      background: #faf9f6;
     }
     .frame {
       position: relative;
       width: 297mm; height: 210mm;
       box-sizing: border-box;
       background: #ffffff;
-      border: 2mm solid #0f2a44;
+      border: 3mm solid #0c1e36;
+      padding: 12mm;
     }
-    .center {
-      position: absolute;
-      top: 50%; left: 0; right: 0;
-      transform: translateY(-50%);
+    .inner-border {
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      border: 0.5mm solid #9e6534;
+      position: relative;
+      padding: 16mm 24mm;
       text-align: center;
-      padding: 0 26mm;
     }
-    .brand { font-size: 30px; font-weight: 700; color: #0f2a44; letter-spacing: 1px; }
-    .legal { font-size: 11px; color: #5c6b7a; text-transform: uppercase; letter-spacing: 2.5px; margin-top: 4px; }
-    .rule { width: 70px; height: 2px; background: #8a1c2b; margin: 20px auto; }
-    .title { font-size: 22px; font-weight: 600; color: #0d1b2a; margin: 8px 0 0; }
-    .lead { font-size: 12px; color: #5c6b7a; margin: 16px 0 4px; }
-    .name { font-size: 36px; font-weight: 700; color: #0f2a44; margin: 0 30mm; padding-bottom: 10px; border-bottom: 1px solid #dde4ea; }
-    .programme { font-size: 19px; font-weight: 600; color: #16395c; margin-top: 16px; }
-    .footer { margin-top: 26px; font-size: 10px; color: #5c6b7a; line-height: 1.8; }
-    .ref { color: #0f2a44; font-weight: 700; }
+    .brand {
+      font-size: 28px;
+      font-weight: 700;
+      color: #0c1e36;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .legal {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 10px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-top: 4px;
+    }
+    .rule {
+      width: 80px;
+      height: 2px;
+      background: #9e6534;
+      margin: 18px auto;
+    }
+    .title {
+      font-size: 26px;
+      font-weight: 600;
+      color: #0c1e36;
+      letter-spacing: 0.5px;
+      margin: 10px 0 0;
+    }
+    .lead {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 11px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin: 16px 0 6px;
+    }
+    .name {
+      font-size: 38px;
+      font-weight: 700;
+      color: #0c1e36;
+      margin: 0 auto;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5e0d8;
+      display: inline-block;
+      min-width: 320px;
+    }
+    .programme {
+      font-size: 20px;
+      font-weight: 600;
+      color: #162e4e;
+      margin-top: 14px;
+      font-style: italic;
+    }
+    .footer {
+      position: absolute;
+      bottom: 16mm;
+      left: 24mm;
+      right: 24mm;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 9px;
+      color: #6b7280;
+      line-height: 1.6;
+      border-top: 1px solid #e5e0d8;
+      padding-top: 10px;
+    }
+    .ref {
+      color: #0c1e36;
+      font-weight: 700;
+      font-family: monospace;
+      font-size: 10px;
+    }
   </style>
 </head>
 <body>
   <div class="frame">
-    <div class="center">
+    <div class="inner-border">
       <div class="brand">{{ COMPANY.name }}</div>
-      <div class="legal">{{ COMPANY.legal_name }}</div>
+      <div class="legal">{{ COMPANY.legal_name }} · Irving, Texas</div>
       <div class="rule"></div>
       <div class="title">Certificate of Completion</div>
-      <p class="lead">This is proudly presented to</p>
+      <p class="lead">This certifies that</p>
       <div class="name">{{ reg.student.display_name }}</div>
-      <p class="lead">for successfully completing the programme</p>
+      <p class="lead">has successfully completed the executive curriculum</p>
       <div class="programme">{{ reg.programme.title }}</div>
       <div class="footer">
-        <div>Issued {{ reg.certificate_issued_at|date:"F j, Y" }}</div>
-        <div class="ref">Certificate ID: {{ reg.certificate_ref }}</div>
-        <div>Verify at {{ COMPANY.url }}/training/verify/{{ reg.certificate_ref }}/</div>
+        <div style="text-align: left;">
+          <div>Issued: {{ reg.certificate_issued_at|date:"F j, Y" }}</div>
+          <div>Director of Technical Education</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="ref">ID: {{ reg.certificate_ref }}</div>
+          <div>Verify: {{ COMPANY.url }}/training/verify/{{ reg.certificate_ref }}/</div>
+        </div>
       </div>
     </div>
   </div>

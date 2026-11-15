@@ -1,7 +1,16 @@
-<section class="border-b border-line bg-surface">
-  <div class="mx-auto max-w-7xl px-6 py-14 md:py-20">
-    <p class="eyebrow">{{ eyebrow }}</p>
-    <h1 class="mt-4 max-w-3xl display-xl">{{ title }}</h1>
-    {% if intro %}<p class="mt-4 max-w-2xl text-lg leading-relaxed text-ink/65">{{ intro }}</p>{% endif %}
+<section class="border-b border-line bg-surface/75 py-16 lg:py-24">
+  <div class="mx-auto max-w-7xl px-6">
+    <div class="max-w-3xl reveal">
+      {% if eyebrow %}
+        <p class="eyebrow flex items-center gap-2">
+          <span class="inline-block h-px w-6 bg-accent"></span>
+          {{ eyebrow }}
+        </p>
+      {% endif %}
+      <h1 class="mt-4 display-xl">{{ title }}</h1>
+      {% if intro %}
+        <p class="mt-5 text-lg leading-relaxed text-ink-muted sm:text-xl font-sans">{{ intro }}</p>
+      {% endif %}
+    </div>
   </div>
 </section>
