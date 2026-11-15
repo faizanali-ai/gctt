@@ -8,5 +8,6 @@ def site(request):
         "COMPANY": COMPANY,
         "NAV_ITEMS": NAV_ITEMS,
         "SERVICES": SERVICES,
-        "enquiry_form": EnquiryForm(),
+        # Repopulate a failed enquiry once, then clear it.
+        "enquiry_form": EnquiryForm(initial=request.session.pop("enquiry_initial", {})),
     }

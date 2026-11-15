@@ -9,7 +9,11 @@ from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.audit import log_action
-from config.emails import notify_application
+from config.emails import (
+    notify_application,
+    notify_application_status,
+    notify_staff_new_application,
+)
 
 from .forms import ApplicationForm
 from .models import Application, Job
@@ -77,6 +81,7 @@ def job_apply(request, slug):
                 application.save()
             messages.success(request, "Your application has been sent.")
             notify_application(application)
+            notify_staff_new_application(application)
         except IntegrityError:
             messages.error(request, "You have already applied to this job.")
         return redirect("job_detail", slug=job.slug)
@@ -85,6 +90,16 @@ def job_apply(request, slug):
         "jobs/job_detail.html",
         {"job": job, "form": form, "applied": False},
     )
+
+
+@login_required
+@require_POST
+def withdraw_application(request, pk):
+    application = get_object_or_404(Application, pk=pk, applicant=request.user)
+    role = application.job.title
+    application.delete()
+    messages.success(request, f"Your application for {role} was withdrawn.")
+    return redirect("dashboard")
 
 
 @login_required
@@ -164,5 +179,6 @@ def staff_application_status(request, pk):
         application.status = status
         application.save(update_fields=["status"])
         log_action(request, "application.status", f"{application.pk}", f"{previous} → {status}")
+        notify_application_status(application)
         messages.success(request, "Status updated.")
     return redirect("staff_applications")

@@ -57,6 +57,11 @@ urlpatterns = [
     path("enquiries/", include("apps.enquiries.urls")),
     path("accounts/", include("apps.accounts.urls")),
     path("dashboard/", accounts_views.dashboard, name="dashboard"),
+    path(
+        "dashboard/applications/<int:pk>/withdraw/",
+        jobs_views.withdraw_application,
+        name="withdraw_application",
+    ),
     path("profile/", accounts_views.profile_edit, name="profile"),
     path("staff/enquiries/", enquiries_views.staff_enquiries, name="staff_enquiries"),
     path(

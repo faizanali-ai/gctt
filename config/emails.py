@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
+from .constants import COMPANY
+
 
 def send(to, subject, body):
     # shortcut: synchronous send, move to a task queue when volume justifies it
@@ -34,8 +36,21 @@ def notify_enquiry(enquiry):
         f"New enquiry: {enquiry.get_category_display()}",
         f"From: {enquiry.name} <{enquiry.email}>\n"
         f"Phone: {enquiry.phone or '—'}\n"
+        f"Company: {enquiry.company or '—'}\n"
         f"Category: {enquiry.get_category_display()}\n\n"
         f"{enquiry.message}",
+    )
+
+
+def notify_enquiry_received(enquiry):
+    send(
+        enquiry.email,
+        "We received your enquiry — GCTT",
+        f"Hi {enquiry.name},\n\n"
+        f"Thanks for contacting GCTT. Your enquiry has been received and our team "
+        f"will respond within one business day.\n\n"
+        f"For reference, your message was:\n\n{enquiry.message}\n\n"
+        f"— GCTT\n{COMPANY['email']}",
     )
 
 
@@ -50,6 +65,35 @@ def notify_application(application):
     )
 
 
+def notify_staff_new_application(application):
+    send(
+        COMPANY["jobs_email"],
+        f"New application: {application.job.title}",
+        f"Candidate: {application.applicant.display_name} <{application.applicant.email}>\n"
+        f"Phone: {application.applicant.phone or '—'}\n"
+        f"Role: {application.job.title} ({application.job.location})\n\n"
+        f"{application.message}\n\n"
+        f"Review it in the staff portal: /staff/applications/",
+    )
+
+
+def notify_application_status(application):
+    subject = {
+        "shortlisted": f"You've been shortlisted for {application.job.title}",
+        "selected": f"Good news about your application: {application.job.title}",
+        "rejected": f"Update on your application: {application.job.title}",
+    }.get(application.status, f"Your application status changed: {application.job.title}")
+    send(
+        application.applicant.email,
+        subject,
+        f"Hi {application.applicant.display_name},\n\n"
+        f"Your application for {application.job.title} is now "
+        f"“{application.get_status_display()}”.\n"
+        f"You can see the full history on your dashboard.\n\n"
+        f"— GCTT",
+    )
+
+
 def notify_registration(registration):
     send(
         registration.student.email,
@@ -57,6 +101,18 @@ def notify_registration(registration):
         f"Hi {registration.student.display_name},\n\n"
         f"We received your registration for {registration.programme.title}.\n"
         f"We'll be in touch with the next steps. You can track it on your dashboard.\n\n"
+        f"— GCTT",
+    )
+
+
+def notify_registration_status(registration):
+    send(
+        registration.student.email,
+        f"Your training registration is now “{registration.get_status_display()}”",
+        f"Hi {registration.student.display_name},\n\n"
+        f"Your registration for {registration.programme.title} is now "
+        f"“{registration.get_status_display()}”.\n"
+        f"You can see the details on your dashboard.\n\n"
         f"— GCTT",
     )
 

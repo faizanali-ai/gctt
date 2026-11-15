@@ -29,7 +29,14 @@
             <a href="{% url 'job_detail' application.job.slug %}" class="font-medium text-brand hover:text-accent">{{ application.job.title }}</a>
             <p class="text-xs text-ink/50">{{ application.job.location }} · applied {{ application.created_at|date:"M j, Y" }}</p>
           </div>
-          <span class="rounded-full bg-brand/10 px-2.5 py-0.5 text-xs font-semibold text-brand">{{ application.get_status_display }}</span>
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="rounded-full bg-brand/10 px-2.5 py-0.5 text-xs font-semibold text-brand">{{ application.get_status_display }}</span>
+            <a href="{{ application.resume.url }}" target="_blank" rel="noopener" class="text-xs font-semibold text-brand hover:text-accent">View resume</a>
+            <form method="post" action="{% url 'withdraw_application' application.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="text-xs font-semibold text-ink/50 hover:text-accent">Withdraw</button>
+            </form>
+          </div>
         </div>
       {% endfor %}
     </div>

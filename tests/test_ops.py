@@ -37,6 +37,19 @@ class AuditLogTests(TestCase):
         self.assertIn("shortlisted", entry.details)
         self.assertEqual(entry.ip, "127.0.0.1")
 
+    @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+    def test_status_change_emails_the_candidate(self):
+        from django.core import mail
+
+        self.client.force_login(self.recruiter)
+        self.client.post(
+            reverse("staff_application_status", args=[self.application.pk]),
+            {"status": "shortlisted"},
+        )
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ["c@example.com"])
+        self.assertIn("shortlisted", mail.outbox[0].subject.lower())
+
 
 class TwoFactorTests(TestCase):
     @classmethod

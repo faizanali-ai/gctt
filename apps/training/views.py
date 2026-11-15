@@ -9,7 +9,11 @@ from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.audit import log_action
-from config.emails import notify_certificate, notify_registration
+from config.emails import (
+    notify_certificate,
+    notify_registration,
+    notify_registration_status,
+)
 
 from .certificates import generate_certificate_pdf
 from .forms import RegistrationForm
@@ -213,6 +217,7 @@ def staff_registration_status(request, pk):
         log_action(
             request, "registration.status", f"{registration.pk}", f"{previous} → {status}"
         )
+        notify_registration_status(registration)
         messages.success(request, "Status updated.")
     return redirect("staff_registrations")
 

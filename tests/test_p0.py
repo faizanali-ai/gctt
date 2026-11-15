@@ -57,8 +57,23 @@ class NotificationTests(TestCase):
             reverse("submit_enquiry"),
             {"name": "A", "email": "a@example.com", "category": "general", "message": "Hi"},
         )
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn("New enquiry", mail.outbox[0].subject)
+        recipients = [message.to[0] for message in mail.outbox]
+        self.assertIn("Accounts@gctekton.com", recipients)
+        self.assertIn("a@example.com", recipients)
+
+    def test_enquiry_error_preserves_typed_input(self):
+        response = self.client.post(
+            reverse("submit_enquiry"),
+            {
+                "name": "A",
+                "email": "not-an-email",
+                "message": "A long message that must survive validation.",
+                "next": "contact",
+            },
+            follow=True,
+        )
+        self.assertContains(response, "A long message that must survive validation.")
+        self.assertContains(response, "Please check:")
 
     def test_application_confirms_to_candidate(self):
         user = User.objects.create_user(email="c@example.com", password="test-pass-12345")
@@ -74,8 +89,9 @@ class NotificationTests(TestCase):
             },
         )
         self.assertTrue(Application.objects.exists())
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn("We received your application", mail.outbox[0].subject)
+        recipients = [message.to[0] for message in mail.outbox]
+        self.assertIn("c@example.com", recipients)
+        self.assertIn("Jobs@gctekton.com", recipients)
 
 
 class CertificateTests(TestCase):
@@ -233,6 +249,25 @@ class ApplicationRuleTests(TestCase):
             reverse("job_apply", args=[job.slug]),
             {"resume": SimpleUploadedFile("cv.pdf", b"%PDF-1.4"), "message": "Keen"},
         )
+        self.assertTrue(Application.objects.exists())
+
+    def test_candidate_can_withdraw_own_application(self):
+        user = User.objects.create_user(email="w@example.com", password="test-pass-12345")
+        job = Job.objects.create(title="Dev", location="x", description="x", published=True)
+        application = Application.objects.create(job=job, applicant=user, resume="resumes/x.pdf")
+        self.client.force_login(user)
+        response = self.client.post(reverse("withdraw_application", args=[application.pk]))
+        self.assertRedirects(response, reverse("dashboard"))
+        self.assertFalse(Application.objects.exists())
+
+    def test_cannot_withdraw_someone_elses_application(self):
+        owner = User.objects.create_user(email="o@example.com", password="test-pass-12345")
+        other = User.objects.create_user(email="x@example.com", password="test-pass-12345")
+        job = Job.objects.create(title="Dev", location="x", description="x", published=True)
+        application = Application.objects.create(job=job, applicant=owner, resume="resumes/x.pdf")
+        self.client.force_login(other)
+        response = self.client.post(reverse("withdraw_application", args=[application.pk]))
+        self.assertEqual(response.status_code, 404)
         self.assertTrue(Application.objects.exists())
 
 

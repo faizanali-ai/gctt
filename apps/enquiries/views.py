@@ -8,7 +8,7 @@ from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.audit import log_action
-from config.emails import notify_enquiry
+from config.emails import notify_enquiry, notify_enquiry_received
 
 from .forms import EnquiryForm
 from .models import Enquiry
@@ -42,10 +42,19 @@ def submit_enquiry(request):
         )
         enquiry.save()
         notify_enquiry(enquiry)
+        notify_enquiry_received(enquiry)
         messages.success(request, "Thank you — we'll be in touch shortly.")
     else:
-        # shortcut: redirect drops partially-typed values, inline errors when forms move to HTMX
-        messages.error(request, f"Please check the form: {form.errors.as_text()}")
+        # Keep what the visitor typed so a validation error never wipes their message.
+        request.session["enquiry_initial"] = {
+            key: value
+            for key, value in request.POST.items()
+            if key not in ("csrfmiddlewaretoken", "website", "next")
+        }
+        first_errors = [
+            f"{field}: {errors[0]}" for field, errors in form.errors.items()
+        ][:2]
+        messages.error(request, "Please check: " + " · ".join(first_errors))
     return redirect(_safe_next(request.POST.get("next", "")))
 
 
