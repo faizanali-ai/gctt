@@ -3,33 +3,86 @@
 
 {% block title %}{{ title }} | GCTT Admin{% endblock %}
 
+{# Disable Django's dark theme so the brand palette always has contrast. #}
+{% block dark-mode-vars %}{% endblock %}
+
 {% block extrastyle %}
   {{ block.super }}
   <style>
     :root {
-      --primary: #0c1e36;
-      --secondary: #162e4e;
-      --accent: #9e6534;
-      --link-fg: #0c1e36;
-      --link-hover-color: #9e6534;
-      --button-bg: #0c1e36;
-      --button-hover-bg: #9e6534;
+      color-scheme: light;
+      --primary: #0f2a44;
+      --secondary: #16395c;
+      --accent: #8a1c2b;
+      --header-color: #f7f4ee;
+      --header-branding-color: #f7f4ee;
+      --header-link-color: #f7f4ee;
+      --breadcrumbs-fg: #dbe4ee;
+      --breadcrumbs-link-fg: #ffffff;
+      --breadcrumbs-bg: #16395c;
+      --link-fg: #0f2a44;
+      --link-hover-color: #8a1c2b;
+      --link-selected-fg: #8a1c2b;
+      --button-bg: #0f2a44;
+      --button-hover-bg: #16395c;
+      --default-button-bg: #8a1c2b;
+      --default-button-hover-bg: #0f2a44;
+      --body-bg: #f3f6f9;
+      --body-fg: #0d1b2a;
+      --hairline-color: #dde4ea;
+      --border-color: #dde4ea;
+      --darkened-bg: #eef2f6;
+      --selected-bg: #e6edf4;
+      --object-tools-bg: #0f2a44;
+      --object-tools-hover-bg: #8a1c2b;
     }
+
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
     #header {
-      background: #0c1e36;
-      border-bottom: 2px solid #9e6534;
+      background: #0f2a44;
     }
+
     #branding h1,
     #branding h1 a:link,
     #branding h1 a:visited {
-      color: #faf9f6;
-      font-family: "Playfair Display", Georgia, "Times New Roman", serif;
-      letter-spacing: 0.02em;
+      color: #f7f4ee;
+      font-family: Georgia, "Times New Roman", serif;
+      letter-spacing: 0.01em;
     }
+
+    div.breadcrumbs {
+      background: #16395c;
+    }
+
     .module h2,
     .module caption,
     .inline-group h2 {
-      background: #0c1e36;
+      background: #0f2a44;
+      color: #f7f4ee;
+    }
+
+    .module table th {
+      background: #eef2f6;
+    }
+
+    #changelist-filter h2 {
+      background: #0f2a44;
+      color: #f7f4ee;
+    }
+
+    .button,
+    input[type="submit"],
+    input[type="button"],
+    .submit-row input,
+    a.button {
+      border-radius: 4px;
+    }
+
+    #theme-toggle {
+      display: none;
     }
   </style>
 {% endblock %}
