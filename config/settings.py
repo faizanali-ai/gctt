@@ -166,6 +166,22 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = True
 EMAIL_TIMEOUT = 10
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {"format": "{levelname} {asctime} {name}: {message}", "style": "{"},
+    },
+    "handlers": {
+        "console": {"class": "logging.StreamHandler", "formatter": "simple"},
+    },
+    "root": {"handlers": ["console"], "level": "INFO"},
+    "loggers": {
+        "django.request": {"handlers": ["console"], "level": "WARNING", "propagate": False},
+        "django.security": {"handlers": ["console"], "level": "INFO", "propagate": False},
+    },
+}
+
 # Staff two-factor authentication (TOTP). Enable after every staff account has
 # enrolled at /account/security/.
 REQUIRE_STAFF_2FA = os.environ.get("REQUIRE_STAFF_2FA", "0") == "1"

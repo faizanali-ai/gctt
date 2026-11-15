@@ -41,6 +41,20 @@ class SmokeTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, b"ok")
 
+    def test_healthz_reports_database_failure(self):
+        from unittest.mock import patch
+
+        from django.db import OperationalError
+
+        with patch(
+            "config.views.connection.cursor", side_effect=OperationalError("down")
+        ):
+            response = self.client.get("/healthz/")
+        self.assertEqual(response.status_code, 503)
+
+    def test_home_has_skip_link(self):
+        self.assertContains(self.client.get("/"), "Skip to content")
+
     def test_slug_collisions_get_suffix(self):
         first = Job.objects.create(title="Duplicate Title", location="x", description="x")
         second = Job.objects.create(title="Duplicate Title", location="x", description="x")

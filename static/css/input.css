@@ -23,6 +23,14 @@
   input[type="checkbox"] {
     @apply w-auto accent-brand;
   }
+  a:focus-visible,
+  button:focus-visible,
+  summary:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
   ul:has(input[type="radio"]) {
     @apply space-y-1.5;
   }

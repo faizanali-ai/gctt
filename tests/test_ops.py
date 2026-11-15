@@ -81,3 +81,18 @@ class TwoFactorTests(TestCase):
         user = User.objects.create_user(email="n@example.com", password="test-pass-12345")
         self.client.force_login(user)
         self.assertEqual(self.client.get(reverse("security")).status_code, 403)
+
+
+class BackupCommandTests(TestCase):
+    def test_backup_writes_json(self):
+        import tempfile
+        from pathlib import Path
+
+        from django.core.management import call_command
+
+        User.objects.create_user(email="backup@example.com", password="test-pass-12345")
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "backup.json"
+            call_command("backup_db", output=str(target))
+            self.assertTrue(target.exists())
+            self.assertIn("accounts.user", target.read_text())

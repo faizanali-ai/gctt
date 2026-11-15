@@ -1,3 +1,4 @@
+from django.db import DatabaseError, connection
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -5,6 +6,11 @@ from apps.accounts.models import TeamProfile
 
 
 def healthz(request):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+    except DatabaseError:
+        return HttpResponse("database unavailable", status=503, content_type="text/plain")
     return HttpResponse("ok", content_type="text/plain")
 
 

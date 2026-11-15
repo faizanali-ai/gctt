@@ -7,7 +7,7 @@
 
     <nav class="hidden items-center gap-6 text-sm font-medium lg:flex" aria-label="Main">
       {% for item in NAV_ITEMS %}
-        <a href="{{ item.url }}" class="transition hover:text-accent {% if request.path == item.url %}text-accent{% endif %}">{{ item.label }}</a>
+        <a href="{{ item.url }}" class="transition hover:text-accent {% if request.path == item.url %}text-accent{% endif %}" {% if request.path == item.url %}aria-current="page"{% endif %}>{{ item.label }}</a>
       {% endfor %}
     </nav>
 

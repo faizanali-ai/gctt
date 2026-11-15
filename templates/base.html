@@ -15,8 +15,7 @@
   <meta name="twitter:image" content="{{ COMPANY.url }}{% static 'images/og-gctt-v2.jpg' %}">
   <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
   <link rel="icon" href="{% static 'images/logo-small.webp' %}">
-  <link rel="stylesheet" href="{% static 'css/output.css' %}">
-  <script type="application/ld+json">
+  <link rel="stylesheet" href="{% static 'css/output.css' %}">  <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -36,9 +35,10 @@
   </script>
 </head>
 <body class="min-h-screen bg-paper font-sans text-ink">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-sm focus:bg-brand focus:px-4 focus:py-2 focus:font-semibold focus:text-paper">Skip to content</a>
   {% include "partials/_header.html" %}
   {% include "partials/_messages.html" %}
-  <main>{% block content %}{% endblock %}</main>
+  <main id="main">{% block content %}{% endblock %}</main>
   {% include "partials/_footer.html" %}
 </body>
 </html>
