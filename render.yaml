@@ -1,0 +1,51 @@
+services:
+  - type: web
+    name: gctt
+    runtime: python
+    plan: free
+    region: oregon
+    autoDeploy: true
+    healthCheckPath: /healthz/
+    buildCommand: pip install uv && uv sync --frozen --no-dev
+    startCommand: >-
+      uv run python manage.py migrate --noinput &&
+      uv run python manage.py createcachetable &&
+      uv run python manage.py collectstatic --noinput &&
+      uv run gunicorn config.wsgi --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: DJANGO_DEBUG
+        value: "0"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_ALLOWED_HOSTS
+        sync: false
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: EMAIL_BACKEND
+        value: django.core.mail.backends.smtp.EmailBackend
+      - key: EMAIL_HOST
+        value: smtp.resend.com
+      - key: EMAIL_PORT
+        value: "587"
+      - key: EMAIL_HOST_USER
+        value: resend
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        value: Accounts@gctekton.com
+      - key: R2_BUCKET
+        sync: false
+      - key: R2_ENDPOINT
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      - key: REQUIRE_STAFF_2FA
+        value: "0"

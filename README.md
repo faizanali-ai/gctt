@@ -28,19 +28,38 @@ uv run python manage.py test tests
 uv run ruff check .
 ```
 
-## Deploy (Railway + Neon + R2 + Resend)
+## Deploy — 100% free tier
 
-1. Create a Neon Postgres database and copy its connection string.
-2. Create a Railway project from this repo; add the variables from `.env.example`
-   (`DATABASE_URL`, `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=0`, `DJANGO_ALLOWED_HOSTS`,
-   `DJANGO_CSRF_TRUSTED_ORIGINS`, `EMAIL_*`, `R2_*`).
-3. Railway runs `Procfile`: release migrates + collects static; web serves via gunicorn.
-4. Point your domain's DNS at Railway, then add the domain to `DJANGO_ALLOWED_HOSTS`
-   and `DJANGO_CSRF_TRUSTED_ORIGINS`.
-5. Health check endpoint: `/healthz/`.
+Stack: **Render** (web, free) + **Neon** (Postgres, free) + **Resend** (email, free)
++ **Cloudflare R2** (media, free within limits) + **GitHub Actions** (CI, free minutes).
 
-Media files go to R2 only when `R2_BUCKET` is set; otherwise they stay on local disk.
-Email stays on the console backend until `EMAIL_BACKEND` is set to SMTP.
+1. Create a Neon project (free plan, no expiry) and copy the **pooled** connection
+   string (`...-pooler...`) — it becomes `DATABASE_URL`.
+2. In Render, **New → Blueprint**, point it at this repo. `render.yaml` provisions the
+   free web service; fill the `sync: false` variables when prompted:
+   `DATABASE_URL`, `DJANGO_ALLOWED_HOSTS` (e.g. `gctt.onrender.com`),
+   `DJANGO_CSRF_TRUSTED_ORIGINS` (`https://gctt.onrender.com`), the Resend SMTP
+   password, and the R2 keys.
+3. The start command runs `migrate`, `createcachetable`, `collectstatic` and gunicorn
+   on every boot — no paid release phase needed.
+4. Verify `/healthz/` returns `ok`, then create the CEO account:
+   `uv run python manage.py createsuperuser` (Render shell) or via Django Admin invite.
+5. Optional custom domain: add it in Render, then append it to
+   `DJANGO_ALLOWED_HOSTS` and `DJANGO_CSRF_TRUSTED_ORIGINS`; DNS is free on Cloudflare.
+
+Free-tier realities (plan for them):
+
+- The Render service **sleeps after 15 minutes** of inactivity; the first request
+  afterwards takes ~30–60s. Neon also suspends idle compute (~0.5s wake).
+- 512 MB RAM — fine for this app; PDF generation runs one request at a time.
+- Resend free allows 3,000 emails/month (100/day).
+- R2 free allows 10 GB storage with free egress (a payment method is required to
+  activate R2, but usage within the free tier costs $0).
+- Render free has **no persistent disk** — media must go to R2 (the app refuses
+  to rely on local disk in production only insofar as it is wiped on redeploy).
+
+Railway/paid hosts still work unchanged via `Procfile` if you outgrow the free tier.
+
 
 ## Operations
 

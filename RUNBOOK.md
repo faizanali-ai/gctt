@@ -1,20 +1,25 @@
 # GCTT Runbook
 
-Operational steps for the deployed site. Assumes Railway + Neon + R2 + Resend.
+Operational steps for the deployed site. Assumes the free-tier stack: Render (web),
+Neon (Postgres), R2 (media), Resend (email).
 
 ## Deploy
 
-1. Merge to `main` (or push, if branch protection allows).
-2. Railway builds, then runs the `release` step: `migrate`, `createcachetable`, `collectstatic`.
+1. Merge to `main` (Render auto-deploys from the branch).
+2. Render builds, then the start command runs: `migrate`, `createcachetable`,
+   `collectstatic`, gunicorn.
 3. Confirm `/healthz/` returns `ok` and the deploy log has no errors.
 
-Rollback: Railway → Deployments → previous deployment → **Redeploy**. Database
-migrations are forward-only — if a migration must be undone, restore a backup first.
+Rollback: Render → Deploys → previous deploy → **Redeploy**. Migrations are
+forward-only — if a migration must be undone, restore a backup first.
+
+Free-tier note: the service sleeps after 15 minutes idle; the first request after
+that is slow (~30–60s). That is expected, not an outage.
 
 ## Backups and restore
 
-- **Neon**: point-in-time recovery is the primary recovery path. Confirm it is enabled.
-- **R2**: bucket object versioning protects uploaded resumes.
+- **Neon**: point-in-time recovery is the primary recovery path.
+- **R2**: enable bucket object versioning to protect uploaded resumes.
 - **Portable dump** (any environment):
   ```bash
   DJANGO_DEBUG=0 uv run python manage.py backup_db
@@ -23,8 +28,8 @@ migrations are forward-only — if a migration must be undone, restore a backup 
   ```bash
   pg_dump "$DATABASE_URL" > backup-$(date +%F).sql
   ```
-- **Restore drill** (do this once per quarter): restore the latest dump into a scratch
-  database, run `loaddata`, start the app against it, verify `/healthz/` and one job page.
+- **Restore drill** (quarterly): restore the latest dump into a scratch database,
+  run `loaddata`, start the app against it, verify `/healthz/` and one job page.
 
 ## Secrets
 
