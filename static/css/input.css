@@ -256,12 +256,10 @@ html.dark .bg-brand\/10 {
 
 .animate-float-gentle {
   animation: float-gentle 6s ease-in-out infinite;
-  will-change: transform;
 }
 
 .animate-float-delayed {
   animation: float-gentle-delayed 7s ease-in-out infinite 1s;
-  will-change: transform;
 }
 
 .animate-dash-flow {
