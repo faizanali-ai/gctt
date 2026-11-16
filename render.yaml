@@ -40,7 +40,7 @@ services:
       - key: EMAIL_HOST_PASSWORD
         sync: false
       - key: DEFAULT_FROM_EMAIL
-        value: Accounts@gctekton.com
+        value: accounts@gctekton.com
       - key: R2_BUCKET
         sync: false
       - key: R2_ENDPOINT

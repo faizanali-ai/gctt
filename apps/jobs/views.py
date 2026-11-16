@@ -97,7 +97,7 @@ def job_apply(request, slug):
             messages.error(
                 request,
                 "We couldn't store your application just now. Please try again in a "
-                "moment, or email Jobs@gctekton.com.",
+                "moment, or email jobs@gctekton.com.",
             )
         return redirect("job_detail", slug=job.slug)
     return render(

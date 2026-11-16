@@ -58,7 +58,7 @@ class NotificationTests(TestCase):
             {"name": "A", "email": "a@example.com", "category": "general", "message": "Hi"},
         )
         recipients = [message.to[0] for message in mail.outbox]
-        self.assertIn("Accounts@gctekton.com", recipients)
+        self.assertIn("accounts@gctekton.com", recipients)
         self.assertIn("a@example.com", recipients)
 
     def test_enquiry_error_preserves_typed_input(self):
@@ -91,7 +91,7 @@ class NotificationTests(TestCase):
         self.assertTrue(Application.objects.exists())
         recipients = [message.to[0] for message in mail.outbox]
         self.assertIn("c@example.com", recipients)
-        self.assertIn("Jobs@gctekton.com", recipients)
+        self.assertIn("jobs@gctekton.com", recipients)
 
 
 class CertificateTests(TestCase):

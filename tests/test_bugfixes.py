@@ -244,7 +244,7 @@ class EnquiryAndSearchBugTests(TestCase):
                 "next": "training",
             },
         )
-        staff_email = next(m for m in mail.outbox if "Accounts@gctekton.com" in m.to)
+        staff_email = next(m for m in mail.outbox if "accounts@gctekton.com" in m.to)
         self.assertIn("Area: SAP", staff_email.body)
         self.assertIn("How heard: LinkedIn", staff_email.body)
 

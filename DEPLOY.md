@@ -106,7 +106,7 @@ Then log in at `/admin/` and change the password.
 |---|---|
 | `https://<host>/healthz/` | `ok` |
 | Signup on `/accounts/signup/` | welcome message; verification email arrives (Resend → Emails log) |
-| `/contact/` enquiry | confirmation banner; alert email to `Accounts@gctekton.com` |
+| `/contact/` enquiry | confirmation banner; alert email to `accounts@gctekton.com` |
 | Apply to a job with a PDF | application appears in `/staff/applications/`; object visible in R2 |
 | Trainer issues a certificate | PDF downloads; `/training/verify/<ref>/` shows **Valid certificate** |
 | `/admin/` with CEO account | dashboard loads |
