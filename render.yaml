@@ -7,7 +7,7 @@ services:
     autoDeploy: true
     healthCheckPath: /healthz/
     buildCommand: >-
-      pip install uv &&
+      pip install --cache-dir /opt/render/project/.cache/pip uv &&
       UV_CACHE_DIR=/opt/render/project/.cache/uv uv sync --frozen --no-dev &&
       uv run python manage.py collectstatic --noinput
     startCommand: >-
@@ -15,6 +15,8 @@ services:
       uv run python manage.py createcachetable &&
       uv run gunicorn config.wsgi --bind 0.0.0.0:$PORT --workers 2 --timeout 120
     envVars:
+      - key: PIP_CACHE_DIR
+        value: /opt/render/project/.cache/pip
       - key: UV_CACHE_DIR
         value: /opt/render/project/.cache/uv
       - key: PYTHON_VERSION
