@@ -11,8 +11,6 @@
     </div>
   </div>
 
-  {% include "staff/_nav.html" %}
-
   <!-- Quick Status Pill Ribbon -->
   <div class="mt-6 flex flex-wrap items-center gap-2">
     <a href="{% url 'staff_registrations' %}{% if q %}?q={{ q }}{% endif %}{% if programme %}&programme={{ programme }}{% endif %}" class="btn text-xs py-1.5 px-3 {% if not status %}btn-brand{% else %}btn-secondary{% endif %}">

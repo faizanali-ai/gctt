@@ -77,7 +77,7 @@ class User(AbstractUser):
 
     @property
     def can_manage_users(self):
-        return self.role in (self.Role.OWNER, self.Role.SUPERADMIN, self.Role.CEO)
+        return self.is_superuser or self.role in (self.Role.OWNER, self.Role.SUPERADMIN, self.Role.CEO)
 
     def assignable_roles(self):
         """(value, label) pairs this account may grant to someone else."""

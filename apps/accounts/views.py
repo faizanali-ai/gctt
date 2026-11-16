@@ -99,30 +99,60 @@ def dashboard(request):
 
 def _staff_dashboard(request):
     user = request.user
-    sections = []
+    stats = {}
 
-    def add(label, url_name, perm, count, note=""):
-        if user.has_perm(perm):
-            sections.append({"label": label, "url": url_name, "count": count, "note": note})
+    if user.has_perm("enquiries.view_enquiry"):
+        stats["enquiries_new"] = Enquiry.objects.filter(status=Enquiry.Status.NEW).count()
+        stats["enquiries_total"] = Enquiry.objects.count()
 
-    add("Enquiries", "staff_enquiries", "enquiries.view_enquiry",
-        Enquiry.objects.filter(status=Enquiry.Status.NEW).count(), "new")
-    add("Jobs", "staff_jobs", "jobs.view_job",
-        Job.objects.count(), f"{Job.objects.filter(published=False).count()} awaiting review")
-    add("Applications", "staff_applications", "jobs.view_application",
-        Application.objects.count())
-    add("Programmes", "staff_programmes", "training.view_programme",
-        Programme.objects.count(), f"{Programme.objects.filter(published=False).count()} drafts")
-    add("Registrations", "staff_registrations", "training.view_registration",
-        Registration.objects.count())
+    if user.has_perm("jobs.view_job"):
+        stats["jobs_active"] = Job.objects.filter(published=True).count()
+        stats["jobs_drafts"] = Job.objects.filter(published=False).count()
+
+    if user.has_perm("jobs.view_application"):
+        stats["applications_total"] = Application.objects.count()
+        stats["applications_submitted"] = Application.objects.filter(
+            status=Application.Status.SUBMITTED
+        ).count()
+
+    if user.has_perm("training.view_programme"):
+        stats["programmes_total"] = Programme.objects.count()
+        stats["programmes_drafts"] = Programme.objects.filter(published=False).count()
+
+    if user.has_perm("training.view_registration"):
+        stats["registrations_total"] = Registration.objects.count()
+        stats["registrations_pending"] = Registration.objects.filter(
+            status=Registration.Status.REGISTERED
+        ).count()
+
+    recent_applications = []
+    if user.has_perm("jobs.view_application"):
+        recent_applications = (
+            Application.objects.select_related("job", "applicant")
+            .order_by("-created_at")[:5]
+        )
+
+    recent_enquiries = []
+    if user.has_perm("enquiries.view_enquiry"):
+        recent_enquiries = Enquiry.objects.order_by("-created_at")[:5]
+
+    recent_registrations = []
+    if user.has_perm("training.view_registration"):
+        recent_registrations = (
+            Registration.objects.select_related("programme", "student")
+            .order_by("-created_at")[:5]
+        )
 
     return render(
         request,
         "accounts/staff_dashboard.html",
         {
-            "sections": sections,
-            "is_ceo": user.is_superuser,
-            "can_use_admin": user.is_superuser or user.has_perm("jobs.delete_job"),
+            "stats": stats,
+            "recent_applications": recent_applications,
+            "recent_enquiries": recent_enquiries,
+            "recent_registrations": recent_registrations,
+            "can_manage_users": user.can_manage_users,
+            "can_use_admin": user.is_owner or user.is_superuser,
         },
     )
 
