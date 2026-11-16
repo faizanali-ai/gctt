@@ -5,11 +5,13 @@ import qrcode.image.svg
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
@@ -185,8 +187,11 @@ def manage_user_create(request):
             error = "Email is required."
         elif User.objects.filter(email=email).exists():
             error = "A user with that email already exists."
-        elif len(password) < 8:
-            error = "Set a temporary password of at least 8 characters."
+        else:
+            try:
+                validate_password(password)
+            except ValidationError as exc:
+                error = " ".join(exc.messages)
         if error:
             messages.error(request, error)
         else:
@@ -235,6 +240,23 @@ def manage_user_edit(request, pk):
         elif target == request.user and request.POST.get("is_active") != "on":
             messages.error(request, "You cannot deactivate your own account.")
         else:
+            new_password = request.POST.get("password", "").strip()
+            if new_password:
+                try:
+                    validate_password(new_password, user=target)
+                except ValidationError as exc:
+                    for problem in exc.messages:
+                        messages.error(request, problem)
+                    return render(
+                        request,
+                        "portals/user_form.html",
+                        {
+                            "mode": "edit",
+                            "target": target,
+                            "assignable": assignable,
+                            "groups": Group.objects.all(),
+                        },
+                    )
             target.first_name = request.POST.get("first_name", "").strip()
             target.last_name = request.POST.get("last_name", "").strip()
             target.phone = request.POST.get("phone", "").strip()
@@ -246,8 +268,7 @@ def manage_user_edit(request, pk):
                 target.groups.set(Group.objects.filter(name=request.POST.get("group", "")))
             else:
                 target.groups.set(Group.objects.filter(name="Admin"))
-            new_password = request.POST.get("password", "").strip()
-            if len(new_password) >= 8:
+            if new_password:
                 target.set_password(new_password)
                 target.save(update_fields=["password"])
             log_action(
@@ -267,6 +288,23 @@ def manage_user_edit(request, pk):
     )
 
 
+@login_required
+@require_POST
+def account_delete(request):
+    if request.user.role == User.Role.OWNER:
+        raise PermissionDenied
+    if not request.user.check_password(request.POST.get("password", "")):
+        messages.error(request, "Password incorrect. Your account was not deleted.")
+        return redirect("profile")
+
+    email = request.user.email
+    log_action(request, "account.delete", email)
+    request.user.delete()
+    auth_logout(request)
+    messages.success(request, "Your account and data have been permanently deleted.")
+    return redirect("home")
+
+
 def _qr_svg(url):
     image = qrcode.make(url, image_factory=qrcode.image.svg.SvgPathImage)
     buffer = io.BytesIO()
@@ -277,8 +315,6 @@ def _qr_svg(url):
 @login_required
 def security(request):
     user = request.user
-    if not user.is_staff:
-        raise PermissionDenied
 
     device = user.totpdevice_set.filter(confirmed=True).first()
     if request.method == "POST":

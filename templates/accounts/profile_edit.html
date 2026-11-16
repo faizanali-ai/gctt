@@ -42,5 +42,26 @@
       Return to Dashboard
     </a>
   </div>
+
+  {% if not user.is_owner %}
+    <div class="mt-12 border-t border-rose-200 pt-8">
+      <p class="eyebrow text-2xs text-rose-700">Danger zone</p>
+      <h2 class="mt-2 font-display text-xl font-bold text-ink">Delete account</h2>
+      <p class="mt-2 max-w-lg text-xs leading-relaxed text-ink-muted">
+        Permanently delete your account, applications, registrations and uploaded documents.
+        This cannot be undone.
+      </p>
+      <form method="post" action="{% url 'account_delete' %}" class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+        {% csrf_token %}
+        <label class="block sm:w-72">
+          <span class="mb-1 block text-xs font-semibold">Confirm with your password</span>
+          <input type="password" name="password" required autocomplete="current-password">
+        </label>
+        <button type="submit" class="btn bg-rose-700 text-white hover:bg-rose-800">
+          Permanently delete account
+        </button>
+      </form>
+    </div>
+  {% endif %}
 </section>
 {% endblock %}

@@ -90,10 +90,10 @@ class TwoFactorTests(TestCase):
         device.refresh_from_db()
         self.assertFalse(device.confirmed)
 
-    def test_non_staff_cannot_open_security(self):
+    def test_non_staff_can_open_security(self):
         user = User.objects.create_user(email="n@example.com", password="test-pass-12345")
         self.client.force_login(user)
-        self.assertEqual(self.client.get(reverse("security")).status_code, 403)
+        self.assertEqual(self.client.get(reverse("security")).status_code, 200)
 
 
 class BackupCommandTests(TestCase):

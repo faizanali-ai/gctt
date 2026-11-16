@@ -14,9 +14,10 @@
           {% if user.phone %} · {{ user.phone }}{% endif %}
         </p>
       </div>
-      <a href="{% url 'profile' %}" class="btn btn-secondary text-xs">
-        Edit Account Profile
-      </a>
+      <div class="flex flex-wrap items-center gap-2">
+        <a href="{% url 'security' %}" class="btn btn-secondary text-xs">Security &amp; 2FA</a>
+        <a href="{% url 'profile' %}" class="btn btn-secondary text-xs">Edit Account Profile</a>
+      </div>
     </div>
 
     {% if not user.email_verified %}

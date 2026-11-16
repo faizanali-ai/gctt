@@ -46,10 +46,8 @@
         {% if user.is_owner %}
           <a href="{% url 'admin:index' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-paper/10">Database admin</a>
         {% endif %}
-        {% if user.is_staff %}
-          <p class="mt-6 px-3 text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Security</p>
-          <a href="{% url 'security' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-paper/10 {% if '/accounts/security/' in request.path %}bg-paper/10 font-semibold text-accent{% endif %}">Two-factor auth</a>
-        {% endif %}
+        <p class="mt-6 px-3 text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Security</p>
+        <a href="{% url 'security' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-paper/10 {% if '/accounts/security/' in request.path %}bg-paper/10 font-semibold text-accent{% endif %}">Security &amp; 2FA</a>
       </nav>
       <div class="border-t border-paper/10 p-4 text-xs">
         <p class="truncate text-paper/80 font-medium">{{ user.email }}</p>
@@ -74,7 +72,7 @@
               {% if perms.training.view_programme %}<a href="{% url 'staff_programmes' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Programmes</a>{% endif %}
               {% if perms.training.view_registration %}<a href="{% url 'staff_registrations' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Registrations</a>{% endif %}
               {% if user.can_manage_users %}<a href="{% url 'manage_users' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Users &amp; roles</a>{% endif %}
-              {% if user.is_staff %}<a href="{% url 'security' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Two-factor</a>{% endif %}
+              <a href="{% url 'security' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Security &amp; 2FA</a>
               <form method="post" action="{% url 'logout' %}" class="px-3 pt-2">{% csrf_token %}<button type="submit" class="font-semibold text-accent hover:underline">Log out</button></form>
             </nav>
           </details>
