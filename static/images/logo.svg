@@ -1,52 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" fill="none" class="gctt-brand-logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 64" fill="none" class="gctt-brand-logo">
   <defs>
-    <linearGradient id="gctt-em-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="gctt-pillar-grad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#10B981" />
       <stop offset="100%" stop-color="#059669" />
     </linearGradient>
-    <linearGradient id="gctt-em-grad-2" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#047857" />
-      <stop offset="100%" stop-color="#10B981" />
-    </linearGradient>
-    <linearGradient id="gctt-navy-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1E3E62" />
-      <stop offset="100%" stop-color="#0B192C" />
-    </linearGradient>
   </defs>
 
-  <!-- Architectural Precision Monogram (Emblem) -->
-  <g transform="translate(6, 6)">
-    <!-- Base Structural Diamond -->
-    <path d="M26 2 L50 16 L50 36 L26 50 L2 36 L2 16 Z" fill="url(#gctt-navy-grad)" stroke="#059669" stroke-width="1.5" stroke-linejoin="round" opacity="0.95"/>
-    
-    <!-- Top Facet (Enterprise Foundation) -->
-    <path d="M26 2 L50 16 L26 30 L2 16 Z" fill="url(#gctt-em-grad-1)" opacity="0.9"/>
-    
-    <!-- Left Facet (Technology & Staffing Pillar) -->
-    <path d="M2 16 L26 30 L26 50 L2 36 Z" fill="url(#gctt-em-grad-2)" opacity="0.8"/>
-    
-    <!-- Right Facet (Training & Scaled Agile Pillar) -->
-    <path d="M26 30 L50 16 L50 36 L26 50 Z" fill="#0B192C" opacity="0.85"/>
-
-    <!-- Central Precision Core: Dynamic Growth Axis -->
-    <path d="M26 14 L38 21 L26 28 L14 21 Z" fill="#FFFFFF" opacity="0.9"/>
-    <path d="M26 28 L38 21 L38 35 L26 42 Z" fill="#10B981"/>
-    <path d="M26 28 L14 21 L14 35 L26 42 Z" fill="#059669"/>
+  <!-- Architectural Tekton Pillar Emblem -->
+  <g transform="translate(6, 8)">
+    <rect x="0" y="0" width="48" height="48" rx="10" fill="#0E1E2E" stroke="#10B981" stroke-width="2"/>
+    <path d="M12 16 H36 M24 16 V36 M16 24 H32" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="24" cy="34" r="2.5" fill="#10B981"/>
   </g>
 
-  <!-- Wordmark Section -->
-  <g transform="translate(74, 13)">
-    <!-- Primary Acronym: GCTT -->
-    <text x="0" y="25" font-family="'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif" font-size="28" font-weight="800" letter-spacing="0.08em" class="fill-current text-ink">
+  <!-- High-Contrast Wordmark -->
+  <g transform="translate(68, 14)">
+    <!-- Primary Acronym: GCTT (High-Contrast Clean Vector) -->
+    <text x="0" y="24" font-family="'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif" font-size="28" font-weight="900" letter-spacing="0.08em" fill="#FFFFFF">
       GCTT
     </text>
 
-    <!-- Emerald Accent Divider Dot -->
-    <circle cx="98" cy="18" r="3" fill="#10B981" />
+    <!-- Accent Dot -->
+    <circle cx="96" cy="18" r="3" fill="#10B981" />
 
-    <!-- Subtitle: Global Center for Technology & Training -->
-    <text x="0" y="42" font-family="'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif" font-size="7.5" font-weight="700" letter-spacing="0.18em" text-transform="uppercase" fill="#059669">
-      Global Center for Technology &amp; Training
+    <!-- Subtitle: Crisp High-Contrast Emerald -->
+    <text x="0" y="40" font-family="'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif" font-size="8.5" font-weight="800" letter-spacing="0.18em" text-transform="uppercase" fill="#10B981">
+      GLOBAL CENTER FOR TECH &amp; TRAINING · TEXAS
     </text>
   </g>
 </svg>
