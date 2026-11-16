@@ -1,10 +1,15 @@
+import logging
 import uuid
 from pathlib import Path
 
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.utils.text import slugify
+
+logger = logging.getLogger(__name__)
 
 
 def resume_upload_to(instance, filename):
@@ -79,3 +84,15 @@ class Application(models.Model):
 
     def __str__(self):
         return f"{self.applicant} → {self.job}"
+
+
+@receiver(post_delete, sender=Application)
+def delete_resume_file(sender, instance, **kwargs):
+    if instance.resume:
+        try:
+            instance.resume.delete(save=False)
+        except OSError:
+            logger.warning(
+                "Failed to remove resume file %s on application delete", instance.resume.name
+            )
+

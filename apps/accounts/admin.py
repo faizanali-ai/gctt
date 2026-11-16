@@ -25,18 +25,21 @@ class AuditLogAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return False
 
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     ordering = ("email",)
-    list_display = ("email", "display_name", "account_type", "email_verified", "is_staff", "date_joined")
-    list_filter = ("account_type", "is_staff", "is_superuser", "email_verified")
+    list_display = ("email", "display_name", "role", "account_type", "email_verified", "is_staff", "date_joined")
+    list_filter = ("role", "account_type", "is_staff", "is_superuser", "email_verified")
     search_fields = ("email", "first_name", "last_name")
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         (
             "Personal info",
-            {"fields": ("first_name", "last_name", "phone", "account_type", "email_verified")},
+            {"fields": ("first_name", "last_name", "phone", "role", "account_type", "email_verified")},
         ),
         (
             "Permissions",

@@ -16,8 +16,8 @@ class SecurityHeadersMiddleware:
         response["Content-Security-Policy"] = (
             "default-src 'self'; "
             "script-src 'self' 'unsafe-inline'; "
-            "style-src 'self' 'unsafe-inline'; "
-            "font-src 'self'; "
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+            "font-src 'self' data: https://fonts.gstatic.com; "
             "img-src 'self' data: https:; "
             "frame-ancestors 'none';"
         )
@@ -30,7 +30,7 @@ class StaffTwoFactorMiddleware:
     Only active when REQUIRE_STAFF_2FA is on, so accounts can enrol first.
     """
 
-    PROTECTED_PREFIXES = ("/admin/", "/staff/", "/dashboard/", "/profile/")
+    PROTECTED_PREFIXES = ("/admin/", "/staff/", "/dashboard/", "/profile/", "/manage/")
     ALLOWED_PREFIXES = ("/accounts/", "/static/", "/media/")
 
     def __init__(self, get_response):

@@ -37,7 +37,9 @@ def notify_enquiry(enquiry):
         f"From: {enquiry.name} <{enquiry.email}>\n"
         f"Phone: {enquiry.phone or '—'}\n"
         f"Company: {enquiry.company or '—'}\n"
-        f"Category: {enquiry.get_category_display()}\n\n"
+        f"Category: {enquiry.get_category_display()}\n"
+        f"Area: {enquiry.area or '—'}\n"
+        f"How heard: {enquiry.how_heard or '—'}\n\n"
         f"{enquiry.message}",
     )
 
@@ -102,6 +104,18 @@ def notify_registration(registration):
         f"We received your registration for {registration.programme.title}.\n"
         f"We'll be in touch with the next steps. You can track it on your dashboard.\n\n"
         f"— GCTT",
+    )
+
+
+def notify_staff_new_registration(registration):
+    send(
+        settings.DEFAULT_FROM_EMAIL,
+        f"New training registration: {registration.programme.title}",
+        f"Student: {registration.student.display_name} <{registration.student.email}>\n"
+        f"Phone: {registration.student.phone or '—'}\n"
+        f"Programme: {registration.programme.title}\n\n"
+        f"{registration.message or 'No message provided.'}\n\n"
+        f"Review it in the staff portal: /staff/registrations/",
     )
 
 

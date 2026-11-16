@@ -28,6 +28,7 @@ CATEGORY_BY_PAGE = {
     "career_restart": Enquiry.Category.CAREER_RESTART,
     "employers": Enquiry.Category.EMPLOYER_INTAKE,
     "training": Enquiry.Category.TRAINING,
+    "sap_scrum": Enquiry.Category.TRAINING,
 }
 
 
@@ -96,8 +97,9 @@ def staff_enquiry_status(request, pk):
     status = request.POST.get("status", "")
     if status in Enquiry.Status.values:
         previous = enquiry.status
-        enquiry.status = status
-        enquiry.save(update_fields=["status"])
-        log_action(request, "enquiry.status", f"{enquiry.pk}", f"{previous} → {status}")
-        messages.success(request, "Enquiry updated.")
+        if previous != status:
+            enquiry.status = status
+            enquiry.save(update_fields=["status"])
+            log_action(request, "enquiry.status", f"{enquiry.pk}", f"{previous} → {status}")
+            messages.success(request, "Enquiry updated.")
     return redirect("staff_enquiries")

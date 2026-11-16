@@ -27,8 +27,9 @@ class ApplicationForm(forms.ModelForm):
         if resume.size > 5 * 1024 * 1024:
             raise forms.ValidationError("Resume must be 5 MB or smaller.")
         extension = Path(resume.name).suffix.lower().lstrip(".")
+        expected_sig = SIGNATURES.get(extension)
         head = resume.read(8)
         resume.seek(0)
-        if not head.startswith(SIGNATURES.get(extension, b"")):
+        if not expected_sig or not head.startswith(expected_sig):
             raise forms.ValidationError("Upload a valid PDF or Word document.")
         return resume

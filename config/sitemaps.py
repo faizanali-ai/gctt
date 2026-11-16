@@ -1,4 +1,5 @@
 from django.contrib.sitemaps import Sitemap
+from django.db.models import Q
 
 from apps.jobs.models import Job
 from apps.training.models import Programme
@@ -40,7 +41,9 @@ class ProgrammeSitemap(Sitemap):
     priority = 0.7
 
     def items(self):
-        return Programme.objects.filter(published=True)
+        return Programme.objects.filter(published=True).filter(
+            Q(category__isnull=True) | Q(category__published=True)
+        )
 
     def lastmod(self, obj):
         return obj.created_at

@@ -159,9 +159,9 @@ if os.environ.get("R2_BUCKET"):
     STORAGES["default"] = {"BACKEND": "storages.backends.s3.S3Storage"}
 elif SUPABASE_URL:
     # Supabase Storage via its S3-compatible endpoint (free tier, no card).
-    AWS_ACCESS_KEY_ID = os.environ["SUPABASE_ACCESS_KEY_ID"]
-    AWS_SECRET_ACCESS_KEY = os.environ["SUPABASE_SECRET_ACCESS_KEY"]
-    AWS_STORAGE_BUCKET_NAME = os.environ["SUPABASE_BUCKET"]
+    AWS_ACCESS_KEY_ID = os.environ.get("SUPABASE_ACCESS_KEY_ID", "")
+    AWS_SECRET_ACCESS_KEY = os.environ.get("SUPABASE_SECRET_ACCESS_KEY", "")
+    AWS_STORAGE_BUCKET_NAME = os.environ.get("SUPABASE_BUCKET", "")
     AWS_S3_ENDPOINT_URL = f"{SUPABASE_URL.rstrip('/')}/storage/v1/s3"
     AWS_S3_REGION_NAME = os.environ.get("SUPABASE_REGION", "us-east-1")
     AWS_S3_ADDRESSING_STYLE = "path"
@@ -172,7 +172,8 @@ elif SUPABASE_URL:
     # Supabase answers HEAD on a missing key with 400 (not 404), which breaks
     # django-storages' existence probe. Our names are UUIDs, so overwrite is safe.
     AWS_S3_FILE_OVERWRITE = True
-    STORAGES["default"] = {"BACKEND": "storages.backends.s3.S3Storage"}
+    if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME:
+        STORAGES["default"] = {"BACKEND": "storages.backends.s3.S3Storage"}
 
 if TESTING:
     # Tests must never touch remote storage, whatever the environment says.

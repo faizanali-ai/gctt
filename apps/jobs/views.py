@@ -36,7 +36,10 @@ def job_list(request):
     employment_type = request.GET.get("type", "")
     if q:
         jobs = jobs.filter(
-            Q(title__icontains=q) | Q(location__icontains=q) | Q(description__icontains=q)
+            Q(title__icontains=q)
+            | Q(location__icontains=q)
+            | Q(description__icontains=q)
+            | Q(requirements__icontains=q)
         )
     if employment_type:
         jobs = jobs.filter(employment_type=employment_type)
@@ -189,9 +192,10 @@ def staff_application_status(request, pk):
     status = request.POST.get("status", "")
     if status in STAFF_STATUSES:
         previous = application.status
-        application.status = status
-        application.save(update_fields=["status"])
-        log_action(request, "application.status", f"{application.pk}", f"{previous} → {status}")
-        notify_application_status(application)
-        messages.success(request, "Status updated.")
+        if previous != status:
+            application.status = status
+            application.save(update_fields=["status"])
+            log_action(request, "application.status", f"{application.pk}", f"{previous} → {status}")
+            notify_application_status(application)
+            messages.success(request, "Status updated.")
     return redirect("staff_applications")

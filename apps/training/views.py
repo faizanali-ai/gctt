@@ -13,6 +13,7 @@ from config.emails import (
     notify_certificate,
     notify_registration,
     notify_registration_status,
+    notify_staff_new_registration,
 )
 
 from .certificates import generate_certificate_pdf
@@ -75,6 +76,7 @@ def programme_register(request, slug):
                 registration.save()
             messages.success(request, "Your registration has been sent.")
             notify_registration(registration)
+            notify_staff_new_registration(registration)
         except IntegrityError:
             messages.error(request, "You are already registered for this programme.")
         return redirect("programme_detail", slug=programme.slug)
@@ -116,7 +118,8 @@ def download_certificate(request, ref):
     response = HttpResponse(
         generate_certificate_pdf(registration), content_type="application/pdf"
     )
-    response["Content-Disposition"] = f'attachment; filename="GCTT-{ref}.pdf"'
+    filename = f"{ref}.pdf" if ref.startswith("GCTT-") else f"GCTT-{ref}.pdf"
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
     return response
 
 
@@ -212,13 +215,14 @@ def staff_registration_status(request, pk):
     status = request.POST.get("status", "")
     if status in STAFF_STATUSES:
         previous = registration.status
-        registration.status = status
-        registration.save(update_fields=["status"])
-        log_action(
-            request, "registration.status", f"{registration.pk}", f"{previous} → {status}"
-        )
-        notify_registration_status(registration)
-        messages.success(request, "Status updated.")
+        if previous != status:
+            registration.status = status
+            registration.save(update_fields=["status"])
+            log_action(
+                request, "registration.status", f"{registration.pk}", f"{previous} → {status}"
+            )
+            notify_registration_status(registration)
+            messages.success(request, "Status updated.")
     return redirect("staff_registrations")
 
 
@@ -228,8 +232,9 @@ def staff_registration_status(request, pk):
 def staff_registration_certificate(request, pk):
     registration = get_object_or_404(Registration, pk=pk)
     if request.POST.get("action") == "revoke":
+        ref = registration.certificate_ref or ""
         registration.revoke_certificate()
-        log_action(request, "certificate.revoke", registration.certificate_ref or "")
+        log_action(request, "certificate.revoke", ref)
         messages.success(request, "Certificate revoked.")
     elif registration.status == Registration.Status.COMPLETED:
         registration.issue_certificate()

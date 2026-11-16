@@ -24,6 +24,7 @@ from apps.jobs.models import Application, Job
 from apps.training.models import Programme, Registration
 from config.emails import send_verification
 
+from .audit import log_action
 from .forms import ProfileForm, SignupForm
 from .models import User
 
@@ -32,6 +33,8 @@ INPUT = "w-full rounded-sm border border-line bg-white px-4 py-2.5"
 
 @ratelimit(key="ip", rate="10/h", method="POST", block=True)
 def signup(request):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
     form = SignupForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         user = form.save()
@@ -44,7 +47,9 @@ def signup(request):
 
 @ratelimit(key="ip", rate="10/m", method="POST", block=True)
 def login_view(request, *args, **kwargs):
-    return LoginView.as_view(template_name="accounts/login.html")(request, *args, **kwargs)
+    return LoginView.as_view(
+        template_name="accounts/login.html", redirect_authenticated_user=True
+    )(request, *args, **kwargs)
 
 
 def verify_email(request, uidb64, token):
@@ -53,7 +58,9 @@ def verify_email(request, uidb64, token):
         user = User.objects.get(pk=force_str(urlsafe_base64_decode(uidb64)))
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         pass
-    if user and default_token_generator.check_token(user, token):
+    if user and user.email_verified:
+        messages.info(request, "Your email is already verified.")
+    elif user and default_token_generator.check_token(user, token):
         user.email_verified = True
         user.save(update_fields=["email_verified"])
         messages.success(request, "Email verified — thank you.")
@@ -136,7 +143,7 @@ def _require_user_manager(request):
 @login_required
 def manage_users(request):
     _require_user_manager(request)
-    users = User.objects.exclude(role=User.Role.OWNER).select_related()
+    users = User.objects.filter(is_staff=True).exclude(role=User.Role.OWNER).select_related()
     q = request.GET.get("q", "").strip()
     role = request.GET.get("role", "")
     if q:
@@ -196,6 +203,7 @@ def manage_user_create(request):
             elif role != User.Role.STAFF:
                 # CEO and superadmins get full business permissions.
                 user.groups.set(Group.objects.filter(name="Admin"))
+            log_action(request, "user.create", user.email, f"role={user.role}")
             messages.success(
                 request, f"{email} added as {user.get_role_display()}."
             )
@@ -217,11 +225,7 @@ def manage_user_edit(request, pk):
     target = get_object_or_404(User.objects.exclude(role=User.Role.OWNER), pk=pk)
     if not request.user.can_manage_account(target):
         raise PermissionDenied
-    assignable = [
-        choice
-        for choice in request.user.assignable_roles()
-        if choice[0] != target.role or True
-    ]
+    assignable = list(request.user.assignable_roles())
     if target.role not in [value for value, _ in assignable]:
         assignable.append((target.role, target.get_role_display()))
     if request.method == "POST":
@@ -246,6 +250,9 @@ def manage_user_edit(request, pk):
             if len(new_password) >= 8:
                 target.set_password(new_password)
                 target.save(update_fields=["password"])
+            log_action(
+                request, "user.edit", target.email, f"role={role}, active={target.is_active}"
+            )
             messages.success(request, "User updated.")
             return redirect("manage_users")
     return render(
@@ -279,6 +286,7 @@ def security(request):
         if action == "disable":
             if user.check_password(request.POST.get("password", "")):
                 user.totpdevice_set.all().delete()
+                log_action(request, "security.2fa.disable", user.email)
                 messages.success(request, "Two-factor authentication disabled.")
             else:
                 messages.error(request, "Password incorrect.")
@@ -288,6 +296,7 @@ def security(request):
             if not target.confirmed:
                 target.confirmed = True
                 target.save(update_fields=["confirmed"])
+                log_action(request, "security.2fa.enable", user.email)
             otp_login(request, target)
             messages.success(request, "Two-factor authentication is active.")
         else:
