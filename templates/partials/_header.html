@@ -9,19 +9,19 @@
 
     <!-- Desktop Streamlined Navigation -->
     <nav class="hidden items-center gap-8 text-sm font-semibold text-ink-muted lg:flex" aria-label="Main">
-      <a href="{% url 'it_staffing' %}" class="py-2 transition-colors hover:text-ink {% if '/it-staffing/' in request.path or '/services/' in request.path or '/employers/' in request.path %}font-bold text-accent{% endif %}">
+      <a href="{% url 'it_staffing' %}" class="py-2 transition-colors hover:text-ink {% if '/it-staffing/' in request.path or '/services/' in request.path or '/employers/' in request.path %}font-bold text-blue-600 dark:text-blue-400{% endif %}">
         Solutions &amp; Practices
       </a>
 
-      <a href="{% url 'training' %}" class="py-2 transition-colors hover:text-ink {% if '/training/' in request.path or '/career-restart/' in request.path %}font-bold text-accent{% endif %}">
+      <a href="{% url 'training' %}" class="py-2 transition-colors hover:text-ink {% if '/training/' in request.path or '/career-restart/' in request.path %}font-bold text-blue-600 dark:text-blue-400{% endif %}">
         Academy &amp; Training
       </a>
 
-      <a href="{% url 'careers' %}" class="py-2 transition-colors hover:text-ink {% if '/careers/' in request.path or '/jobs/' in request.path %}font-bold text-accent{% endif %}">
+      <a href="{% url 'careers' %}" class="py-2 transition-colors hover:text-ink {% if '/careers/' in request.path or '/jobs/' in request.path %}font-bold text-blue-600 dark:text-blue-400{% endif %}">
         Open Mandates
       </a>
 
-      <a href="{% url 'about' %}" class="py-2 transition-colors hover:text-ink {% if '/about/' in request.path %}font-bold text-accent{% endif %}">
+      <a href="{% url 'about' %}" class="py-2 transition-colors hover:text-ink {% if '/about/' in request.path %}font-bold text-blue-600 dark:text-blue-400{% endif %}">
         About &amp; Texas HQ
       </a>
     </nav>
@@ -32,7 +32,7 @@
       <button
         type="button"
         id="theme-toggle"
-        class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-card text-ink-muted shadow-xs transition-colors hover:border-accent hover:text-ink"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-card text-ink-muted shadow-xs transition-colors hover:border-blue-500 hover:text-ink"
         aria-label="Toggle visual theme"
       >
         <svg class="theme-sun-icon h-4 w-4 hidden text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -56,8 +56,8 @@
         {% endif %}
       </div>
 
-      <!-- Primary Action CTA -->
-      <a href="{% url 'employers' %}" class="hidden sm:inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:bg-emerald-500 hover:shadow-md dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400">
+      <!-- Primary Action CTA: Authoritative Royal Sapphire -->
+      <a href="{% url 'employers' %}" class="hidden sm:inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:bg-blue-500 hover:shadow-md dark:bg-blue-600 dark:hover:bg-blue-500">
         <span>Request Talent</span>
         <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
       </a>
@@ -66,12 +66,12 @@
       <button
         type="button"
         id="mobile-drawer-open"
-        class="inline-flex items-center gap-2 rounded-lg border border-line bg-card px-3 py-2 text-xs font-bold text-ink shadow-xs hover:border-accent transition-colors lg:hidden"
+        class="inline-flex items-center gap-2 rounded-lg border border-line bg-card px-3 py-2 text-xs font-bold text-ink shadow-xs hover:border-blue-500 transition-colors lg:hidden"
         aria-label="Open Navigation Menu"
         aria-expanded="false"
         aria-controls="mobile-drawer"
       >
-        <svg class="h-4 w-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
         </svg>
         <span>Menu</span>
@@ -116,7 +116,7 @@
 
           <!-- Drawer Action CTAs -->
           <div class="mt-8 border-t border-line pt-6 space-y-3">
-            <a href="{% url 'employers' %}" class="btn btn-primary w-full justify-center text-sm font-bold">Request Talent</a>
+            <a href="{% url 'employers' %}" class="btn btn-primary w-full justify-center text-sm font-bold bg-blue-600 hover:bg-blue-500 text-white">Request Talent</a>
             {% if user.is_authenticated %}
               <a href="{% url 'dashboard' %}" class="btn btn-secondary w-full justify-center">Portal Dashboard</a>
             {% else %}
@@ -129,7 +129,7 @@
         <div class="border-t border-line/60 bg-surface/50 p-6 text-xs text-ink-muted">
           <p class="font-bold text-ink">Global Center for Technology &amp; Training</p>
           <p class="mt-1">2612 Laramie St, Irving TX 75062</p>
-          <p class="mt-0.5 text-emerald-600 dark:text-emerald-400 font-semibold">Registered Texas E-Verify Employer</p>
+          <p class="mt-0.5 text-blue-600 dark:text-blue-400 font-semibold">Registered Texas E-Verify Employer</p>
         </div>
       </div>
     </div>
