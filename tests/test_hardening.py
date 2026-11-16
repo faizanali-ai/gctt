@@ -44,6 +44,10 @@ class UploadHardeningTests(TestCase):
 
 
 class AdminLoginThrottleTests(TestCase):
+    def setUp(self):
+        from django.core.cache import cache
+        cache.clear()
+
     def test_admin_login_is_rate_limited(self):
         payload = {"username": "nobody@example.com", "password": "wrong", "next": "/admin/"}
         for _ in range(10):

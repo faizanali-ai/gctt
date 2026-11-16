@@ -48,9 +48,39 @@
   <main id="main">{% block content %}{% endblock %}</main>
   {% include "partials/_footer.html" %}
 
-  <!-- Micro Motion: Viewport Intersection Observer -->
+  <!-- Scripts: Mobile Drawer & Micro Motion -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      // Mobile Drawer Controller
+      var drawer = document.getElementById("mobile-drawer");
+      var openBtn = document.getElementById("mobile-drawer-open");
+      var closeBtn = document.getElementById("mobile-drawer-close");
+      var backdrop = document.getElementById("mobile-drawer-backdrop");
+
+      function openDrawer() {
+        if (!drawer) return;
+        drawer.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+        if (openBtn) openBtn.setAttribute("aria-expanded", "true");
+      }
+
+      function closeDrawer() {
+        if (!drawer) return;
+        drawer.classList.add("hidden");
+        document.body.style.overflow = "";
+        if (openBtn) openBtn.setAttribute("aria-expanded", "false");
+      }
+
+      if (openBtn) openBtn.addEventListener("click", openDrawer);
+      if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
+      if (backdrop) backdrop.addEventListener("click", closeDrawer);
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && drawer && !drawer.classList.contains("hidden")) {
+          closeDrawer();
+        }
+      });
+
+      // Micro Motion: Viewport Intersection Observer
       if (!("IntersectionObserver" in window)) {
         document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in-view"); });
         return;

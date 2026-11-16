@@ -41,7 +41,7 @@
         {% endif %}
         {% if user.can_manage_users %}
           <p class="mt-6 px-3 text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Administration</p>
-          <a href="{% url 'manage_users' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-paper/10 {% if '/staff/users/' in request.path %}bg-paper/10 font-semibold text-accent{% endif %}">Users &amp; roles</a>
+          <a href="{% url 'manage_users' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-paper/10 {% if '/manage/users/' in request.path %}bg-paper/10 font-semibold text-accent{% endif %}">Users &amp; roles</a>
         {% endif %}
         {% if user.is_owner %}
           <a href="{% url 'admin:index' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-paper/10">Database admin</a>

@@ -1,6 +1,30 @@
 {% extends "base.html" %}
 {% block title %}{{ job.title }} — Careers — GCTT{% endblock %}
 {% block content %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "JobPosting",
+  "title": "{{ job.title|escapejs }}",
+  "description": "{{ job.description|escapejs }}",
+  "datePosted": "{{ job.created_at|date:'Y-m-d' }}",
+  "employmentType": "{{ job.employment_type|upper }}",
+  "hiringOrganization": {
+    "@type": "Organization",
+    "name": "{{ COMPANY.name|escapejs }}",
+    "sameAs": "{{ COMPANY.url|escapejs }}"
+  },
+  "jobLocation": {
+    "@type": "Place",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "{{ job.location|escapejs }}",
+      "addressRegion": "TX",
+      "addressCountry": "US"
+    }
+  }
+}
+</script>
 {% include "partials/_hero.html" with eyebrow="Direct Mandate" title=job.title intro=job.location %}
 
 {% if not job.published %}

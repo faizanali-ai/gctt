@@ -1,0 +1,24 @@
+name: CI
+
+on: [push, pull_request]
+
+env:
+  DJANGO_DEBUG: "0"
+  DJANGO_SECRET_KEY: ci-only-secret-9f8e7d6c5b4a39281706f5e4d3c2b1a0f9e8d7c6b5a49382
+  DJANGO_ALLOWED_HOSTS: example.com
+  DJANGO_CSRF_TRUSTED_ORIGINS: https://example.com
+  DATABASE_URL: sqlite:///ci.db
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync
+      - run: uv run ruff check .
+      - run: uv run python manage.py check
+      - run: uv run python manage.py test tests
+      - run: uv run python manage.py check --deploy

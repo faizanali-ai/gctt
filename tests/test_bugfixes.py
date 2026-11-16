@@ -365,3 +365,70 @@ class UserManagementAndAuthBugTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, f"/training/{p1.slug}/")
         self.assertNotContains(response, f"/training/{p2.slug}/")
+
+
+class UiUxOverhaulTests(TestCase):
+    def setUp(self):
+        self.candidate = User.objects.create_user(
+            email="candidate-ui@example.com",
+            password="test-pass-12345",
+            first_name="Jordan",
+            last_name="Lee",
+            account_type=User.AccountType.CANDIDATE,
+        )
+        self.job = Job.objects.create(
+            title="Senior SAP MM Architect",
+            slug="senior-sap-mm-architect",
+            location="Irving, TX (Hybrid)",
+            employment_type="Full-time / Contract",
+            description="Leading enterprise SAP supply chain transformation.",
+            published=True,
+        )
+
+    def test_job_detail_contains_schema_org_json_ld(self):
+        response = self.client.get(reverse("job_detail", args=[self.job.slug]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '"@type": "JobPosting"')
+        self.assertContains(response, "Senior SAP MM Architect")
+        self.assertContains(response, '"hiringOrganization"')
+
+    def test_candidate_dashboard_renders_pipeline_stepper_and_metrics(self):
+        Application.objects.create(
+            job=self.job,
+            applicant=self.candidate,
+            status=Application.Status.SHORTLISTED,
+        )
+        self.client.force_login(self.candidate)
+        response = self.client.get(reverse("dashboard"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Submitted")
+        self.assertContains(response, "Under Review")
+        self.assertContains(response, "Shortlisted")
+        self.assertContains(response, "Selected")
+        self.assertContains(response, "Active Applications")
+
+    def test_training_verify_renders_gold_trimmed_credential_plaque(self):
+        cat = Category.objects.create(name="Executive IT", published=True)
+        prog = Programme.objects.create(title="SAP S/4HANA Masterclass", category=cat, published=True)
+        reg = Registration.objects.create(programme=prog, student=self.candidate)
+        reg.issue_certificate()
+
+        response = self.client.get(reverse("verify_certificate", args=[reg.certificate_ref]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "credential-card credential-gold-trim")
+        self.assertContains(response, "Official Credential Plaque")
+        self.assertContains(response, "Valid certificate")
+        self.assertContains(response, "Add to LinkedIn")
+
+    def test_enterprise_services_page_contains_faq_accordions(self):
+        response = self.client.get(reverse("services"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Services &amp; Engagement FAQ")
+        self.assertIn("How are GCTT&#39;s service practices structured", response.content.decode().replace("&#x27;", "&#39;").replace("'", "&#39;"))
+
+    def test_employers_page_contains_faq_accordions(self):
+        response = self.client.get(reverse("employers"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Frequently Asked Enterprise Questions")
+        self.assertContains(response, "What engagement models does GCTT support?")
+

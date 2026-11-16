@@ -1,19 +1,52 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
+:root {
+  color-scheme: light dark;
+  --paper: #faf9f6;
+  --surface: #f3f1ec;
+  --card: #ffffff;
+  --ink: #111827;
+  --ink-muted: #4b5563;
+  --ink-subtle: #9ca3af;
+  --brand: #0c1e36;
+  --brand-2: #162e4e;
+  --accent: #9e6534;
+  --accent-hover: #835227;
+  --line: #e5e0d8;
+  --line-subtle: #f0ede8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #090f1d;
+    --surface: #0f192c;
+    --card: #14223b;
+    --ink: #f8fafc;
+    --ink-muted: #94a3b8;
+    --ink-subtle: #64748b;
+    --brand: #0f1f3d;
+    --brand-2: #1b335e;
+    --accent: #c07d45;
+    --accent-hover: #d99155;
+    --line: #1c2e4f;
+    --line-subtle: #162540;
+  }
+}
+
 @theme {
-  --color-paper: #faf9f6;
-  --color-surface: #f3f1ec;
-  --color-card: #ffffff;
-  --color-ink: #111827;
-  --color-ink-muted: #4b5563;
-  --color-ink-subtle: #9ca3af;
-  --color-brand: #0c1e36;
-  --color-brand-2: #162e4e;
-  --color-accent: #9e6534;
-  --color-accent-hover: #835227;
-  --color-line: #e5e0d8;
-  --color-line-subtle: #f0ede8;
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-line: var(--line);
+  --color-line-subtle: var(--line-subtle);
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
 }
@@ -143,6 +176,84 @@
   .delay-1 { transition-delay: 80ms; }
   .delay-2 { transition-delay: 160ms; }
   .delay-3 { transition-delay: 240ms; }
+
+  /* Credential & Executive Plaque */
+  .credential-card {
+    position: relative;
+    border: 2px solid var(--color-line);
+    border-radius: 0.75rem;
+    background: var(--color-card);
+    box-shadow: 0 10px 30px -5px rgba(12, 30, 54, 0.08);
+  }
+  .credential-gold-trim {
+    border: 2px solid var(--color-accent);
+    box-shadow: 0 0 0 1px rgba(158, 101, 52, 0.25), 0 12px 35px -8px rgba(158, 101, 52, 0.18);
+  }
+
+  /* Status Badge Pills */
+  .badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: 9999px;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+  .badge-emerald {
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+  }
+  .badge-amber {
+    background: rgba(245, 158, 11, 0.12);
+    color: #d97706;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+  }
+  .badge-rose {
+    background: rgba(244, 63, 94, 0.12);
+    color: #e11d48;
+    border: 1px solid rgba(244, 63, 94, 0.25);
+  }
+  .badge-brand {
+    background: rgba(12, 30, 54, 0.08);
+    color: var(--color-brand);
+    border: 1px solid var(--color-line);
+  }
+
+  /* Interactive FAQ Disclosure */
+  .faq-item {
+    border-bottom: 1px solid var(--color-line);
+    padding: 1.25rem 0;
+  }
+  .faq-item summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-item summary svg {
+    transition: transform 200ms ease;
+  }
+  .faq-item[open] summary svg {
+    transform: rotate(180deg);
+  }
+  .faq-content {
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--color-ink-muted);
+  }
 }
 
 @keyframes rise {

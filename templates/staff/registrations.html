@@ -13,8 +13,20 @@
 
   {% include "staff/_nav.html" %}
 
+  <!-- Quick Status Pill Ribbon -->
+  <div class="mt-6 flex flex-wrap items-center gap-2">
+    <a href="{% url 'staff_registrations' %}{% if q %}?q={{ q }}{% endif %}{% if programme %}&programme={{ programme }}{% endif %}" class="btn text-xs py-1.5 px-3 {% if not status %}btn-brand{% else %}btn-secondary{% endif %}">
+      All Registrations
+    </a>
+    {% for value, label in all_statuses %}
+      <a href="{% url 'staff_registrations' %}?status={{ value }}{% if q %}&q={{ q }}{% endif %}{% if programme %}&programme={{ programme }}{% endif %}" class="btn text-xs py-1.5 px-3 {% if status == value %}btn-brand{% else %}btn-secondary{% endif %}">
+        {{ label }}
+      </a>
+    {% endfor %}
+  </div>
+
   <!-- Filter Ribbon -->
-  <div class="mt-6 rounded-lg border border-line bg-card p-4 shadow-xs">
+  <div class="mt-3 rounded-lg border border-line bg-card p-4 shadow-xs">
     <form method="get" class="flex flex-col gap-3 sm:flex-row">
       <input
         type="search"
