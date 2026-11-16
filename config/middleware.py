@@ -25,9 +25,10 @@ class SecurityHeadersMiddleware:
 
 
 class StaffTwoFactorMiddleware:
-    """Blocks staff pages until the session is verified with a TOTP device.
+    """Blocks executive staff pages until the session is verified with a TOTP device.
 
-    Only active when REQUIRE_STAFF_2FA is on, so accounts can enrol first.
+    Only active when REQUIRE_STAFF_2FA is on, restricted strictly to
+    Owner and Superadmin roles.
     """
 
     PROTECTED_PREFIXES = ("/admin/", "/staff/", "/dashboard/", "/profile/", "/manage/")
@@ -37,11 +38,17 @@ class StaffTwoFactorMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        user = request.user
+        is_executive = (
+            getattr(user, "is_owner", False)
+            or getattr(user, "role", "") in ("owner", "superadmin")
+            or getattr(user, "is_superuser", False)
+        )
         if (
             settings.REQUIRE_STAFF_2FA
-            and request.user.is_authenticated
-            and request.user.is_staff
-            and not getattr(request.user, "is_verified", lambda: False)()
+            and user.is_authenticated
+            and is_executive
+            and not getattr(user, "is_verified", lambda: False)()
             and request.path.startswith(self.PROTECTED_PREFIXES)
             and not request.path.startswith(self.ALLOWED_PREFIXES)
         ):

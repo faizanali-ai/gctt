@@ -54,11 +54,94 @@ def signup(request):
     return render(request, "accounts/signup.html", {"form": form})
 
 
+class CustomLoginView(LoginView):
+    template_name = "accounts/login.html"
+    redirect_authenticated_user = True
+
+    def form_valid(self, form):
+        user = form.get_user()
+        is_executive = (
+            getattr(user, "is_owner", False)
+            or getattr(user, "role", "") in (User.Role.OWNER, User.Role.SUPERADMIN)
+            or getattr(user, "is_superuser", False)
+        )
+        if user.totpdevice_set.filter(confirmed=True).exists() and is_executive:
+            self.request.session["pre_2fa_user_id"] = user.pk
+            next_url = self.get_success_url()
+            if next_url:
+                self.request.session["pre_2fa_next"] = next_url
+            return redirect("login_2fa")
+        return super().form_valid(form)
+
+
 @ratelimit(key="ip", rate="10/m", method="POST", block=True)
 def login_view(request, *args, **kwargs):
-    return LoginView.as_view(
-        template_name="accounts/login.html", redirect_authenticated_user=True
-    )(request, *args, **kwargs)
+    return CustomLoginView.as_view()(request, *args, **kwargs)
+
+
+@ratelimit(key="ip", rate="10/m", method="POST", block=True)
+def login_2fa(request):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+
+    user_id = request.session.get("pre_2fa_user_id")
+    if not user_id:
+        return redirect("login")
+
+    try:
+        user = User.objects.get(pk=user_id, is_active=True)
+    except User.DoesNotExist:
+        request.session.pop("pre_2fa_user_id", None)
+        return redirect("login")
+
+    device = user.totpdevice_set.filter(confirmed=True).first()
+    if not device:
+        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+        request.session.pop("pre_2fa_user_id", None)
+        return redirect("dashboard")
+
+    if request.method == "POST":
+        action = request.POST.get("action", "")
+        if action == "cancel":
+            request.session.pop("pre_2fa_user_id", None)
+            request.session.pop("pre_2fa_next", None)
+            return redirect("login")
+
+        token = request.POST.get("token", "").strip()
+        if device.verify_token(token):
+            request.session.pop("pre_2fa_user_id", None)
+            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+            otp_login(request, device)
+            log_action(request, "auth.login_2fa", user.email)
+
+            next_url = request.session.pop("pre_2fa_next", None)
+            if next_url and url_has_allowed_host_and_scheme(
+                next_url, allowed_hosts={request.get_host()}
+            ):
+                return redirect(next_url)
+            return redirect("dashboard")
+        else:
+            messages.error(
+                request,
+                "Invalid 6-digit verification code. Please check your Google Authenticator app and try again.",
+            )
+
+    email = user.email
+    masked_email = email
+    if "@" in email:
+        local, domain = email.split("@", 1)
+        if len(local) > 2:
+            masked_email = f"{local[:2]}***@{domain}"
+        else:
+            masked_email = f"{local[:1]}***@{domain}"
+
+    return render(
+        request,
+        "accounts/login_2fa.html",
+        {
+            "masked_email": masked_email,
+        },
+    )
 
 
 @ratelimit(key="ip", rate="20/m", method="GET", block=True)
@@ -185,6 +268,21 @@ def google_callback(request):
         if not user.email_verified:
             user.email_verified = True
             user.save(update_fields=["email_verified"])
+
+        is_executive = (
+            getattr(user, "is_owner", False)
+            or getattr(user, "role", "") in (User.Role.OWNER, User.Role.SUPERADMIN)
+            or getattr(user, "is_superuser", False)
+        )
+        if user.totpdevice_set.filter(confirmed=True).exists() and is_executive:
+            request.session["pre_2fa_user_id"] = user.pk
+            next_url = request.session.pop("google_oauth_next", None)
+            if next_url and url_has_allowed_host_and_scheme(
+                next_url, allowed_hosts={request.get_host()}
+            ):
+                request.session["pre_2fa_next"] = next_url
+            return redirect("login_2fa")
+
         log_action(request, "auth.google_login", user.email)
     else:
         account_type = request.session.pop(
@@ -485,6 +583,24 @@ def manage_user_edit(request, pk):
             "groups": Group.objects.all(),
         },
     )
+
+
+@login_required
+@require_POST
+def manage_user_delete(request, pk):
+    _require_user_manager(request)
+    target = get_object_or_404(User.objects.exclude(role=User.Role.OWNER), pk=pk)
+    if not request.user.can_manage_account(target):
+        raise PermissionDenied
+    if target == request.user:
+        messages.error(request, "You cannot delete your own account from user management.")
+        return redirect("manage_users")
+
+    target_email = target.email
+    target.delete()
+    log_action(request, "manage.user_delete", target_email)
+    messages.success(request, f"User account {target_email} has been permanently deleted.")
+    return redirect("manage_users")
 
 
 @login_required

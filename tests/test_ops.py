@@ -55,7 +55,10 @@ class TwoFactorTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.staff = User.objects.create_user(
-            email="s@example.com", password="test-pass-12345", is_staff=True
+            email="s@example.com",
+            password="test-pass-12345",
+            is_staff=True,
+            role=User.Role.SUPERADMIN,
         )
 
     @staticmethod

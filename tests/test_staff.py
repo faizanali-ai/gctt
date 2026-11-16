@@ -25,6 +25,13 @@ class StaffPortalTests(TestCase):
         cls.trainer = make_employee("trainer@gcttekton.com", "Trainer")
         cls.enquiry_manager = make_employee("enquiries@gcttekton.com", "Enquiry Manager")
         cls.ceo = User.objects.create_superuser(email="ceo@gcttekton.com", password="test-pass-12345")
+        cls.owner = User.objects.filter(role=User.Role.OWNER).first()
+        if not cls.owner:
+            cls.owner = User.objects.create_superuser(
+                email="owner.test@gcttekton.com",
+                password="test-pass-12345",
+                role=User.Role.OWNER,
+            )
         cls.candidate = User.objects.create_user(
             email="candidate@example.com", password="test-pass-12345"
         )
@@ -135,3 +142,15 @@ class StaffPortalTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertFalse(User.objects.filter(email="e@example.com").exists())
+
+    def test_owner_can_delete_managed_user(self):
+        victim = User.objects.create_user(
+            email="temp.trainer@gctekton.com",
+            password="test-pass-12345",
+            role=User.Role.STAFF,
+            is_staff=True,
+        )
+        self.client.force_login(self.owner)
+        response = self.client.post(reverse("manage_user_delete", args=[victim.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(User.objects.filter(pk=victim.pk).exists())

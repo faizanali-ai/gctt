@@ -83,9 +83,19 @@
                 {% endif %}
               </td>
               <td class="px-5 py-4 text-right">
-                <a href="{% url 'manage_user_edit' item.pk %}" class="btn btn-secondary text-2xs py-1 px-3">
-                  Edit
-                </a>
+                <div class="flex items-center justify-end gap-2">
+                  <a href="{% url 'manage_user_edit' item.pk %}" class="btn btn-secondary text-2xs py-1 px-3">
+                    Edit
+                  </a>
+                  {% if user.can_manage_users and item != user and item.role != 'owner' %}
+                    <form method="post" action="{% url 'manage_user_delete' item.pk %}" onsubmit="return confirm('Permanently remove {{ item.email }}? This action cannot be undone.');">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-secondary text-2xs py-1 px-2.5 text-rose-700 hover:border-rose-300 hover:bg-rose-50" title="Delete User">
+                        Remove
+                      </button>
+                    </form>
+                  {% endif %}
+                </div>
               </td>
             </tr>
           {% empty %}

@@ -70,6 +70,7 @@ urlpatterns = [
     path("manage/users/", accounts_views.manage_users, name="manage_users"),
     path("manage/users/new/", accounts_views.manage_user_create, name="manage_user_create"),
     path("manage/users/<int:pk>/", accounts_views.manage_user_edit, name="manage_user_edit"),
+    path("manage/users/<int:pk>/delete/", accounts_views.manage_user_delete, name="manage_user_delete"),
     path("staff/enquiries/", enquiries_views.staff_enquiries, name="staff_enquiries"),
     path(
         "staff/enquiries/<int:pk>/status/",

@@ -15,6 +15,7 @@ password_reset_view = ratelimit(key="ip", rate="5/m", method="POST", block=True)
 urlpatterns = [
     path("signup/", views.signup, name="signup"),
     path("login/", views.login_view, name="login"),
+    path("login/2fa/", views.login_2fa, name="login_2fa"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("google/login/", views.google_login, name="google_login"),
     path("google/callback/", views.google_callback, name="google_callback"),
