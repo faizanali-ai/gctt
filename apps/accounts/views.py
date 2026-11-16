@@ -1,3 +1,4 @@
+import base64
 import io
 
 import qrcode
@@ -375,7 +376,7 @@ def security(request):
         if pending is None:
             pending = user.totpdevice_set.create(name="default", confirmed=False)
         qr_svg = _qr_svg(pending.config_url)
-        secret = pending.bin_key.hex().upper()
+        secret = base64.b32encode(pending.bin_key).decode("utf-8")
     return render(
         request,
         "accounts/security.html",
