@@ -432,3 +432,13 @@ class UiUxOverhaulTests(TestCase):
         self.assertContains(response, "Frequently Asked Enterprise Questions")
         self.assertContains(response, "What engagement models does GCTT support?")
 
+    def test_theme_toggle_button_and_anti_fouc_script_present(self):
+        response = self.client.get(reverse("home"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "theme-toggle-btn")
+        self.assertContains(response, "theme-sun-icon")
+        self.assertContains(response, "theme-moon-icon")
+        self.assertContains(response, "localStorage.getItem")
+        self.assertContains(response, "gctt-theme")
+
+

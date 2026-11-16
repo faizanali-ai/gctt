@@ -1,5 +1,5 @@
 {% load static %}
-<footer class="mt-28 border-t border-brand-2/50 bg-brand text-paper">
+<footer class="mt-28 border-t border-brand-2/50 bg-brand text-slate-100">
   <div class="mx-auto max-w-7xl px-6 py-16 lg:py-20">
     <div class="grid gap-12 lg:grid-cols-5">
       <!-- Col 1: Brand & Headquarters -->
@@ -11,10 +11,10 @@
             <p class="text-xs uppercase tracking-wider text-accent">{{ COMPANY.tagline }}</p>
           </div>
         </div>
-        <p class="mt-4 max-w-sm text-sm leading-relaxed text-paper/70">
+        <p class="mt-4 max-w-sm text-sm leading-relaxed text-slate-300">
           {{ COMPANY.legal_name }}. An Irving, Texas technology staffing and workforce development consultancy connecting enterprise clients with vetted IT professionals.
         </p>
-        <div class="mt-6 flex flex-col gap-1.5 text-xs text-paper/75">
+        <div class="mt-6 flex flex-col gap-1.5 text-xs text-slate-300">
           <span class="flex items-center gap-2">
             <svg class="h-3.5 w-3.5 text-accent shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             {{ COMPANY.address }}
@@ -33,7 +33,7 @@
       <!-- Col 2: Enterprise Services -->
       <div>
         <p class="text-xs font-semibold uppercase tracking-[0.14em] text-accent">Enterprise Services</p>
-        <ul class="mt-4 space-y-2.5 text-sm text-paper/80">
+        <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
           {% for service in SERVICES %}
             <li><a href="{{ service.url }}" class="transition-colors hover:text-white">{{ service.title }}</a></li>
           {% endfor %}
@@ -45,7 +45,7 @@
       <!-- Col 3: Talent & Training -->
       <div>
         <p class="text-xs font-semibold uppercase tracking-[0.14em] text-accent">Talent &amp; Academy</p>
-        <ul class="mt-4 space-y-2.5 text-sm text-paper/80">
+        <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
           <li><a href="{% url 'careers' %}" class="transition-colors hover:text-white">Open Requisitions</a></li>
           <li><a href="{% url 'training' %}" class="transition-colors hover:text-white">Training Programmes</a></li>
           <li><a href="{% url 'career_restart' %}" class="transition-colors hover:text-white">Career Restart Hub</a></li>
@@ -56,7 +56,7 @@
       <!-- Col 4: Corporate Governance -->
       <div>
         <p class="text-xs font-semibold uppercase tracking-[0.14em] text-accent">Governance</p>
-        <ul class="mt-4 space-y-2.5 text-sm text-paper/80">
+        <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
           <li><a href="{% url 'about' %}" class="transition-colors hover:text-white">About GCTT</a></li>
           <li><a href="{% url 'contact' %}" class="transition-colors hover:text-white">Corporate Inquiries</a></li>
           <li><a href="{% url 'privacy' %}" class="transition-colors hover:text-white">Privacy Policy</a></li>
@@ -66,15 +66,15 @@
     </div>
 
     <!-- Bottom Bar -->
-    <div class="mt-14 border-t border-paper/10 pt-8">
-      <div class="flex flex-col gap-4 text-xs text-paper/60 sm:flex-row sm:items-center sm:justify-between">
+    <div class="mt-14 border-t border-white/10 pt-8">
+      <div class="flex flex-col gap-4 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
         <p>&copy; {% now "Y" %} Global Center for Technology &amp; Training (GCTT). All rights reserved.</p>
         <div class="flex items-center gap-6">
           <a href="{% url 'privacy' %}" class="transition-colors hover:text-white">Privacy</a>
-          <span class="text-paper/20">·</span>
+          <span class="text-slate-600">·</span>
           <a href="{% url 'terms' %}" class="transition-colors hover:text-white">Terms</a>
-          <span class="text-paper/20">·</span>
-          <span class="text-paper/50">Irving, TX</span>
+          <span class="text-slate-600">·</span>
+          <span class="text-slate-400">Irving, TX</span>
         </div>
       </div>
     </div>

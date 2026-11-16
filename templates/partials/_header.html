@@ -1,22 +1,22 @@
 {% load static %}
 <!-- Top Executive Utility Bar -->
-<div class="hidden border-b border-brand-2/60 bg-brand text-paper md:block">
+<div class="hidden border-b border-brand-2/60 bg-brand text-slate-200 md:block">
   <div class="mx-auto flex h-9 max-w-7xl items-center justify-between px-6 text-xs tracking-wide">
-    <div class="flex items-center gap-6 text-paper/70">
+    <div class="flex items-center gap-6 text-slate-300">
       <span class="flex items-center gap-1.5">
         <svg class="h-3 w-3 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         {{ COMPANY.address }}
       </span>
-      <span class="text-paper/20">|</span>
+      <span class="text-slate-500">|</span>
       <a href="mailto:{{ COMPANY.jobs_email }}" class="transition-colors hover:text-white">{{ COMPANY.jobs_email }}</a>
-      <span class="text-paper/20">|</span>
+      <span class="text-slate-500">|</span>
       <a href="mailto:{{ COMPANY.email }}" class="transition-colors hover:text-white">{{ COMPANY.email }}</a>
     </div>
     <div class="flex items-center gap-5 text-xs">
-      <a href="{% url 'careers' %}" class="text-paper/70 transition-colors hover:text-white">Job Seekers</a>
-      <a href="{% url 'employers' %}" class="text-paper/70 transition-colors hover:text-white">Employers</a>
+      <a href="{% url 'careers' %}" class="text-slate-300 transition-colors hover:text-white">Job Seekers</a>
+      <a href="{% url 'employers' %}" class="text-slate-300 transition-colors hover:text-white">Employers</a>
       {% if not user.is_authenticated %}
-        <span class="text-paper/20">|</span>
+        <span class="text-slate-500">|</span>
         <a href="{% url 'login' %}" class="font-semibold text-accent transition-colors hover:text-white">Staff / Portal Login</a>
       {% endif %}
     </div>
@@ -61,7 +61,22 @@
       <a href="{% url 'contact' %}" class="transition-colors hover:text-ink {% if request.path == '/contact/' %}font-semibold text-accent{% endif %}">Contact</a>
     </nav>
 
-    <div class="ml-auto hidden items-center gap-4 text-sm font-medium lg:flex">
+    <div class="ml-auto hidden items-center gap-3.5 text-sm font-medium lg:flex">
+      <!-- Desktop Dark/Light Theme Toggle -->
+      <button
+        type="button"
+        class="theme-toggle-btn flex h-9 w-9 items-center justify-center rounded-md border border-line bg-card text-ink transition-colors hover:border-accent hover:text-accent focus:outline-hidden"
+        aria-label="Toggle Theme Mode"
+        title="Toggle Dark / Light Mode"
+      >
+        <svg class="theme-sun-icon h-4 w-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <svg class="theme-moon-icon h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+
       {% if user.is_authenticated %}
         <a href="{% url 'dashboard' %}" class="text-ink-muted transition-colors hover:text-ink">Dashboard</a>
         <form method="post" action="{% url 'logout' %}">
@@ -74,20 +89,36 @@
       {% endif %}
     </div>
 
-    <!-- Mobile Slide-Out Drawer Trigger -->
-    <button
-      type="button"
-      id="mobile-drawer-open"
-      class="ml-auto inline-flex items-center gap-2 rounded-md border border-line bg-card px-3.5 py-2 text-sm font-semibold text-ink shadow-xs lg:hidden hover:border-accent transition-colors"
-      aria-label="Open Navigation Menu"
-      aria-expanded="false"
-      aria-controls="mobile-drawer"
-    >
-      <svg class="h-4 w-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-      </svg>
-      <span>Menu</span>
-    </button>
+    <!-- Mobile Header Actions (Theme Toggle + Drawer Trigger) -->
+    <div class="ml-auto flex items-center gap-2 lg:hidden">
+      <button
+        type="button"
+        class="theme-toggle-btn flex h-9 w-9 items-center justify-center rounded-md border border-line bg-card text-ink transition-colors hover:border-accent"
+        aria-label="Toggle Theme Mode"
+        title="Toggle Dark / Light Mode"
+      >
+        <svg class="theme-sun-icon h-4 w-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <svg class="theme-moon-icon h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        id="mobile-drawer-open"
+        class="inline-flex items-center gap-2 rounded-md border border-line bg-card px-3 py-2 text-sm font-semibold text-ink shadow-xs hover:border-accent transition-colors"
+        aria-label="Open Navigation Menu"
+        aria-expanded="false"
+        aria-controls="mobile-drawer"
+      >
+        <svg class="h-4 w-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+        <span>Menu</span>
+      </button>
+    </div>
   </div>
 </header>
 
