@@ -1,5 +1,10 @@
 import base64
 import io
+import json
+import secrets
+import urllib.error
+import urllib.parse
+import urllib.request
 
 import qrcode
 import qrcode.image.svg
@@ -16,8 +21,9 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.encoding import force_str
-from django.utils.http import urlsafe_base64_decode
+from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_decode
 from django.views.decorators.http import require_POST
 from django_otp import login as otp_login
 from django_ratelimit.decorators import ratelimit
@@ -53,6 +59,168 @@ def login_view(request, *args, **kwargs):
     return LoginView.as_view(
         template_name="accounts/login.html", redirect_authenticated_user=True
     )(request, *args, **kwargs)
+
+
+@ratelimit(key="ip", rate="20/m", method="GET", block=True)
+def google_login(request):
+    client_id = getattr(settings, "GOOGLE_CLIENT_ID", "").strip()
+    if not client_id:
+        messages.warning(
+            request,
+            "Google Sign-In is being initialized on this domain. Please use your email and password below.",
+        )
+        return redirect("login")
+
+    state = secrets.token_urlsafe(32)
+    request.session["google_oauth_state"] = state
+
+    next_url = request.GET.get("next", "")
+    if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+        request.session["google_oauth_next"] = next_url
+    else:
+        request.session.pop("google_oauth_next", None)
+
+    account_type = request.GET.get("account_type", "")
+    if account_type in (User.AccountType.CANDIDATE, User.AccountType.STUDENT):
+        request.session["google_oauth_account_type"] = account_type
+
+    redirect_uri = request.build_absolute_uri(reverse("google_callback"))
+    if not settings.DEBUG and redirect_uri.startswith("http://"):
+        redirect_uri = "https://" + redirect_uri[len("http://") :]
+
+    params = {
+        "client_id": client_id,
+        "redirect_uri": redirect_uri,
+        "response_type": "code",
+        "scope": "openid email profile",
+        "state": state,
+        "access_type": "online",
+        "prompt": "select_account",
+    }
+    return redirect(
+        f"https://accounts.google.com/o/oauth2/v2/auth?{urllib.parse.urlencode(params)}"
+    )
+
+
+@ratelimit(key="ip", rate="20/m", method="GET", block=True)
+def google_callback(request):
+    error = request.GET.get("error")
+    if error:
+        messages.error(
+            request, f"Google authentication was cancelled or encountered an error ({error})."
+        )
+        return redirect("login")
+
+    code = request.GET.get("code")
+    state = request.GET.get("state")
+    saved_state = request.session.pop("google_oauth_state", None)
+
+    if not code or not state or not saved_state or state != saved_state:
+        messages.error(request, "Invalid or expired Google authentication session. Please try again.")
+        return redirect("login")
+
+    client_id = getattr(settings, "GOOGLE_CLIENT_ID", "").strip()
+    client_secret = getattr(settings, "GOOGLE_CLIENT_SECRET", "").strip()
+    if not client_id or not client_secret:
+        messages.error(request, "Google Sign-In configuration is missing server credentials.")
+        return redirect("login")
+
+    redirect_uri = request.build_absolute_uri(reverse("google_callback"))
+    if not settings.DEBUG and redirect_uri.startswith("http://"):
+        redirect_uri = "https://" + redirect_uri[len("http://") :]
+
+    token_payload = urllib.parse.urlencode({
+        "code": code,
+        "client_id": client_id,
+        "client_secret": client_secret,
+        "redirect_uri": redirect_uri,
+        "grant_type": "authorization_code",
+    }).encode("utf-8")
+
+    token_req = urllib.request.Request(
+        "https://oauth2.googleapis.com/token",
+        data=token_payload,
+        headers={"Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(token_req, timeout=10) as resp:
+            token_data = json.loads(resp.read().decode("utf-8"))
+    except (urllib.error.URLError, json.JSONDecodeError, OSError):
+        messages.error(
+            request, "Unable to communicate with Google authentication servers. Please try again."
+        )
+        return redirect("login")
+
+    access_token = token_data.get("access_token")
+    if not access_token:
+        messages.error(request, "Failed to retrieve access credentials from Google.")
+        return redirect("login")
+
+    userinfo_req = urllib.request.Request(
+        "https://www.googleapis.com/oauth2/v3/userinfo",
+        headers={"Authorization": f"Bearer {access_token}", "Accept": "application/json"},
+    )
+
+    try:
+        with urllib.request.urlopen(userinfo_req, timeout=10) as resp:
+            user_info = json.loads(resp.read().decode("utf-8"))
+    except (urllib.error.URLError, json.JSONDecodeError, OSError):
+        messages.error(request, "Unable to verify profile details with Google.")
+        return redirect("login")
+
+    email = (user_info.get("email") or "").strip().lower()
+    email_verified = user_info.get("email_verified", False)
+
+    if not email or not email_verified:
+        messages.error(request, "Google account does not have a verified email address.")
+        return redirect("login")
+
+    user = User.objects.filter(email=email).first()
+    if user:
+        if not user.is_active:
+            messages.error(request, "This account is inactive. Please contact administration.")
+            return redirect("login")
+        if not user.email_verified:
+            user.email_verified = True
+            user.save(update_fields=["email_verified"])
+        log_action(request, "auth.google_login", user.email)
+    else:
+        account_type = request.session.pop(
+            "google_oauth_account_type", User.AccountType.CANDIDATE
+        )
+        if account_type not in (User.AccountType.CANDIDATE, User.AccountType.STUDENT):
+            account_type = User.AccountType.CANDIDATE
+
+        first_name = (user_info.get("given_name") or "")[:150]
+        last_name = (user_info.get("family_name") or "")[:150]
+        if not first_name and user_info.get("name"):
+            names = user_info["name"].split(None, 1)
+            first_name = names[0][:150]
+            if len(names) > 1:
+                last_name = names[1][:150]
+
+        user = User.objects.create_user(
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            account_type=account_type,
+        )
+        user.is_staff = False
+        user.is_superuser = False
+        user.email_verified = True
+        user.set_unusable_password()
+        user.save()
+        log_action(request, "auth.google_signup", user.email)
+        messages.success(request, f"Welcome to GCTT, {user.first_name or user.email}!")
+
+    login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+
+    next_url = request.session.pop("google_oauth_next", None)
+    if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+        return redirect(next_url)
+    return redirect("dashboard")
 
 
 def verify_email(request, uidb64, token):
@@ -366,8 +534,15 @@ def security(request):
                 log_action(request, "security.2fa.enable", user.email)
             otp_login(request, target)
             messages.success(request, "Two-factor authentication is active.")
+            next_url = request.POST.get("next") or request.GET.get("next")
+            if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+                return redirect(next_url)
+            return redirect("security")
         else:
             messages.error(request, "That code is not valid. Try again.")
+        next_url = request.POST.get("next") or request.GET.get("next")
+        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+            return redirect(f"{reverse('security')}?next={urllib.parse.quote(next_url)}")
         return redirect("security")
 
     qr_svg = secret = None

@@ -45,5 +45,10 @@ class StaffTwoFactorMiddleware:
             and request.path.startswith(self.PROTECTED_PREFIXES)
             and not request.path.startswith(self.ALLOWED_PREFIXES)
         ):
-            return redirect("security")
+            from urllib.parse import quote
+
+            from django.urls import reverse
+
+            next_url = quote(request.get_full_path())
+            return redirect(f"{reverse('security')}?next={next_url}")
         return self.get_response(request)

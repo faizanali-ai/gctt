@@ -30,6 +30,9 @@
           <form method="post" class="mt-4 flex flex-col gap-3 sm:flex-row">
             {% csrf_token %}
             <input type="hidden" name="action" value="verify">
+            {% if request.GET.next %}
+              <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
             <input type="text" name="token" inputmode="numeric" autocomplete="one-time-code" placeholder="000000" required class="font-mono text-center tracking-widest sm:w-48">
             <button type="submit" class="btn btn-primary text-xs">Verify Current Session</button>
           </form>
@@ -79,6 +82,9 @@
           <form method="post" class="mt-4 flex flex-col gap-3 sm:flex-row">
             {% csrf_token %}
             <input type="hidden" name="action" value="enable">
+            {% if request.GET.next %}
+              <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
             <input type="text" name="token" inputmode="numeric" autocomplete="one-time-code" placeholder="000000" required class="font-mono text-center tracking-widest sm:w-48">
             <button type="submit" class="btn btn-primary text-xs">
               Activate Two-Factor Protection

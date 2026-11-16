@@ -61,5 +61,9 @@ services:
         sync: false
       - key: SENTRY_DSN
         sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
       - key: REQUIRE_STAFF_2FA
-        value: "0"
+        value: "1"
