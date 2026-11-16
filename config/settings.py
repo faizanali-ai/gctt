@@ -15,22 +15,42 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-insecure-key-change-m
 if not DEBUG and not TESTING and SECRET_KEY.startswith("dev-only"):
     raise RuntimeError("Set DJANGO_SECRET_KEY before running with DJANGO_DEBUG off")
 
-ALLOWED_HOSTS = [
+base_allowed_hosts = [
+    "localhost",
+    "127.0.0.1",
+    "gctekton.com",
+    "www.gctekton.com",
+    ".gctekton.com",
+    ".onrender.com",
+]
+env_allowed_hosts = [
     host.strip()
-    for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+    for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
     if host.strip()
 ]
-CSRF_TRUSTED_ORIGINS = [
+ALLOWED_HOSTS = list(dict.fromkeys(base_allowed_hosts + env_allowed_hosts))
+
+base_csrf_origins = [
+    "https://gctekton.com",
+    "https://www.gctekton.com",
+    "https://*.onrender.com",
+    "https://*.gctekton.com",
+]
+env_csrf_origins = [
     origin.strip()
     for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
     if origin.strip()
 ]
+CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(base_csrf_origins + env_csrf_origins))
 
 # Render injects its public hostname; trust it automatically.
 RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME", "")
 if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-    CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_EXTERNAL_HOSTNAME}")
+    if RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+    render_origin = f"https://{RENDER_EXTERNAL_HOSTNAME}"
+    if render_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(render_origin)
 
 INSTALLED_APPS = [
     "django.contrib.admin",
