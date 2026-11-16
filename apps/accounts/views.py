@@ -122,7 +122,7 @@ def _staff_dashboard(request):
     if user.has_perm("training.view_registration"):
         stats["registrations_total"] = Registration.objects.count()
         stats["registrations_pending"] = Registration.objects.filter(
-            status=Registration.Status.REGISTERED
+            status=Registration.Status.SUBMITTED
         ).count()
 
     recent_applications = []

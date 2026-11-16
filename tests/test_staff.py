@@ -64,10 +64,20 @@ class StaffPortalTests(TestCase):
 
     def test_ceo_sees_everything(self):
         self.client.force_login(self.ceo)
-        for name in ("staff_enquiries", "staff_jobs", "staff_applications",
+        for name in ("dashboard", "staff_enquiries", "staff_jobs", "staff_applications",
                      "staff_programmes", "staff_registrations"):
             with self.subTest(name=name):
                 self.assertEqual(self.client.get(reverse(name)).status_code, 200)
+
+    def test_owner_dashboard_renders_all_executive_metrics(self):
+        self.client.force_login(self.ceo)
+        response = self.client.get(reverse("dashboard"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Operations Command")
+        self.assertContains(response, "Applications")
+        self.assertContains(response, "Enquiries")
+        self.assertContains(response, "Programmes")
+        self.assertContains(response, "Registrations")
 
     def test_candidate_is_blocked(self):
         self.client.force_login(self.candidate)
