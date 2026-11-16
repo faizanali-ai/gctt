@@ -31,7 +31,7 @@
             Manage Staff &amp; Roles
           </a>
         {% endif %}
-        {% if can_use_admin %}
+        {% if user.is_owner %}
           <a href="{% url 'admin:index' %}" class="btn btn-secondary text-xs" title="Access raw Django administration database">
             Django Admin Database ↗
           </a>

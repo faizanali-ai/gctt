@@ -60,3 +60,15 @@ class AccountsConfig(AppConfig):
 
     def ready(self):
         post_migrate.connect(sync_role_groups)
+        from django.contrib import admin
+
+        def owner_only_admin_permission(request):
+            user = request.user
+            return bool(
+                user
+                and user.is_authenticated
+                and user.is_active
+                and (getattr(user, "is_owner", False) or getattr(user, "role", "") == "owner")
+            )
+
+        admin.site.has_permission = owner_only_admin_permission

@@ -153,7 +153,7 @@ def _staff_dashboard(request):
             "recent_enquiries": recent_enquiries,
             "recent_registrations": recent_registrations,
             "can_manage_users": user.can_manage_users,
-            "can_use_admin": user.is_owner or user.is_superuser,
+            "can_use_admin": user.is_owner,
         },
     )
 
