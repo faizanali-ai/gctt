@@ -7,14 +7,16 @@ services:
     autoDeploy: true
     healthCheckPath: /healthz/
     buildCommand: >-
-      pip install uv && uv sync --frozen --no-dev &&
-      DATABASE_URL=sqlite:///buildtest.db uv run python manage.py test tests
+      pip install uv &&
+      UV_CACHE_DIR=/opt/render/project/.cache/uv uv sync --frozen --no-dev &&
+      uv run python manage.py collectstatic --noinput
     startCommand: >-
       uv run python manage.py migrate --noinput &&
       uv run python manage.py createcachetable &&
-      uv run python manage.py collectstatic --noinput &&
       uv run gunicorn config.wsgi --bind 0.0.0.0:$PORT --workers 2 --timeout 120
     envVars:
+      - key: UV_CACHE_DIR
+        value: /opt/render/project/.cache/uv
       - key: PYTHON_VERSION
         value: "3.12.8"
       - key: DJANGO_DEBUG
