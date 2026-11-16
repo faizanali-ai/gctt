@@ -11,8 +11,8 @@
   --ink-subtle: #64748b;
   --brand: #0b192c;
   --brand-2: #1e3e62;
-  --accent: #059669;
-  --accent-hover: #047857;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
   --line: #e2e8f0;
   --line-subtle: #f1f5f9;
 }
@@ -27,8 +27,8 @@ html.dark {
   --ink-subtle: #94a3b8;
   --brand: #0b192c;
   --brand-2: #1e3e62;
-  --accent: #10b981;
-  --accent-hover: #34d399;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
   --line: #1e293b;
   --line-subtle: #141f36;
 }
@@ -44,8 +44,8 @@ html.dark {
     --ink-subtle: #94a3b8;
     --brand: #0b192c;
     --brand-2: #1e3e62;
-    --accent: #10b981;
-    --accent-hover: #34d399;
+    --accent: #3b82f6;
+    --accent-hover: #60a5fa;
     --line: #1e293b;
     --line-subtle: #141f36;
   }
@@ -388,4 +388,50 @@ details[open] > nav {
   textarea:focus-visible {
     @apply outline-2 outline-offset-2 outline-accent;
   }
+}
+
+/* LeanSpike & Kani Solutions Inspired UI Polish */
+/* 1. Custom Smooth Gradient Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--paper);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #2563eb, #38bdf8);
+  border-radius: 9999px;
+  border: 2px solid var(--paper);
+}
+
+/* 2. Typewriter Blinking Cursor */
+@keyframes typewriter-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.animate-typewriter-cursor {
+  animation: typewriter-blink 0.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* 3. Card Hover Elevation & Luminous Border Glow */
+.card-hover-luminous {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+.card-hover-luminous:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -12px rgba(37, 99, 235, 0.12);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+/* 4. Ambient Glow Background Orbs */
+.ambient-glow-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  pointer-events: none;
+  opacity: 0.45;
+}
+.dark .ambient-glow-orb {
+  opacity: 0.25;
 }
