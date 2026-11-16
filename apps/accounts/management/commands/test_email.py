@@ -40,5 +40,5 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f"✓ Test email successfully transmitted to {recipient}!"))
             else:
                 self.stdout.write(self.style.WARNING("! send_mail returned 0 messages sent."))
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             self.stdout.write(self.style.ERROR(f"✗ Failed to transmit test email: {exc}"))
