@@ -10,11 +10,17 @@ JOBS = [
         "location": "Irving, TX",
         "employment_type": "contract",
         "description": (
-            "We are looking for an SAP MM consultant with hands-on experience in "
-            "procurement, inventory management and supplier collaboration.\n\n"
-            "You will work with our client teams on implementation and support projects."
+            "GCTT is deploying an experienced SAP S/4HANA Materials Management (MM) Consultant "
+            "for an enterprise supply chain modernization initiative in Irving, TX.\n\n"
+            "You will spearhead procurement process configuration, inventory valuation models, "
+            "automated MRP scheduling, and cross-functional integration with FICO and SD ledgers."
         ),
-        "requirements": "- 4+ years SAP MM experience\n- S/4HANA exposure preferred\n- Strong communication skills",
+        "requirements": (
+            "- 4+ years of hands-on SAP MM configuration and enterprise delivery experience\n"
+            "- Direct S/4HANA migration or greenfield implementation exposure\n"
+            "- Deep proficiency in Procure-to-Pay (P2P), inventory management, and EDI/IDoc workflows\n"
+            "- Exceptional stakeholder communication and cross-functional alignment skills"
+        ),
         "published": True,
     },
     {
@@ -22,10 +28,16 @@ JOBS = [
         "location": "Remote",
         "employment_type": "full_time",
         "description": (
-            "Build and maintain backend services for our client platform.\n\n"
-            "You will design APIs, review code and help shape technical direction."
+            "Build and scale mission-critical cloud-native distributed microservices for an enterprise partner.\n\n"
+            "You will design high-throughput RESTful and event-driven APIs, architect resilient PostgreSQL schemas, "
+            "conduct rigorous architectural code reviews, and drive cloud infrastructure reliability."
         ),
-        "requirements": "- 3+ years Java/Spring\n- REST and SQL\n- Git-based workflows",
+        "requirements": (
+            "- 3+ years of production experience with Java 17+, Spring Boot, and microservices architecture\n"
+            "- Strong relational database modeling, indexing, and query optimization (PostgreSQL/SQL)\n"
+            "- Practical containerization experience with Docker, Kubernetes, and automated CI/CD pipelines\n"
+            "- Firm grasp of asynchronous messaging paradigms (Kafka/RabbitMQ) and API security standards"
+        ),
         "published": True,
     },
 ]
@@ -35,10 +47,11 @@ PROGRAMMES = [
         "title": "SAP MM Fundamentals",
         "category": "SAP",
         "duration": "6 weeks",
-        "schedule": "Evening batches",
+        "schedule": "Evening & Weekend Batches",
         "description": (
-            "Hands-on SAP Materials Management training covering master data, "
-            "purchasing and inventory processes."
+            "Comprehensive, hands-on enterprise workforce accelerator in SAP S/4HANA Materials Management. "
+            "Covers master data governance, purchasing configurations, inventory valuation, MRP algorithms, and "
+            "live enterprise sandbox simulations. Culminates in a tamper-evident verifiable digital credential."
         ),
         "registration_open": True,
         "published": True,
@@ -47,9 +60,11 @@ PROGRAMMES = [
         "title": "Scrum & Agile Foundations",
         "category": "Scrum & Agile",
         "duration": "4 weeks",
+        "schedule": "Flexible Cohorts",
         "description": (
-            "Practical Scrum and Agile foundations for teams and individuals "
-            "preparing for certification."
+            "Practical Scaled Agile and Scrum masterclass engineered for aspiring Scrum Masters, Product Owners, "
+            "and delivery managers. Deep dive into sprint telemetry, backlog grooming, impediment resolution, "
+            "and cross-functional squad leadership with formal verifiable certification."
         ),
         "registration_open": True,
         "published": True,

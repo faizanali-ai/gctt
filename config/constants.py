@@ -1,7 +1,7 @@
 COMPANY = {
     "name": "GCTT",
     "legal_name": "Global Center for Technology & Training",
-    "tagline": "Bridging Talent. Connecting Opportunities.",
+    "tagline": "Bridging Elite Talent. Delivering Enterprise Certainty.",
     "email": "Accounts@gctekton.com",
     "jobs_email": "Jobs@gctekton.com",
     "address": "2612 Laramie St, Irving TX 75062",
@@ -13,22 +13,22 @@ SERVICES = [
     {
         "url": "/it-staffing/",
         "title": "IT Staffing",
-        "text": "Connecting companies with skilled IT professionals for their technology teams.",
+        "text": "Mission-critical engineering, architecture, and cloud infrastructure talent deployed on flexible W2 contract and direct frameworks.",
     },
     {
         "url": "/recruitment/",
         "title": "Recruitment",
-        "text": "Share your hiring requirements and we help you find the right people.",
+        "text": "Retained and contingent technical search delivering senior practitioners pre-screened through architectural assessments.",
     },
     {
         "url": "/talent-acquisition/",
         "title": "Talent Acquisition",
-        "text": "Support for companies building their teams around the talent they need.",
+        "text": "Strategic workforce advisory helping enterprise engineering organizations build high-performance technical delivery squads.",
     },
     {
         "url": "/training/",
         "title": "Training & Development",
-        "text": "Online and in-person training, with certificates on successful completion.",
+        "text": "Accredited enterprise upskilling and professional cohorts in SAP S/4HANA functional domains and Scaled Agile delivery.",
     },
 ]
 

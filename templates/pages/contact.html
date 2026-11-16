@@ -1,35 +1,42 @@
 {% extends "base.html" %}
-{% block title %}Corporate Contact & Headquarters — GCTT{% endblock %}
+{% block title %}Corporate Contact &amp; Headquarters — GCTT{% endblock %}
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Executive Contact" title="Connect with our practice leads." intro="Direct communications for corporate clients, enterprise partnerships, and candidate inquiries." %}
+{% include "partials/_hero.html" with eyebrow="Executive Contact" title="Connect directly with our corporate leadership." intro="Direct communications for enterprise clients, strategic staffing partnerships, academic cohorts, and senior candidate inquiries." %}
 
 <section class="mx-auto max-w-7xl px-6 py-16 lg:py-24">
-  <div class="grid gap-16 lg:grid-cols-[1fr_1.3fr] lg:items-start">
+  <div class="grid gap-16 lg:grid-cols-[1.1fr_1.2fr] lg:items-start">
     <div class="space-y-8 reveal">
       <div>
-        <p class="eyebrow text-2xs">Headquarters</p>
+        <p class="eyebrow text-2xs">Corporate Headquarters</p>
         <p class="mt-2 font-display text-xl font-bold text-ink">{{ COMPANY.name }} — {{ COMPANY.legal_name }}</p>
         <p class="mt-1 text-sm text-ink-muted">{{ COMPANY.address }}</p>
+        <p class="mt-2 text-xs text-ink-muted">Executive Command Center &bull; Dallas-Fort Worth Technology Corridor</p>
       </div>
 
       <div class="border-t border-line/60 pt-6 space-y-6">
         <div>
-          <p class="text-xs font-semibold uppercase tracking-wider text-accent">Client &amp; Employer Requisitions</p>
+          <p class="text-xs font-semibold uppercase tracking-wider text-accent">Client Accounts &amp; Enterprise Requisitions</p>
           <a href="mailto:{{ COMPANY.email }}" class="mt-1 block font-display text-lg font-bold text-ink hover:text-accent transition-colors">{{ COMPANY.email }}</a>
-          <p class="text-xs text-ink-muted">For staffing partnerships, SOW inquiries, and enterprise accounts.</p>
+          <p class="text-xs text-ink-muted">For master services agreements (MSA), statement of work (SOW) staffing, and corporate cohorts.</p>
         </div>
 
         <div>
-          <p class="text-xs font-semibold uppercase tracking-wider text-accent">Candidate &amp; Career Inquiries</p>
+          <p class="text-xs font-semibold uppercase tracking-wider text-accent">Candidate, Careers &amp; Returnships</p>
           <a href="mailto:{{ COMPANY.jobs_email }}" class="mt-1 block font-display text-lg font-bold text-ink hover:text-accent transition-colors">{{ COMPANY.jobs_email }}</a>
-          <p class="text-xs text-ink-muted">For resume submissions, application tracking, and recruiter connect.</p>
+          <p class="text-xs text-ink-muted">For confidential resume submissions, portfolio reviews, and returnship applications.</p>
+        </div>
+
+        <div class="rounded-md border border-line bg-surface/50 p-4 text-xs text-ink-muted">
+          <p class="font-semibold text-ink">Operating Hours &amp; Response SLA</p>
+          <p class="mt-1">Monday &ndash; Friday: 8:00 AM &ndash; 6:00 PM CST</p>
+          <p class="mt-0.5">Corporate inquiries receive a dedicated executive response within 24 business hours.</p>
         </div>
       </div>
     </div>
 
     <div class="card shadow-md p-8 sm:p-10 reveal delay-1">
-      <h3 class="font-display text-xl font-bold text-ink">Send a Message</h3>
-      <p class="mt-1 text-xs text-ink-muted">Fill out the brief below and our Irving team will follow up directly.</p>
+      <h3 class="font-display text-xl font-bold text-ink">Initiate Corporate Contact</h3>
+      <p class="mt-1 text-xs text-ink-muted">Provide your organization or background details below. A practice director will reach out promptly.</p>
       <div class="mt-6 border-t border-line/60 pt-6">
         {% include "enquiries/_form.html" %}
       </div>

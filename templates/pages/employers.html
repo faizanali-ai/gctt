@@ -1,27 +1,34 @@
 {% extends "base.html" %}
 {% block title %}Request Vetted IT Talent — GCTT for Employers{% endblock %}
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Enterprise Requisitions" title="Request Vetted Technical Talent" intro="Connect with specialized IT consultants, software engineers, and SAP architects pre-screened for your technical roadmap." %}
+{% include "partials/_hero.html" with eyebrow="Enterprise Requisitions" title="Request Vetted Technical Talent" intro="Deploy specialized IT consultants, software engineers, and SAP architects pre-screened through architectural diagnostics for your technical roadmap." %}
 
 <section class="mx-auto max-w-7xl px-6 py-16 lg:py-24">
-  <div class="grid gap-16 lg:grid-cols-[1fr_1.3fr] lg:items-start">
+  <div class="grid gap-16 lg:grid-cols-[1.1fr_1.2fr] lg:items-start">
     <div class="space-y-6 text-base leading-relaxed text-ink-muted sm:text-lg reveal">
-      <p class="font-display text-2xl font-bold text-ink">A consultative staffing partner, not a resume clearinghouse.</p>
-      <p>When you partner with GCTT, your requisition is managed directly by seasoned technical recruiters who understand enterprise architecture, compliance requirements, and delivery urgency.</p>
+      <p class="font-display text-2xl font-bold text-ink">A consultative staffing partner delivering certainty, not a resume clearinghouse.</p>
+      <p>When you partner with GCTT, your hiring requisition is directed exclusively by seasoned technical recruiters and practice leads who understand enterprise architecture, compliance requirements, and delivery urgency.</p>
       
       <div class="space-y-4 border-t border-line/60 pt-6 text-sm text-ink">
         <div class="flex items-start gap-3">
-          <svg class="h-5 w-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <svg class="h-5 w-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
           <div>
-            <p class="font-bold text-ink">Rapid Profile Submission</p>
-            <p class="text-xs text-ink-muted">Pre-screened, interview-ready candidate shortlists delivered within 48 to 72 hours of requisition intake.</p>
+            <p class="font-bold text-ink">Strict 48-Hour Shortlist SLA</p>
+            <p class="text-xs text-ink-muted">Pre-screened, interview-ready candidate dossiers delivered within 48 hours of requisition calibration.</p>
           </div>
         </div>
         <div class="flex items-start gap-3">
-          <svg class="h-5 w-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <svg class="h-5 w-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
           <div>
-            <p class="font-bold text-ink">Texas &amp; Nationwide Talent Footprint</p>
-            <p class="text-xs text-ink-muted">Onsite placement across the Dallas-Fort Worth metroplex or remote/hybrid engineers across all US time zones.</p>
+            <p class="font-bold text-ink">100% Right-to-Work Compliance Guarantee</p>
+            <p class="text-xs text-ink-muted">Complete Form I-9, E-Verify, and credential audit files delivered before the candidate's first sprint day.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <svg class="h-5 w-5 text-accent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div>
+            <p class="font-bold text-ink">Texas Center &amp; Nationwide Deployment</p>
+            <p class="text-xs text-ink-muted">Onsite placement across the Dallas-Fort Worth metroplex or remote/hybrid engineers synchronized to your time zone.</p>
           </div>
         </div>
       </div>
@@ -29,7 +36,7 @@
 
     <div class="card shadow-md p-8 sm:p-10 reveal delay-1">
       <h3 class="font-display text-xl font-bold text-ink">Submit Requisition Details</h3>
-      <p class="mt-1 text-xs text-ink-muted">Describe the skill sets, duration, and engagement model needed.</p>
+      <p class="mt-1 text-xs text-ink-muted">Specify technical competencies, project timeline, and engagement model below.</p>
       <div class="mt-6 border-t border-line/60 pt-6">
         {% include "enquiries/_form.html" %}
       </div>
