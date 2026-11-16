@@ -435,3 +435,31 @@ details[open] > nav {
 .dark .ambient-glow-orb {
   opacity: 0.25;
 }
+
+/* 5. Kani Solutions Gradient Text Highlight */
+.kani-gradient-highlight {
+  background: linear-gradient(88.11deg, #3D1DFF 0.71%, #6147FF 13.82%, #2563EB 27.85%, #00B4D8 44.62%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.dark .kani-gradient-highlight {
+  background: linear-gradient(88.11deg, #818CF8 0.71%, #60A5FA 20%, #38BDF8 50%, #34D399 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 6. Kani Hero Background Gradient */
+.kani-hero-bg {
+  background: linear-gradient(180deg, rgba(229, 225, 251, 0.25) 10%, rgba(38, 161, 234, 0.12) 100%);
+}
+.dark .kani-hero-bg {
+  background: linear-gradient(180deg, rgba(14, 20, 34, 0.9) 0%, rgba(9, 13, 22, 1) 100%);
+}
+
+/* 7. Kani Pill Shadow */
+.kani-card-shadow {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+.dark .kani-card-shadow {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}

@@ -1,6 +1,6 @@
-# GCTT Design System Architecture & Figma MCP Integration Rules
+# GCTT & Kani-Inspired Design System Architecture
 
-This document establishes the official Design System structure, token contracts, styling conventions, component patterns, and motion standards for **GCTT** (`gctekton.com`).
+This document establishes the official Design System structure, token contracts, styling conventions, component patterns, and motion standards for **GCTT** (`gctekton.com`), incorporating the high-impact visual design language of **Kani Solutions**.
 
 ---
 
@@ -8,26 +8,33 @@ This document establishes the official Design System structure, token contracts,
 
 ### Token Location
 - **Primary Source of Truth**: `static/css/input.css` and compiled output `static/css/output.css`.
-- **Theme Variables**: Defined in CSS `:root` and `.dark` blocks, mapped to Tailwind CSS utilities.
+- **Theme Variables**: Defined in CSS `:root` and `html.dark` blocks, mapped to Tailwind CSS utilities.
 
-### Color Palette (Deep Sapphire & Institutional Trust)
+### Color Palette (Deep Sapphire, Electric Violet & Sky Luminous Gradient)
 ```css
 :root {
   /* Canvas Surfaces (Light Mode) */
-  --bg-canvas: #F8FAFC;
-  --bg-card: #FFFFFF;
-  --bg-surface: #F1F5F9;
+  --paper: #FFFFFF;
+  --surface: #F8FAFC;
+  --card: #FFFFFF;
   --line: #E2E8F0;
+  --line-subtle: #F1F5F9;
 
   /* Typography */
-  --ink: #0F172A;
-  --ink-muted: #64748B;
-  --ink-subtle: #94A3B8;
+  --ink: #0B192C;
+  --ink-muted: #334155;
+  --ink-subtle: #64748B;
 
-  /* Primary Brand: Royal Sapphire */
+  /* Primary Brand: Royal Sapphire & Electric Violet */
+  --brand: #0B192C;
+  --brand-2: #1E3E62;
   --accent: #2563EB;
   --accent-hover: #1D4ED8;
-  --accent-subtle: rgba(37, 99, 235, 0.1);
+
+  /* Kani Gradient Tokens */
+  --kani-gradient-start: #3D1DFF;
+  --kani-gradient-mid: #6147FF;
+  --kani-gradient-end: #00B4D8;
 
   /* Status & Compliance */
   --status-verified: #10B981;
@@ -35,22 +42,29 @@ This document establishes the official Design System structure, token contracts,
   --status-tech: #38BDF8;
 }
 
-.dark {
+html.dark {
   /* Canvas Surfaces (Dark Mode - Midnight Slate) */
-  --bg-canvas: #090D16;
-  --bg-card: #0E1422;
-  --bg-surface: #131B2E;
-  --line: rgba(255, 255, 255, 0.08);
+  --paper: #080D16;
+  --surface: #0F172A;
+  --card: #131E33;
+  --line: #1E293B;
+  --line-subtle: #141F36;
 
   /* Typography */
-  --ink: #FFFFFF;
-  --ink-muted: #94A3B8;
-  --ink-subtle: #64748B;
+  --ink: #F8FAFC;
+  --ink-muted: #CBD5E1;
+  --ink-subtle: #94A3B8;
 
-  /* Primary Brand: Royal Sapphire */
+  /* Primary Brand */
+  --brand: #0B192C;
+  --brand-2: #1E3E62;
   --accent: #3B82F6;
-  --accent-hover: #2563EB;
-  --accent-subtle: rgba(59, 130, 246, 0.15);
+  --accent-hover: #60A5FA;
+
+  /* Kani Gradient Tokens (Dark Mode) */
+  --kani-gradient-start: #818CF8;
+  --kani-gradient-mid: #60A5FA;
+  --kani-gradient-end: #34D399;
 
   /* Status & Compliance */
   --status-verified: #10B981;
@@ -60,25 +74,32 @@ This document establishes the official Design System structure, token contracts,
 ```
 
 ### Typography Hierarchy
-- **Display Headings**: `font-display` (`Plus Jakarta Sans`, 800/900 weight, `tracking-tight`).
-- **Body & Controls**: `font-sans` (`system-ui`, `-apple-system`, `sans-serif`, 400/500/600 weight, `leading-relaxed`).
-- **Data, Codes & Metrics**: `font-mono` (`JetBrains Mono`, `ui-monospace`, 600 weight, uppercase tracking).
+- **Display Headings**: `font-display` (`Plus Jakarta Sans` / `Playfair Display`, 800/900 weight, `tracking-tight`).
+- **Body & Controls**: `font-sans` (`Plus Jakarta Sans`, `system-ui`, `-apple-system`, 400/500/600 weight, `leading-relaxed`).
+- **Data, Codes & Metrics**: `font-mono` (`JetBrains Mono`, `ui-monospace`, 600/700 weight, uppercase tracking).
 
 ---
 
 ## 2. Component Library & Architecture
 
 Components in this Django project follow a modular partial architecture:
-- `templates/partials/_header.html` — Sticky executive navigation bar, adaptive SVG logo, mobile slide-over drawer, and theme controller.
-- `templates/partials/_footer.html` — Full statutory corporate footer, Irving TX legal notices, and directory.
+- `templates/partials/_header.html` — Sticky executive navigation bar, adaptive vector SVG logo, mobile slide-over drawer, and theme controller.
+- `templates/partials/_footer.html` — Full statutory corporate footer, Irving TX legal notices, directory, and contact coordinates.
 - `templates/partials/_messages.html` — Dismissible flash feedback notifications.
 - `templates/partials/_pagination.html` — Accessible pagination controls.
-- `templates/pages/` — Modular full-page templates extending `templates/base.html`.
+- `templates/pages/home.html` — Kani-inspired high-impact homepage layout (Hero, Industries Metric Grid, Core Services Bento, Specialized Solutions, Achievements, Academy Sandbox, Portal Preview, Testimonials, FAQ, Corporate Governance).
 
-### Component Design Conventions
-1. **Hairline Precision**: All borders use thin 1px lines (`border-line` or `border-white/10`). Never use heavy 2px/3px borders on cards.
-2. **Glassmorphism**: Sticky and elevated elements use `backdrop-blur-md bg-paper/95` or `bg-card/95`.
-3. **No Stock Photo Clutter**: Replace all generic stock photos with structured, high-conviction interactive UI components (Bento consoles, metric scorecards, practice matrices).
+### Key Component Patterns
+1. **Avatar Social Proof Stack**:
+   Circular multi-element badge (`TX`, `W2`, `DFW`) + live pulsing green dot + institutional text.
+2. **Kani Gradient Highlight**:
+   Vibrant linear gradient clipped to text: `bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-400 bg-clip-text text-transparent`.
+3. **Glassmorphic Metric Tiles (`.industries-grid`)**:
+   Clean white rounded-2xl cards with subtle box-shadow (`box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06)`), prominent stat, uppercase tag, and subtext.
+4. **Bento Grid Architecture (`.core-services`)**:
+   Responsive multi-column cards with large hero spans, vector icon illustrations, and interactive hover lifts.
+5. **Interactive Console**:
+   Tabbed switcher switching between live vetting metrics and Texas SOW terms.
 
 ---
 
@@ -109,14 +130,16 @@ Components in this Django project follow a modular partial architecture:
   - Checkmarks: `<polyline points="20 6 9 17 4 12" />` in `--status-verified`.
   - Arrow links: `<path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />`.
   - Status Pulses: In-DOM pulsing dot: `<span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>`.
+  - Rocket glyph: `<path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />`.
 
 ---
 
-## 6. Motion & Animation Standards (Figma Motion & Impeccable)
+## 6. Styling Approach & Motion Standards
 
 ### Motion Timing & Curves
 - **Standard Transitions**: `duration-200 ease-out` (150ms–250ms).
 - **Spring Curves**: `cubic-bezier(0.16, 1, 0.3, 1)` for smooth card lifts and tab reveals.
+- **Typewriter Animation**: Dynamic real-time cycling of core technical values with blinking cursor.
 - **Reduced Motion Directive**:
   ```css
   @media (prefers-reduced-motion: reduce) {
@@ -128,11 +151,6 @@ Components in this Django project follow a modular partial architecture:
     }
   }
   ```
-
-### Micro-Interactions on GCTT:
-1. **Interactive Console Tab Switch**: Smooth cross-fade between `Capability Specs` and `Texas SOW Terms`.
-2. **Card Hover States**: `transition-all duration-200 hover:border-blue-500/40 hover:-translate-y-0.5`.
-3. **Button Press**: Subtle scale transition `active:scale-[0.98]`.
 
 ---
 
