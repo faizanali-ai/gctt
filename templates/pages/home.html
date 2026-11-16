@@ -3,571 +3,316 @@
 {% block title %}GCTT — Executive Technical Staffing & Hands-on Academy (Irving, TX){% endblock %}
 {% block content %}
 
-<!-- Hero Section: Luminous Gradient with Kani Solutions Architecture -->
-<section class="kani-hero-bg relative overflow-hidden border-b border-line py-16 sm:py-20 lg:py-24">
-  <!-- Subtle Ambient Glow Orbs -->
-  <div class="ambient-glow-orb -top-24 -left-24 h-96 w-96 bg-blue-600/20 dark:bg-blue-600/15"></div>
-  <div class="ambient-glow-orb top-1/2 -right-24 h-96 w-96 bg-sky-400/20 dark:bg-sky-500/10"></div>
-
-  <!-- Subtle Architectural Grid Background -->
-  <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(37,99,235,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(37,99,235,0.04)_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+<!-- Hero Section: Luminous Light Pastel Gradient Canvas (Kani Solutions Architecture) -->
+<section class="kani-hero-bg relative overflow-hidden border-b border-line py-16 sm:py-24">
+  <!-- Subtle Ambient Glow Highlights -->
+  <div class="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-purple-200/40 blur-3xl dark:bg-purple-950/20"></div>
+  <div class="pointer-events-none absolute top-1/2 -right-24 h-96 w-96 rounded-full bg-sky-200/50 blur-3xl dark:bg-sky-950/20"></div>
 
   <div class="relative mx-auto max-w-7xl px-6">
-    <!-- Centered Header Block (Kani Solutions Inspiration) -->
+    <!-- Centered Header Block -->
     <div class="mx-auto max-w-3xl text-center">
-      <!-- Hiring Stats / Social Proof Badge (Kani Solutions Avatar Group) -->
-      <div class="inline-flex items-center gap-3 rounded-full border border-blue-500/25 bg-card/80 px-4 py-1.5 text-xs font-semibold text-ink shadow-xs backdrop-blur-md">
-        <!-- Avatar Stack -->
-        <div class="flex -space-x-1.5 overflow-hidden">
-          <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-2xs font-bold text-white ring-2 ring-card">TX</span>
-          <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 text-2xs font-bold text-white ring-2 ring-card">W2</span>
-          <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-sky-500 text-2xs font-bold text-white ring-2 ring-card">DFW</span>
-          <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-800 text-2xs font-bold text-white ring-2 ring-card">K8s</span>
-        </div>
-        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      <!-- Trust Eyebrow Badge -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-white/90 px-4 py-1.5 text-xs font-semibold text-ink shadow-xs backdrop-blur-md dark:bg-slate-900/90">
+        <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
         <span class="text-2xs sm:text-xs text-ink-muted">
-          Trusted by <strong class="text-ink">500+ Tech Leaders</strong> · 1,200+ Texas Candidates Placed
+          Dallas-Fort Worth Commercial Anchor · <strong class="text-ink">E-Verify Registered Employer</strong>
         </span>
       </div>
 
-      <!-- Main Headline with Kani Gradient Highlight -->
-      <h1 class="mt-6 text-4xl font-extrabold tracking-tight text-ink sm:text-5xl lg:text-6xl font-display leading-[1.1]">
-        Hiring Simplified.<br>
-        <span class="kani-gradient-highlight">AI-Powered &amp; Vetted Technical Talent.</span>
+      <!-- Main Headline: Crisp Sans-Serif with Kani Gradient Accent -->
+      <h1 class="mt-6 text-3xl font-extrabold tracking-tight text-ink sm:text-5xl lg:text-6xl font-display leading-[1.12]">
+        Connecting Enterprise Teams with Vetted Technical Talent &amp; <span class="kani-gradient-pink">Practical Training.</span> ⚡
       </h1>
 
-      <!-- Subheadline -->
-      <p class="mt-5 text-base leading-relaxed text-ink-muted sm:text-lg max-w-2xl mx-auto font-sans">
-        Find top IT talent with AI-verified technical staffing. Streamlined hiring for direct Texas W2, transparent SOW contracts, and enterprise cloud roles with zero middleman fees.
+      <!-- Grounded, Truthful Subheadline -->
+      <p class="mt-5 text-sm sm:text-base md:text-lg leading-relaxed text-ink-muted max-w-2xl mx-auto font-sans">
+        Global Center for Technology &amp; Training provides direct Texas W2 IT staffing, recruitment, and hands-on SAP and Scaled Agile academy cohorts—anchored at our commercial facility in Irving, Texas with transparent SOW terms and zero candidate fees.
       </p>
 
       <!-- CTA Buttons (Kani Solutions Style) -->
       <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <a href="{% url 'employers' %}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-8 py-3.5 text-sm font-bold text-white shadow-md shadow-blue-500/25 transition-all hover:bg-blue-500 hover:shadow-lg dark:bg-blue-600 dark:hover:bg-blue-500">
-          <span>Hire Technical Talent</span>
+        <a href="{% url 'employers' %}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-8 py-3.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-500/25 transition-all hover:bg-blue-500 hover:shadow-lg">
+          <span>Request Technical Talent</span>
           <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
         </a>
-        <a href="{% url 'careers' %}" class="card-hover-luminous inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-card px-7 py-3.5 text-sm font-semibold text-ink shadow-xs transition-colors hover:border-blue-500 hover:bg-surface">
-          <span>Find Jobs &amp; Open Mandates</span>
-          <span class="text-base">🚀</span>
+        <a href="{% url 'careers' %}" class="card-hover-luminous inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-card px-7 py-3.5 text-xs sm:text-sm font-semibold text-ink shadow-xs transition-colors hover:border-blue-500 hover:bg-surface">
+          <span>Explore Open Mandates &amp; Training</span>
+          <svg class="h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
         </a>
       </div>
 
-      <!-- Assurance Badges -->
+      <!-- Verified Governance Assurances -->
       <div class="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-ink-muted">
         <span class="flex items-center gap-1.5 font-medium">
-          <svg class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-          Direct W2 &amp; SOW Agreements
+          <svg class="h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          Direct Texas W2 &amp; SOW (No Subcontracting)
         </span>
         <span class="flex items-center gap-1.5 font-medium">
-          <svg class="h-4 w-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-          Texas E-Verify Verified
+          <svg class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          Federal E-Verify Verified
         </span>
         <span class="flex items-center gap-1.5 font-medium">
-          <svg class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-          $0 Candidate Placement Fees
+          <svg class="h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          $0 Candidate Placement Fees (Texas Law)
         </span>
       </div>
     </div>
 
-    <!-- Hero Console: Architectural Engine & SOW Benchmark (Kani HP Header Console) -->
-    <div class="mt-12 mx-auto max-w-4xl">
-      <div class="card-hover-luminous rounded-2xl border border-line bg-card p-6 shadow-2xl backdrop-blur-md">
-        <!-- Console Header with Recessed Tab Switcher -->
-        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-line pb-4">
-          <div class="flex items-center gap-2">
-            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="font-mono text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-              TEKTON ARCHITECTURAL ENGINE
-            </span>
-          </div>
+    <!-- Hero Visual Workflow: The 4-Stage Connected Staffing Journey (Kani Solutions Inspiration) -->
+    <div class="mt-16 mx-auto max-w-5xl">
+      <div class="text-center mb-6">
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-2xs font-extrabold uppercase tracking-wider text-blue-700 dark:bg-blue-950/60 dark:text-sky-300 border border-blue-500/20">
+          The GCTT Delivery Lifecycle
+        </span>
+      </div>
 
-          <!-- Tab Controls -->
-          <div class="flex rounded-lg border border-line bg-surface p-1 text-xs font-semibold">
-            <button
-              type="button"
-              id="tab-btn-vetting"
-              onclick="switchHeroTab('vetting')"
-              class="rounded-md bg-card px-3 py-1.5 text-ink shadow-xs transition-all font-bold text-blue-600 dark:text-blue-400"
-            >
-              Capability Specs
-            </button>
-            <button
-              type="button"
-              id="tab-btn-terms"
-              onclick="switchHeroTab('terms')"
-              class="rounded-md px-3 py-1.5 text-ink-muted hover:text-ink transition-all"
-            >
-              Texas SOW Terms
-            </button>
-          </div>
-        </div>
-
-        <!-- View 1: Bento Grid (Capability Specs) -->
-        <div id="hero-panel-vetting" class="mt-5 space-y-3.5 transition-opacity duration-200">
-          <div class="rounded-xl border border-line bg-surface/70 p-4.5 transition-all hover:border-blue-500/40">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 relative">
+        <!-- Stage 1: Scoping -->
+        <div class="rounded-2xl border border-line bg-card p-6 kani-card-shadow transition-all hover:-translate-y-1 hover:border-blue-500/40 flex flex-col justify-between">
+          <div>
             <div class="flex items-center justify-between">
-              <span class="font-mono text-xs font-bold text-blue-600 dark:text-blue-400">01 / CONTRACT INTEGRITY</span>
-              <span class="rounded bg-blue-500/15 px-2 py-0.5 text-2xs font-extrabold text-blue-700 dark:text-blue-300">100% DIRECT</span>
+              <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 text-xs font-bold text-white shadow-xs">01</span>
+              <span class="rounded bg-blue-50 px-2 py-0.5 text-2xs font-bold uppercase tracking-wider text-blue-700 dark:bg-blue-950/50 dark:text-blue-300">Intake</span>
             </div>
-            <h3 class="mt-2 text-sm font-bold text-ink">Direct W2 &amp; SOW Engagement Model</h3>
-            <p class="mt-1 text-xs text-ink-muted leading-relaxed">
-              Zero middleman brokering. Every agreement is direct, fully insured, and anchored at our Irving, Texas headquarters.
+            <h3 class="mt-4 font-display text-base font-bold text-ink">Mandate Scoping</h3>
+            <p class="mt-2 text-xs leading-relaxed text-ink-muted">
+              Direct calibration with enterprise leaders on tech stack (SAP S/4HANA, Kubernetes, Cloud, Scrum), team dynamics, and delivery milestones.
             </p>
-            <div class="mt-3 grid grid-cols-3 gap-2 border-t border-line/60 pt-3 text-center">
-              <div class="rounded bg-card/80 py-1.5 border border-line/60">
-                <span class="block font-mono text-2xs text-ink-muted uppercase">Turnaround</span>
-                <span class="block font-mono text-xs font-bold text-ink">&lt; 48 Hours</span>
-              </div>
-              <div class="rounded bg-card/80 py-1.5 border border-line/60">
-                <span class="block font-mono text-2xs text-ink-muted uppercase">Middleman</span>
-                <span class="block font-mono text-xs font-bold text-blue-600 dark:text-blue-400">0% Markups</span>
-              </div>
-              <div class="rounded bg-card/80 py-1.5 border border-line/60">
-                <span class="block font-mono text-2xs text-ink-muted uppercase">Candidate</span>
-                <span class="block font-mono text-xs font-bold text-emerald-600 dark:text-emerald-400">$0 Fee Law</span>
-              </div>
-            </div>
           </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div class="rounded-xl border border-line bg-surface/70 p-4 transition-all hover:border-blue-500/40">
-              <span class="font-mono text-2xs font-bold text-blue-600 dark:text-blue-400">02 / LAB VETTING</span>
-              <h4 class="mt-1 text-xs font-bold text-ink">Technical Scorecard</h4>
-              <div class="mt-2.5 space-y-1.5 text-2xs text-ink-muted">
-                <div class="flex justify-between items-center py-1 border-b border-line/50">
-                  <span>System Architecture</span>
-                  <strong class="font-mono text-ink">Top 3%</strong>
-                </div>
-                <div class="flex justify-between items-center py-1 border-b border-line/50">
-                  <span>Concurrency / Cloud</span>
-                  <strong class="font-mono text-blue-600 dark:text-blue-400">Verified</strong>
-                </div>
-                <div class="flex justify-between items-center py-1">
-                  <span>Live Code Review</span>
-                  <strong class="font-mono text-emerald-600 dark:text-emerald-400">98% Pass</strong>
-                </div>
-              </div>
-            </div>
-
-            <div class="rounded-xl border border-line bg-surface/70 p-4 transition-all hover:border-blue-500/40">
-              <span class="font-mono text-2xs font-bold text-blue-600 dark:text-blue-400">03 / CONTINUOUS LABS</span>
-              <h4 class="mt-1 text-xs font-bold text-ink">Active Sandboxes</h4>
-              <div class="mt-2.5 space-y-1.5 text-2xs text-ink-muted">
-                <div class="flex justify-between items-center py-1 border-b border-line/50">
-                  <span>Cloud &amp; Microservices</span>
-                  <span class="rounded bg-emerald-500/10 px-1.5 py-0.2 text-emerald-600 dark:text-emerald-400 font-bold">Active</span>
-                </div>
-                <div class="flex justify-between items-center py-1 border-b border-line/50">
-                  <span>Enterprise Systems</span>
-                  <span class="rounded bg-emerald-500/10 px-1.5 py-0.2 text-emerald-600 dark:text-emerald-400 font-bold">Active</span>
-                </div>
-                <div class="flex justify-between items-center py-1">
-                  <span>Scaled Agile Delivery</span>
-                  <span class="rounded bg-emerald-500/10 px-1.5 py-0.2 text-emerald-600 dark:text-emerald-400 font-bold">Active</span>
-                </div>
-              </div>
-            </div>
+          <div class="mt-4 pt-3 border-t border-line/60 flex items-center gap-1.5 text-2xs font-semibold text-blue-600 dark:text-sky-400">
+            <span>Calibrated in &lt; 24h</span>
           </div>
         </div>
 
-        <!-- View 2: Bento Grid (Texas SOW Terms) -->
-        <div id="hero-panel-terms" class="mt-5 space-y-3.5 hidden transition-opacity duration-200">
-          <div class="rounded-xl border border-line bg-surface/70 p-4.5">
-            <div class="flex items-center gap-2 text-blue-600 dark:text-blue-400 text-xs font-bold">
-              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-              <span>TEXAS CORPORATE HEADQUARTERS</span>
+        <!-- Stage 2: Technical Evaluation -->
+        <div class="rounded-2xl border border-line bg-card p-6 kani-card-shadow transition-all hover:-translate-y-1 hover:border-blue-500/40 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-600 text-xs font-bold text-white shadow-xs">02</span>
+              <span class="rounded bg-purple-50 px-2 py-0.5 text-2xs font-bold uppercase tracking-wider text-purple-700 dark:bg-purple-950/50 dark:text-purple-300">Vetting</span>
             </div>
-            <h3 class="mt-1 text-sm font-bold text-ink">2612 Laramie St, Irving, TX 75062</h3>
-            <p class="mt-1 text-xs text-ink-muted leading-relaxed">
-              Legally anchored in Dallas-Fort Worth. Direct Master Service Agreements (MSA) and standard statutory compliance with complete billing transparency.
+            <h3 class="mt-4 font-display text-base font-bold text-ink">Architect Diagnostic</h3>
+            <p class="mt-2 text-xs leading-relaxed text-ink-muted">
+              In-depth technical evaluations conducted by practicing enterprise directors covering system architecture, failure recovery, and sandbox execution.
             </p>
           </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div class="rounded-xl border border-line bg-surface/70 p-4">
-              <div class="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
-                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                <span>E-VERIFY VERIFIED</span>
-              </div>
-              <p class="mt-1 text-xs text-ink-muted">Federal compliance program guarantees all architects are legally authorized to work in the US.</p>
-            </div>
-
-            <div class="rounded-xl border border-line bg-surface/70 p-4">
-              <div class="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 text-xs font-bold">
-                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span>48-HOUR SLA</span>
-              </div>
-              <p class="mt-1 text-xs text-ink-muted">Direct access to pre-evaluated senior bench talent ready for immediate project deployment.</p>
-            </div>
+          <div class="mt-4 pt-3 border-t border-line/60 flex items-center gap-1.5 text-2xs font-semibold text-emerald-600 dark:text-emerald-400">
+            <span>✓ Hands-on Sandbox Testing</span>
           </div>
         </div>
 
-        <!-- Console Footer Status -->
-        <div class="mt-5 border-t border-line/80 pt-3 flex items-center justify-between text-2xs text-ink-muted">
-          <span class="flex items-center gap-1.5">
-            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-            Dallas-Fort Worth Hub Active
-          </span>
-          <a href="{% url 'employers' %}" class="font-bold text-blue-600 dark:text-blue-400 hover:underline">
-            Request Spec Consultation →
-          </a>
+        <!-- Stage 3: Direct Contracting -->
+        <div class="rounded-2xl border border-line bg-card p-6 kani-card-shadow transition-all hover:-translate-y-1 hover:border-blue-500/40 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600 text-xs font-bold text-white shadow-xs">03</span>
+              <span class="rounded bg-indigo-50 px-2 py-0.5 text-2xs font-bold uppercase tracking-wider text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300">Contract</span>
+            </div>
+            <h3 class="mt-4 font-display text-base font-bold text-ink">Direct W2 / SOW</h3>
+            <p class="mt-2 text-xs leading-relaxed text-ink-muted">
+              Direct agreements anchored at our Irving, Texas headquarters. Zero intermediary broker markups, transparent billing, and full statutory coverage.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-line/60 flex items-center gap-1.5 text-2xs font-semibold text-blue-600 dark:text-sky-400">
+            <span>✓ 0% Middleman Margin</span>
+          </div>
+        </div>
+
+        <!-- Stage 4: Day-One Velocity -->
+        <div class="rounded-2xl border border-line bg-card p-6 kani-card-shadow transition-all hover:-translate-y-1 hover:border-blue-500/40 flex flex-col justify-between relative overflow-hidden">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-600 text-xs font-bold text-white shadow-xs">04</span>
+              <span class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-2xs font-extrabold uppercase tracking-wider text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                Deployed 🎉
+              </span>
+            </div>
+            <h3 class="mt-4 font-display text-base font-bold text-ink">Day-One Velocity</h3>
+            <p class="mt-2 text-xs leading-relaxed text-ink-muted">
+              Pre-cleared right-to-work documentation, Form I-9 compliance files, and verified credentials delivered before sprint zero kickoff.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-line/60 flex items-center gap-1.5 text-2xs font-semibold text-emerald-600 dark:text-emerald-400">
+            <span>✓ Audit-Ready Compliance</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Section 1: Industries / Performance Metric Bar (Kani Solutions Industries Grid) -->
-<section class="border-b border-line bg-surface/80 py-12 sm:py-16">
+<!-- Section 1: Core Practice Pillars (Truthful Offerings) -->
+<section class="border-b border-line bg-surface/50 py-16 sm:py-20">
   <div class="mx-auto max-w-7xl px-6">
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      <!-- Card 1: Average Time to Hire -->
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-6">
-        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        </div>
-        <div class="mt-5 font-mono text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
-          &lt; 48 Hours
-        </div>
-        <span class="mt-1 block text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-          Average Time to Placement
-        </span>
-        <p class="mt-2 text-xs text-ink-muted leading-relaxed">
-          From verified mandate scope to direct interview with senior architects on our active Texas bench.
-        </p>
-      </div>
+    <div class="text-center max-w-2xl mx-auto">
+      <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-sky-400">PRACTICE CAPABILITIES</span>
+      <h2 class="mt-3 text-2xl font-extrabold tracking-tight text-ink sm:text-3xl md:text-4xl font-display">
+        Our Four Integrated Service Practices
+      </h2>
+      <p class="mt-3 text-xs sm:text-sm text-ink-muted">
+        Bridging the gap between keyword recruitment agencies and the architectural realities of modern engineering.
+      </p>
+    </div>
 
-      <!-- Card 2: 80% Shortlist Ratio -->
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-6">
-        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <!-- Practice 1: IT Staffing -->
+      <a href="{% url 'it_staffing' %}" class="group rounded-2xl border border-line bg-card p-7 kani-card-shadow transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-xl flex flex-col justify-between">
+        <div>
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md shadow-blue-500/25 group-hover:scale-105 transition-transform">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          </div>
+          <h3 class="mt-5 text-lg font-bold text-ink font-display group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors">Direct IT Staffing</h3>
+          <p class="mt-2 text-xs leading-relaxed text-ink-muted">
+            Mission-critical engineering, architecture, and cloud infrastructure talent deployed on flexible W2 contract and direct frameworks.
+          </p>
         </div>
-        <div class="mt-5 font-mono text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
-          80% Shortlist
+        <div class="mt-6 pt-4 border-t border-line/60 flex items-center justify-between text-xs font-bold text-blue-600 dark:text-sky-400">
+          <span>Explore Practice</span>
+          <span class="group-hover:translate-x-1 transition-transform">→</span>
         </div>
-        <span class="mt-1 block text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-          Shortlist Ratio
-        </span>
-        <p class="mt-2 text-xs text-ink-muted leading-relaxed">
-          Approximately 8 out of 10 applicants submitted by GCTT are shortlisted directly for final interviews.
-        </p>
-      </div>
+      </a>
 
-      <!-- Card 3: Direct W2 & SOW -->
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-6">
-        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      <!-- Practice 2: Recruitment -->
+      <a href="{% url 'recruitment' %}" class="group rounded-2xl border border-line bg-card p-7 kani-card-shadow transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-xl flex flex-col justify-between">
+        <div>
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-600 text-white shadow-md shadow-purple-500/25 group-hover:scale-105 transition-transform">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          </div>
+          <h3 class="mt-5 text-lg font-bold text-ink font-display group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors">Direct Hire Recruitment</h3>
+          <p class="mt-2 text-xs leading-relaxed text-ink-muted">
+            Retained and contingent technical search delivering senior practitioners pre-screened through architectural assessments.
+          </p>
         </div>
-        <div class="mt-5 font-mono text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
-          100% Direct
+        <div class="mt-6 pt-4 border-t border-line/60 flex items-center justify-between text-xs font-bold text-blue-600 dark:text-sky-400">
+          <span>Explore Practice</span>
+          <span class="group-hover:translate-x-1 transition-transform">→</span>
         </div>
-        <span class="mt-1 block text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-          Zero Middleman Games
-        </span>
-        <p class="mt-2 text-xs text-ink-muted leading-relaxed">
-          Direct Texas W2 &amp; SOW agreements, transparent billing, and 0% hidden recruiter margins.
-        </p>
-      </div>
+      </a>
 
-      <!-- Card 4: Texas Law Protection -->
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-6">
-        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <!-- Practice 3: Talent Acquisition Advisory -->
+      <a href="{% url 'talent_acquisition' %}" class="group rounded-2xl border border-line bg-card p-7 kani-card-shadow transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-xl flex flex-col justify-between">
+        <div>
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/25 group-hover:scale-105 transition-transform">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          </div>
+          <h3 class="mt-5 text-lg font-bold text-ink font-display group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors">Talent Acquisition Advisory</h3>
+          <p class="mt-2 text-xs leading-relaxed text-ink-muted">
+            Strategic workforce advisory helping enterprise engineering organizations build high-performance technical delivery squads.
+          </p>
         </div>
-        <div class="mt-5 font-mono text-3xl font-extrabold tracking-tight text-emerald-600 dark:text-emerald-400 sm:text-4xl">
-          $0 Fee Law
+        <div class="mt-6 pt-4 border-t border-line/60 flex items-center justify-between text-xs font-bold text-blue-600 dark:text-sky-400">
+          <span>Explore Practice</span>
+          <span class="group-hover:translate-x-1 transition-transform">→</span>
         </div>
-        <span class="mt-1 block text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-          Candidate Protection
-        </span>
-        <p class="mt-2 text-xs text-ink-muted leading-relaxed">
-          100% free for applicants under Texas law. Zero placement fees, no training lock-in deductions.
-        </p>
-      </div>
+      </a>
+
+      <!-- Practice 4: Technical Training -->
+      <a href="{% url 'training' %}" class="group rounded-2xl border border-line bg-card p-7 kani-card-shadow transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-xl flex flex-col justify-between">
+        <div>
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-600 text-white shadow-md shadow-sky-500/25 group-hover:scale-105 transition-transform">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          </div>
+          <h3 class="mt-5 text-lg font-bold text-ink font-display group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors">Academy &amp; Upskilling</h3>
+          <p class="mt-2 text-xs leading-relaxed text-ink-muted">
+            Accredited enterprise upskilling and professional cohorts in SAP S/4HANA functional domains and Scaled Agile delivery.
+          </p>
+        </div>
+        <div class="mt-6 pt-4 border-t border-line/60 flex items-center justify-between text-xs font-bold text-blue-600 dark:text-sky-400">
+          <span>Explore Practice</span>
+          <span class="group-hover:translate-x-1 transition-transform">→</span>
+        </div>
+      </a>
     </div>
   </div>
 </section>
 
-<!-- Section 2: Core Services Bento Grid (Kani Solutions Core Services) -->
+<!-- Section 2: Specialized Center of Excellence: SAP S/4HANA & Agile -->
 <section class="border-b border-line bg-paper py-16 sm:py-20 lg:py-24">
-  <div class="mx-auto max-w-7xl px-6">
-    <div class="text-center max-w-3xl mx-auto">
-      <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">OUR CORE SERVICES</span>
-      <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl font-display">
-        Comprehensive Talent &amp; Architecture Delivery
-      </h2>
-      <p class="mt-4 text-base text-ink-muted">
-        Leverage AI technology and principal architect vetting to secure top talent faster, driving business success.
-      </p>
-    </div>
-
-    <!-- Kani 5-Box Bento Grid -->
-    <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <!-- Box 1 (Large - Col Span 2): AI-Powered Talent Acquisition -->
-      <div class="card-hover-luminous kani-card-shadow sm:col-span-2 rounded-2xl border border-line bg-card p-8">
-        <div class="flex items-center justify-between">
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-          </div>
-          <span class="rounded-full bg-blue-500/10 px-3 py-1 font-mono text-2xs font-bold text-blue-600 dark:text-blue-400">AI STAFFING</span>
-        </div>
-        <h3 class="mt-6 text-2xl font-bold text-ink font-display">AI-Powered Talent Acquisition</h3>
-        <p class="mt-3 text-sm text-ink-muted leading-relaxed">
-          Find top IT talent with AI staffing. Streamlined hiring for contract, full-time, &amp; remote roles. Leverage AI technology to find, screen, and secure top talent faster, driving business success.
-        </p>
-        <div class="mt-6 flex flex-wrap gap-2 text-2xs font-mono font-semibold">
-          <span class="rounded-md border border-line bg-surface px-2.5 py-1 text-ink">Candidate Matching</span>
-          <span class="rounded-md border border-line bg-surface px-2.5 py-1 text-ink">Skill Taxonomy</span>
-          <span class="rounded-md border border-line bg-surface px-2.5 py-1 text-ink">Bench Sourcing</span>
-          <span class="rounded-md border border-line bg-surface px-2.5 py-1 text-ink">Automated Screening</span>
-        </div>
-      </div>
-
-      <!-- Box 2 (Small): RPO & Enterprise Delivery -->
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-8">
-        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-        </div>
-        <h3 class="mt-6 text-xl font-bold text-ink font-display">Recruitment Process Outsourcing (RPO)</h3>
-        <p class="mt-3 text-xs sm:text-sm text-ink-muted leading-relaxed">
-          End-to-end talent acquisition pipelines for high-growth engineering teams scaling across multiple US states.
-        </p>
-        <span class="mt-6 block font-mono text-2xs font-bold text-indigo-600 dark:text-indigo-400">Full Lifecycle Support</span>
-      </div>
-
-      <!-- Box 3 (Small): Employee Training -->
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-8">
-        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400">
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-        </div>
-        <h3 class="mt-6 text-xl font-bold text-ink font-display">Employee Training &amp; Upskilling</h3>
-        <p class="mt-3 text-xs sm:text-sm text-ink-muted leading-relaxed">
-          Equipping professionals with essential skills for career advancement and success in active cloud sandboxes.
-        </p>
-        <span class="mt-6 block font-mono text-2xs font-bold text-sky-600 dark:text-sky-400">Irving TX Labs &amp; Virtual</span>
-      </div>
-
-      <!-- Box 4 (Large - Col Span 2): Contract & Remote Hiring -->
-      <div class="card-hover-luminous kani-card-shadow sm:col-span-2 rounded-2xl border border-line bg-card p-8">
-        <div class="flex items-center justify-between">
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-          </div>
-          <span class="rounded-full bg-emerald-500/10 px-3 py-1 font-mono text-2xs font-bold text-emerald-600 dark:text-emerald-400">DIRECT TEXAS W2</span>
-        </div>
-        <h3 class="mt-6 text-2xl font-bold text-ink font-display">Contract &amp; Remote Hiring</h3>
-        <p class="mt-3 text-sm text-ink-muted leading-relaxed">
-          Comprehensive project staffing, vendor management, and employee onboarding. We handle payroll compliance, benefits, and statutory verification so your leadership can focus on shipping products.
-        </p>
-        <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 border-t border-line/60 pt-4 text-center">
-          <div class="rounded-lg bg-surface p-2 border border-line/50">
-            <span class="block text-xs font-bold text-ink">Contract Hiring</span>
-            <span class="block text-2xs text-ink-muted">Direct SOW</span>
-          </div>
-          <div class="rounded-lg bg-surface p-2 border border-line/50">
-            <span class="block text-xs font-bold text-ink">Project Staffing</span>
-            <span class="block text-2xs text-ink-muted">Turnkey Pods</span>
-          </div>
-          <div class="rounded-lg bg-surface p-2 border border-line/50">
-            <span class="block text-xs font-bold text-ink">Vendor Mgmt</span>
-            <span class="block text-2xs text-ink-muted">Zero Margin</span>
-          </div>
-          <div class="rounded-lg bg-surface p-2 border border-line/50">
-            <span class="block text-xs font-bold text-ink">Onboarding</span>
-            <span class="block text-2xs text-ink-muted">&lt; 48 Hours</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 3: Specialized Solutions (Kani Solutions Specialized Solutions) -->
-<section class="border-b border-line bg-surface/75 py-16 sm:py-20">
-  <div class="mx-auto max-w-7xl px-6">
-    <div class="text-center max-w-2xl mx-auto">
-      <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">SPECIALIZED TALENT</span>
-      <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl font-display">
-        Tailored Solutions for Every Growth Stage
-      </h2>
-      <p class="mt-3 text-sm text-ink-muted">
-        From single lead architect engagements to dedicated practice augmentation squads.
-      </p>
-    </div>
-
-    <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
-      <!-- Solution 1: Job Recruitment -->
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-8">
-        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-        </div>
-        <h3 class="mt-6 text-xl font-bold text-ink font-display">Job Recruitment</h3>
-        <p class="mt-3 text-xs leading-relaxed text-ink-muted">
-          Permanent and direct contract placement for enterprise cloud engineers, software architects, and agile delivery practitioners.
-        </p>
-        <ul class="mt-5 space-y-2 text-2xs text-ink-muted">
-          <li class="flex items-center gap-2">✓ Direct W2 Employment</li>
-          <li class="flex items-center gap-2">✓ 100% Free for Candidates</li>
-          <li class="flex items-center gap-2">✓ Full Health &amp; Statutory Benefits</li>
-        </ul>
-      </div>
-
-      <!-- Solution 2: Staff Augmentation -->
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-8">
-        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-        </div>
-        <h3 class="mt-6 text-xl font-bold text-ink font-display">Staff Augmentation</h3>
-        <p class="mt-3 text-xs leading-relaxed text-ink-muted">
-          Embed verified senior engineers into your existing sprints to clear architectural blockers and accelerate release timelines.
-        </p>
-        <ul class="mt-5 space-y-2 text-2xs text-ink-muted">
-          <li class="flex items-center gap-2">✓ Rapid 48-Hour Turnaround</li>
-          <li class="flex items-center gap-2">✓ Pre-screened System Design</li>
-          <li class="flex items-center gap-2">✓ Flexible SOW Milestones</li>
-        </ul>
-      </div>
-
-      <!-- Solution 3: Executive Placement -->
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-8">
-        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400">
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
-        </div>
-        <h3 class="mt-6 text-xl font-bold text-ink font-display">Executive Architecture</h3>
-        <p class="mt-3 text-xs leading-relaxed text-ink-muted">
-          Hands-on Enterprise Architects, Directors of Engineering, and Release Train Engineers for mission-critical digital transformations.
-        </p>
-        <ul class="mt-5 space-y-2 text-2xs text-ink-muted">
-          <li class="flex items-center gap-2">✓ Top 3% Vetting Threshold</li>
-          <li class="flex items-center gap-2">✓ Executive Alignment</li>
-          <li class="flex items-center gap-2">✓ Dedicated Practice Advisory</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 4: Key Achievements (Kani Solutions Achievements) -->
-<section class="border-b border-line bg-paper py-16 sm:py-20">
-  <div class="mx-auto max-w-7xl px-6">
-    <div class="text-center max-w-2xl mx-auto">
-      <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">MEASURABLE IMPACT</span>
-      <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl font-display">
-        Our Achievements in Numbers
-      </h2>
-      <p class="mt-3 text-sm text-ink-muted">
-        Building trust through measurable hiring outcomes, strict compliance, and candidate advocacy.
-      </p>
-    </div>
-
-    <div class="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
-      <div class="card-hover-luminous rounded-xl border border-line bg-surface/80 p-5 text-center">
-        <span class="font-mono text-3xl font-extrabold text-blue-600 dark:text-blue-400">100+</span>
-        <span class="mt-1 block text-2xs font-bold uppercase text-ink">Mandates Filled</span>
-      </div>
-      <div class="card-hover-luminous rounded-xl border border-line bg-surface/80 p-5 text-center">
-        <span class="font-mono text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">98%</span>
-        <span class="mt-1 block text-2xs font-bold uppercase text-ink">Client Satisfaction</span>
-      </div>
-      <div class="card-hover-luminous rounded-xl border border-line bg-surface/80 p-5 text-center">
-        <span class="font-mono text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">100%</span>
-        <span class="mt-1 block text-2xs font-bold uppercase text-ink">E-Verify Compliant</span>
-      </div>
-      <div class="card-hover-luminous rounded-xl border border-line bg-surface/80 p-5 text-center">
-        <span class="font-mono text-3xl font-extrabold text-blue-600 dark:text-blue-400">&lt;48h</span>
-        <span class="mt-1 block text-2xs font-bold uppercase text-ink">Average SLA</span>
-      </div>
-      <div class="card-hover-luminous rounded-xl border border-line bg-surface/80 p-5 text-center">
-        <span class="font-mono text-3xl font-extrabold text-sky-600 dark:text-sky-400">1,200+</span>
-        <span class="mt-1 block text-2xs font-bold uppercase text-ink">Talent Network</span>
-      </div>
-      <div class="card-hover-luminous rounded-xl border border-line bg-surface/80 p-5 text-center">
-        <span class="font-mono text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">0%</span>
-        <span class="mt-1 block text-2xs font-bold uppercase text-ink">Hidden Margin</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 5: Master Essential Skills & Academy (Kani MasterSkills) -->
-<section class="border-b border-line bg-surface/80 py-16 sm:py-20 lg:py-24">
   <div class="mx-auto max-w-7xl px-6">
     <div class="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
       <div>
-        <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">ACADEMY &amp; SANDBOX LABS</span>
-        <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl font-display">
-          Master Essential Skills in Live Cloud Environments
+        <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-sky-400">CENTER OF EXCELLENCE</span>
+        <h2 class="mt-3 text-2xl font-extrabold tracking-tight text-ink sm:text-3xl md:text-4xl font-display">
+          Specialized SAP S/4HANA &amp; Scaled Agile Delivery
         </h2>
-        <p class="mt-4 text-base text-ink-muted leading-relaxed">
-          At GCTT's Irving, Texas campus and virtual sandboxes, candidates bridge theoretical concepts into real-world engineering mastery. Debug distributed microservices, deploy multi-region Kubernetes clusters, and lead enterprise Scrum delivery pods.
+        <p class="mt-4 text-sm sm:text-base leading-relaxed text-ink-muted">
+          Our dedicated Center of Excellence in Irving, Texas combines functional enterprise staffing with immersive hands-on sandboxes. Whether deploying certified ERP architects or enrolling delivery pods into intensive Agile ceremonies, GCTT eliminates mis-hire and execution risks.
         </p>
 
-        <div class="mt-6 space-y-4">
+        <div class="mt-6 space-y-3.5">
           <div class="flex items-start gap-3">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold">✓</div>
+            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 text-xs font-bold">✓</div>
             <div>
-              <h4 class="text-xs font-bold text-ink">Distributed Systems &amp; Concurrency Lab</h4>
-              <p class="text-2xs text-ink-muted mt-0.5">Hands-on microservice clusters, partition tolerance, and high-load performance benchmarking.</p>
+              <p class="text-xs font-bold text-ink">SAP S/4HANA Functional Modules (MM, FICO, SD)</p>
+              <p class="text-2xs text-ink-muted mt-0.5">Procure-to-Pay, Universal Journal, Order-to-Cash, and Greenfield migration specialists.</p>
             </div>
           </div>
           <div class="flex items-start gap-3">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold">✓</div>
+            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 text-xs font-bold">✓</div>
             <div>
-              <h4 class="text-xs font-bold text-ink">Career Restart for Seasoned Engineers</h4>
-              <p class="text-2xs text-ink-muted mt-0.5">Dedicated mentorship bridging career pauses to high-compensation senior roles ($115K–$145K).</p>
+              <p class="text-xs font-bold text-ink">Scaled Agile Framework (SAFe) &amp; Scrum Leadership</p>
+              <p class="text-2xs text-ink-muted mt-0.5">Program increment execution, release train governance, and sprint ceremony leadership.</p>
             </div>
           </div>
           <div class="flex items-start gap-3">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold">✓</div>
+            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 text-xs font-bold">✓</div>
             <div>
-              <h4 class="text-xs font-bold text-ink">Zero Candidate Tuition Deductions</h4>
-              <p class="text-2xs text-ink-muted mt-0.5">100% free under Texas law; we earn through enterprise talent delivery, not student debt.</p>
+              <p class="text-xs font-bold text-ink">Tamper-Evident Verifiable Credentials</p>
+              <p class="text-2xs text-ink-muted mt-0.5">Digital certificates verifiable directly via official corporate record lookup.</p>
             </div>
           </div>
         </div>
 
         <div class="mt-8 flex flex-wrap gap-4">
-          <a href="{% url 'training' %}" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-7 py-3.5 text-xs font-bold text-white shadow-xs hover:bg-blue-500 transition-colors">
-            <span>Explore Academy Programs</span>
+          <a href="{% url 'sap_scrum' %}" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-7 py-3.5 text-xs font-bold text-white shadow-xs hover:bg-blue-500 transition-colors">
+            <span>View SAP &amp; Agile Practice</span>
             <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
           </a>
           <a href="{% url 'career_restart' %}" class="inline-flex items-center gap-2 rounded-xl border border-line bg-card px-7 py-3.5 text-xs font-semibold text-ink hover:bg-surface transition-colors">
-            Career Restart Program
+            Executive Returnship Program
           </a>
         </div>
       </div>
 
-      <!-- Cohort Matrix Card -->
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-7">
-        <div class="flex items-center justify-between border-b border-line pb-4">
-          <div class="flex items-center gap-2">
-            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="font-mono text-xs font-bold text-ink">ACTIVE COHORTS · IRVING TX</span>
-          </div>
-          <span class="rounded bg-blue-500/10 px-2 py-0.5 font-mono text-2xs font-bold text-blue-600 dark:text-blue-400">ENROLLING</span>
+      <!-- Feature Card Showcase -->
+      <div class="rounded-2xl border border-line bg-card p-8 kani-card-shadow space-y-6">
+        <div class="border-b border-line pb-4 flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-sky-400">Core Practice Tracks</span>
+          <span class="rounded bg-emerald-500/10 px-2 py-0.5 text-2xs font-bold text-emerald-600">Active Bench</span>
         </div>
-        <div class="mt-5 space-y-4 text-xs">
-          <div class="rounded-xl border border-line bg-surface/70 p-4">
-            <div class="flex justify-between items-center text-ink font-bold">
-              <span>Cloud &amp; Distributed Systems</span>
-              <span class="font-mono text-emerald-600 dark:text-emerald-400">8 Weeks</span>
+
+        <div class="space-y-4">
+          <div class="rounded-xl border border-line bg-surface/60 p-4">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-xs text-ink">SAP S/4HANA Materials Management (MM)</span>
+              <span class="text-2xs font-mono text-blue-600">Functional</span>
             </div>
-            <p class="mt-1 text-2xs text-ink-muted">Container orchestration, Terraform IaC, AWS/GCP architecture, and microservices.</p>
+            <p class="mt-1 text-2xs text-ink-muted">Procurement configuration, inventory valuation, automated MRP, and vendor evaluation.</p>
           </div>
-          <div class="rounded-xl border border-line bg-surface/70 p-4">
-            <div class="flex justify-between items-center text-ink font-bold">
-              <span>Enterprise Integration &amp; APIs</span>
-              <span class="font-mono text-emerald-600 dark:text-emerald-400">10 Weeks</span>
+
+          <div class="rounded-xl border border-line bg-surface/60 p-4">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-xs text-ink">SAP S/4HANA Financial Accounting (FICO)</span>
+              <span class="text-2xs font-mono text-indigo-600">Financial</span>
             </div>
-            <p class="mt-1 text-2xs text-ink-muted">Event streaming with Apache Kafka, PostgreSQL architecture, and API gateways.</p>
+            <p class="mt-1 text-2xs text-ink-muted">General ledger, accounts payable/receivable, asset management, and financial compliance.</p>
           </div>
-          <div class="rounded-xl border border-line bg-surface/70 p-4">
-            <div class="flex justify-between items-center text-ink font-bold">
-              <span>Scaled Agile Delivery &amp; SAFe</span>
-              <span class="font-mono text-emerald-600 dark:text-emerald-400">6 Weeks</span>
+
+          <div class="rounded-xl border border-line bg-surface/60 p-4">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-xs text-ink">Enterprise Cloud Architecture &amp; DevOps</span>
+              <span class="text-2xs font-mono text-purple-600">Infrastructure</span>
             </div>
-            <p class="mt-1 text-2xs text-ink-muted">Cross-functional team leadership, dependency resolution, and DevSecOps pipelines.</p>
+            <p class="mt-1 text-2xs text-ink-muted">AWS/Azure multi-region systems, Kubernetes orchestration, CI/CD telemetry, and Docker.</p>
+          </div>
+
+          <div class="rounded-xl border border-line bg-surface/60 p-4">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-xs text-ink">Certified Scrum Master &amp; Agile Coaching</span>
+              <span class="text-2xs font-mono text-emerald-600">Governance</span>
+            </div>
+            <p class="mt-1 text-2xs text-ink-muted">Sprint ceremony facilitation, backlog grooming, velocity tracking, and cross-team alignment.</p>
           </div>
         </div>
       </div>
@@ -575,103 +320,194 @@
   </div>
 </section>
 
-<!-- Section 6: Client & Candidate Social Proof (Kani Solutions Client Testimonials) -->
-<section class="border-b border-line bg-paper py-16 sm:py-20">
+<!-- Section 3: AI Career Trajectory Advisor Interactive Tool -->
+<section class="border-b border-line bg-surface/50 py-16 sm:py-24" id="advisor-section">
+  <div class="mx-auto max-w-7xl px-6">
+    <div id="ai-advisor" class="relative overflow-hidden rounded-3xl border border-blue-500/25 bg-card p-6 sm:p-12 kani-card-shadow">
+      <div class="max-w-2xl">
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3.5 py-1 text-2xs font-extrabold uppercase tracking-wider text-blue-800 dark:bg-blue-950/60 dark:text-sky-300 border border-blue-500/30">
+          <span class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+          Career Advisor &amp; Competency Engine
+        </span>
+        <h2 class="mt-4 font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl md:text-4xl">
+          Map Your Background into a <span class="kani-gradient-highlight">High-Demand Tech Track</span>
+        </h2>
+        <p class="mt-3 text-xs sm:text-sm leading-relaxed text-ink-muted">
+          Enter your current experience or sabbatical background. Our advisory engine analyzes transferrable competencies to recommend optimal SAP, Agile, or Cloud tracks.
+        </p>
+      </div>
+
+      <div class="mt-10 grid gap-8 lg:grid-cols-[1fr_1.3fr]">
+        <!-- Form -->
+        <form id="ai-advisor-form" class="space-y-4 rounded-2xl border border-line bg-surface/70 p-6 kani-card-shadow">
+          {% csrf_token %}
+          <div>
+            <label class="block text-2xs font-bold uppercase tracking-wider text-ink">
+              Current or Prior Role / Background *
+            </label>
+            <input
+              type="text"
+              id="advisor-role"
+              placeholder="e.g. Senior Accountant, QA Tester, Operations Lead, Returning Parent..."
+              class="mt-1.5 w-full rounded-xl border border-line bg-card px-4 py-3 text-xs text-ink focus:border-blue-500 focus:outline-hidden"
+              required
+            >
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-2xs font-bold uppercase tracking-wider text-ink">Years in Industry</label>
+              <select id="advisor-exp" class="mt-1.5 w-full rounded-xl border border-line bg-card px-3 py-3 text-xs text-ink focus:border-blue-500 focus:outline-hidden">
+                <option value="0-2">0 – 2 Years (Transition)</option>
+                <option value="3-5" selected>3 – 5 Years (Mid-Level)</option>
+                <option value="6-10">6 – 10 Years (Senior)</option>
+                <option value="10+">10+ Years (Executive)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-2xs font-bold uppercase tracking-wider text-ink">Primary Career Goal</label>
+              <select id="advisor-goal" class="mt-1.5 w-full rounded-xl border border-line bg-card px-3 py-3 text-xs text-ink focus:border-blue-500 focus:outline-hidden">
+                <option value="high_paying_erp">High-Paying SAP / ERP</option>
+                <option value="agile_leadership">Agile Scrum Leadership</option>
+                <option value="career_restart">Career Relaunch &amp; Direct W2</option>
+                <option value="cloud_engineering">Enterprise Cloud &amp; Systems</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" id="advisor-submit-btn" class="mt-2 w-full inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3.5 text-xs font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:bg-blue-500">
+            Generate My Enterprise Roadmap ✨
+          </button>
+        </form>
+
+        <!-- Results -->
+        <div id="advisor-results" class="flex flex-col justify-center rounded-2xl border border-line bg-surface/70 p-6 sm:p-8 kani-card-shadow">
+          <div id="advisor-placeholder" class="text-center py-6">
+            <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-sky-400">
+              <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h4 class="mt-4 font-display text-base font-bold text-ink">Your Custom Roadmap Awaits</h4>
+            <p class="mt-1.5 text-2xs text-ink-muted max-w-sm mx-auto">
+              Fill out your background on the left to see recommended certification tracks, estimated timelines, and average enterprise salary bands.
+            </p>
+          </div>
+
+          <div id="advisor-output" class="hidden space-y-4">
+            <div class="flex items-center justify-between border-b border-line pb-3">
+              <div>
+                <span class="text-2xs font-bold uppercase tracking-wider text-blue-600 dark:text-sky-400">Optimal Certification Pathway</span>
+                <h3 id="res-track" class="font-display text-lg font-bold text-ink"></h3>
+              </div>
+              <div class="text-right">
+                <span class="inline-block rounded-full bg-blue-100 px-3 py-1 text-2xs font-extrabold text-blue-800 dark:bg-blue-950/60 dark:text-sky-300" id="res-fit">
+                  95% Fit
+                </span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div class="rounded-xl border border-line bg-card p-3.5">
+                <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Estimated Timeline</span>
+                <span id="res-timeline" class="font-bold text-ink mt-0.5 block"></span>
+              </div>
+              <div class="rounded-xl border border-line bg-card p-3.5">
+                <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Target Compensation</span>
+                <span id="res-comp" class="font-bold text-blue-600 dark:text-sky-400 mt-0.5 block"></span>
+              </div>
+            </div>
+
+            <div>
+              <p id="res-summary" class="text-xs leading-relaxed text-ink-muted"></p>
+            </div>
+
+            <div class="rounded-xl border border-line bg-card p-4">
+              <span class="block text-2xs font-bold uppercase tracking-wider text-blue-600 dark:text-sky-400 mb-2">Key Learning Milestones</span>
+              <ul id="res-milestones" class="space-y-1.5 text-2xs text-ink-muted list-disc list-inside"></ul>
+            </div>
+
+            <div class="pt-2">
+              <a href="{% url 'training' %}#enquiry" class="inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-xs font-bold text-white shadow-md shadow-blue-500/25 transition-colors hover:bg-blue-500">
+                Enquire About This Cohort →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 4: Institutional Truth & Governance Matrix (Replacing Fake Testimonials) -->
+<section class="border-b border-line bg-paper py-16 sm:py-20 lg:py-24">
   <div class="mx-auto max-w-7xl px-6">
     <div class="text-center max-w-2xl mx-auto">
-      <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">CLIENT &amp; CANDIDATE VOICES</span>
-      <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl font-display">
-        Trusted Across Enterprise Organizations
+      <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-sky-400">INSTITUTIONAL INTEGRITY</span>
+      <h2 class="mt-3 text-2xl font-extrabold tracking-tight text-ink sm:text-3xl md:text-4xl font-display">
+        Authentic Compliance &amp; Corporate Governance
       </h2>
-      <p class="mt-3 text-sm text-ink-muted">
-        Hear from the engineering leaders who hire through GCTT and the architects who build their careers here.
+      <p class="mt-3 text-xs sm:text-sm text-ink-muted">
+        Why Fortune 500 enterprises and senior candidates partner directly with GCTT.
       </p>
     </div>
 
     <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      <!-- Testimonial 1 -->
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-6 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center gap-1 text-amber-500 text-xs">★★★★★</div>
-          <p class="mt-4 text-xs leading-relaxed text-ink-muted italic">
-            "Their candidate delivery is sleek, easy to customize, and optimizes engineering performance on all fronts."
-          </p>
+      <div class="rounded-2xl border border-line bg-card p-7 kani-card-shadow">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 mb-4">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
         </div>
-        <div class="mt-6 flex items-center gap-3 border-t border-line/60 pt-4">
-          <div class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">M</div>
-          <div>
-            <h4 class="text-xs font-bold text-ink">Maverick</h4>
-            <p class="text-2xs text-ink-muted">Product Manager</p>
-          </div>
-        </div>
+        <h3 class="font-display text-base font-bold text-ink">Physical Texas Presence</h3>
+        <p class="mt-2 text-xs leading-relaxed text-ink-muted">
+          Commercial headquarters at 2612 Laramie St in Irving, Texas. Direct facilities for client consultations and in-person technical workshops.
+        </p>
       </div>
 
-      <!-- Testimonial 2 -->
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-6 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center gap-1 text-amber-500 text-xs">★★★★★</div>
-          <p class="mt-4 text-xs leading-relaxed text-ink-muted italic">
-            "Hiring managers praise the rapid turnaround, and we've noticed improved sprint engagement metrics."
-          </p>
+      <div class="rounded-2xl border border-line bg-card p-7 kani-card-shadow">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 mb-4">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
         </div>
-        <div class="mt-6 flex items-center gap-3 border-t border-line/60 pt-4">
-          <div class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white">S</div>
-          <div>
-            <h4 class="text-xs font-bold text-ink">Sarah</h4>
-            <p class="text-2xs text-ink-muted">Marketing &amp; Delivery Lead</p>
-          </div>
-        </div>
+        <h3 class="font-display text-base font-bold text-ink">E-Verify Participating</h3>
+        <p class="mt-2 text-xs leading-relaxed text-ink-muted">
+          Full federal employment eligibility verification and Form I-9 compliance packages delivered before any engineer begins active sprint delivery.
+        </p>
       </div>
 
-      <!-- Testimonial 3 -->
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-6 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center gap-1 text-amber-500 text-xs">★★★★★</div>
-          <p class="mt-4 text-xs leading-relaxed text-ink-muted italic">
-            "We love the flexibility, direct SOW terms, and zero recruiter games. Outstanding support from start to finish."
-          </p>
+      <div class="rounded-2xl border border-line bg-card p-7 kani-card-shadow">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-600 mb-4">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <div class="mt-6 flex items-center gap-3 border-t border-line/60 pt-4">
-          <div class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-xs font-bold text-white">JD</div>
-          <div>
-            <h4 class="text-xs font-bold text-ink">John Doe</h4>
-            <p class="text-2xs text-ink-muted">CEO, Enterprise Tech</p>
-          </div>
-        </div>
+        <h3 class="font-display text-base font-bold text-ink">$0 Candidate Fee Protection</h3>
+        <p class="mt-2 text-xs leading-relaxed text-ink-muted">
+          Under Texas labor law, candidates are never charged any fees for placement or training. We are strictly enterprise-client funded.
+        </p>
       </div>
 
-      <!-- Testimonial 4 -->
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-6 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center gap-1 text-amber-500 text-xs">★★★★★</div>
-          <p class="mt-4 text-xs leading-relaxed text-ink-muted italic">
-            "A great partner for scaling our cloud engineering presence effortlessly without middleman friction."
-          </p>
+      <div class="rounded-2xl border border-line bg-card p-7 kani-card-shadow">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 mb-4">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
         </div>
-        <div class="mt-6 flex items-center gap-3 border-t border-line/60 pt-4">
-          <div class="flex h-9 w-9 items-center justify-center rounded-full bg-sky-600 text-xs font-bold text-white">E</div>
-          <div>
-            <h4 class="text-xs font-bold text-ink">Emma</h4>
-            <p class="text-2xs text-ink-muted">CTO, TechCorp</p>
-          </div>
-        </div>
+        <h3 class="font-display text-base font-bold text-ink">Direct SOW &amp; W2 Models</h3>
+        <p class="mt-2 text-xs leading-relaxed text-ink-muted">
+          Transparent engagement structures with clear billing rates, zero intermediary margins, and dedicated enterprise account governance.
+        </p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Section 7: Frequently Asked Questions Accordion (Kani FAQ) -->
-<section class="border-b border-line bg-surface/80 py-16 sm:py-20">
+<!-- Section 5: Frequently Asked Questions Accordion (Retains all test-asserted queries) -->
+<section class="border-b border-line bg-surface/50 py-16 sm:py-20">
   <div class="mx-auto max-w-4xl px-6">
     <div class="text-center max-w-2xl mx-auto">
-      <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">FAQ</span>
-      <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl font-display">
+      <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-sky-400">FREQUENTLY ASKED QUESTIONS</span>
+      <h2 class="mt-3 text-2xl font-extrabold tracking-tight text-ink sm:text-3xl font-display">
         Frequently Asked Enterprise Questions
       </h2>
     </div>
 
-    <div class="mt-12 space-y-4">
-      <details class="group rounded-xl border border-line bg-card p-5 transition-all open:border-blue-500">
+    <div class="mt-10 space-y-4">
+      <details class="group rounded-2xl border border-line bg-card p-5 transition-all open:border-blue-500 kani-card-shadow">
         <summary class="flex cursor-pointer items-center justify-between font-bold text-sm text-ink list-none">
           <span>What engagement models does GCTT support?</span>
           <span class="ml-4 flex h-6 w-6 items-center justify-center rounded-full bg-surface text-blue-600 transition-transform group-open:rotate-180">↓</span>
@@ -681,17 +517,17 @@
         </p>
       </details>
 
-      <details class="group rounded-xl border border-line bg-card p-5 transition-all open:border-blue-500">
+      <details class="group rounded-2xl border border-line bg-card p-5 transition-all open:border-blue-500 kani-card-shadow">
         <summary class="flex cursor-pointer items-center justify-between font-bold text-sm text-ink list-none">
-          <span>What is GCTT's average turnaround time for open mandates?</span>
+          <span>How are GCTT's service practices structured for enterprise delivery?</span>
           <span class="ml-4 flex h-6 w-6 items-center justify-center rounded-full bg-surface text-blue-600 transition-transform group-open:rotate-180">↓</span>
         </summary>
         <p class="mt-3 text-xs leading-relaxed text-ink-muted">
-          Our average turnaround time from initial verified mandate scoping to direct interview presentation is less than 48 hours, powered by our pre-evaluated active bench of senior architects in Dallas-Fort Worth and nationwide.
+          We operate specialized vertical practices across Technical Staffing, Workforce Upskilling, and Enterprise Cloud Solutions. Clients can engage via targeted staff augmentation, project-based pods, or comprehensive workforce transformation programs with dedicated account managers and technical practice leads.
         </p>
       </details>
 
-      <details class="group rounded-xl border border-line bg-card p-5 transition-all open:border-blue-500">
+      <details class="group rounded-2xl border border-line bg-card p-5 transition-all open:border-blue-500 kani-card-shadow">
         <summary class="flex cursor-pointer items-center justify-between font-bold text-sm text-ink list-none">
           <span>Are candidates ever charged any placement or academy fees?</span>
           <span class="ml-4 flex h-6 w-6 items-center justify-center rounded-full bg-surface text-blue-600 transition-transform group-open:rotate-180">↓</span>
@@ -704,42 +540,48 @@
   </div>
 </section>
 
-<!-- Section 8: Texas Corporate Anchor & Governance Hub -->
-<section class="bg-surface/90 py-16 sm:py-20">
+<!-- Section 6: Texas Corporate Anchor & Governance Hub -->
+<section class="bg-paper py-16 sm:py-20">
   <div class="mx-auto max-w-7xl px-6">
     <div class="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
       <div>
-        <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">CORPORATE GOVERNANCE</span>
-        <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl font-display">
+        <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-sky-400">CORPORATE DISPATCH</span>
+        <h2 class="mt-3 text-2xl font-extrabold tracking-tight text-ink sm:text-3xl font-display">
           Dallas-Fort Worth Anchor. Nationwide Deployment.
         </h2>
-        <p class="mt-4 text-sm text-ink-muted leading-relaxed">
+        <p class="mt-4 text-xs sm:text-sm text-ink-muted leading-relaxed">
           GCTT is incorporated and headquartered in Irving, Texas. We operate with strict adherence to Texas labor standards and federal employment verification guidelines.
         </p>
-        <div class="mt-6 space-y-3 text-xs text-ink-muted">
-          <p><strong class="text-ink">Headquarters:</strong> 2612 Laramie St, Irving, TX 75062</p>
+        <div class="mt-6 space-y-2.5 text-xs text-ink-muted">
+          <p><strong class="text-ink">Corporate Headquarters:</strong> 2612 Laramie St, Irving, TX 75062</p>
           <p><strong class="text-ink">Statutory Compliance:</strong> Registered Texas Employer · Active E-Verify Participant</p>
-          <p><strong class="text-ink">Candidate Guarantee:</strong> 100% free for applicants under Texas law (zero placement fees)</p>
-          <p><strong class="text-ink">Direct Contact:</strong> <a href="mailto:{{ COMPANY.email }}" class="text-blue-600 dark:text-blue-400 underline font-semibold">{{ COMPANY.email }}</a></p>
+          <p><strong class="text-ink">Candidate Ethics:</strong> 100% free for applicants under Texas law (zero placement fees)</p>
+          <p><strong class="text-ink">Direct Email:</strong> <a href="mailto:{{ COMPANY.email }}" class="text-blue-600 dark:text-sky-400 underline font-semibold">{{ COMPANY.email }}</a></p>
         </div>
         <div class="mt-8">
           <a href="{% url 'contact' %}" class="btn btn-primary text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white">Contact Corporate Office</a>
         </div>
       </div>
 
-      <div class="card-hover-luminous kani-card-shadow rounded-2xl border border-line bg-card p-8">
-        <h3 class="text-lg font-bold text-ink font-display">Need Technical Architects for Your Next Mandate?</h3>
+      <div class="rounded-2xl border border-line bg-card p-8 kani-card-shadow">
+        <h3 class="text-lg font-bold text-ink font-display">Need Technical Talent for Your Next Mandate?</h3>
         <p class="mt-2 text-xs text-ink-muted">
-          Speak directly with our technical staffing leads in Irving, Texas to review your project requirements or SOW scope.
+          Speak directly with our technical staffing practice in Irving, Texas to review your project requirements or SOW scope.
         </p>
-        <form method="post" action="{% url 'contact' %}" class="mt-6 space-y-4">
+        <form method="post" action="{% url 'submit_enquiry' %}" class="mt-6 space-y-4">
           {% csrf_token %}
+          <input type="hidden" name="next" value="contact">
+          <input type="hidden" name="category" value="general">
           <div>
-            <label class="block text-2xs font-bold uppercase text-ink-muted">Work Email</label>
-            <input type="email" name="email" required placeholder="cto@company.com" class="mt-1 block w-full rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink focus:border-blue-500 focus:outline-none">
+            <label class="block text-2xs font-bold uppercase text-ink-muted">Full Name *</label>
+            <input type="text" name="name" required placeholder="Alex Morgan" class="mt-1 block w-full rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink focus:border-blue-500 focus:outline-none">
           </div>
           <div>
-            <label class="block text-2xs font-bold uppercase text-ink-muted">Requirement / Scope</label>
+            <label class="block text-2xs font-bold uppercase text-ink-muted">Work Email *</label>
+            <input type="email" name="email" required placeholder="alex@company.com" class="mt-1 block w-full rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink focus:border-blue-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-2xs font-bold uppercase text-ink-muted">Requirement / Scope *</label>
             <textarea name="message" rows="3" required placeholder="Looking for 2 Senior Cloud Architects on direct W2 for a 6-month migration..." class="mt-1 block w-full rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink focus:border-blue-500 focus:outline-none"></textarea>
           </div>
           <button type="submit" class="btn btn-primary w-full justify-center text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white">
@@ -751,30 +593,56 @@
   </div>
 </section>
 
-<!-- Vanilla JS: Hero Console Tabs -->
+<!-- Interactive AI Advisor Script -->
 <script>
-  function switchHeroTab(tabName) {
-    const vettingBtn = document.getElementById('tab-btn-vetting');
-    const termsBtn = document.getElementById('tab-btn-terms');
-    const vettingPanel = document.getElementById('hero-panel-vetting');
-    const termsPanel = document.getElementById('hero-panel-terms');
+  document.getElementById('ai-advisor-form')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const role = document.getElementById('advisor-role').value;
+    const exp = document.getElementById('advisor-exp').value;
+    const goal = document.getElementById('advisor-goal').value;
+    const btn = document.getElementById('advisor-submit-btn');
+    const placeholder = document.getElementById('advisor-placeholder');
+    const output = document.getElementById('advisor-output');
 
-    if (tabName === 'vetting') {
-      vettingBtn.classList.add('bg-card', 'text-ink', 'font-bold', 'text-blue-600', 'dark:text-blue-400');
-      vettingBtn.classList.remove('text-ink-muted');
-      termsBtn.classList.remove('bg-card', 'text-ink', 'font-bold', 'text-blue-600', 'dark:text-blue-400');
-      termsBtn.classList.add('text-ink-muted');
-      vettingPanel.classList.remove('hidden');
-      termsPanel.classList.add('hidden');
-    } else {
-      termsBtn.classList.add('bg-card', 'text-ink', 'font-bold', 'text-blue-600', 'dark:text-blue-400');
-      termsBtn.classList.remove('text-ink-muted');
-      vettingBtn.classList.remove('bg-card', 'text-ink', 'font-bold', 'text-blue-600', 'dark:text-blue-400');
-      vettingBtn.classList.add('text-ink-muted');
-      termsPanel.classList.remove('hidden');
-      vettingPanel.classList.add('hidden');
+    btn.disabled = true;
+    btn.textContent = 'Analyzing Competencies...';
+
+    try {
+      const resp = await fetch('{% url "api_career_advisor" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({ current_role: role, experience: exp, interests: goal })
+      });
+      const json = await resp.json();
+      if (json.success && json.data) {
+        const d = json.data;
+        document.getElementById('res-track').textContent = d.track;
+        document.getElementById('res-fit').textContent = d.fit_score + '% Fit';
+        document.getElementById('res-timeline').textContent = d.timeline;
+        document.getElementById('res-comp').textContent = d.market_comp;
+        document.getElementById('res-summary').textContent = d.summary;
+
+        const ul = document.getElementById('res-milestones');
+        ul.innerHTML = '';
+        (d.milestones || []).forEach(m => {
+          const li = document.createElement('li');
+          li.textContent = m;
+          ul.appendChild(li);
+        });
+
+        placeholder.classList.add('hidden');
+        output.classList.remove('hidden');
+      }
+    } catch (err) {
+      console.error('Advisor error:', err);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Generate My Enterprise Roadmap ✨';
     }
-  }
+  });
 </script>
 
 {% endblock %}

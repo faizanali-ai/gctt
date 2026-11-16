@@ -27,8 +27,7 @@
   <script>
     (function () {
       var savedTheme = localStorage.getItem("gctt-theme");
-      var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+      if (savedTheme === "dark") {
         document.documentElement.classList.add("dark");
         document.documentElement.classList.remove("light");
       } else {
