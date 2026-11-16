@@ -83,6 +83,11 @@ urlpatterns = [
         jobs_views.staff_job_publish,
         name="staff_job_publish",
     ),
+    path(
+        "staff/jobs/<int:pk>/linkedin/",
+        jobs_views.staff_job_linkedin_post,
+        name="staff_job_linkedin_post",
+    ),
     path("staff/applications/", jobs_views.staff_applications, name="staff_applications"),
     path(
         "staff/applications/<int:pk>/status/",

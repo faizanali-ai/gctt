@@ -1,66 +1,141 @@
 {% load static %}
 <!-- Main Executive Sticky Navigation -->
 <header class="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur-md transition-shadow">
-  <div class="mx-auto flex h-18 max-w-7xl items-center gap-6 px-6">
-    <a href="{% url 'home' %}" class="group flex shrink-0 items-center gap-3">
-      <img src="{% static 'images/logo-small.webp' %}" alt="GCTT — Global Center for Technology & Training" class="h-9.5 w-auto transition-transform group-hover:scale-102">
+  <div class="mx-auto flex h-20 max-w-7xl items-center gap-6 px-6">
+    <!-- Brand Logo -->
+    <a href="{% url 'home' %}" class="group flex shrink-0 items-center">
+      <img src="{% static 'images/logo.svg' %}" alt="GCTT — Global Center for Technology & Training" class="h-10.5 w-auto transition-transform group-hover:scale-[1.01]">
     </a>
 
-    <nav class="hidden flex-1 items-center gap-7 text-sm font-medium text-ink-muted lg:flex" aria-label="Main">
-      <a href="{% url 'about' %}" class="transition-colors hover:text-ink {% if request.path == '/about/' %}font-semibold text-accent{% endif %}">About</a>
-      
-      <details class="group relative">
-        <summary class="flex cursor-pointer list-none items-center gap-1.5 transition-colors hover:text-ink {% if '/services/' in request.path or '/it-staffing/' in request.path or '/recruitment/' in request.path or '/talent-acquisition/' in request.path or '/sap-scrum/' in request.path %}font-semibold text-accent{% endif %}">
-          Services
-          <svg class="h-3.5 w-3.5 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </summary>
-        <div class="absolute left-0 top-full z-30 mt-3 w-80 rounded-md border border-line bg-card p-3 shadow-xl ring-1 ring-black/5">
-          <div class="px-3 py-1.5 text-2xs font-semibold uppercase tracking-[0.1em] text-accent">Practice Capabilities</div>
-          {% for service in SERVICES %}
-            <a href="{{ service.url }}" class="group/item block rounded-md px-3 py-2 text-sm text-ink transition-colors hover:bg-surface">
-              <span class="block font-medium group-hover/item:text-accent">{{ service.title }}</span>
-              <span class="block text-2xs text-ink-muted line-clamp-1">{{ service.text }}</span>
-            </a>
-          {% endfor %}
-          <div class="my-1.5 border-t border-line"></div>
-          <a href="{% url 'sap_scrum' %}" class="group/item block rounded-md px-3 py-2 text-sm text-ink transition-colors hover:bg-surface">
-            <span class="block font-medium group-hover/item:text-accent">SAP &amp; Scrum Specialization</span>
-            <span class="block text-2xs text-ink-muted">Certified functional ERP &amp; Agile delivery practices</span>
-          </a>
-        </div>
-      </details>
+    <!-- Enterprise Desktop Mega-Nav -->
+    <nav class="hidden flex-1 items-center gap-6 text-sm font-medium text-ink-muted lg:flex" aria-label="Main">
+      <!-- Solutions & Practices (Mega-Menu) -->
+      <div class="group relative">
+        <button type="button" class="flex items-center gap-1.5 py-6 transition-colors hover:text-ink {% if '/services/' in request.path or '/it-staffing/' in request.path or '/recruitment/' in request.path or '/talent-acquisition/' in request.path or '/sap-scrum/' in request.path or '/employers/' in request.path %}font-semibold text-accent{% endif %}" aria-haspopup="true">
+          <span>Solutions &amp; Practices</span>
+          <svg class="h-3.5 w-3.5 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <!-- Mega-Menu Dropdown Panel -->
+        <div class="invisible absolute left-0 top-full z-30 w-[540px] opacity-0 -translate-y-2 rounded-lg border border-line bg-card p-5 shadow-2xl transition-all duration-200 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0">
+          <div class="grid grid-cols-2 gap-5">
+            <!-- Pillar 1: Enterprise Talent Solutions -->
+            <div class="space-y-3">
+              <div class="border-b border-line pb-1.5 text-2xs font-bold uppercase tracking-[0.14em] text-accent">Enterprise Talent Solutions</div>
+              <a href="{% url 'it_staffing' %}" class="group/item block rounded-md p-2 transition-colors hover:bg-surface">
+                <span class="block text-xs font-semibold text-ink group-hover/item:text-accent">Direct W2 &amp; SOW Staffing</span>
+                <span class="block text-2xs text-ink-muted">Rigorous technical talent augmentation for enterprise scale</span>
+              </a>
+              <a href="{% url 'recruitment' %}" class="group/item block rounded-md p-2 transition-colors hover:bg-surface">
+                <span class="block text-xs font-semibold text-ink group-hover/item:text-accent">Recruitment &amp; Placement</span>
+                <span class="block text-2xs text-ink-muted">Executive search and specialized technical screening</span>
+              </a>
+              <a href="{% url 'employers' %}" class="group/item block rounded-md p-2 transition-colors hover:bg-surface">
+                <span class="block text-xs font-semibold text-ink group-hover/item:text-accent">For Enterprise Clients</span>
+                <span class="block text-2xs text-ink-muted">Master Service Agreements (MSA) and dedicated practice teams</span>
+              </a>
+            </div>
 
-      <a href="{% url 'training' %}" class="transition-colors hover:text-ink {% if request.path == '/training/' %}font-semibold text-accent{% endif %}">Training</a>
-      <a href="{% url 'careers' %}" class="transition-colors hover:text-ink {% if request.path == '/careers/' %}font-semibold text-accent{% endif %}">Careers</a>
-      <a href="{% url 'career_restart' %}" class="transition-colors hover:text-ink {% if request.path == '/career-restart/' %}font-semibold text-accent{% endif %}">Career Restart</a>
-      <a href="{% url 'employers' %}" class="transition-colors hover:text-ink {% if request.path == '/employers/' %}font-semibold text-accent{% endif %}">For Employers</a>
-      <a href="{% url 'contact' %}" class="transition-colors hover:text-ink {% if request.path == '/contact/' %}font-semibold text-accent{% endif %}">Contact</a>
+            <!-- Pillar 2: Centers of Excellence (CoE) -->
+            <div class="space-y-3">
+              <div class="border-b border-line pb-1.5 text-2xs font-bold uppercase tracking-[0.14em] text-accent">Technology Centers of Excellence</div>
+              <a href="{% url 'sap_scrum' %}" class="group/item block rounded-md p-2 transition-colors hover:bg-surface">
+                <span class="block text-xs font-semibold text-ink group-hover/item:text-accent">SAP S/4HANA Practice</span>
+                <span class="block text-2xs text-ink-muted">Certified functional ERP architects and enterprise integrators</span>
+              </a>
+              <a href="{% url 'sap_scrum' %}" class="group/item block rounded-md p-2 transition-colors hover:bg-surface">
+                <span class="block text-xs font-semibold text-ink group-hover/item:text-accent">Scaled Agile &amp; Scrum Delivery</span>
+                <span class="block text-2xs text-ink-muted">Cross-functional delivery leads and release train engineers</span>
+              </a>
+              <a href="{% url 'talent_acquisition' %}" class="group/item block rounded-md p-2 transition-colors hover:bg-surface">
+                <span class="block text-xs font-semibold text-ink group-hover/item:text-accent">Technical Vetting Standards</span>
+                <span class="block text-2xs text-ink-muted">Multi-stage technical validation and US work authorization</span>
+              </a>
+            </div>
+          </div>
+          <div class="mt-4 border-t border-line/70 pt-3 flex items-center justify-between text-2xs text-ink-muted">
+            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-emerald-500"></span> Texas Headquarters &amp; Nationwide Deployment</span>
+            <a href="{% url 'employers' %}" class="font-semibold text-accent hover:underline">View Enterprise Capabilities →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Academy & Training -->
+      <div class="group relative">
+        <button type="button" class="flex items-center gap-1.5 py-6 transition-colors hover:text-ink {% if request.path == '/training/' or request.path == '/career-restart/' %}font-semibold text-accent{% endif %}" aria-haspopup="true">
+          <span>Academy &amp; Training</span>
+          <svg class="h-3.5 w-3.5 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div class="invisible absolute left-0 top-full z-30 w-72 opacity-0 -translate-y-2 rounded-lg border border-line bg-card p-4 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0">
+          <div class="space-y-2">
+            <a href="{% url 'training' %}" class="group/item block rounded-md p-2.5 transition-colors hover:bg-surface">
+              <span class="block text-xs font-semibold text-ink group-hover/item:text-accent">Executive Certification Courses</span>
+              <span class="block text-2xs text-ink-muted">SAP, Scaled Agile &amp; Cloud engineering programmes</span>
+            </a>
+            <a href="{% url 'career_restart' %}" class="group/item block rounded-md p-2.5 transition-colors hover:bg-surface">
+              <span class="block text-xs font-semibold text-ink group-hover/item:text-accent">Career Restart Programme</span>
+              <span class="block text-2xs text-ink-muted">Dedicated pathway for returning professionals &amp; career changers</span>
+            </a>
+            <a href="{% url 'training' %}#ai-advisor" class="group/item block rounded-md p-2.5 bg-emerald-50/50 border border-emerald-100 dark:bg-emerald-950/20 dark:border-emerald-800/40 transition-colors hover:bg-emerald-100/50">
+              <span class="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                AI Career Path Advisor
+              </span>
+              <span class="block text-2xs text-emerald-700/80 dark:text-emerald-400/80">Map your background into a high-demand tech track</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Careers / Open Mandates -->
+      <a href="{% url 'careers' %}" class="py-6 transition-colors hover:text-ink {% if request.path == '/careers/' %}font-semibold text-accent{% endif %}">
+        Careers &amp; Mandates
+      </a>
+
+      <!-- Governance & About -->
+      <a href="{% url 'about' %}" class="py-6 transition-colors hover:text-ink {% if request.path == '/about/' %}font-semibold text-accent{% endif %}">
+        About &amp; Governance
+      </a>
+
+      <!-- Contact -->
+      <a href="{% url 'contact' %}" class="py-6 transition-colors hover:text-ink {% if request.path == '/contact/' %}font-semibold text-accent{% endif %}">
+        Contact
+      </a>
     </nav>
 
-    <div class="ml-auto hidden items-center gap-3.5 text-sm font-medium lg:flex">
-      <!-- Desktop Dark/Light Theme Toggle -->
+    <!-- Desktop Action Hub (Revenue CTA + Portal Access + Theme Toggle) -->
+    <div class="ml-auto hidden items-center gap-3 text-sm font-medium lg:flex">
+      <!-- Dark/Light Theme Toggle -->
       <button
         type="button"
-        class="theme-toggle-btn flex h-9 w-9 items-center justify-center rounded-md border border-line bg-card text-ink transition-colors hover:border-accent hover:text-accent focus:outline-hidden"
+        class="theme-toggle-btn flex h-9.5 w-9.5 items-center justify-center rounded-md border border-line bg-card text-ink transition-colors hover:border-accent hover:text-accent focus:outline-hidden"
         aria-label="Toggle Theme Mode"
         title="Toggle Dark / Light Mode"
       >
-        <svg class="theme-sun-icon h-4 w-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="theme-sun-icon h-4 w-4 hidden text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
-        <svg class="theme-moon-icon h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="theme-moon-icon h-4 w-4 text-ink-subtle" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
         </svg>
       </button>
 
       {% if user.is_authenticated %}
-        <a href="{% url 'dashboard' %}" class="btn btn-secondary py-2 px-3.5 text-xs font-semibold">Dashboard</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary py-2.5 px-4 text-xs font-semibold">
+          Portal Dashboard
+        </a>
         <form method="post" action="{% url 'logout' %}">
           {% csrf_token %}
-          <button type="submit" class="text-xs text-ink-muted transition-colors hover:text-accent">Log out</button>
+          <button type="submit" class="text-xs text-ink-muted transition-colors hover:text-rose-600">Log out</button>
         </form>
       {% else %}
-        <a href="{% url 'login' %}" class="btn btn-primary py-2 px-4 text-xs font-semibold">Log in</a>
+        <!-- Secondary CTA: Portal Gateway -->
+        <a href="{% url 'login' %}" class="btn btn-secondary py-2.5 px-4 text-xs font-semibold">
+          Portal Sign In
+        </a>
+        <!-- Primary Revenue CTA: Request Talent for Enterprise Clients -->
+        <a href="{% url 'employers' %}" class="btn btn-primary py-2.5 px-5 text-xs font-semibold shadow-xs">
+          Request Talent
+        </a>
       {% endif %}
     </div>
 
@@ -68,14 +143,14 @@
     <div class="ml-auto flex items-center gap-2 lg:hidden">
       <button
         type="button"
-        class="theme-toggle-btn flex h-9 w-9 items-center justify-center rounded-md border border-line bg-card text-ink transition-colors hover:border-accent"
+        class="theme-toggle-btn flex h-9.5 w-9.5 items-center justify-center rounded-md border border-line bg-card text-ink transition-colors hover:border-accent"
         aria-label="Toggle Theme Mode"
         title="Toggle Dark / Light Mode"
       >
-        <svg class="theme-sun-icon h-4 w-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="theme-sun-icon h-4 w-4 hidden text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
-        <svg class="theme-moon-icon h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="theme-moon-icon h-4 w-4 text-ink-subtle" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
         </svg>
       </button>
@@ -109,8 +184,7 @@
         <!-- Drawer Header -->
         <div class="flex items-center justify-between border-b border-line px-6 py-4">
           <a href="{% url 'home' %}" class="flex items-center gap-2">
-            <img src="{% static 'images/logo-small.webp' %}" alt="GCTT" class="h-7 w-auto">
-            <span class="font-display text-sm font-bold tracking-tight text-ink">GCTT</span>
+            <img src="{% static 'images/logo.svg' %}" alt="GCTT" class="h-8 w-auto">
           </a>
           <button
             type="button"
@@ -125,38 +199,40 @@
         </div>
 
         <!-- Drawer Content Navigation -->
-        <nav class="flex-1 space-y-1 px-6 py-6" aria-label="Mobile Navigation">
-          <div class="mb-4">
-            <p class="px-3 text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Main</p>
-            <a href="{% url 'about' %}" class="mt-1 block rounded-md px-3 py-2.5 text-base font-medium text-ink hover:bg-surface">About GCTT</a>
-            <a href="{% url 'training' %}" class="block rounded-md px-3 py-2.5 text-base font-medium text-ink hover:bg-surface">Training &amp; Certifications</a>
-            <a href="{% url 'careers' %}" class="block rounded-md px-3 py-2.5 text-base font-medium text-ink hover:bg-surface">Careers &amp; Open Roles</a>
-            <a href="{% url 'career_restart' %}" class="block rounded-md px-3 py-2.5 text-base font-medium text-ink hover:bg-surface">Career Restart</a>
-            <a href="{% url 'employers' %}" class="block rounded-md px-3 py-2.5 text-base font-medium text-ink hover:bg-surface">For Enterprise Employers</a>
-            <a href="{% url 'contact' %}" class="block rounded-md px-3 py-2.5 text-base font-medium text-ink hover:bg-surface">Contact Headquarters</a>
+        <nav class="flex-1 space-y-4 px-6 py-6" aria-label="Mobile Navigation">
+          <!-- Main Links -->
+          <div>
+            <p class="px-3 text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Solutions &amp; Practices</p>
+            <a href="{% url 'it_staffing' %}" class="mt-1 block rounded-md px-3 py-2 text-sm font-medium text-ink hover:bg-surface">IT Staffing &amp; SOW Delivery</a>
+            <a href="{% url 'sap_scrum' %}" class="block rounded-md px-3 py-2 text-sm font-medium text-ink hover:bg-surface">SAP S/4HANA &amp; Agile CoE</a>
+            <a href="{% url 'recruitment' %}" class="block rounded-md px-3 py-2 text-sm font-medium text-ink hover:bg-surface">Recruitment &amp; Vetting</a>
+            <a href="{% url 'employers' %}" class="block rounded-md px-3 py-2 text-sm font-medium text-ink hover:bg-surface">For Enterprise Employers</a>
           </div>
 
-          <div class="border-t border-line/60 pt-4">
-            <p class="px-3 text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Practice Capabilities</p>
-            {% for service in SERVICES %}
-              <a href="{{ service.url }}" class="block rounded-md px-3 py-2 text-sm text-ink-muted hover:bg-surface hover:text-ink">{{ service.title }}</a>
-            {% endfor %}
-            <a href="{% url 'sap_scrum' %}" class="block rounded-md px-3 py-2 text-sm text-ink-muted hover:bg-surface hover:text-ink">SAP &amp; Scrum Specialization</a>
+          <div class="border-t border-line/60 pt-3">
+            <p class="px-3 text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Academy &amp; Careers</p>
+            <a href="{% url 'training' %}" class="mt-1 block rounded-md px-3 py-2 text-sm font-medium text-ink hover:bg-surface">Executive Training &amp; Certifications</a>
+            <a href="{% url 'career_restart' %}" class="block rounded-md px-3 py-2 text-sm font-medium text-ink hover:bg-surface">Career Restart Programme</a>
+            <a href="{% url 'careers' %}" class="block rounded-md px-3 py-2 text-sm font-medium text-ink hover:bg-surface">Open Mandates &amp; Jobs</a>
+          </div>
+
+          <div class="border-t border-line/60 pt-3">
+            <p class="px-3 text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Corporate</p>
+            <a href="{% url 'about' %}" class="mt-1 block rounded-md px-3 py-2 text-sm font-medium text-ink hover:bg-surface">About GCTT &amp; Governance</a>
+            <a href="{% url 'contact' %}" class="block rounded-md px-3 py-2 text-sm font-medium text-ink hover:bg-surface">Contact Headquarters</a>
           </div>
 
           <!-- Drawer Action CTAs -->
           <div class="mt-8 border-t border-line pt-6 space-y-3">
             {% if user.is_authenticated %}
-              <a href="{% url 'dashboard' %}" class="btn btn-secondary w-full justify-center">Dashboard Portal</a>
+              <a href="{% url 'dashboard' %}" class="btn btn-primary w-full justify-center">Portal Dashboard</a>
               <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-secondary w-full justify-center text-ink-muted">Log out</button>
               </form>
             {% else %}
-              <div class="grid grid-cols-2 gap-2">
-                <a href="{% url 'login' %}" class="btn btn-primary justify-center text-xs">Log in</a>
-                <a href="{% url 'signup' %}" class="btn btn-secondary justify-center text-xs">Register</a>
-              </div>
+              <a href="{% url 'employers' %}" class="btn btn-primary w-full justify-center text-xs">Request Talent Consultation</a>
+              <a href="{% url 'login' %}" class="btn btn-secondary w-full justify-center text-xs">Portal Sign In</a>
             {% endif %}
           </div>
         </nav>

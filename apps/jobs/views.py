@@ -66,31 +66,75 @@ def job_detail(request, slug):
         request.user.is_authenticated
         and job.applications.filter(applicant=request.user).exists()
     )
+    initial = {}
+    if request.user.is_authenticated:
+        initial = {
+            "first_name": request.user.first_name,
+            "last_name": request.user.last_name,
+            "email": request.user.email,
+            "phone": getattr(request.user, "phone", ""),
+        }
+    form = ApplicationForm(is_authenticated=request.user.is_authenticated, initial=initial)
     return render(
         request,
         "jobs/job_detail.html",
-        {"job": job, "form": ApplicationForm(), "applied": applied},
+        {"job": job, "form": form, "applied": applied},
     )
 
 
 @require_POST
-@login_required
-@ratelimit(key="user", rate="20/h", method="POST", block=True)
+@ratelimit(key="ip", rate="30/h", method="POST", block=True)
 def job_apply(request, slug):
     job = get_object_or_404(Job, slug=slug, published=True)
-    form = ApplicationForm(request.POST, request.FILES)
+    is_auth = request.user.is_authenticated
+    form = ApplicationForm(request.POST, request.FILES, is_authenticated=is_auth)
     if form.is_valid():
+        if is_auth:
+            user = request.user
+        else:
+            from django.contrib.auth import login
+
+            from apps.accounts.models import User
+
+            email = form.cleaned_data["email"].strip().lower()
+            first_name = form.cleaned_data.get("first_name", "").strip()
+            last_name = form.cleaned_data.get("last_name", "").strip()
+            phone = form.cleaned_data.get("phone", "").strip()
+            user = User.objects.filter(email=email).first()
+            if not user:
+                user = User.objects.create_user(
+                    email=email,
+                    first_name=first_name,
+                    last_name=last_name,
+                    phone=phone,
+                    account_type="candidate",
+                )
+                user.set_unusable_password()
+                user.save()
+            elif not user.phone and phone:
+                user.phone = phone
+                user.save(update_fields=["phone"])
+            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+
         application = form.save(commit=False)
         application.job = job
-        application.applicant = request.user
+        application.applicant = user
+        work_auth = form.cleaned_data.get("work_authorization")
+        if work_auth:
+            label = dict(form.fields["work_authorization"].choices).get(work_auth, work_auth)
+            prefix = f"[Work Auth: {label}]\n"
+            if prefix not in application.message:
+                application.message = f"{prefix}{application.message}"
         try:
             with transaction.atomic():
                 application.save()
-            messages.success(request, "Your application has been sent.")
+            messages.success(request, "Your application has been received by GCTT technical recruitment directors.")
             notify_application(application)
             notify_staff_new_application(application)
+            return redirect("dashboard")
         except IntegrityError:
             messages.error(request, "You have already applied to this job.")
+            return redirect("job_detail", slug=job.slug)
         except Exception:
             # Storage or DB failure: never surface a 500 with a lost submission.
             logger.exception("Application submission failed for job %s", job.pk)
@@ -99,7 +143,7 @@ def job_apply(request, slug):
                 "We couldn't store your application just now. Please try again in a "
                 "moment, or email jobs@gctekton.com.",
             )
-        return redirect("job_detail", slug=job.slug)
+            return redirect("job_detail", slug=job.slug)
     return render(
         request,
         "jobs/job_detail.html",
@@ -199,3 +243,26 @@ def staff_application_status(request, pk):
             notify_application_status(application)
             messages.success(request, "Status updated.")
     return redirect("staff_applications")
+
+
+@login_required
+@permission_required("jobs.change_job", raise_exception=True)
+@require_POST
+def staff_job_linkedin_post(request, pk):
+    from .linkedin import generate_linkedin_share_url, post_job_to_linkedin
+
+    job = get_object_or_404(Job, pk=pk)
+    if not job.published:
+        messages.error(request, "Please publish the job mandate before sharing to LinkedIn.")
+        return redirect("staff_jobs")
+
+    res = post_job_to_linkedin(job, request)
+    if res.get("success"):
+        messages.success(request, f"Successfully published '{job.title}' to GCTT's LinkedIn Organization Page!")
+    else:
+        share_url = res.get("share_url") or generate_linkedin_share_url(job, request)
+        messages.info(
+            request,
+            f"LinkedIn API token not configured. You can share manually to LinkedIn using: {share_url}"
+        )
+    return redirect("staff_jobs")

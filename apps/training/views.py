@@ -1,9 +1,11 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
 from django.db.models import Q
-from django.http import Http404, HttpResponse, HttpResponseForbidden
+from django.http import Http404, HttpResponse, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
@@ -16,6 +18,7 @@ from config.emails import (
     notify_staff_new_registration,
 )
 
+from .ai_advisor import analyze_career_trajectory
 from .certificates import generate_certificate_pdf
 from .forms import RegistrationForm
 from .models import Programme, Registration
@@ -56,6 +59,23 @@ def programme_detail(request, slug):
         "training/programme_detail.html",
         {"programme": programme, "form": RegistrationForm(), "registered": registered},
     )
+
+
+@ratelimit(key="ip", rate="40/h", method="POST", block=True)
+def api_career_advisor(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST method required"}, status=405)
+    try:
+        data = json.loads(request.body.decode("utf-8")) if request.body else request.POST
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        data = request.POST
+
+    current_role = data.get("current_role", "")
+    experience = data.get("experience", "")
+    interests = data.get("interests", "")
+
+    result = analyze_career_trajectory(current_role, experience, interests)
+    return JsonResponse({"success": True, "data": result})
 
 
 @require_POST

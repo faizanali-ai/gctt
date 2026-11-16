@@ -241,6 +241,10 @@ REQUIRE_STAFF_2FA = (os.environ.get("REQUIRE_STAFF_2FA", "0") == "1") and not TE
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "").strip()
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "").strip()
 
+# LinkedIn API Credentials (for simultaneous organization posting)
+LINKEDIN_ACCESS_TOKEN = os.environ.get("LINKEDIN_ACCESS_TOKEN", "").strip()
+LINKEDIN_ORGANIZATION_ID = os.environ.get("LINKEDIN_ORGANIZATION_ID", "").strip()
+
 SENTRY_DSN = os.environ.get("SENTRY_DSN", "")
 if SENTRY_DSN:
     import sentry_sdk

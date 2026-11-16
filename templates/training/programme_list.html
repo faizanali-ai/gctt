@@ -37,6 +37,173 @@
     </div>
   </div>
 
+  <!-- AI Career Trajectory Advisor Interactive Tool -->
+  <div id="ai-advisor" class="mt-16 rounded-2xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50/50 via-card to-card p-6 shadow-sm dark:border-emerald-900/40 dark:from-emerald-950/20 dark:via-card dark:to-card sm:p-10 reveal">
+    <div class="max-w-2xl">
+      <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-2xs font-bold uppercase tracking-wider text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
+        <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        AI Career Trajectory &amp; Learning Advisor
+      </span>
+      <h2 class="mt-3 font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+        Map Your Domain Background into a High-Demand Tech Track
+      </h2>
+      <p class="mt-2 text-xs sm:text-sm leading-relaxed text-ink-muted">
+        Enter your existing experience or career history below. Our enterprise engine will analyze your transferrable competencies and chart your optimal SAP or Agile certification roadmap.
+      </p>
+    </div>
+
+    <!-- Interactive Advisor Form -->
+    <div class="mt-8 grid gap-8 lg:grid-cols-[1fr_1.3fr]">
+      <!-- Inputs -->
+      <form id="ai-advisor-form" class="space-y-4">
+        {% csrf_token %}
+        <div>
+          <label class="block text-2xs font-bold uppercase tracking-wider text-ink">
+            Current or Prior Role / Background *
+          </label>
+          <input
+            type="text"
+            id="advisor-role"
+            placeholder="e.g. Senior Accountant, QA Tester, Operations Lead, Returning Parent..."
+            class="mt-1 w-full rounded-lg border border-line bg-card px-4 py-2.5 text-xs text-ink focus:border-accent focus:outline-hidden"
+            required
+          >
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-2xs font-bold uppercase tracking-wider text-ink">Years in Industry</label>
+            <select id="advisor-exp" class="mt-1 w-full rounded-lg border border-line bg-card px-3 py-2.5 text-xs text-ink focus:border-accent focus:outline-hidden">
+              <option value="0-2">0 – 2 Years (Early Career / Transition)</option>
+              <option value="3-5" selected>3 – 5 Years (Mid-Level)</option>
+              <option value="6-10">6 – 10 Years (Senior Specialist)</option>
+              <option value="10+">10+ Years (Executive / Lead)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-2xs font-bold uppercase tracking-wider text-ink">Primary Career Goal</label>
+            <select id="advisor-goal" class="mt-1 w-full rounded-lg border border-line bg-card px-3 py-2.5 text-xs text-ink focus:border-accent focus:outline-hidden">
+              <option value="high_paying_erp">High-Paying SAP / ERP Consulting</option>
+              <option value="agile_leadership">Agile Scrum Master / Leadership</option>
+              <option value="career_restart">Career Relaunch &amp; Job Placement</option>
+              <option value="cloud_engineering">Enterprise Cloud &amp; Systems</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="advisor-submit-btn" class="btn btn-primary w-full justify-center text-xs py-3 font-bold shadow-xs">
+          Generate My Enterprise Roadmap ✨
+        </button>
+      </form>
+
+      <!-- Advisor Results Panel -->
+      <div id="advisor-results" class="flex flex-col justify-center rounded-xl border border-line bg-surface/70 p-6 sm:p-8">
+        <div id="advisor-placeholder" class="text-center py-6">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h4 class="mt-3 font-display text-sm font-bold text-ink">Your Custom Roadmap Awaits</h4>
+          <p class="mt-1 text-2xs text-ink-muted max-w-sm mx-auto">
+            Fill out your background on the left to see recommended certification tracks, estimated timelines, and average enterprise salary bands.
+          </p>
+        </div>
+
+        <div id="advisor-output" class="hidden space-y-4">
+          <div class="flex items-center justify-between border-b border-line pb-3">
+            <div>
+              <span class="text-2xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">Optimal Certification Pathway</span>
+              <h3 id="res-track" class="font-display text-lg font-bold text-ink"></h3>
+            </div>
+            <div class="text-right">
+              <span class="inline-block rounded-full bg-emerald-100 px-2.5 py-1 text-2xs font-extrabold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300" id="res-fit">
+                95% Fit
+              </span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div class="rounded-lg border border-line bg-card p-3">
+              <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Estimated Timeline</span>
+              <span id="res-timeline" class="font-bold text-ink"></span>
+            </div>
+            <div class="rounded-lg border border-line bg-card p-3">
+              <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Target Compensation</span>
+              <span id="res-comp" class="font-bold text-emerald-700 dark:text-emerald-400"></span>
+            </div>
+          </div>
+
+          <div>
+            <p id="res-summary" class="text-xs leading-relaxed text-ink-muted"></p>
+          </div>
+
+          <div class="rounded-lg border border-line bg-card p-3.5">
+            <span class="block text-2xs font-bold uppercase tracking-wider text-accent mb-2">Key Learning Milestones</span>
+            <ul id="res-milestones" class="space-y-1.5 text-2xs text-ink-muted list-disc list-inside"></ul>
+          </div>
+
+          <div class="pt-2">
+            <a href="#enquiry" class="btn btn-primary w-full justify-center text-xs">
+              Enquire About This Cohort →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('ai-advisor-form')?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const role = document.getElementById('advisor-role').value;
+      const exp = document.getElementById('advisor-exp').value;
+      const goal = document.getElementById('advisor-goal').value;
+      const btn = document.getElementById('advisor-submit-btn');
+      const placeholder = document.getElementById('advisor-placeholder');
+      const output = document.getElementById('advisor-output');
+
+      btn.disabled = true;
+      btn.textContent = 'Analyzing Competencies...';
+
+      try {
+        const resp = await fetch('{% url "api_career_advisor" %}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+          },
+          body: JSON.stringify({ current_role: role, experience: exp, interests: goal })
+        });
+        const json = await resp.json();
+        if (json.success && json.data) {
+          const d = json.data;
+          document.getElementById('res-track').textContent = d.track;
+          document.getElementById('res-fit').textContent = d.fit_score + '% Fit';
+          document.getElementById('res-timeline').textContent = d.timeline;
+          document.getElementById('res-comp').textContent = d.market_comp;
+          document.getElementById('res-summary').textContent = d.summary;
+
+          const ul = document.getElementById('res-milestones');
+          ul.innerHTML = '';
+          (d.milestones || []).forEach(m => {
+            const li = document.createElement('li');
+            li.textContent = m;
+            ul.appendChild(li);
+          });
+
+          placeholder.classList.add('hidden');
+          output.classList.remove('hidden');
+        }
+      } catch (err) {
+        console.error('Advisor error:', err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Generate My Enterprise Roadmap ✨';
+      }
+    });
+  </script>
+
   <!-- Programmes Header -->
   <div class="mb-6 mt-16 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-4 reveal">
     <div>
