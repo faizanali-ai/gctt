@@ -9,9 +9,11 @@
       <h1 class="mt-1 font-display text-2xl font-bold text-ink sm:text-3xl">Professional Curricula &amp; Cohorts</h1>
       <p class="mt-1 text-xs text-ink-muted">Manage cohort scheduling, publish public syllabi, and open or freeze cohort registration.</p>
     </div>
+    {% if user.is_owner %}
     <a href="{% url 'admin:training_programme_add' %}" class="btn btn-primary text-xs">
       + Create New Programme
     </a>
+    {% endif %}
   </div>
 
   <!-- Filter Ribbon -->

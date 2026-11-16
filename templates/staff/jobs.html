@@ -9,9 +9,11 @@
       <h1 class="mt-1 font-display text-2xl font-bold text-ink sm:text-3xl">Client Mandates &amp; Open Roles</h1>
       <p class="mt-1 text-xs text-ink-muted">Manage corporate staffing listings, review candidate response counts, and toggle publication status.</p>
     </div>
+    {% if user.is_owner %}
     <a href="{% url 'admin:jobs_job_add' %}" class="btn btn-primary text-xs">
       + Post New Job Mandate
     </a>
+    {% endif %}
   </div>
 
   <!-- Filter Ribbon -->
