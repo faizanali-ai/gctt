@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -7,10 +9,14 @@ from django.utils.http import urlsafe_base64_encode
 
 from .constants import COMPANY
 
+logger = logging.getLogger(__name__)
+
 
 def send(to, subject, body):
-    # shortcut: synchronous send, move to a task queue when volume justifies it
-    send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [to], fail_silently=True)
+    try:
+        send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [to], fail_silently=False)
+    except Exception:
+        logger.exception("Failed to send email to %s (subject: %s)", to, subject)
 
 
 def verification_url(user, request):
