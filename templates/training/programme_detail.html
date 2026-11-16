@@ -4,16 +4,16 @@
 {% include "partials/_hero.html" with eyebrow="Curriculum Specification" title=programme.title intro=programme.description|truncatewords:25 %}
 
 {% if not programme.published %}
-  <div class="border-b border-accent/30 bg-accent/10 px-6 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-accent">
+  <div class="border-b border-amber-300 bg-amber-50 px-6 py-2.5 text-center text-xs font-semibold text-amber-900 dark:bg-amber-950/40 dark:text-amber-300">
     Draft preview — this training programme is unlisted from public registration.
   </div>
 {% endif %}
 
-<section class="mx-auto max-w-7xl px-6 py-12 md:py-16">
+<section class="mx-auto max-w-7xl px-6 py-12 md:py-20">
   <div class="grid items-start gap-12 lg:grid-cols-[1.5fr_1fr]">
     <!-- Left Column: Syllabus & Delivery Info -->
     <div class="space-y-8 reveal">
-      <a href="{% url 'training' %}" class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-accent transition-colors hover:text-accent-hover">
+      <a href="{% url 'training' %}" class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-sky-400 transition-colors hover:text-blue-500">
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
@@ -21,45 +21,48 @@
       </a>
 
       <!-- Programme Metadata Bar -->
-      <div class="flex flex-wrap items-center gap-4 rounded-lg border border-line bg-card p-4 text-xs font-medium text-ink-muted">
+      <div class="flex flex-wrap items-center gap-4 rounded-2xl border border-line bg-card p-5 text-xs font-medium text-ink-muted kani-card-shadow">
         <div>
           <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Delivery Mode</span>
-          <span class="font-semibold text-ink">{{ programme.get_delivery_mode_display }}</span>
+          <span class="font-bold text-ink mt-0.5 block">{{ programme.get_delivery_mode_display }}</span>
         </div>
         {% if programme.duration %}
           <div class="h-6 w-px bg-line"></div>
           <div>
             <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Duration</span>
-            <span class="font-semibold text-ink">{{ programme.duration }}</span>
+            <span class="font-bold text-ink mt-0.5 block">{{ programme.duration }}</span>
           </div>
         {% endif %}
         {% if programme.schedule %}
           <div class="h-6 w-px bg-line"></div>
           <div>
             <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Schedule</span>
-            <span class="font-semibold text-ink">{{ programme.schedule }}</span>
+            <span class="font-bold text-ink mt-0.5 block">{{ programme.schedule }}</span>
           </div>
         {% endif %}
         {% if programme.category %}
           <div class="h-6 w-px bg-line"></div>
           <div>
             <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Practice Area</span>
-            <span class="font-semibold text-accent">{{ programme.category.name }}</span>
+            <span class="font-bold text-blue-600 dark:text-sky-400 mt-0.5 block">{{ programme.category.name }}</span>
           </div>
         {% endif %}
       </div>
 
       <!-- Description & Curriculum -->
-      <div class="rounded-lg border border-line bg-card p-6 sm:p-8">
-        <h2 class="font-display text-xl font-bold text-ink sm:text-2xl">Curriculum Overview</h2>
-        <div class="mt-4 whitespace-pre-line text-base leading-relaxed text-ink-muted">
+      <div class="rounded-2xl border border-line bg-card p-6 sm:p-8 kani-card-shadow">
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-0.5 text-2xs font-bold uppercase tracking-wider text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border border-blue-500/20">
+          Syllabus &amp; Outcomes
+        </span>
+        <h2 class="mt-2 font-display text-xl font-bold text-ink sm:text-2xl">Curriculum Overview</h2>
+        <div class="mt-4 whitespace-pre-line text-sm sm:text-base leading-relaxed text-ink-muted">
           {{ programme.description }}
         </div>
       </div>
 
       {% if programme.image_url %}
-        <div class="overflow-hidden rounded-lg border border-line bg-card">
-          <img src="{{ programme.image_url }}" alt="{{ programme.title }}" class="h-72 w-full object-cover" loading="lazy">
+        <div class="overflow-hidden rounded-2xl border border-line bg-card kani-card-shadow">
+          <img src="{{ programme.image_url }}" alt="{{ programme.title }}" class="h-80 w-full object-cover" loading="lazy">
         </div>
       {% endif %}
 
@@ -71,44 +74,46 @@
     </div>
 
     <!-- Right Column: Registration Box -->
-    <div class="lg:sticky lg:top-24 reveal delay-1">
-      <div class="rounded-lg border border-line bg-card p-6 sm:p-8 shadow-sm">
+    <div class="lg:sticky lg:top-28 reveal delay-1">
+      <div class="rounded-2xl border border-line bg-card p-6 sm:p-8 kani-card-shadow">
         <div class="border-b border-line-subtle pb-4">
-          <p class="eyebrow">Cohort Enrolment</p>
-          <h3 class="mt-1 font-display text-xl font-bold text-ink">Register Your Interest</h3>
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-0.5 text-2xs font-bold uppercase tracking-wider text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border border-blue-500/20">
+            Cohort Enrolment
+          </span>
+          <h3 class="mt-2 font-display text-xl font-bold text-ink">Register Your Interest</h3>
         </div>
 
         {% if registered %}
-          <div class="mt-6 rounded-md border border-emerald-200 bg-emerald-50/60 p-5 text-sm">
-            <div class="flex items-center gap-2 font-semibold text-emerald-900">
-              <svg class="h-5 w-5 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50/60 p-5 text-sm dark:border-emerald-800/40 dark:bg-emerald-950/20">
+            <div class="flex items-center gap-2 font-bold text-emerald-900 dark:text-emerald-300">
+              <svg class="h-5 w-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
               Enrolment Confirmed
             </div>
-            <p class="mt-2 text-xs leading-relaxed text-emerald-800">
+            <p class="mt-2 text-xs leading-relaxed text-emerald-800 dark:text-emerald-400">
               You are officially registered for this cohort. Our training coordinators will email you syllabus materials, schedule calendar invites, and prerequisite guides.
             </p>
-            <a href="{% url 'dashboard' %}" class="btn btn-primary mt-4 w-full text-xs">
+            <a href="{% url 'dashboard' %}" class="btn btn-primary mt-4 w-full justify-center text-xs">
               View Student Portal →
             </a>
           </div>
 
         {% elif not programme.registration_open %}
-          <div class="mt-6 rounded-md border border-amber-200 bg-amber-50/60 p-5 text-sm">
-            <p class="font-semibold text-amber-900">Enrolment Closed for Current Cohort</p>
-            <p class="mt-1 text-xs text-amber-800">
+          <div class="mt-6 rounded-xl border border-amber-200 bg-amber-50/60 p-5 text-sm dark:border-amber-800/40 dark:bg-amber-950/20">
+            <p class="font-bold text-amber-900 dark:text-amber-300">Enrolment Closed for Current Cohort</p>
+            <p class="mt-1 text-xs text-amber-800 dark:text-amber-400">
               Registration for this session has reached capacity or is undergoing curriculum review. Submit an inquiry to be waitlisted for future dates.
             </p>
-            <a href="{% url 'training' %}#enquiry" class="btn btn-secondary mt-4 w-full text-xs">
+            <a href="{% url 'training' %}#enquiry" class="btn btn-secondary mt-4 w-full justify-center text-xs">
               Request Waitlist Spot
             </a>
           </div>
 
         {% elif user.is_authenticated %}
-          <div class="mt-5 rounded-md border border-line bg-surface p-3.5 text-xs text-ink-muted">
+          <div class="mt-5 rounded-xl border border-line bg-surface p-4 text-xs text-ink-muted">
             <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Registering as</span>
-            <p class="mt-0.5 font-semibold text-ink">
+            <p class="mt-0.5 font-bold text-ink">
               {{ user.display_name }} · <span class="font-mono font-normal">{{ user.email }}</span>
             </p>
           </div>
@@ -116,7 +121,7 @@
           <form method="post" action="{% url 'programme_register' programme.slug %}" class="mt-5 space-y-4">
             {% csrf_token %}
             <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-ink">
+              <label class="block text-2xs font-bold uppercase tracking-wider text-ink">
                 Questions or Target Outcomes
                 <span class="font-normal lowercase text-ink-subtle">(optional)</span>
               </label>
@@ -128,7 +133,7 @@
               {% endif %}
             </div>
 
-            <button type="submit" class="btn btn-primary w-full justify-center">
+            <button type="submit" class="w-full inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3.5 text-xs font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:bg-blue-500">
               Confirm Cohort Registration
             </button>
             <p class="text-center text-2xs text-ink-subtle">
@@ -138,15 +143,15 @@
 
         {% else %}
           <div class="mt-6 space-y-4 text-sm">
-            <p class="text-ink-muted">
+            <p class="text-xs text-ink-muted leading-relaxed">
               Create an account or sign in to register for this training cohort and track your certifications.
             </p>
-            <a href="{% url 'signup' %}" class="btn btn-primary w-full justify-center">
+            <a href="{% url 'signup' %}" class="w-full inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3.5 text-xs font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:bg-blue-500">
               Create Student Account
             </a>
-            <div class="rounded-md border border-line bg-surface p-4 text-xs text-ink-muted">
+            <div class="rounded-xl border border-line bg-surface p-4 text-xs text-ink-muted">
               <span>Already registered with GCTT?</span>
-              <a href="{% url 'login' %}?next={{ request.path }}" class="mt-1 block font-semibold text-brand hover:text-accent">
+              <a href="{% url 'login' %}?next={{ request.path }}" class="mt-1 block font-bold text-blue-600 dark:text-sky-400 hover:underline">
                 Sign in to register →
               </a>
             </div>
