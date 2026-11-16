@@ -43,14 +43,67 @@
 
     #header {
       background: #0f2a44;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
     }
 
-    #branding h1,
-    #branding h1 a:link,
-    #branding h1 a:visited {
-      color: #f7f4ee;
+    #branding {
+      display: flex;
+      align-items: center;
+    }
+
+    #site-name,
+    #site-name a,
+    #site-name a:link,
+    #site-name a:visited {
+      color: #f7f4ee !important;
       font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.25rem;
+      font-weight: 700;
       letter-spacing: 0.01em;
+      text-decoration: none;
+    }
+
+    #site-name a:hover {
+      color: #ffffff !important;
+    }
+
+    #user-tools {
+      color: #dbe4ee;
+      font-size: 0.8125rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    #user-tools a {
+      color: #f7f4ee !important;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    #user-tools a:hover {
+      color: #ffffff !important;
+      text-decoration: underline;
+    }
+
+    #user-tools form button {
+      background: none;
+      border: none;
+      color: #f7f4ee;
+      cursor: pointer;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #user-tools form button:hover {
+      color: #ffffff;
+      text-decoration: underline;
     }
 
     div.breadcrumbs {
@@ -81,14 +134,15 @@
       border-radius: 4px;
     }
 
+    .theme-toggle,
     #theme-toggle {
-      display: none;
+      display: none !important;
     }
   </style>
 {% endblock %}
 
 {% block branding %}
-  <div id="site-name">
+  <h1 id="site-name">
     <a href="{% url 'admin:index' %}">GCTT Corporate Administration</a>
-  </div>
+  </h1>
 {% endblock %}
