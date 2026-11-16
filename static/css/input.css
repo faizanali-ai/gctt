@@ -218,10 +218,55 @@ html.dark .bg-brand\/10 {
   -webkit-text-fill-color: transparent;
 }
 
-.kani-gradient-pink {
-  background: linear-gradient(90deg, #ec4899 0%, #a855f7 50%, #6366f1 100%);
+.brand-gradient-headline {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 40%, #0284c7 80%, #0369a1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+.dark .brand-gradient-headline {
+  background: linear-gradient(135deg, #60a5fa 0%, #38bdf8 50%, #93c5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Floating organic animations for hero cards */
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.4deg);
+  }
+}
+
+@keyframes float-gentle-delayed {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(8px) rotate(-0.4deg);
+  }
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+.animate-float-gentle {
+  animation: float-gentle 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-delayed {
+  animation: float-gentle-delayed 7s ease-in-out infinite 1s;
+  will-change: transform;
+}
+
+.animate-dash-flow {
+  stroke-dasharray: 6 6;
+  animation: dash-flow 1.8s linear infinite;
 }
 
 /* Luminous Pastel Hero Background (Pure Kani Solutions Styling) */
