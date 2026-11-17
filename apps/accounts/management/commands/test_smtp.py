@@ -1,7 +1,8 @@
 import sys
-from django.core.management.base import BaseCommand
-from django.core.mail import send_mail
+
 from django.conf import settings
+from django.core.mail import send_mail
+from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
@@ -37,6 +38,6 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f"Successfully sent test email to {recipient}."))
             else:
                 self.stdout.write(self.style.WARNING("send_mail returned 0 messages sent."))
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             self.stderr.write(self.style.ERROR(f"Failed to send email: {exc}"))
             sys.exit(1)

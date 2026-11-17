@@ -1,6 +1,7 @@
 import json
 
 from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
@@ -11,6 +12,7 @@ from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.audit import log_action
+from apps.accounts.models import User
 from config.emails import (
     notify_certificate,
     notify_registration,
@@ -20,9 +22,6 @@ from config.emails import (
 
 from .ai_advisor import analyze_career_trajectory
 from .certificates import generate_certificate_pdf
-from django.contrib.auth import login
-from django.contrib.auth.models import User as DjangoUser
-from apps.accounts.models import User
 from .forms import InboundEnrollmentForm, RegistrationForm
 from .models import Programme, Registration
 

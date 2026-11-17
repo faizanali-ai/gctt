@@ -1,4 +1,3 @@
-from django.contrib.auth.models import Group
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
