@@ -2,7 +2,7 @@ from django import forms
 
 from .models import Enquiry
 
-INPUT = "w-full rounded-sm border border-line bg-white px-4 py-2.5"
+INPUT = "w-full rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-4 py-2.5 text-xs text-[#0d1c2f] focus:border-[#006398] focus:outline-hidden"
 
 
 class EnquiryForm(forms.ModelForm):

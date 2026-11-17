@@ -98,4 +98,83 @@
       </button>
     </div>
   </div>
+
+  <!-- Mobile Navigation Drawer -->
+  <div id="mobile-drawer" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
+    <!-- Backdrop -->
+    <div id="mobile-drawer-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"></div>
+
+    <!-- Drawer Panel -->
+    <div class="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white shadow-2xl">
+      <!-- Drawer Header -->
+      <div class="flex h-20 items-center justify-between border-b border-[#dde9ff] px-6">
+        <div class="flex items-center gap-2.5">
+          <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0f2444] text-white font-black text-lg">
+            G
+          </div>
+          <span class="font-display text-lg font-bold text-[#000e27]">GCTT</span>
+        </div>
+        <button
+          type="button"
+          id="mobile-drawer-close"
+          class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#dde9ff] bg-[#f8f9ff] text-[#000e27] hover:bg-[#eff4ff] transition-all"
+          aria-label="Close navigation drawer"
+        >
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="flex-1 overflow-y-auto px-6 py-6 font-sans">
+        <nav class="space-y-1 text-sm font-semibold text-[#000e27]">
+          <a href="{% url 'it_staffing' %}" class="flex items-center justify-between rounded-xl px-4 py-3 hover:bg-[#eff4ff] hover:text-[#006398] transition-colors">
+            <span>Solutions &amp; Practices</span>
+            <svg class="h-4 w-4 text-[#75777f]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </a>
+          <a href="{% url 'training' %}" class="flex items-center justify-between rounded-xl px-4 py-3 hover:bg-[#eff4ff] hover:text-[#006398] transition-colors">
+            <span>Academy &amp; Training</span>
+            <svg class="h-4 w-4 text-[#75777f]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </a>
+          <a href="{% url 'careers' %}" class="flex items-center justify-between rounded-xl px-4 py-3 hover:bg-[#eff4ff] hover:text-[#006398] transition-colors">
+            <span>Open Mandates</span>
+            <svg class="h-4 w-4 text-[#75777f]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </a>
+          <a href="{% url 'about' %}" class="flex items-center justify-between rounded-xl px-4 py-3 hover:bg-[#eff4ff] hover:text-[#006398] transition-colors">
+            <span>About &amp; Texas HQ</span>
+            <svg class="h-4 w-4 text-[#75777f]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </a>
+          <a href="{% url 'contact' %}" class="flex items-center justify-between rounded-xl px-4 py-3 hover:bg-[#eff4ff] hover:text-[#006398] transition-colors">
+            <span>Contact</span>
+            <svg class="h-4 w-4 text-[#75777f]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </a>
+        </nav>
+
+        <div class="mt-6 border-t border-[#dde9ff] pt-6 space-y-3">
+          {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="btn-stitch-primary w-full justify-center text-xs">
+              Portal Dashboard
+            </a>
+            <a href="{% url 'logout' %}" class="btn-stitch-secondary w-full justify-center text-xs">
+              Sign Out
+            </a>
+          {% else %}
+            <a href="{% url 'employers' %}" class="btn-stitch-primary w-full justify-center text-xs">
+              Request Talent
+            </a>
+            <a href="{% url 'login' %}" class="btn-stitch-secondary w-full justify-center text-xs">
+              Portal Sign In
+            </a>
+          {% endif %}
+        </div>
+
+        <div class="mt-8 rounded-xl bg-[#f8f9ff] p-4 text-xs text-[#44474e] border border-[#dde9ff]">
+          <p class="font-bold text-[#000e27]">GCTT Corporate Portal</p>
+          <p class="mt-1 text-2xs text-[#75777f]">2612 Laramie St, Irving TX 75062</p>
+          <p class="mt-0.5 text-2xs text-[#75777f] font-mono">E-Verify ID: 198420-TX</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </header>

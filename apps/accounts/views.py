@@ -34,7 +34,7 @@ from apps.training.models import Programme, Registration
 from config.emails import send_verification
 
 from .audit import log_action
-from .forms import ProfileForm, SignupForm
+from .forms import ProfileForm, SignupForm, StyledAuthenticationForm
 from .models import User
 
 INPUT = "w-full rounded-sm border border-line bg-white px-4 py-2.5"
@@ -55,6 +55,7 @@ def signup(request):
 
 
 class CustomLoginView(LoginView):
+    form_class = StyledAuthenticationForm
     template_name = "accounts/login.html"
     redirect_authenticated_user = True
 

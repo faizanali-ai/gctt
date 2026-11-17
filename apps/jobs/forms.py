@@ -12,32 +12,35 @@ SIGNATURES = {
 }
 
 
+JOB_INPUT_CLASS = "w-full rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-4 py-2.5 text-sm text-[#0d1c2f] focus:border-[#006398] focus:outline-hidden"
+
+
 class ApplicationForm(forms.ModelForm):
     first_name = forms.CharField(
         max_length=150,
         required=False,
         widget=forms.TextInput(
-            attrs={"placeholder": "Jane", "class": "w-full rounded-md border border-line bg-card px-4 py-2.5 text-sm text-ink focus:border-accent focus:outline-hidden"}
+            attrs={"placeholder": "Jane", "class": JOB_INPUT_CLASS}
         ),
     )
     last_name = forms.CharField(
         max_length=150,
         required=False,
         widget=forms.TextInput(
-            attrs={"placeholder": "Doe", "class": "w-full rounded-md border border-line bg-card px-4 py-2.5 text-sm text-ink focus:border-accent focus:outline-hidden"}
+            attrs={"placeholder": "Doe", "class": JOB_INPUT_CLASS}
         ),
     )
     email = forms.EmailField(
         required=False,
         widget=forms.EmailInput(
-            attrs={"placeholder": "jane.doe@example.com", "class": "w-full rounded-md border border-line bg-card px-4 py-2.5 text-sm text-ink focus:border-accent focus:outline-hidden"}
+            attrs={"placeholder": "jane.doe@example.com", "class": JOB_INPUT_CLASS}
         ),
     )
     phone = forms.CharField(
         max_length=50,
         required=False,
         widget=forms.TextInput(
-            attrs={"placeholder": "+1 (555) 000-0000", "class": "w-full rounded-md border border-line bg-card px-4 py-2.5 text-sm text-ink focus:border-accent focus:outline-hidden"}
+            attrs={"placeholder": "+1 (555) 000-0000", "class": JOB_INPUT_CLASS}
         ),
     )
     work_authorization = forms.ChoiceField(
@@ -49,7 +52,7 @@ class ApplicationForm(forms.ModelForm):
         ],
         required=False,
         widget=forms.Select(
-            attrs={"class": "w-full rounded-md border border-line bg-card px-4 py-2.5 text-sm text-ink focus:border-accent focus:outline-hidden"}
+            attrs={"class": JOB_INPUT_CLASS}
         ),
     )
 
@@ -61,7 +64,7 @@ class ApplicationForm(forms.ModelForm):
                 attrs={
                     "rows": 4,
                     "placeholder": "Briefly describe your enterprise tech experience, key specializations, and earliest start date...",
-                    "class": "w-full rounded-md border border-line bg-card px-4 py-2.5 text-sm text-ink focus:border-accent focus:outline-hidden",
+                    "class": JOB_INPUT_CLASS,
                 }
             )
         }

@@ -1,32 +1,32 @@
 {% extends "base.html" %}
-{% block title %}Enterprise Services — GCTekton{% endblock %}
+{% block title %}Enterprise Services — GCTT{% endblock %}
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Practice Directory" title="Enterprise IT Staffing, Technical Search &amp; Specialized Upskilling." intro="Rigorous talent acquisition frameworks and accredited workforce training designed for enterprise organizations navigating digital, cloud, and ERP transformations." %}
+{% include "partials/_hero.html" with eyebrow="Practice Directory" title="Enterprise IT Staffing, Technical Search & Specialized Upskilling." subtitle="Rigorous talent acquisition frameworks and accredited workforce training designed for enterprise organizations navigating digital, cloud, and ERP transformations." %}
 
-<section class="mx-auto max-w-7xl px-6 sm:px-12 py-16 lg:py-24 font-sans border-b border-white/10">
+<section class="mx-auto max-w-7xl px-6 sm:px-12 py-16 lg:py-24 font-sans">
   <div class="grid gap-8 md:grid-cols-2">
     {% for service in SERVICES %}
-      <a href="{{ service.url }}" class="glass-card-hover p-8 sm:p-10 border border-white/10 bg-white/[0.02] block reveal group">
+      <a href="{{ service.url }}" class="stitch-card p-8 sm:p-10 block reveal group">
         <div class="flex items-start justify-between">
-          <span class="rounded-full bg-[#ccff00]/10 border border-[#ccff00]/30 px-3 py-1 font-mono text-2xs uppercase tracking-widest text-[#ccff00]">PRACTICE 0{{ forloop.counter }}</span>
-          <span class="text-xl text-[#ccff00] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">&nearr;</span>
+          <span class="rounded-full bg-[#eff4ff] border border-[#dde9ff] px-3 py-1 font-mono text-2xs uppercase tracking-widest text-[#006398] font-bold">PRACTICE 0{{ forloop.counter }}</span>
+          <span class="text-xl text-[#006398] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">&nearr;</span>
         </div>
-        <h2 class="mt-4 font-display text-2xl font-bold text-white group-hover:text-[#ccff00] transition-colors">{{ service.title }}</h2>
-        <p class="mt-3 text-sm leading-relaxed text-white/60">{{ service.text }}</p>
-        <div class="mt-6 border-t border-white/10 pt-4 font-mono text-xs uppercase tracking-wider text-[#ccff00] flex items-center gap-1.5">
+        <h2 class="mt-4 font-display text-2xl font-bold text-[#000e27] group-hover:text-[#006398] transition-colors">{{ service.title }}</h2>
+        <p class="mt-3 text-sm leading-relaxed text-[#44474e]">{{ service.text }}</p>
+        <div class="mt-6 border-t border-[#dde9ff] pt-4 font-mono text-xs uppercase tracking-wider text-[#006398] flex items-center gap-1.5 font-bold">
           <span>Explore Practice Details</span>
           <span>&rarr;</span>
         </div>
       </a>
     {% endfor %}
-    <a href="{% url 'sap_scrum' %}" class="glass-card-hover p-8 sm:p-10 md:col-span-2 block border border-[#ccff00]/30 bg-white/[0.03] group reveal">
+    <a href="{% url 'sap_scrum' %}" class="stitch-card p-8 sm:p-10 md:col-span-2 block border-2 border-[#006398]/30 group reveal hover:border-[#006398]">
       <div class="flex items-start justify-between">
-        <span class="rounded-full bg-[#ccff00]/15 border border-[#ccff00]/40 px-3 py-1 font-mono text-2xs uppercase tracking-widest text-[#ccff00]">CENTER OF EXCELLENCE</span>
-        <span class="text-xl text-[#ccff00] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">&nearr;</span>
+        <span class="rounded-full bg-[#006398]/10 border border-[#006398]/30 px-3 py-1 font-mono text-2xs uppercase tracking-widest text-[#006398] font-bold">CENTER OF EXCELLENCE</span>
+        <span class="text-xl text-[#006398] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">&nearr;</span>
       </div>
-      <h2 class="mt-4 font-display text-2xl font-bold text-white group-hover:text-[#ccff00] transition-colors sm:text-3xl">SAP S/4HANA Practice &amp; Scaled Agile Delivery</h2>
-      <p class="mt-3 max-w-3xl text-sm leading-relaxed text-white/70">In-depth technical staffing and accredited cohort training across core SAP functional domains (MM, FICO, SD) and Scaled Agile enterprise delivery frameworks. Deploy pre-evaluated ERP consultants or sponsor custom enterprise workforce upskilling.</p>
-      <div class="mt-6 border-t border-white/10 pt-4 font-mono text-xs uppercase tracking-wider text-[#ccff00] flex items-center gap-1.5">
+      <h2 class="mt-4 font-display text-2xl font-bold text-[#000e27] group-hover:text-[#006398] transition-colors sm:text-3xl">SAP S/4HANA Practice &amp; Scaled Agile Delivery</h2>
+      <p class="mt-3 max-w-3xl text-sm leading-relaxed text-[#44474e]">In-depth technical staffing and accredited cohort training across core SAP functional domains (MM, FICO, SD) and Scaled Agile enterprise delivery frameworks. Deploy pre-evaluated ERP consultants or sponsor custom enterprise workforce upskilling.</p>
+      <div class="mt-6 border-t border-[#dde9ff] pt-4 font-mono text-xs uppercase tracking-wider text-[#006398] flex items-center gap-1.5 font-bold">
         <span>View SAP &amp; Agile Center of Excellence</span>
         <span>&rarr;</span>
       </div>
@@ -34,77 +34,77 @@
   </div>
 
   <!-- Enterprise Engagement Matrix -->
-  <div class="mt-20 border-t border-white/10 pt-16 reveal">
+  <div class="mt-20 border-t border-[#dde9ff] pt-16 reveal">
     <div class="max-w-3xl">
-      <span class="font-mono text-xs uppercase tracking-widest text-[#ccff00]">CONTRACTING &amp; DELIVERY</span>
-      <h2 class="mt-2 font-display text-2xl sm:text-3xl font-bold text-white">Flexible Enterprise Engagement Models</h2>
-      <p class="mt-2 text-sm text-white/60">Engineered to accommodate varying project risk profiles, fiscal cycles, and technical roadmap milestones.</p>
+      <span class="font-mono text-xs uppercase tracking-widest text-[#006398] font-bold">CONTRACTING &amp; DELIVERY</span>
+      <h2 class="mt-2 font-display text-2xl sm:text-3xl font-bold text-[#000e27]">Flexible Enterprise Engagement Models</h2>
+      <p class="mt-2 text-sm text-[#44474e]">Engineered to accommodate varying project risk profiles, fiscal cycles, and technical roadmap milestones.</p>
     </div>
     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 font-sans">
-      <div class="glass-card-hover p-6 border border-white/10 bg-white/[0.02]">
-        <span class="font-mono text-3xs font-bold uppercase tracking-widest text-[#ccff00]">MODEL 01</span>
-        <h3 class="mt-3 text-lg font-bold text-white font-display">Staff Augmentation</h3>
-        <p class="mt-2 text-xs leading-relaxed text-white/60">Time-and-materials deployment of vetted W2 senior engineers and architects directly integrated into your existing release trains.</p>
+      <div class="stitch-card p-6">
+        <span class="font-mono text-3xs font-bold uppercase tracking-widest text-[#006398]">MODEL 01</span>
+        <h3 class="mt-3 text-lg font-bold text-[#000e27] font-display">Staff Augmentation</h3>
+        <p class="mt-2 text-xs leading-relaxed text-[#44474e]">Time-and-materials deployment of vetted W2 senior engineers and architects directly integrated into your existing release trains.</p>
       </div>
-      <div class="glass-card-hover p-6 border border-white/10 bg-white/[0.02]">
-        <span class="font-mono text-3xs font-bold uppercase tracking-widest text-[#10b981]">MODEL 02</span>
-        <h3 class="mt-3 text-lg font-bold text-white font-display">Contract-to-Hire</h3>
-        <p class="mt-2 text-xs leading-relaxed text-white/60">Structured 3-to-6 month evaluation frameworks allowing thorough architectural and cultural assessment prior to direct full-time conversion.</p>
+      <div class="stitch-card p-6">
+        <span class="font-mono text-3xs font-bold uppercase tracking-widest text-emerald-700">MODEL 02</span>
+        <h3 class="mt-3 text-lg font-bold text-[#000e27] font-display">Contract-to-Hire</h3>
+        <p class="mt-2 text-xs leading-relaxed text-[#44474e]">Structured 3-to-6 month evaluation frameworks allowing thorough architectural and cultural assessment prior to direct full-time conversion.</p>
       </div>
-      <div class="glass-card-hover p-6 border border-white/10 bg-white/[0.02]">
-        <span class="font-mono text-3xs font-bold uppercase tracking-widest text-white/70">MODEL 03</span>
-        <h3 class="mt-3 text-lg font-bold text-white font-display">Direct Search</h3>
-        <p class="mt-2 text-xs leading-relaxed text-white/60">Retained and contingency search for mission-critical engineering leaders, enterprise ERP leads, and principal cloud specialists.</p>
+      <div class="stitch-card p-6">
+        <span class="font-mono text-3xs font-bold uppercase tracking-widest text-[#006398]">MODEL 03</span>
+        <h3 class="mt-3 text-lg font-bold text-[#000e27] font-display">Direct Search</h3>
+        <p class="mt-2 text-xs leading-relaxed text-[#44474e]">Retained and contingency search for mission-critical engineering leaders, enterprise ERP leads, and principal cloud specialists.</p>
       </div>
-      <div class="glass-card-hover p-6 border border-white/10 bg-white/[0.02]">
-        <span class="font-mono text-3xs font-bold uppercase tracking-widest text-[#ccff00]">MODEL 04</span>
-        <h3 class="mt-3 text-lg font-bold text-white font-display">SOW Project Squads</h3>
-        <p class="mt-2 text-xs leading-relaxed text-white/60">Milestone-driven technical project teams delivering defined deliverables for SAP migration, cloud transitions, or CI/CD pipelines.</p>
+      <div class="stitch-card p-6">
+        <span class="font-mono text-3xs font-bold uppercase tracking-widest text-[#0f2444]">MODEL 04</span>
+        <h3 class="mt-3 text-lg font-bold text-[#000e27] font-display">SOW Project Squads</h3>
+        <p class="mt-2 text-xs leading-relaxed text-[#44474e]">Milestone-driven technical project teams delivering defined deliverables for SAP migration, cloud transitions, or CI/CD pipelines.</p>
       </div>
     </div>
   </div>
 
   <!-- Services Delivery & Advisory FAQ -->
-  <div class="mt-20 border-t border-white/10 pt-16 reveal">
+  <div class="mt-20 border-t border-[#dde9ff] pt-16 reveal">
     <div class="max-w-3xl">
-      <span class="text-xs font-bold uppercase tracking-widest text-[#ccff00] font-mono">DELIVERY GOVERNANCE</span>
-      <h2 class="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">Services &amp; Engagement FAQ</h2>
-      <p class="mt-2 text-sm text-slate-300">Clear answers on enterprise delivery models, compliance guarantees, and workforce onboarding.</p>
+      <span class="text-xs font-bold uppercase tracking-widest text-[#006398] font-mono font-bold">DELIVERY GOVERNANCE</span>
+      <h2 class="mt-2 font-display text-2xl font-bold text-[#000e27] sm:text-3xl">Services &amp; Engagement FAQ</h2>
+      <p class="mt-2 text-sm text-[#44474e]">Clear answers on enterprise delivery models, compliance guarantees, and workforce onboarding.</p>
     </div>
 
     <div class="mt-8 space-y-4">
-      <details class="group rounded-2xl border border-white/10 glass-card p-5 transition-all open:border-[#ccff00]/40">
-        <summary class="flex cursor-pointer items-center justify-between text-base font-semibold text-white list-none">
+      <details class="group rounded-2xl border border-[#dde9ff] bg-white p-5 transition-all open:border-[#006398] shadow-xs">
+        <summary class="flex cursor-pointer items-center justify-between text-base font-semibold text-[#000e27] list-none">
           <span>How are GCTT's service practices structured for enterprise delivery?</span>
-          <svg class="h-5 w-5 text-[#ccff00] transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="h-5 w-5 text-[#006398] transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </summary>
-        <p class="text-sm text-slate-300 leading-relaxed pt-3">
+        <p class="text-sm text-[#44474e] leading-relaxed pt-3">
           We operate specialized vertical practices across Technical Staffing, Workforce Upskilling, and Enterprise Cloud Solutions. Clients can engage via targeted staff augmentation, project-based pods, or comprehensive workforce transformation programs with dedicated account managers and technical practice leads.
         </p>
       </details>
 
-      <details class="group rounded-2xl border border-white/10 glass-card p-5 transition-all open:border-[#ccff00]/40">
-        <summary class="flex cursor-pointer items-center justify-between text-base font-semibold text-white list-none">
+      <details class="group rounded-2xl border border-[#dde9ff] bg-white p-5 transition-all open:border-[#006398] shadow-xs">
+        <summary class="flex cursor-pointer items-center justify-between text-base font-semibold text-[#000e27] list-none">
           <span>What compliance and work authorization standards are maintained?</span>
-          <svg class="h-5 w-5 text-[#ccff00] transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="h-5 w-5 text-[#006398] transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </summary>
-        <p class="text-sm text-slate-300 leading-relaxed pt-3">
+        <p class="text-sm text-[#44474e] leading-relaxed pt-3">
           All talent placed or trained through GCTT undergoes rigorous right-to-work verification (E-Verify, Form I-9, criminal background check, and education/credential validation). We adhere strictly to US federal and state labor regulations and provide client-audit-ready documentation packages.
         </p>
       </details>
 
-      <details class="group rounded-2xl border border-white/10 glass-card p-5 transition-all open:border-[#ccff00]/40">
-        <summary class="flex cursor-pointer items-center justify-between text-base font-semibold text-white list-none">
+      <details class="group rounded-2xl border border-[#dde9ff] bg-white p-5 transition-all open:border-[#006398] shadow-xs">
+        <summary class="flex cursor-pointer items-center justify-between text-base font-semibold text-[#000e27] list-none">
           <span>Can training programs be customized for internal enterprise teams?</span>
-          <svg class="h-5 w-5 text-[#ccff00] transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="h-5 w-5 text-[#006398] transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </summary>
-        <p class="text-sm text-slate-300 leading-relaxed pt-3">
+        <p class="text-sm text-[#44474e] leading-relaxed pt-3">
           Yes. In addition to our public cohort tracks, GCTT designs customized corporate upskilling programs tailored to specific technology modernization stacks, architecture methodologies, and internal delivery workflows.
         </p>
       </details>

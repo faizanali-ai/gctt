@@ -1,29 +1,29 @@
 {% extends "base.html" %}
-{% block title %}About GCTekton — Enterprise Technology Advisory &amp; Workforce Development{% endblock %}
+{% block title %}About GCTT — Enterprise Technology Advisory &amp; Workforce Development{% endblock %}
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Institutional Background" title="The Convergence of Strategic Technical Search &amp; Practical Enterprise Upskilling." intro="Headquartered in Irving, Texas, Global Center for Technology &amp; Training bridges enterprise capability gaps through principal-led architectural vetting, compliant talent deployment, and proprietary workforce development." %}
+{% include "partials/_hero.html" with eyebrow="Institutional Background" title="The Convergence of Strategic Technical Search & Practical Enterprise Upskilling." subtitle="Headquartered in Irving, Texas, Global Center for Technology & Training bridges enterprise capability gaps through principal-led architectural vetting, compliant talent deployment, and proprietary workforce development." %}
 
-<section class="mx-auto max-w-7xl px-6 sm:px-12 py-16 lg:py-24 border-b border-white/10">
+<section class="mx-auto max-w-7xl px-6 sm:px-12 py-16 lg:py-24">
   <div class="grid gap-12 lg:grid-cols-2 lg:items-start reveal">
-    <div class="space-y-6 text-base sm:text-lg leading-relaxed text-white/70 font-sans">
-      <div class="inline-flex items-center gap-2 rounded-full border border-[#ccff00]/30 bg-[#ccff00]/10 px-4 py-1 font-mono text-2xs uppercase tracking-widest text-[#ccff00]">
-        <span class="h-2 w-2 rounded-full bg-[#ccff00] animate-pulse"></span>
+    <div class="space-y-6 text-base sm:text-lg leading-relaxed text-[#44474e] font-sans">
+      <div class="inline-flex items-center gap-2 rounded-full border border-[#dde9ff] bg-[#eff4ff] px-4 py-1 font-mono text-2xs uppercase tracking-widest text-[#006398] font-bold">
+        <span class="h-2 w-2 rounded-full bg-[#006398] animate-pulse"></span>
         <span>Dallas-Fort Worth Corporate Anchor · E-Verify Registered</span>
       </div>
-      <p>Operating from our corporate headquarters at 2612 Laramie St in Irving, Texas, Global Center for Technology &amp; Training (GCTekton) was established to solve a fundamental enterprise dilemma: the widening chasm between superficial keyword-matching agencies and the rigorous architectural reality of modern engineering organizations.</p>
-      <p>Rather than functioning as a transactional resume broker, GCTekton operates an integrated talent capability hub. Every candidate we submit has undergone rigorous technical evaluation by practicing senior architects. Concurrently, our proprietary academy delivers intensive, sandbox-driven cohorts in mission-critical platforms—including SAP S/4HANA (MM, FICO, SD) and Scaled Agile enterprise delivery.</p>
+      <p>Operating from our corporate headquarters at 2612 Laramie St in Irving, Texas, Global Center for Technology &amp; Training (GCTT) was established to solve a fundamental enterprise dilemma: the widening chasm between superficial keyword-matching agencies and the rigorous architectural reality of modern engineering organizations.</p>
+      <p>Rather than functioning as a transactional resume broker, GCTT operates an integrated talent capability hub. Every candidate we submit has undergone rigorous technical evaluation by practicing senior architects. Concurrently, our proprietary academy delivers intensive, sandbox-driven cohorts in mission-critical platforms—including SAP S/4HANA (MM, FICO, SD) and Scaled Agile enterprise delivery.</p>
       <p>Our dual-track infrastructure guarantees that our corporate partners receive day-one delivery velocity, backed by uncompromising right-to-work compliance, E-Verify verification, and transparent engagement frameworks across all 50 states.</p>
     </div>
-    <div class="space-y-3 font-sans">
+    <div class="space-y-4 font-sans">
       {% for service in SERVICES %}
-        <a href="{{ service.url }}" class="group block glass-card-hover p-6 border border-white/10 bg-white/[0.02]">
+        <a href="{{ service.url }}" class="group block stitch-card p-6">
           <div class="flex items-center justify-between">
-            <span class="font-display text-lg font-bold text-white transition-colors group-hover:text-[#ccff00]">{{ service.title }}</span>
-            <svg class="h-4 w-4 text-white/40 transition-transform group-hover:translate-x-1 group-hover:text-[#ccff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <span class="font-display text-lg font-bold text-[#000e27] transition-colors group-hover:text-[#006398]">{{ service.title }}</span>
+            <svg class="h-4 w-4 text-[#75777f] transition-transform group-hover:translate-x-1 group-hover:text-[#006398]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </div>
-          <span class="mt-2 block font-sans text-xs sm:text-sm leading-relaxed text-white/60">{{ service.text }}</span>
+          <span class="mt-2 block font-sans text-xs sm:text-sm leading-relaxed text-[#44474e]">{{ service.text }}</span>
         </a>
       {% endfor %}
     </div>
@@ -31,71 +31,71 @@
 </section>
 
 <!-- Three Core Strategic Pillars -->
-<section class="border-b border-white/10 bg-[#080808] py-16 lg:py-24 px-6 sm:px-12">
+<section class="border-y border-[#dde9ff] bg-[#000e27] text-white py-16 lg:py-24 px-6 sm:px-12">
   <div class="mx-auto max-w-7xl">
     <div class="reveal">
-      <span class="font-mono text-2xs uppercase tracking-widest text-[#ccff00] glass-pill px-4 py-1.5 inline-block">
+      <span class="font-mono text-2xs uppercase tracking-widest text-[#5bb8fe] bg-white/10 px-4 py-1.5 inline-block rounded-full border border-white/20 font-bold">
         OPERATIONAL ARCHITECTURE
       </span>
       <h2 class="mt-4 font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">Our Three Foundational Pillars</h2>
-      <p class="mt-3 max-w-2xl text-sm sm:text-base text-white/60 font-sans">Designed to deliver complete organizational resilience, technical capability, and verified talent mobility.</p>
+      <p class="mt-3 max-w-2xl text-sm sm:text-base text-slate-300 font-sans">Designed to deliver complete organizational resilience, technical capability, and verified talent mobility.</p>
     </div>
     <div class="mt-12 grid gap-6 md:grid-cols-3">
-      <div class="glass-card-hover p-8 border border-white/10 bg-white/[0.02] reveal">
-        <span class="font-mono text-3xs font-bold uppercase tracking-widest text-[#ccff00] block mb-3">
+      <div class="p-8 rounded-2xl border border-white/10 bg-white/[0.04] reveal">
+        <span class="font-mono text-3xs font-bold uppercase tracking-widest text-[#5bb8fe] block mb-3">
           PILLAR 01 // STAFFING GOVERNANCE
         </span>
         <h3 class="font-display text-xl font-bold text-white">Enterprise Talent Augmentation</h3>
-        <p class="mt-3 text-xs sm:text-sm leading-relaxed text-white/60 font-sans">Deploying elite software engineers, solution architects, and technical scrum leads via direct W2, Statement of Work (SOW), and contract-to-hire frameworks with pre-screened technical rigor.</p>
+        <p class="mt-3 text-xs sm:text-sm leading-relaxed text-slate-300 font-sans">Deploying elite software engineers, solution architects, and technical scrum leads via direct W2, Statement of Work (SOW), and contract-to-hire frameworks with pre-screened technical rigor.</p>
       </div>
-      <div class="glass-card-hover p-8 border border-white/10 bg-white/[0.02] reveal delay-1">
-        <span class="font-mono text-3xs font-bold uppercase tracking-widest text-[#10b981] block mb-3">
+      <div class="p-8 rounded-2xl border border-white/10 bg-white/[0.04] reveal delay-1">
+        <span class="font-mono text-3xs font-bold uppercase tracking-widest text-emerald-400 block mb-3">
           PILLAR 02 // WORKFORCE ACADEMY
         </span>
         <h3 class="font-display text-xl font-bold text-white">Hands-On Technical Academy</h3>
-        <p class="mt-3 text-xs sm:text-sm leading-relaxed text-white/60 font-sans">Immersive, sandbox-driven training curricula in SAP S/4HANA functional modules and Agile frameworks. Every graduate is awarded a digitally verifiable, tamper-evident credential.</p>
+        <p class="mt-3 text-xs sm:text-sm leading-relaxed text-slate-300 font-sans">Immersive, sandbox-driven training curricula in SAP S/4HANA functional modules and Agile frameworks. Every graduate is awarded a digitally verifiable, tamper-evident credential.</p>
       </div>
-      <div class="glass-card-hover p-8 border border-white/10 bg-white/[0.02] reveal delay-2">
-        <span class="font-mono text-3xs font-bold uppercase tracking-widest text-white/70 block mb-3">
+      <div class="p-8 rounded-2xl border border-white/10 bg-white/[0.04] reveal delay-2">
+        <span class="font-mono text-3xs font-bold uppercase tracking-widest text-amber-300 block mb-3">
           PILLAR 03 // TALENT MOBILITY
         </span>
         <h3 class="font-display text-xl font-bold text-white">Executive Returnship Accelerator</h3>
-        <p class="mt-3 text-xs sm:text-sm leading-relaxed text-white/60 font-sans">A dedicated program engineered to transition seasoned technology leaders and specialists back into senior enterprise roles following career pauses, backed by modern toolchain re-skilling.</p>
+        <p class="mt-3 text-xs sm:text-sm leading-relaxed text-slate-300 font-sans">A dedicated program engineered to transition seasoned technology leaders and specialists back into senior enterprise roles following career pauses, backed by modern toolchain re-skilling.</p>
       </div>
     </div>
   </div>
 </section>
 
 {% if team or network %}
-<section class="py-20 lg:py-28 px-6 sm:px-12 border-b border-white/10">
+<section class="py-20 lg:py-28 px-6 sm:px-12">
   <div class="mx-auto max-w-7xl">
     {% if team %}
       <div class="reveal">
-        <span class="font-mono text-2xs uppercase tracking-widest text-[#ccff00] glass-pill px-4 py-1.5 inline-block">
+        <span class="font-mono text-2xs uppercase tracking-widest text-[#006398] bg-[#eff4ff] px-4 py-1.5 inline-block rounded-full border border-[#dde9ff] font-bold">
           LEADERSHIP &amp; PRACTICE DIRECTORS
         </span>
-        <h2 class="mt-4 font-display text-3xl sm:text-4xl font-bold tracking-tight text-white">Our Leadership Team</h2>
+        <h2 class="mt-4 font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#000e27]">Our Leadership Team</h2>
       </div>
       <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {% for person in team %}
-          <div class="glass-card-hover p-6 sm:p-7 border border-white/10 bg-white/[0.02] reveal">
+          <div class="stitch-card p-6 sm:p-7 reveal">
             <div class="flex items-center gap-4">
               {% if person.photo_url %}
-                <img src="{{ person.photo_url }}" alt="{{ person.name }}" class="h-16 w-16 rounded-2xl border border-white/15 object-cover shadow-sm" loading="lazy">
+                <img src="{{ person.photo_url }}" alt="{{ person.name }}" class="h-16 w-16 rounded-2xl border border-[#dde9ff] object-cover shadow-xs" loading="lazy">
               {% else %}
-                <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ccff00]/10 border border-[#ccff00]/30 font-display text-lg font-bold text-[#ccff00]">
+                <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#eff4ff] border border-[#dde9ff] font-display text-lg font-bold text-[#006398]">
                   {{ person.name|slice:":2" }}
                 </div>
               {% endif %}
               <div>
-                <p class="font-display text-lg font-bold text-white">{{ person.name }}</p>
-                {% if person.designation %}<p class="font-mono text-2xs uppercase tracking-widest text-[#ccff00]">{{ person.designation }}</p>{% endif %}
+                <p class="font-display text-lg font-bold text-[#000e27]">{{ person.name }}</p>
+                {% if person.designation %}<p class="font-mono text-2xs uppercase tracking-widest text-[#006398] font-bold">{{ person.designation }}</p>{% endif %}
               </div>
             </div>
-            {% if person.bio %}<p class="mt-4 text-xs sm:text-sm leading-relaxed text-white/60 font-sans">{{ person.bio }}</p>{% endif %}
+            {% if person.bio %}<p class="mt-4 text-xs sm:text-sm leading-relaxed text-[#44474e] font-sans">{{ person.bio }}</p>{% endif %}
             {% if person.linkedin_url %}
-              <div class="mt-5 border-t border-white/10 pt-4 font-mono">
-                <a href="{{ person.linkedin_url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-xs text-[#ccff00] hover:underline">
+              <div class="mt-5 border-t border-[#dde9ff] pt-4 font-mono">
+                <a href="{{ person.linkedin_url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-xs text-[#006398] font-bold hover:underline">
                   View Executive Profile &nearr;
                 </a>
               </div>
@@ -107,31 +107,31 @@
 
     {% if network %}
       <div class="mt-20 reveal">
-        <span class="font-mono text-2xs uppercase tracking-widest text-[#ccff00] glass-pill px-4 py-1.5 inline-block">
+        <span class="font-mono text-2xs uppercase tracking-widest text-[#006398] bg-[#eff4ff] px-4 py-1.5 inline-block rounded-full border border-[#dde9ff] font-bold">
           ADVISORY &amp; STRATEGIC PARTNERS
         </span>
-        <h2 class="mt-4 font-display text-3xl sm:text-4xl font-bold tracking-tight text-white">Our Professional Network</h2>
+        <h2 class="mt-4 font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#000e27]">Our Professional Network</h2>
       </div>
       <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {% for person in network %}
-          <div class="glass-card-hover p-6 sm:p-7 border border-white/10 bg-white/[0.02] reveal">
+          <div class="stitch-card p-6 sm:p-7 reveal">
             <div class="flex items-center gap-4">
               {% if person.photo_url %}
-                <img src="{{ person.photo_url }}" alt="{{ person.name }}" class="h-16 w-16 rounded-2xl border border-white/15 object-cover shadow-sm" loading="lazy">
+                <img src="{{ person.photo_url }}" alt="{{ person.name }}" class="h-16 w-16 rounded-2xl border border-[#dde9ff] object-cover shadow-xs" loading="lazy">
               {% else %}
-                <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ccff00]/10 border border-[#ccff00]/30 font-display text-lg font-bold text-[#ccff00]">
+                <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#eff4ff] border border-[#dde9ff] font-display text-lg font-bold text-[#006398]">
                   {{ person.name|slice:":2" }}
                 </div>
               {% endif %}
               <div>
-                <p class="font-display text-lg font-bold text-white">{{ person.name }}</p>
-                {% if person.designation %}<p class="font-mono text-2xs uppercase tracking-widest text-[#ccff00]">{{ person.designation }}</p>{% endif %}
+                <p class="font-display text-lg font-bold text-[#000e27]">{{ person.name }}</p>
+                {% if person.designation %}<p class="font-mono text-2xs uppercase tracking-widest text-[#006398] font-bold">{{ person.designation }}</p>{% endif %}
               </div>
             </div>
-            {% if person.bio %}<p class="mt-4 text-xs sm:text-sm leading-relaxed text-white/60 font-sans">{{ person.bio }}</p>{% endif %}
+            {% if person.bio %}<p class="mt-4 text-xs sm:text-sm leading-relaxed text-[#44474e] font-sans">{{ person.bio }}</p>{% endif %}
             {% if person.linkedin_url %}
-              <div class="mt-5 border-t border-white/10 pt-4 font-mono">
-                <a href="{{ person.linkedin_url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-xs text-[#ccff00] hover:underline">
+              <div class="mt-5 border-t border-[#dde9ff] pt-4 font-mono">
+                <a href="{{ person.linkedin_url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-xs text-[#006398] font-bold hover:underline">
                   View Profile &nearr;
                 </a>
               </div>
