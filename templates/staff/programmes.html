@@ -108,13 +108,21 @@
                 </form>
               </td>
               <td class="px-5 py-4 text-right">
-                <form method="post" action="{% url 'staff_programme_toggle' programme.pk %}" class="inline-block">
-                  {% csrf_token %}
-                  <input type="hidden" name="field" value="registration_open">
-                  <button type="submit" class="btn {% if programme.registration_open %}btn-secondary text-rose-700 hover:bg-rose-50{% else %}btn-primary{% endif %} text-2xs py-1 px-2.5">
-                    {% if programme.registration_open %}Close Enrolment{% else %}Open Enrolment{% endif %}
-                  </button>
-                </form>
+                <div class="flex items-center justify-end gap-1.5">
+                  {% if programme.published %}
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.scheme }}://{{ request.get_host }}{% url 'programme_detail' programme.slug %}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary text-2xs py-1 px-2 text-[#0A66C2] hover:bg-sky-50" title="1-Click LinkedIn Share">
+                      <svg class="h-3 w-3 inline mr-1 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                      Share
+                    </a>
+                  {% endif %}
+                  <form method="post" action="{% url 'staff_programme_toggle' programme.pk %}" class="inline-block">
+                    {% csrf_token %}
+                    <input type="hidden" name="field" value="registration_open">
+                    <button type="submit" class="btn {% if programme.registration_open %}btn-secondary text-rose-700 hover:bg-rose-50{% else %}btn-primary{% endif %} text-2xs py-1 px-2.5">
+                      {% if programme.registration_open %}Close Enrolment{% else %}Open Enrolment{% endif %}
+                    </button>
+                  </form>
+                </div>
               </td>
             </tr>
           {% empty %}

@@ -1,23 +1,21 @@
-<section class="relative overflow-hidden border-b-2 border-black bg-[#ffe17c] py-14 lg:py-20 font-sans">
-  <!-- Neo-Brutalist 28px dot pattern overlay -->
-  <div class="pointer-events-none absolute inset-0 bg-dot-pattern opacity-10"></div>
+<!-- Inner Page Hero Component (Stitch Theme) -->
+<section class="border-b border-[#dde9ff] bg-[#f8f9ff] py-16 px-6 font-sans">
+  <div class="mx-auto max-w-5xl text-center space-y-4">
+    {% if eyebrow %}
+      <div class="inline-flex items-center gap-2 rounded-full border border-[#dde9ff] bg-white px-4 py-1 text-xs font-mono font-semibold uppercase text-[#006398] shadow-2xs">
+        <span class="h-2 w-2 rounded-full bg-[#006398]"></span>
+        <span>{{ eyebrow }}</span>
+      </div>
+    {% endif %}
 
-  <div class="relative z-10 mx-auto max-w-7xl px-6">
-    <div class="max-w-4xl reveal">
-      {% if eyebrow %}
-        <div class="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-4 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-black shadow-[2px_2px_0px_#000000]">
-          <span class="h-2 w-2 rounded-full bg-black"></span>
-          <span>{{ eyebrow }}</span>
-        </div>
-      {% endif %}
-      <h1 class="mt-4 font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-black leading-tight">
-        {{ title }}
-      </h1>
-      {% if intro %}
-        <p class="mt-3 font-sans text-sm sm:text-base leading-relaxed text-black/80 max-w-2xl font-medium">
-          {{ intro }}
-        </p>
-      {% endif %}
-    </div>
+    <h1 class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-[#000e27] leading-tight">
+      {{ title }}
+    </h1>
+
+    {% if subtitle %}
+      <p class="mx-auto max-w-2xl text-base sm:text-lg text-[#44474e] leading-relaxed">
+        {{ subtitle }}
+      </p>
+    {% endif %}
   </div>
 </section>

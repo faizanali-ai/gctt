@@ -1,87 +1,87 @@
 {% load static %}
-<!-- Top Executive Utility Strip (Neo-Brutalist Light Ground) -->
-<div class="border-b-2 border-black bg-white px-6 py-2 text-xs font-mono text-black">
+<!-- Top Executive Utility Strip (Stitch Executive Navy & Off-White) -->
+<div class="border-b border-[#dde9ff] bg-[#f8f9ff] px-6 py-2 text-xs font-sans text-[#44474e]">
   <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 text-2xs sm:text-xs">
     <div class="flex items-center gap-2">
-      <span class="inline-block h-2.5 w-2.5 rounded-full bg-[#171e19]"></span>
-      <span class="font-bold uppercase tracking-wider">DIRECT TEXAS W2 &amp; SOW RECRUITMENT · 2612 LARAMIE ST, IRVING TX</span>
+      <span class="inline-block h-2 w-2 rounded-full bg-[#006398]"></span>
+      <span class="font-bold uppercase tracking-wider text-[#000e27]">DIRECT TEXAS W2 &amp; SOW RECRUITMENT · 2612 LARAMIE ST, IRVING TX</span>
     </div>
-    <div class="hidden items-center gap-4 sm:flex text-3xs font-bold">
-      <span class="rounded bg-[#ffe17c] px-2 py-0.5 border border-black uppercase">E-VERIFY ID: 198420-TX</span>
+    <div class="hidden items-center gap-4 sm:flex text-3xs font-semibold">
+      <span class="rounded bg-[#eff4ff] border border-[#dde9ff] px-2 py-0.5 text-[#006398] uppercase font-bold">E-VERIFY ID: 198420-TX</span>
       <span>|</span>
-      <span class="uppercase text-[#171e19]">$0 CANDIDATE PLACEMENT FEES</span>
+      <span class="uppercase text-[#000e27] font-bold">$0 CANDIDATE PLACEMENT FEES</span>
       <span>|</span>
-      <a href="mailto:{{ COMPANY.email }}" class="underline hover:text-black">{{ COMPANY.email }}</a>
+      <a href="mailto:{{ COMPANY.email }}" class="hover:text-[#006398] transition-colors">{{ COMPANY.email }}</a>
     </div>
   </div>
 </div>
 
-<!-- Main Sticky Navigation Bar (Lumina Neo-Brutalist #ffe17c Header) -->
-<header id="main-header" class="sticky top-0 z-40 border-b-2 border-black bg-[#ffe17c]">
+<!-- Main Sticky Navigation Bar (Stitch Executive Palette) -->
+<header id="main-header" class="sticky top-0 z-40 border-b border-[#dde9ff] bg-white/95 backdrop-blur-md shadow-xs">
   <div class="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-6">
-    <!-- Brand Mark: Black initial block + Wordmark & Logo SVG -->
+    <!-- Brand Mark: Logo SVG + Wordmark -->
     <a href="{% url 'home' %}" class="group flex shrink-0 items-center gap-3" aria-label="GCTekton Home">
       <img src="{% static 'images/logo.svg' %}" alt="GCTT — Global Center for Technology &amp; Training" class="h-9 w-auto hidden sm:block transition-transform group-hover:scale-105">
-      <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-black text-[#ffe17c] font-black text-xl shadow-[3px_3px_0px_#000000] transition-transform group-hover:translate-x-0.5 group-hover:translate-y-0.5 sm:hidden">
+      <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0f2444] text-white font-black text-xl shadow-xs transition-transform group-hover:scale-105 sm:hidden">
         G
       </div>
       <div class="flex flex-col sm:hidden">
-        <span class="font-display text-xl font-extrabold tracking-tight text-black">
-          GCTEKTON
+        <span class="font-display text-xl font-bold tracking-tight text-[#000e27]">
+          GCTT
         </span>
-        <span class="font-mono text-[9px] uppercase font-bold tracking-widest text-black/70 -mt-1">
-          Texas Workforce &amp; Academy
+        <span class="font-mono text-[9px] uppercase font-semibold tracking-wider text-[#006398] -mt-1">
+          Global Center for Tech &amp; Training
         </span>
       </div>
     </a>
 
     <!-- Center: Horizontal Navigation Links -->
-    <nav class="hidden lg:flex items-center gap-7 text-sm font-bold text-black" aria-label="Main Navigation">
-      <a href="{% url 'it_staffing' %}" class="py-1 transition-colors hover:underline {% if '/it-staffing/' in request.path or '/services/' in request.path or '/employers/' in request.path %}underline decoration-2 underline-offset-4{% endif %}">
+    <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold text-[#000e27]" aria-label="Main Navigation">
+      <a href="{% url 'it_staffing' %}" class="py-1 transition-colors hover:text-[#006398] {% if '/it-staffing/' in request.path or '/services/' in request.path or '/employers/' in request.path %}text-[#006398] font-bold{% endif %}">
         Solutions &amp; Practices
       </a>
-      <a href="{% url 'training' %}" class="py-1 transition-colors hover:underline {% if '/training/' in request.path or '/career-restart/' in request.path %}underline decoration-2 underline-offset-4{% endif %}">
+      <a href="{% url 'training' %}" class="py-1 transition-colors hover:text-[#006398] {% if '/training/' in request.path or '/career-restart/' in request.path %}text-[#006398] font-bold{% endif %}">
         Academy &amp; Training
       </a>
-      <a href="{% url 'careers' %}" class="py-1 transition-colors hover:underline {% if '/careers/' in request.path or '/jobs/' in request.path %}underline decoration-2 underline-offset-4{% endif %}">
+      <a href="{% url 'careers' %}" class="py-1 transition-colors hover:text-[#006398] {% if '/careers/' in request.path or '/jobs/' in request.path %}text-[#006398] font-bold{% endif %}">
         Open Mandates
       </a>
-      <a href="{% url 'about' %}" class="py-1 transition-colors hover:underline {% if '/about/' in request.path %}underline decoration-2 underline-offset-4{% endif %}">
+      <a href="{% url 'about' %}" class="py-1 transition-colors hover:text-[#006398] {% if '/about/' in request.path %}text-[#006398] font-bold{% endif %}">
         About &amp; Texas HQ
       </a>
-      <a href="{% url 'contact' %}" class="py-1 transition-colors hover:underline {% if '/contact/' in request.path %}underline decoration-2 underline-offset-4{% endif %}">
+      <a href="{% url 'contact' %}" class="py-1 transition-colors hover:text-[#006398] {% if '/contact/' in request.path %}text-[#006398] font-bold{% endif %}">
         Contact
       </a>
     </nav>
 
     <!-- Header Actions -->
     <div class="flex items-center gap-4">
-      <!-- Theme Switcher (for tests and accessibility) -->
+      <!-- Theme Switcher (Preserved for tests) -->
       <button
         type="button"
         id="theme-toggle"
-        class="theme-toggle-btn inline-flex h-9 w-9 items-center justify-center rounded-lg border-2 border-black bg-white text-black shadow-[2px_2px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all focus:outline-hidden"
+        class="theme-toggle-btn inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#dde9ff] bg-[#f8f9ff] text-[#000e27] hover:bg-[#eff4ff] transition-all focus:outline-hidden"
         aria-label="Toggle visual theme"
       >
         <svg class="theme-sun-icon h-4 w-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
-        <svg class="theme-moon-icon h-4 w-4 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="theme-moon-icon h-4 w-4 text-[#000e27]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
         </svg>
       </button>
 
       {% if user.is_authenticated %}
-        <a href="{% url 'dashboard' %}" class="btn-brutal-secondary text-xs py-2 px-4">
+        <a href="{% url 'dashboard' %}" class="btn-stitch-secondary text-xs py-2 px-4">
           Portal Dashboard
         </a>
       {% else %}
-        <a href="{% url 'login' %}" class="hidden sm:inline-flex text-xs font-display font-bold uppercase tracking-wider text-black hover:underline">
+        <a href="{% url 'login' %}" class="hidden sm:inline-flex text-xs font-display font-bold uppercase tracking-wider text-[#000e27] hover:text-[#006398] transition-colors">
           Portal Sign In
         </a>
-        <a href="{% url 'employers' %}" class="btn-brutal-primary text-xs py-2.5 px-5">
+        <a href="{% url 'employers' %}" class="btn-stitch-primary text-xs py-2.5 px-5">
           <span>Request Talent</span>
-          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
         </a>
       {% endif %}
 
@@ -89,55 +89,13 @@
       <button
         type="button"
         id="mobile-drawer-open"
-        class="inline-flex h-10 w-10 items-center justify-center rounded-xl border-2 border-black bg-white text-black shadow-[2px_2px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all lg:hidden"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#dde9ff] bg-[#f8f9ff] text-[#000e27] hover:bg-[#eff4ff] transition-all lg:hidden"
         aria-label="Open mobile navigation drawer"
       >
         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
     </div>
   </div>
 </header>
-
-<!-- Mobile Drawer Navigation -->
-<div id="mobile-drawer" class="fixed inset-0 z-50 hidden lg:hidden" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
-  <div id="mobile-drawer-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"></div>
-  <div class="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col border-l-2 border-black bg-[#ffe17c] p-6 shadow-2xl">
-    <div class="flex items-center justify-between border-b-2 border-black pb-5">
-      <div class="flex items-center gap-2.5">
-        <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-black text-[#ffe17c] font-black text-lg">G</div>
-        <span class="font-display font-extrabold text-black text-lg">GCTEKTON</span>
-      </div>
-      <button type="button" id="mobile-drawer-close" class="p-2 text-black hover:rotate-90 transition-transform" aria-label="Close menu">
-        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-      </button>
-    </div>
-
-    <nav class="mt-6 flex-1 space-y-3 font-display font-bold text-base text-black">
-      <a href="{% url 'it_staffing' %}" class="block rounded-xl border-2 border-black bg-white p-3 shadow-[2px_2px_0px_#000000]">
-        Solutions &amp; Practices
-      </a>
-      <a href="{% url 'training' %}" class="block rounded-xl border-2 border-black bg-white p-3 shadow-[2px_2px_0px_#000000]">
-        Academy &amp; Training
-      </a>
-      <a href="{% url 'careers' %}" class="block rounded-xl border-2 border-black bg-white p-3 shadow-[2px_2px_0px_#000000]">
-        Open Mandates
-      </a>
-      <a href="{% url 'about' %}" class="block rounded-xl border-2 border-black bg-white p-3 shadow-[2px_2px_0px_#000000]">
-        About &amp; Texas HQ
-      </a>
-      <a href="{% url 'contact' %}" class="block rounded-xl border-2 border-black bg-white p-3 shadow-[2px_2px_0px_#000000]">
-        Contact Direct Dispatch
-      </a>
-    </nav>
-
-    <div class="border-t-2 border-black pt-6">
-      <a href="{% url 'employers' %}" class="btn-brutal-primary w-full justify-center">
-        Request Talent →
-      </a>
-    </div>
-  </div>
-</div>

@@ -20,7 +20,10 @@ from config.emails import (
 
 from .ai_advisor import analyze_career_trajectory
 from .certificates import generate_certificate_pdf
-from .forms import RegistrationForm
+from django.contrib.auth import login
+from django.contrib.auth.models import User as DjangoUser
+from apps.accounts.models import User
+from .forms import InboundEnrollmentForm, RegistrationForm
 from .models import Programme, Registration
 
 STAFF_STATUSES = {
@@ -79,32 +82,84 @@ def api_career_advisor(request):
 
 
 @require_POST
-@login_required
-@ratelimit(key="user", rate="20/h", method="POST", block=True)
+@ratelimit(key="ip", rate="30/h", method="POST", block=True)
 def programme_register(request, slug):
     programme = get_object_or_404(Programme, slug=slug, published=True)
     if not programme.registration_open:
         messages.error(request, "Registration for this programme is closed.")
         return redirect("programme_detail", slug=programme.slug)
-    form = RegistrationForm(request.POST)
-    if form.is_valid():
-        registration = form.save(commit=False)
-        registration.programme = programme
-        registration.student = request.user
-        try:
-            with transaction.atomic():
-                registration.save()
-            messages.success(request, "Your registration has been sent.")
-            notify_registration(registration)
-            notify_staff_new_registration(registration)
-        except IntegrityError:
-            messages.error(request, "You are already registered for this programme.")
-        return redirect("programme_detail", slug=programme.slug)
-    return render(
-        request,
-        "training/programme_detail.html",
-        {"programme": programme, "form": form, "registered": False},
-    )
+
+    if request.user.is_authenticated:
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            registration = form.save(commit=False)
+            registration.programme = programme
+            registration.student = request.user
+            try:
+                with transaction.atomic():
+                    registration.save()
+                messages.success(request, "Your registration has been sent.")
+                notify_registration(registration)
+                notify_staff_new_registration(registration)
+            except IntegrityError:
+                messages.error(request, "You are already registered for this programme.")
+            return redirect("programme_detail", slug=programme.slug)
+    else:
+        # Inbound frictionless enrollment from LinkedIn/social
+        form = InboundEnrollmentForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"].strip().lower()
+            full_name = form.cleaned_data["full_name"].strip()
+            phone = form.cleaned_data.get("phone", "").strip()
+            linkedin_url = form.cleaned_data.get("linkedin_url", "").strip()
+            career_status = form.cleaned_data.get("career_status", "").strip()
+            user_msg = form.cleaned_data.get("message", "").strip()
+
+            parts = full_name.split(" ", 1)
+            first_name = parts[0]
+            last_name = parts[1] if len(parts) > 1 else ""
+
+            student, created = User.objects.get_or_create(
+                email=email,
+                defaults={
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "phone": phone,
+                    "account_type": User.AccountType.STUDENT,
+                    "is_staff": False,
+                },
+            )
+            if created:
+                student.set_unusable_password()
+                student.save()
+
+            combined_notes = []
+            if career_status:
+                combined_notes.append(f"[Career Status: {career_status}]")
+            if linkedin_url:
+                combined_notes.append(f"[LinkedIn: {linkedin_url}]")
+            if user_msg:
+                combined_notes.append(user_msg)
+
+            registration, reg_created = Registration.objects.get_or_create(
+                programme=programme,
+                student=student,
+                defaults={"message": "\n".join(combined_notes)},
+            )
+            if not reg_created:
+                messages.error(request, "You are already registered for this programme.")
+            else:
+                messages.success(
+                    request,
+                    "Enrollment confirmed! Check your email for syllabus materials and schedule details.",
+                )
+                notify_registration(registration)
+                notify_staff_new_registration(registration)
+
+            login(request, student)
+            return redirect("programme_detail", slug=programme.slug)
+
+    return redirect("programme_detail", slug=programme.slug)
 
 
 def sap_scrum(request):

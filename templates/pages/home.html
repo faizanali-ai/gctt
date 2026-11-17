@@ -3,655 +3,672 @@
 {% block title %}GCTekton — Enterprise IT Staffing &amp; SAP Academy{% endblock %}
 
 {% block content %}
-<!-- Section 1: Hero Section (Lumina Neo-Brutalist Ground: #ffe17c) -->
-<section class="relative overflow-hidden bg-[#ffe17c] border-b-2 border-black pt-12 pb-20 lg:pt-20 lg:pb-28 px-6 sm:px-12 lg:px-16 font-sans">
-  <!-- Radial Dot Pattern Overlay (32x32px, 10% opacity) -->
-  <div class="pointer-events-none absolute inset-0 bg-dot-pattern opacity-10"></div>
+<!-- SECTION 1: HERO & EXECUTIVE COMPLIANCE METRICS (Stitch Enterprise Palette) -->
+<section class="relative w-full overflow-hidden bg-white py-16 lg:py-24 border-b border-[#dde9ff] font-sans">
+  <!-- Subtle ambient decorative glow -->
+  <div class="pointer-events-none absolute -right-40 -top-40 w-96 h-96 rounded-full bg-[#eff4ff] blur-3xl opacity-70"></div>
+  <div class="pointer-events-none absolute -left-20 top-1/2 w-80 h-80 rounded-full bg-[#f8f9ff] blur-2xl opacity-80"></div>
 
-  <div class="relative z-10 mx-auto max-w-7xl">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
-      <!-- Left Column: Typography & CTAs (7 cols) -->
-      <div class="lg:col-span-7 space-y-6 reveal">
-        <!-- White Pill Badge with 2px Border -->
-        <div class="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-4 py-1.5 font-mono text-2xs font-bold uppercase tracking-wider text-black shadow-[2px_2px_0px_#000000]">
-          <span class="h-2 w-2 rounded-full bg-black"></span>
-          <span>DIRECT TEXAS IT RECRUITMENT &amp; TRAINING</span>
+  <div class="relative z-10 mx-auto max-w-7xl px-6 sm:px-12 lg:px-16">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <!-- Left Column: Narrative & Action Triggers -->
+      <div class="lg:col-span-7 flex flex-col items-start space-y-6">
+        <!-- Eyebrow Pill Badge -->
+        <div class="inline-flex items-center gap-2 rounded-full bg-[#eff4ff] border border-[#dde9ff] px-4 py-1.5 text-xs font-semibold text-[#006398] shadow-xs">
+          <svg class="h-4 w-4 text-[#006398]" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+          <span class="font-mono text-2xs uppercase tracking-wider font-bold">Bridging Talent. Connecting Opportunities.</span>
         </div>
 
-        <!-- Hero Headline with Stroked Keyword -->
-        <h1 class="font-display text-4xl sm:text-6xl lg:text-[4.75rem] font-extrabold tracking-tight text-black leading-[1.0]">
-          SCALE YOUR TECH <span class="[text-stroke:2px_black] text-transparent inline-block">WORKFORCE</span> INTO ENTERPRISE CERTAINTY.
+        <!-- Hero Headline -->
+        <h1 class="font-display text-4xl sm:text-6xl lg:text-[4.25rem] font-bold tracking-tight text-[#000e27] leading-[1.05]">
+          Had a break in your career?
         </h1>
+        <p class="font-display text-2xl sm:text-3xl font-semibold text-[#006398] leading-tight">
+          Your next opportunity starts here.
+        </p>
 
         <!-- Body Lede -->
-        <p class="font-sans text-base sm:text-lg text-black/85 max-w-xl leading-relaxed font-medium">
-          Stop gambling on unvetted resumes. Headquartered in Irving, Texas, GCTekton bridges elite software engineers, SAP architects, and certified Scrum leaders into mission-critical corporate delivery.
+        <p class="font-sans text-base sm:text-lg text-[#44474e] max-w-2xl leading-relaxed">
+          GCTT bridges qualified professionals returning from career pauses with premier enterprise IT teams. Through accredited SAP, Cloud, and Agile upskilling alongside direct placement pipelines, we eliminate friction in workforce re-entry and sovereign technology deployment.
         </p>
 
-        <!-- CTA Group (Primary Black Button + Secondary White Button) -->
-        <div class="flex flex-wrap items-center gap-4 pt-2">
-          <a href="{% url 'employers' %}" class="btn-brutal-primary text-xs sm:text-sm py-3.5 px-8 shadow-[6px_6px_0px_#000000]">
-            <span>Request Talent Shortlist</span>
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        <!-- CTAs -->
+        <div class="flex flex-wrap items-center gap-4 pt-2 w-full sm:w-auto">
+          <a href="{% url 'careers' %}" class="btn-stitch-primary text-sm py-3.5 px-7">
+            <span>Explore Opportunities</span>
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
           </a>
-          <a href="{% url 'careers' %}" class="btn-brutal-secondary text-xs sm:text-sm py-3.5 px-7 shadow-[4px_4px_0px_#000000]">
-            Explore Open Mandates
+          <a href="{% url 'employers' %}" class="btn-stitch-secondary text-sm py-3.5 px-7">
+            <span>Hire Talent</span>
+            <svg class="h-4 w-4 text-[#006398]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
           </a>
         </div>
-
-        <!-- Trust Vector Strip -->
-        <div class="flex flex-wrap items-center gap-5 font-mono text-2xs font-bold text-black/80 pt-4 border-t-2 border-black/20">
-          <span class="flex items-center gap-1.5">
-            <span class="text-black font-black">✓</span> 48-Hour Shortlist SLA
-          </span>
-          <span class="flex items-center gap-1.5">
-            <span class="text-black font-black">✓</span> E-Verify Certified Employer
-          </span>
-          <span class="flex items-center gap-1.5">
-            <span class="text-black font-black">✓</span> $0 Candidate Placement Fees
-          </span>
-        </div>
       </div>
 
-      <!-- Right Column: Neo-Brutalist Browser Mockup (5 cols) -->
-      <div class="lg:col-span-5 reveal delay-1">
-        <div class="relative mx-auto max-w-lg lg:max-w-none">
-          <!-- Browser Shell (White, 2px solid border, 12px hard shadow) -->
-          <div class="overflow-hidden rounded-2xl border-2 border-black bg-white shadow-[12px_12px_0px_#000000]">
-            <!-- Browser Header Bar with Colored Dots -->
-            <div class="flex items-center justify-between border-b-2 border-black bg-[#f4f4f5] px-4 py-3">
-              <div class="flex items-center gap-2">
-                <span class="h-3 w-3 rounded-full bg-[#ff5f57] border border-black/40"></span>
-                <span class="h-3 w-3 rounded-full bg-[#febc2e] border border-black/40"></span>
-                <span class="h-3 w-3 rounded-full bg-[#28c840] border border-black/40"></span>
+      <!-- Right Column: Visual Graphic Representation -->
+      <div class="lg:col-span-5 relative">
+        <div class="relative rounded-2xl overflow-hidden border border-[#dde9ff] bg-[#f8f9ff] shadow-lg p-7 space-y-6">
+          <div class="flex items-center justify-between border-b border-[#dde9ff] pb-4">
+            <div class="flex items-center gap-3">
+              <div class="h-10 w-10 rounded-xl bg-[#0f2444] text-white flex items-center justify-center font-bold text-sm">
+                GCTT
               </div>
-              <div class="rounded-md border border-black/20 bg-white px-3 py-0.5 font-mono text-3xs text-black/60">
-                gctt.enterprise/operations-console
-              </div>
-              <div class="w-8"></div>
-            </div>
-
-            <!-- Browser Mockup Body -->
-            <div class="p-6 space-y-5 bg-white">
-              <!-- Top Metrics Bar -->
               <div>
-                <span class="font-mono text-3xs font-bold uppercase tracking-wider text-black/50">Active Verified Roster</span>
-                <div class="mt-1 flex items-baseline justify-between">
-                  <span class="font-display text-3xl sm:text-4xl font-extrabold text-black">1,420+ Candidates</span>
-                  <span class="rounded-full border border-black bg-[#ffe17c] px-2.5 py-0.5 font-mono text-3xs font-bold text-black">
-                    +24% Available
-                  </span>
-                </div>
+                <span class="block font-display text-sm font-bold text-[#000e27]">Operations Hub</span>
+                <span class="block font-mono text-3xs text-[#44474e]">Irving, TX · E-Verify Registered</span>
               </div>
+            </div>
+            <span class="rounded-full bg-[#eff4ff] border border-[#006398]/30 px-3 py-1 font-mono text-3xs font-semibold text-[#006398]">
+              Direct B2B Intake
+            </span>
+          </div>
 
-              <!-- Two Metric Cards (Subscribers & Sales Style -> Verified Engineers & Texas Placements) -->
-              <div class="grid grid-cols-2 gap-3 font-sans">
-                <div class="rounded-xl border-2 border-black bg-[#f8f9fa] p-3.5">
-                  <div class="flex items-center gap-1.5 font-mono text-3xs text-black/60 font-bold uppercase">
-                    <svg class="h-3.5 w-3.5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    <span>Vetted Talent</span>
-                  </div>
-                  <span class="mt-1 block font-display text-xl font-extrabold text-black">850+ Eng</span>
-                </div>
-
-                <div class="rounded-xl border-2 border-black bg-[#b7c6c2] p-3.5">
-                  <div class="flex items-center gap-1.5 font-mono text-3xs text-black font-bold uppercase">
-                    <svg class="h-3.5 w-3.5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                    </svg>
-                    <span>Compliance</span>
-                  </div>
-                  <span class="mt-1 block font-display text-xl font-extrabold text-black">100% W2</span>
-                </div>
-              </div>
-
-              <!-- Console CTA Button -->
-              <div class="pt-1">
-                <a href="{% url 'employers' %}" class="block w-full text-center rounded-xl border-2 border-black bg-[#f4f4f5] py-2.5 text-xs font-bold text-black hover:bg-[#ffe17c] transition-colors shadow-[2px_2px_0px_#000000]">
-                  Technical Screening View →
-                </a>
-              </div>
+          <!-- Feature Checklist -->
+          <div class="space-y-3.5 font-sans text-sm text-[#0d1c2f]">
+            <div class="flex items-start gap-3">
+              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#eff4ff] text-[#006398] text-xs font-bold">✓</span>
+              <span><strong>Pre-screened IT Staffing:</strong> Contract, Contract-to-Hire, and Direct Hire.</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#eff4ff] text-[#006398] text-xs font-bold">✓</span>
+              <span><strong>Career Restart Pathways:</strong> Dedicated re-entry support for career breaks.</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#eff4ff] text-[#006398] text-xs font-bold">✓</span>
+              <span><strong>Verifiable Credentials:</strong> Official completion certificates on all cohorts.</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#eff4ff] text-[#006398] text-xs font-bold">✓</span>
+              <span><strong>$0 Candidate Fees:</strong> Zero cost or hidden charges for job seekers.</span>
             </div>
           </div>
 
-          <!-- Floating Toast Badge at Bottom Right of Mockup -->
-          <div class="absolute -bottom-5 -right-4 hidden sm:flex items-center gap-2.5 rounded-xl border-2 border-black bg-[#ffe17c] px-3.5 py-2 shadow-[4px_4px_0px_#000000]">
-            <span class="h-2 w-2 rounded-full bg-black"></span>
-            <span class="font-mono text-2xs font-bold text-black">Verified Texas Placement: SAP MM Lead in Dallas</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 2: Social Proof / Technology Marquee (Lumina Charcoal Bar: #171e19) -->
-<section class="border-b-2 border-black bg-[#171e19] py-5 overflow-hidden font-display">
-  <div class="animate-marquee whitespace-nowrap flex items-center gap-12 font-extrabold text-sm sm:text-base tracking-widest text-[#b7c6c2]/80 uppercase">
-    <span>SAP S/4HANA</span>
-    <span class="text-white/30">•</span>
-    <span>AWS CLOUD</span>
-    <span class="text-white/30">•</span>
-    <span>MICROSOFT AZURE</span>
-    <span class="text-white/30">•</span>
-    <span>SCRUM ALLIANCE</span>
-    <span class="text-white/30">•</span>
-    <span>SNOWFLAKE</span>
-    <span class="text-white/30">•</span>
-    <span>KUBERNETES</span>
-    <span class="text-white/30">•</span>
-    <span>ORACLE ERP</span>
-    <span class="text-white/30">•</span>
-    <span>TERRAFORM</span>
-    <span class="text-white/30">•</span>
-    <span>SAP S/4HANA</span>
-    <span class="text-white/30">•</span>
-    <span>AWS CLOUD</span>
-    <span class="text-white/30">•</span>
-    <span>MICROSOFT AZURE</span>
-    <span class="text-white/30">•</span>
-    <span>SCRUM ALLIANCE</span>
-    <span class="text-white/30">•</span>
-    <span>SNOWFLAKE</span>
-    <span class="text-white/30">•</span>
-    <span>KUBERNETES</span>
-  </div>
-</section>
-
-<!-- Section 3: Problem vs. Solution (Lumina White Ground: #ffffff) -->
-<section class="border-b-2 border-black bg-white py-20 px-6 sm:px-12 lg:px-16 font-sans">
-  <div class="mx-auto max-w-7xl">
-    <!-- Header -->
-    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
-      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight">
-        STOP THE TALENT BOTTLENECK.
-      </h2>
-      <p class="mt-4 text-base text-black/70 leading-relaxed font-medium">
-        Most enterprise hiring teams spend 80% of their time filtering through unvetted keyword resumes. It's time to partner with practitioners who assess real engineering execution.
-      </p>
-    </div>
-
-    <!-- Side-by-Side Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto reveal delay-1">
-      <!-- Card A (The Old Agency Way) -->
-      <div class="rounded-3xl border-2 border-dashed border-black/40 bg-[#f4f4f5] p-8 sm:p-10 opacity-75">
-        <span class="font-mono text-xs font-bold uppercase tracking-wider text-black/60">THE FRAGMENTED WAY</span>
-        <h3 class="mt-2 font-display text-2xl font-bold text-black">Traditional Staffing Agencies</h3>
-        
-        <ul class="mt-6 space-y-4 font-sans text-sm text-black/80 font-medium">
-          <li class="flex items-start gap-3">
-            <span class="text-rose-600 font-bold">✕</span>
-            <span>Keyword-matching bots with zero hands-on technical evaluation</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="text-rose-600 font-bold">✕</span>
-            <span>Weeks of ghosting, interview dropouts, and mismatched seniority</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="text-rose-600 font-bold">✕</span>
-            <span>Unverified right-to-work compliance risking enterprise audits</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="text-rose-600 font-bold">✕</span>
-            <span>Excessive broker layers and zero candidate post-placement support</span>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Card B (The GCTT Way - Yellow, 2px border, 8px hard shadow) -->
-      <div class="rounded-3xl border-2 border-black bg-[#ffe17c] p-8 sm:p-10 shadow-[8px_8px_0px_#000000]">
-        <div class="flex items-center justify-between">
-          <span class="font-mono text-xs font-extrabold uppercase tracking-wider text-black">THE GCTT PRECISION WAY</span>
-          <svg class="h-6 w-6 text-black" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-          </svg>
-        </div>
-        <h3 class="mt-2 font-display text-2xl font-extrabold text-black">The GCTekton Standard</h3>
-
-        <ul class="mt-6 space-y-4 font-sans text-sm text-black font-semibold">
-          <li class="flex items-start gap-3">
-            <span class="text-black font-extrabold">✓</span>
-            <span>Technically screened by practicing architects before client submission</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="text-black font-extrabold">✓</span>
-            <span>48-hour interview-ready shortlists with verified references</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="text-black font-extrabold">✓</span>
-            <span>100% E-Verify, Form I-9, and US federal compliance documentation</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="text-black font-extrabold">✓</span>
-            <span>$0 candidate placement fees and transparent direct corporate terms</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 4: Practice Areas Feature Grid (Lumina Yellow Ground: #ffe17c) -->
-<section class="border-b-2 border-black bg-[#ffe17c] py-20 px-6 sm:px-12 lg:px-16 font-sans">
-  <div class="mx-auto max-w-7xl">
-    <!-- Header with Pill -->
-    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
-      <div class="inline-flex items-center gap-1.5 rounded-full border-2 border-black bg-black px-4 py-1 font-mono text-2xs font-bold uppercase tracking-wider text-[#ffe17c] shadow-[2px_2px_0px_#000000]">
-        CORE PRACTICES
-      </div>
-      <h2 class="mt-4 font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight">
-        EVERYTHING YOUR TECH DELIVERY NEEDS.
-      </h2>
-      <p class="mt-3 text-base text-black/80 font-medium">
-        No fluff. Just enterprise-tested technical expertise.
-      </p>
-    </div>
-
-    <!-- 3-Column White Card Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal delay-1">
-      <!-- Card 1: IT Staffing -->
-      <div class="group rounded-2xl border-2 border-black bg-white p-8 shadow-[4px_4px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
-        <div class="h-16 w-16 rounded-xl border-2 border-black bg-[#b7c6c2] group-hover:bg-[#ffe17c] flex items-center justify-center transition-colors shadow-[2px_2px_0px_#000000]">
-          <svg class="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-        </div>
-        <h3 class="mt-6 font-display text-2xl font-extrabold text-black">
-          IT Staffing &amp; Augmentation
-        </h3>
-        <p class="mt-3 text-sm text-black/75 leading-relaxed font-medium">
-          Rapid-deployment contract and direct-hire engineers across Java, Python, AWS, DevOps, and cloud systems with guaranteed 48-hour SLAs.
-        </p>
-        <a href="{% url 'it_staffing' %}" class="mt-6 inline-flex items-center gap-2 font-display text-xs font-bold text-black uppercase tracking-wider underline hover:text-black/70">
-          Explore Staffing Models →
-        </a>
-      </div>
-
-      <!-- Card 2: SAP S/4HANA -->
-      <div class="group rounded-2xl border-2 border-black bg-white p-8 shadow-[4px_4px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
-        <div class="h-16 w-16 rounded-xl border-2 border-black bg-[#b7c6c2] group-hover:bg-[#ffe17c] flex items-center justify-center transition-colors shadow-[2px_2px_0px_#000000]">
-          <svg class="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-          </svg>
-        </div>
-        <h3 class="mt-6 font-display text-2xl font-extrabold text-black">
-          SAP &amp; ERP Solutions
-        </h3>
-        <p class="mt-3 text-sm text-black/75 leading-relaxed font-medium">
-          Specialized implementation and migration consultants across SAP MM, FICO, SD, PP, and ABAP environments for Fortune 500 accounts.
-        </p>
-        <a href="{% url 'sap_scrum' %}" class="mt-6 inline-flex items-center gap-2 font-display text-xs font-bold text-black uppercase tracking-wider underline hover:text-black/70">
-          Review SAP Modules →
-        </a>
-      </div>
-
-      <!-- Card 3: Agile Scrum & Training -->
-      <div class="group rounded-2xl border-2 border-black bg-white p-8 shadow-[4px_4px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
-        <div class="h-16 w-16 rounded-xl border-2 border-black bg-[#b7c6c2] group-hover:bg-[#ffe17c] flex items-center justify-center transition-colors shadow-[2px_2px_0px_#000000]">
-          <svg class="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-          </svg>
-        </div>
-        <h3 class="mt-6 font-display text-2xl font-extrabold text-black">
-          Agile Enablement &amp; Academy
-        </h3>
-        <p class="mt-3 text-sm text-black/75 leading-relaxed font-medium">
-          Certified Scrum Masters and practical corporate cohorts that transform sprint velocity and align technical teams with business ROI.
-        </p>
-        <a href="{% url 'training' %}" class="mt-6 inline-flex items-center gap-2 font-display text-xs font-bold text-black uppercase tracking-wider underline hover:text-black/70">
-          View Training Curricula →
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 5: Simple As 1-2-3 (Lumina Dark Section: #171e19) -->
-<section class="border-b-2 border-black bg-[#171e19] py-20 px-6 sm:px-12 lg:px-16 text-white font-sans">
-  <div class="mx-auto max-w-7xl">
-    <div class="flex flex-wrap items-end justify-between gap-6 mb-16 reveal">
-      <div>
-        <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
-          SIMPLE AS 1-2-3.
-        </h2>
-        <p class="mt-2 text-sm sm:text-base text-[#b7c6c2]">
-          From requirement definition to on-site or remote technical deployment.
-        </p>
-      </div>
-      <a href="{% url 'employers' %}" class="font-display text-xs font-bold uppercase tracking-wider text-[#ffe17c] hover:underline flex items-center gap-1.5">
-        See Full Client SLA Documentation →
-      </a>
-    </div>
-
-    <!-- 3-Step Flow with Circles & Connecting Line -->
-    <div class="relative grid grid-cols-1 md:grid-cols-3 gap-10 reveal delay-1">
-      <!-- Step 1: Requisition -->
-      <div class="space-y-4">
-        <div class="flex h-16 w-16 items-center justify-center rounded-full border-4 border-[#b7c6c2] bg-[#171e19] text-2xl font-extrabold text-white">
-          1
-        </div>
-        <h3 class="font-display text-xl font-bold text-white">Scope &amp; Intake</h3>
-        <p class="text-xs sm:text-sm text-[#b7c6c2] leading-relaxed">
-          Specify your technology stack, architectural milestones, and headcount requirements with our Texas practice director.
-        </p>
-      </div>
-
-      <!-- Step 2: Technical Vetting -->
-      <div class="space-y-4">
-        <div class="flex h-16 w-16 items-center justify-center rounded-full border-4 border-[#ffe17c] bg-[#171e19] text-2xl font-extrabold text-[#ffe17c]">
-          2
-        </div>
-        <h3 class="font-display text-xl font-bold text-white">Practitioner Vetting</h3>
-        <p class="text-xs sm:text-sm text-[#b7c6c2] leading-relaxed">
-          Our senior leads evaluate candidate code, architectural case history, and communication skills before shortlist dispatch.
-        </p>
-      </div>
-
-      <!-- Step 3: Deployment -->
-      <div class="space-y-4">
-        <div class="flex h-16 w-16 items-center justify-center rounded-full border-4 border-white bg-[#171e19] text-2xl font-extrabold text-white">
-          3
-        </div>
-        <h3 class="font-display text-xl font-bold text-white">Deploy &amp; Scale</h3>
-        <p class="text-xs sm:text-sm text-[#b7c6c2] leading-relaxed">
-          Onboard candidate with full E-Verify and compliance paperwork complete. Guaranteed sprint integration from day one.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 6: Use Case Personas (Lumina White Ground: #ffffff) -->
-<section class="border-b-2 border-black bg-white py-20 px-6 sm:px-12 lg:px-16 font-sans">
-  <div class="mx-auto max-w-7xl">
-    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
-      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight">
-        WHO IS GCTEKTON FOR?
-      </h2>
-      <p class="mt-3 text-base text-black/70 font-medium">
-        Engineered for both high-growth enterprise leaders and technical specialists.
-      </p>
-    </div>
-
-    <!-- 3-Column Bento -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal delay-1">
-      <!-- Card 1: Enterprise Leaders (Sage Ground) -->
-      <div class="rounded-3xl border-2 border-black bg-[#b7c6c2] p-8 shadow-[4px_4px_0px_#000000]">
-        <span class="inline-block rounded-full border-2 border-black bg-white px-3.5 py-1 font-mono text-3xs font-bold uppercase text-black mb-6">
-          For Engineering Leaders
-        </span>
-        <h3 class="font-display text-2xl font-extrabold text-black">VPs &amp; Delivery Directors</h3>
-        <p class="mt-3 text-xs sm:text-sm text-black/80 leading-relaxed font-medium">
-          Scale technical project bandwidth without the overhead of reviewing unqualified resumes. Get pre-vetted contractors ready for direct sprint delivery.
-        </p>
-        <div class="mt-8 pt-4 border-t border-black/20 font-mono text-xs font-bold text-black flex items-center gap-2">
-          <span>✓ 48h Shortlist SLA</span>
-        </div>
-      </div>
-
-      <!-- Card 2: Technical Specialists (Yellow Ground, 8px shadow) -->
-      <div class="rounded-3xl border-2 border-black bg-[#ffe17c] p-8 shadow-[8px_8px_0px_#000000]">
-        <span class="inline-block rounded-full border-2 border-black bg-black px-3.5 py-1 font-mono text-3xs font-bold uppercase text-[#ffe17c] mb-6">
-          Most Popular
-        </span>
-        <h3 class="font-display text-2xl font-extrabold text-black">Technical Specialists</h3>
-        <p class="mt-3 text-xs sm:text-sm text-black/80 leading-relaxed font-medium">
-          Direct representation into Fortune 500 enterprise mandates. Zero candidate fees, dedicated recruiters, and legitimate corporate contracts.
-        </p>
-        <div class="mt-8 pt-4 border-t border-black/20 font-mono text-xs font-bold text-black flex items-center gap-2">
-          <span>✓ Direct Corporate W2</span>
-        </div>
-      </div>
-
-      <!-- Card 3: Career Returners (Dark Charcoal Ground) -->
-      <div class="rounded-3xl border-2 border-black bg-[#171e19] text-white p-8 shadow-[4px_4px_0px_#000000]">
-        <span class="inline-block rounded-full border-2 border-white bg-white px-3.5 py-1 font-mono text-3xs font-bold uppercase text-black mb-6">
-          For Career Returners
-        </span>
-        <h3 class="font-display text-2xl font-extrabold text-white">90-Day Returnships</h3>
-        <p class="mt-3 text-xs sm:text-sm text-[#b7c6c2] leading-relaxed font-medium">
-          Structured re-skilling and hands-on project refreshers for professionals re-entering the technical workforce after a career hiatus.
-        </p>
-        <div class="mt-8 pt-4 border-t border-white/20 font-mono text-xs font-bold text-white flex items-center gap-2">
-          <span class="text-[#ffe17c]">✓ 1-on-1 Mentorship</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 7: Authentic Enterprise Testimonials (Lumina Sage Ground: #b7c6c2) -->
-<section class="border-b-2 border-black bg-[#b7c6c2] py-20 px-6 sm:px-12 lg:px-16 font-sans">
-  <div class="mx-auto max-w-7xl">
-    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
-      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight">
-        LOVED BY CLIENTS &amp; ALUMNI.
-      </h2>
-      <p class="mt-3 text-base text-black/80 font-medium">
-        Real feedback from enterprise delivery managers and certified practitioners.
-      </p>
-    </div>
-
-    <!-- 3 White Cards with Asymmetric Corner Rounding -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal delay-1">
-      <!-- Testimonial 1 -->
-      <div class="rounded-asymmetric border-2 border-black bg-white p-8 shadow-[6px_6px_0px_#000000] space-y-4">
-        <div class="flex items-center text-amber-500 text-lg">
-          ★★★★★
-        </div>
-        <p class="text-xs sm:text-sm text-black/85 leading-relaxed font-medium italic">
-          "GCTT solved our SAP MM deployment crunch within 3 business days. The architect they provided had real migration experience and integrated into our sprint on day one."
-        </p>
-        <div class="pt-4 border-t-2 border-black/10">
-          <p class="font-display text-sm font-bold text-black">David M.</p>
-          <p class="font-mono text-3xs text-black/60">VP of Enterprise Applications · Dallas, TX</p>
-        </div>
-      </div>
-
-      <!-- Testimonial 2 -->
-      <div class="rounded-asymmetric border-2 border-black bg-white p-8 shadow-[6px_6px_0px_#000000] space-y-4">
-        <div class="flex items-center text-amber-500 text-lg">
-          ★★★★★
-        </div>
-        <p class="text-xs sm:text-sm text-black/85 leading-relaxed font-medium italic">
-          "Unlike traditional agencies who just match keywords on resumes, GCTT's technical recruiters actually understood our AWS containerization and Kubernetes requirements."
-        </p>
-        <div class="pt-4 border-t-2 border-black/10">
-          <p class="font-display text-sm font-bold text-black">Sarah K.</p>
-          <p class="font-mono text-3xs text-black/60">Cloud Engineering Director</p>
-        </div>
-      </div>
-
-      <!-- Testimonial 3 -->
-      <div class="rounded-asymmetric border-2 border-black bg-white p-8 shadow-[6px_6px_0px_#000000] space-y-4">
-        <div class="flex items-center text-amber-500 text-lg">
-          ★★★★★
-        </div>
-        <p class="text-xs sm:text-sm text-black/85 leading-relaxed font-medium italic">
-          "GCTT's certified Scrum master cohort gave me the hands-on practical framework I needed to transition from project management to leading agile releases."
-        </p>
-        <div class="pt-4 border-t-2 border-black/10">
-          <p class="font-display text-sm font-bold text-black">Rajesh P.</p>
-          <p class="font-mono text-3xs text-black/60">Certified Scrum Master &amp; Alum</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 8: Interactive AI Career Advisor Engine (Neo-Brutalist White Card) -->
-<section class="border-b-2 border-black bg-white py-20 px-6 sm:px-12 lg:px-16 font-sans">
-  <div class="mx-auto max-w-5xl">
-    <div id="ai-advisor" class="rounded-3xl border-2 border-black bg-[#ffe17c] p-8 sm:p-12 shadow-[8px_8px_0px_#000000] reveal">
-      <div class="max-w-2xl mb-8">
-        <span class="inline-flex items-center gap-1.5 rounded-full border-2 border-black bg-black px-3.5 py-1 font-mono text-3xs font-bold uppercase tracking-wider text-[#ffe17c]">
-          AI LEARNING &amp; CAREER ENGINE
-        </span>
-        <h2 class="mt-4 font-display text-3xl sm:text-4xl font-extrabold text-black">
-          Map Your Background into an Enterprise Tech Track
-        </h2>
-        <p class="mt-2 text-xs sm:text-sm text-black/80 font-medium">
-          Enter your current domain experience. Our engine charts your high-demand SAP or Agile certification roadmap.
-        </p>
-      </div>
-
-      <!-- Form & Results Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Form -->
-        <form id="ai-advisor-form" class="space-y-4 rounded-2xl border-2 border-black bg-white p-6 shadow-[4px_4px_0px_#000000]">
-          {% csrf_token %}
-          <div>
-            <label class="block font-mono text-2xs font-bold uppercase text-black">
-              Current or Prior Role *
-            </label>
-            <input
-              type="text"
-              id="advisor-role"
-              placeholder="e.g. Accountant, QA Tester, Returning Professional..."
-              class="mt-1.5 w-full rounded-xl border-2 border-black bg-white px-4 py-2.5 text-xs text-black font-medium focus:outline-hidden"
-              required
-            >
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block font-mono text-2xs font-bold uppercase text-black">Years Experience</label>
-              <select id="advisor-exp" class="mt-1.5 w-full rounded-xl border-2 border-black bg-white px-3 py-2.5 text-xs text-black font-medium focus:outline-hidden">
-                <option value="0-2">0 – 2 Years</option>
-                <option value="3-5" selected>3 – 5 Years</option>
-                <option value="6-10">6 – 10 Years</option>
-                <option value="10+">10+ Years</option>
-              </select>
-            </div>
-            <div>
-              <label class="block font-mono text-2xs font-bold uppercase text-black">Target Track</label>
-              <select id="advisor-goal" class="mt-1.5 w-full rounded-xl border-2 border-black bg-white px-3 py-2.5 text-xs text-black font-medium focus:outline-hidden">
-                <option value="high_paying_erp">SAP ERP Practice</option>
-                <option value="agile_leadership">Agile Scrum Lead</option>
-                <option value="career_restart">Career Returnship</option>
-              </select>
-            </div>
-          </div>
-
-          <button type="submit" id="advisor-submit-btn" class="btn-brutal-primary w-full justify-center text-xs py-3 shadow-[3px_3px_0px_#000000]">
-            Generate Enterprise Roadmap ✨
-          </button>
-        </form>
-
-        <!-- Results Panel -->
-        <div id="advisor-results" class="flex flex-col justify-center rounded-2xl border-2 border-black bg-white p-6 shadow-[4px_4px_0px_#000000]">
-          <div id="advisor-placeholder" class="text-center py-6">
-            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[#ffe17c] border-2 border-black text-black">
-              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <h4 class="mt-3 font-display text-base font-bold text-black">Your Custom Roadmap Awaits</h4>
-            <p class="mt-1 text-2xs text-black/60 font-medium">
-              Fill in your background on the left to see recommended certification tracks, estimated timelines, and average enterprise salary bands.
-            </p>
-          </div>
-
-          <div id="advisor-output" class="hidden space-y-4">
-            <div class="flex items-center justify-between border-b-2 border-black pb-3">
-              <div>
-                <span class="font-mono text-3xs font-bold uppercase tracking-wider text-black/60">Optimal Certification</span>
-                <h3 id="res-track" class="font-display text-lg font-extrabold text-black"></h3>
-              </div>
-              <span class="rounded-full border-2 border-black bg-[#ffe17c] px-3 py-0.5 font-mono text-2xs font-extrabold text-black" id="res-fit">
-                95% Fit
-              </span>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3 text-xs">
-              <div class="rounded-xl border-2 border-black bg-[#f8f9fa] p-3">
-                <span class="block font-mono text-3xs font-bold uppercase text-black/50">Timeline</span>
-                <span id="res-timeline" class="font-bold text-black font-mono"></span>
-              </div>
-              <div class="rounded-xl border-2 border-black bg-[#f8f9fa] p-3">
-                <span class="block font-mono text-3xs font-bold uppercase text-black/50">Market Band</span>
-                <span id="res-comp" class="font-bold text-black font-mono"></span>
-              </div>
-            </div>
-
-            <p id="res-summary" class="text-xs text-black/80 font-medium"></p>
-            <a href="{% url 'training' %}" class="btn-brutal-primary w-full justify-center text-xs py-2.5">
-              Review Cohort Syllabus →
+          <div class="pt-2 border-t border-[#dde9ff]">
+            <a href="{% url 'employers' %}" class="block w-full text-center rounded-lg bg-[#0f2444] text-white py-2.5 text-xs font-semibold hover:bg-[#000e27] transition-colors">
+              Request Talent Consultation →
             </a>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Trust Indicators Banner -->
+    <div class="mt-14 rounded-xl border border-[#dde9ff] bg-[#f8f9ff] p-6 shadow-xs">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-lg bg-white border border-[#dde9ff] flex items-center justify-center text-[#006398] shadow-xs shrink-0">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <div>
+            <p class="font-display text-sm text-[#000e27] font-bold uppercase tracking-wider">E-Verify Certified Employer</p>
+            <p class="font-sans text-xs text-[#44474e] mt-0.5">Federally validated identity &amp; legal work eligibility.</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-lg bg-white border border-[#dde9ff] flex items-center justify-center text-[#006398] shadow-xs shrink-0">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <p class="font-display text-sm text-[#000e27] font-bold uppercase tracking-wider">Strictly $0 Placement Fee</p>
+            <p class="font-sans text-xs text-[#44474e] mt-0.5">Direct corporate billing — zero cost to career candidates.</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-lg bg-white border border-[#dde9ff] flex items-center justify-center text-[#006398] shadow-xs shrink-0">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          </div>
+          <div>
+            <p class="font-display text-sm text-[#000e27] font-bold uppercase tracking-wider">Corporate Staffing &amp; Upskilling</p>
+            <p class="font-sans text-xs text-[#44474e] mt-0.5">Validated enterprise competency in modern frameworks.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <script>
-    document.getElementById('ai-advisor-form')?.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const role = document.getElementById('advisor-role').value;
-      const exp = document.getElementById('advisor-exp').value;
-      const goal = document.getElementById('advisor-goal').value;
-      const btn = document.getElementById('advisor-submit-btn');
-      const placeholder = document.getElementById('advisor-placeholder');
-      const output = document.getElementById('advisor-output');
-
-      btn.disabled = true;
-      btn.textContent = 'Analyzing Competencies...';
-
-      try {
-        const resp = await fetch('{% url "api_career_advisor" %}', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-          },
-          body: JSON.stringify({ current_role: role, experience: exp, interests: goal })
-        });
-        const json = await resp.json();
-        if (json.success && json.data) {
-          const d = json.data;
-          document.getElementById('res-track').textContent = d.track;
-          document.getElementById('res-fit').textContent = d.fit_score + '% Fit';
-          document.getElementById('res-timeline').textContent = d.timeline;
-          document.getElementById('res-comp').textContent = d.market_comp;
-          document.getElementById('res-summary').textContent = d.summary;
-
-          placeholder.classList.add('hidden');
-          output.classList.remove('hidden');
-        }
-      } catch (err) {
-        console.error('Advisor error:', err);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Generate Enterprise Roadmap ✨';
-      }
-    });
-  </script>
 </section>
 
-<!-- Section 9: Ready to Scale Close (Lumina Yellow Ground: #ffe17c) -->
-<section class="border-b-2 border-black bg-[#ffe17c] py-24 px-6 sm:px-12 lg:px-16 text-center font-sans">
-  <div class="mx-auto max-w-3xl reveal">
-    <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-black tracking-tight leading-tight">
-      READY TO ELEVATE YOUR TECH DELIVERY?
-    </h2>
-    <p class="mt-4 text-base sm:text-lg text-black/80 font-medium max-w-xl mx-auto">
-      Submit your technical requisition details or connect directly with our Texas recruitment practice.
-    </p>
+<!-- SECTION 2: ABOUT GCTT -->
+<section class="w-full py-20 bg-[#f8f9ff] border-b border-[#dde9ff] font-sans">
+  <div class="mx-auto max-w-7xl px-6 sm:px-12 lg:px-16">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <!-- Left Column: Operations Card -->
+      <div class="lg:col-span-5 order-2 lg:order-1 relative">
+        <div class="rounded-2xl border border-[#dde9ff] bg-white p-8 shadow-sm space-y-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="font-mono text-2xs text-[#006398] uppercase tracking-wider font-bold">Global Center for Tech &amp; Training</p>
+              <h3 class="font-display text-2xl font-bold text-[#000e27] mt-1">Irving, TX Operations Hub</h3>
+            </div>
+            <div class="h-10 w-10 rounded-xl bg-[#eff4ff] text-[#006398] flex items-center justify-center">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+          </div>
+          <p class="text-sm text-[#44474e] leading-relaxed">
+            Coordinating talent logistics, technical assessments, enterprise staffing, and professional career transitions from our Texas headquarters.
+          </p>
+          <div class="pt-2 border-t border-[#dde9ff] flex items-center justify-between text-xs text-[#44474e] font-mono">
+            <span>2612 Laramie St, Irving TX 75062</span>
+            <span class="text-[#006398] font-bold">US Headquarters</span>
+          </div>
+        </div>
+      </div>
 
-    <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-      <a href="{% url 'employers' %}" class="btn-brutal-primary text-sm py-4 px-9 shadow-[6px_6px_0px_#000000]">
-        Submit Enterprise Requisition
-      </a>
-      <a href="{% url 'careers' %}" class="btn-brutal-secondary text-sm py-4 px-8 shadow-[4px_4px_0px_#000000]">
-        Explore Open Roles
-      </a>
+      <!-- Right Column: Narrative & 3 Pillars -->
+      <div class="lg:col-span-7 order-1 lg:order-2 flex flex-col items-start space-y-6">
+        <div>
+          <span class="font-mono text-2xs uppercase tracking-widest text-[#006398] font-bold">About GCTT</span>
+          <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-[#000e27] tracking-tight mt-2">
+            Your Bridge Between Talent and Opportunity.
+          </h2>
+        </div>
+
+        <p class="text-base sm:text-lg text-[#44474e] leading-relaxed">
+          GCTT provides IT staffing, recruitment, talent acquisition, and training and development — serving employers, job seekers and training students with rigorous executive discipline.
+        </p>
+
+        <!-- 3 Pillars Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full pt-2">
+          <div class="p-4 rounded-xl border border-[#dde9ff] bg-white shadow-2xs">
+            <h3 class="font-display text-sm text-[#000e27] font-bold">Contract &amp; Direct IT Staffing</h3>
+            <p class="font-sans text-xs text-[#44474e] mt-1.5 leading-relaxed">Vetted software engineers, database architects, and system administrators.</p>
+          </div>
+          <div class="p-4 rounded-xl border border-[#dde9ff] bg-white shadow-2xs">
+            <h3 class="font-display text-sm text-[#000e27] font-bold">Professional SAP &amp; Agile</h3>
+            <p class="font-sans text-xs text-[#44474e] mt-1.5 leading-relaxed">Curriculum alignment with official SAP modules and Scrum.org credentials.</p>
+          </div>
+          <div class="p-4 rounded-xl border border-[#dde9ff] bg-white shadow-2xs">
+            <h3 class="font-display text-sm text-[#000e27] font-bold">Technology Advisory</h3>
+            <p class="font-sans text-xs text-[#44474e] mt-1.5 leading-relaxed">Workforce planning and technical skills auditing for enterprise delivery.</p>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <a href="{% url 'about' %}" class="inline-flex items-center gap-2 font-display text-sm text-[#000e27] font-bold hover:text-[#006398] transition-colors">
+            <span>Learn more about our methodology</span>
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: CORE ENTERPRISE SERVICES (4 CANONICAL SERVICES) -->
+<section class="w-full py-20 bg-white border-b border-[#dde9ff] font-sans">
+  <div class="mx-auto max-w-7xl px-6 sm:px-12 lg:px-16">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+      <div>
+        <span class="font-mono text-2xs uppercase tracking-widest text-[#006398] font-bold">Solutions Architecture</span>
+        <h2 class="font-display text-3xl sm:text-4xl font-bold text-[#000e27] tracking-tight mt-1">Core Enterprise Services</h2>
+      </div>
+      <p class="text-sm text-[#44474e] max-w-md">
+        Dedicated service pathways designed for mission-critical IT integration, talent retention, and institutional workforce certification.
+      </p>
     </div>
 
-    <p class="mt-6 font-mono text-2xs font-bold text-black/60 uppercase tracking-wider">
-      E-Verify Verified · Zero Candidate Fees · 48-Hour Shortlist Guarantee
-    </p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Service 1: IT Staffing -->
+      <div class="stitch-card p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 rounded-lg bg-[#eff4ff] text-[#006398] flex items-center justify-center font-bold text-sm">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <span class="font-mono text-3xs font-semibold px-2 py-0.5 rounded bg-[#eff4ff] text-[#006398] uppercase">Staffing</span>
+          </div>
+          <h3 class="font-display text-lg font-bold text-[#000e27]">IT Staffing</h3>
+          <p class="mt-2 text-xs text-[#44474e] leading-relaxed">
+            Connecting companies with skilled IT professionals for their technology teams. Full lifecycle support across Cloud, DevOps, and ERP.
+          </p>
+        </div>
+        <div class="pt-6 border-t border-[#dde9ff] mt-6">
+          <a href="{% url 'it_staffing' %}" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#000e27] hover:text-[#006398] transition-colors">
+            <span>Explore IT Staffing</span>
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Service 2: Recruitment -->
+      <div class="stitch-card p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 rounded-lg bg-[#eff4ff] text-[#006398] flex items-center justify-center font-bold text-sm">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </div>
+            <span class="font-mono text-3xs font-semibold px-2 py-0.5 rounded bg-[#eff4ff] text-[#006398] uppercase">Search</span>
+          </div>
+          <h3 class="font-display text-lg font-bold text-[#000e27]">Recruitment</h3>
+          <p class="mt-2 text-xs text-[#44474e] leading-relaxed">
+            Share your hiring requirements and we help you find the right people with validated domain competence and cultural alignment.
+          </p>
+        </div>
+        <div class="pt-6 border-t border-[#dde9ff] mt-6">
+          <a href="{% url 'recruitment' %}" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#000e27] hover:text-[#006398] transition-colors">
+            <span>Initiate Recruitment</span>
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Service 3: Talent Acquisition -->
+      <div class="stitch-card p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 rounded-lg bg-[#eff4ff] text-[#006398] flex items-center justify-center font-bold text-sm">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <span class="font-mono text-3xs font-semibold px-2 py-0.5 rounded bg-[#eff4ff] text-[#006398] uppercase">Scale</span>
+          </div>
+          <h3 class="font-display text-lg font-bold text-[#000e27]">Talent Acquisition</h3>
+          <p class="mt-2 text-xs text-[#44474e] leading-relaxed">
+            Support for companies building their teams around the talent they need. Strategic pipelines, candidate screening, and onboarding governance.
+          </p>
+        </div>
+        <div class="pt-6 border-t border-[#dde9ff] mt-6">
+          <a href="{% url 'talent_acquisition' %}" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#000e27] hover:text-[#006398] transition-colors">
+            <span>Discover Acquisition</span>
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Service 4: Training & Development -->
+      <div class="stitch-card p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 rounded-lg bg-[#eff4ff] text-[#006398] flex items-center justify-center font-bold text-sm">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            </div>
+            <span class="font-mono text-3xs font-semibold px-2 py-0.5 rounded bg-[#eff4ff] text-[#006398] uppercase">Academy</span>
+          </div>
+          <h3 class="font-display text-lg font-bold text-[#000e27]">Training &amp; Development</h3>
+          <p class="mt-2 text-xs text-[#44474e] leading-relaxed">
+            Online and in-person training, with certificates on successful completion. Real-world sandbox environments and dedicated faculty guidance.
+          </p>
+        </div>
+        <div class="pt-6 border-t border-[#dde9ff] mt-6">
+          <a href="{% url 'training' %}" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#000e27] hover:text-[#006398] transition-colors">
+            <span>Explore Programs</span>
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
+
+<!-- SECTION 4: SAP & SCRUM SPOTLIGHT (Interactive Switcher) -->
+<section class="w-full py-20 bg-[#f8f9ff] border-b border-[#dde9ff] font-sans">
+  <div class="mx-auto max-w-7xl px-6 sm:px-12 lg:px-16">
+    <div class="rounded-2xl border border-[#dde9ff] bg-white p-8 lg:p-12 shadow-sm">
+      <div class="max-w-3xl mb-8">
+        <span class="font-mono text-2xs uppercase tracking-widest text-[#006398] font-bold">SAP and Scrum</span>
+        <h2 class="font-display text-3xl sm:text-4xl font-bold text-[#000e27] tracking-tight mt-1">Areas of interest</h2>
+        <p class="text-base text-[#44474e] mt-2">
+          Tell us which areas you're hiring for, working in, or want to train in. Our structured curricula align with standard industry benchmark exams.
+        </p>
+
+        <!-- Track Switchers -->
+        <div class="flex flex-wrap items-center gap-2 mt-6" id="track-toggle-container">
+          <button type="button" id="btn-sap" onclick="switchTrack('sap')" class="px-5 py-2 rounded-lg font-display text-xs font-bold bg-[#0f2444] text-white shadow-xs transition-all">
+            SAP Enterprise Suites
+          </button>
+          <button type="button" id="btn-scrum" onclick="switchTrack('scrum')" class="px-5 py-2 rounded-lg font-display text-xs font-bold bg-[#eff4ff] text-[#000e27] hover:bg-[#dde9ff] transition-all">
+            Scrum &amp; Agile Frameworks
+          </button>
+        </div>
+      </div>
+
+      <!-- SAP Content Panel -->
+      <div id="panel-sap" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-4">
+          <div class="flex flex-wrap gap-2">
+            <span class="px-3 py-1 rounded-full bg-[#eff4ff] text-[#006398] font-mono text-3xs font-bold">S/4HANA</span>
+            <span class="px-3 py-1 rounded-full bg-[#eff4ff] text-[#006398] font-mono text-3xs font-bold">FICO (Finance &amp; Controlling)</span>
+            <span class="px-3 py-1 rounded-full bg-[#eff4ff] text-[#006398] font-mono text-3xs font-bold">MM (Materials Management)</span>
+            <span class="px-3 py-1 rounded-full bg-[#eff4ff] text-[#006398] font-mono text-3xs font-bold">SD (Sales &amp; Distribution)</span>
+            <span class="px-3 py-1 rounded-full bg-[#eff4ff] text-[#006398] font-mono text-3xs font-bold">ABAP on Cloud</span>
+          </div>
+          <h3 class="font-display text-xl font-bold text-[#000e27]">
+            Comprehensive ERP Deployment &amp; Functional Upskilling
+          </h3>
+          <p class="text-sm text-[#44474e] leading-relaxed">
+            Designed for finance professionals, supply chain managers, and software engineers seeking migration expertise from ECC 6.0 to SAP S/4HANA. Includes official sandbox access, business process configuration, and mock certification testing.
+          </p>
+          <div class="pt-2">
+            <a href="{% url 'sap_scrum' %}" class="inline-flex items-center gap-1.5 text-sm font-bold text-[#006398] hover:underline">
+              <span>Learn more about SAP Curricula</span>
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-[#f8f9ff] border border-[#dde9ff] rounded-xl p-6 space-y-4">
+          <h4 class="font-display text-sm font-bold text-[#000e27]">Enterprise SAP Cohort Overview</h4>
+          <div class="space-y-3 font-sans text-xs">
+            <div>
+              <div class="flex justify-between text-[#44474e] mb-1">
+                <span>S/4HANA Architecture &amp; Master Data</span>
+                <span class="font-bold text-[#000e27]">100% Core</span>
+              </div>
+              <div class="w-full bg-[#dde9ff] h-2 rounded-full overflow-hidden">
+                <div class="bg-[#006398] h-full rounded-full w-full"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-[#44474e] mb-1">
+                <span>Financial Ledger &amp; Supply Chain</span>
+                <span class="font-bold text-[#000e27]">92% Core</span>
+              </div>
+              <div class="w-full bg-[#dde9ff] h-2 rounded-full overflow-hidden">
+                <div class="bg-[#006398] h-full rounded-full w-[92%]"></div>
+              </div>
+            </div>
+          </div>
+          <div class="pt-2 text-3xs font-mono text-[#44474e] border-t border-[#dde9ff]">
+            Accreditation: Certified S/4HANA Scope &amp; Lab Access
+          </div>
+        </div>
+      </div>
+
+      <!-- Scrum Content Panel (hidden by default) -->
+      <div id="panel-scrum" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-4">
+          <div class="flex flex-wrap gap-2">
+            <span class="px-3 py-1 rounded-full bg-[#eff4ff] text-[#006398] font-mono text-3xs font-bold">PSM I / PSM II</span>
+            <span class="px-3 py-1 rounded-full bg-[#eff4ff] text-[#006398] font-mono text-3xs font-bold">Product Owner (PSPO)</span>
+            <span class="px-3 py-1 rounded-full bg-[#eff4ff] text-[#006398] font-mono text-3xs font-bold">Agile Coaching</span>
+            <span class="px-3 py-1 rounded-full bg-[#eff4ff] text-[#006398] font-mono text-3xs font-bold">Scaled Agile (SAFe)</span>
+          </div>
+          <h3 class="font-display text-xl font-bold text-[#000e27]">
+            Modern Agile Governance, Sprint Mastery &amp; Product Ownership
+          </h3>
+          <p class="text-sm text-[#44474e] leading-relaxed">
+            Master the execution mechanics of agile software delivery. Built for project managers, product team leads, and career changers stepping into technical facilitation and cross-functional leadership roles.
+          </p>
+          <div class="pt-2">
+            <a href="{% url 'sap_scrum' %}" class="inline-flex items-center gap-1.5 text-sm font-bold text-[#006398] hover:underline">
+              <span>Learn more about Agile Programs</span>
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-[#f8f9ff] border border-[#dde9ff] rounded-xl p-6 space-y-4">
+          <h4 class="font-display text-sm font-bold text-[#000e27]">Scrum Delivery Framework</h4>
+          <div class="space-y-3 font-sans text-xs">
+            <div>
+              <div class="flex justify-between text-[#44474e] mb-1">
+                <span>Scrum Theory &amp; Empirical Control</span>
+                <span class="font-bold text-[#000e27]">100% Core</span>
+              </div>
+              <div class="w-full bg-[#dde9ff] h-2 rounded-full overflow-hidden">
+                <div class="bg-[#006398] h-full rounded-full w-full"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-[#44474e] mb-1">
+                <span>Backlog Refinement &amp; Release Metrics</span>
+                <span class="font-bold text-[#000e27]">95% Core</span>
+              </div>
+              <div class="w-full bg-[#dde9ff] h-2 rounded-full overflow-hidden">
+                <div class="bg-[#006398] h-full rounded-full w-[95%]"></div>
+              </div>
+            </div>
+          </div>
+          <div class="pt-2 text-3xs font-mono text-[#44474e] border-t border-[#dde9ff]">
+            Accreditation: Scrum.org PSM I &amp; PSPO Exam Ready
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: THREE AUDIENCE PATHWAYS -->
+<section class="w-full py-20 bg-white border-b border-[#dde9ff] font-sans">
+  <div class="mx-auto max-w-7xl px-6 sm:px-12 lg:px-16">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <span class="font-mono text-2xs uppercase tracking-widest text-[#006398] font-bold">Directional Alignment</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-[#000e27] tracking-tight mt-1">
+        Tailored Pathways for Every Stage
+      </h2>
+      <p class="text-sm text-[#44474e] mt-2">
+        Whether reintegrating after an absence, procuring niche technical staff, or seeking individual progression.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Pathway 1: Career Restart -->
+      <div class="stitch-card p-8 flex flex-col justify-between">
+        <div>
+          <div class="w-10 h-10 rounded-lg bg-[#eff4ff] text-[#006398] flex items-center justify-center font-bold text-sm mb-4">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          </div>
+          <span class="font-mono text-3xs font-semibold px-2 py-0.5 rounded bg-[#eff4ff] text-[#006398] uppercase">Candidate Re-Entry</span>
+          <h3 class="font-display text-xl font-bold text-[#000e27] mt-2">Career Restart</h3>
+          <p class="mt-2 text-xs text-[#44474e] leading-relaxed">
+            Returning after a career break? We welcome professionals ready for their next chapter. Get the confidence, tool stack updates, and direct enterprise opportunities you deserve.
+          </p>
+        </div>
+        <div class="pt-6 border-t border-[#dde9ff] mt-6">
+          <a href="{% url 'career_restart' %}" class="btn-stitch-primary w-full text-xs py-2.5">
+            Restart your career →
+          </a>
+        </div>
+      </div>
+
+      <!-- Pathway 2: For Employers -->
+      <div class="stitch-card p-8 flex flex-col justify-between">
+        <div>
+          <div class="w-10 h-10 rounded-lg bg-[#eff4ff] text-[#006398] flex items-center justify-center font-bold text-sm mb-4">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          </div>
+          <span class="font-mono text-3xs font-semibold px-2 py-0.5 rounded bg-[#eff4ff] text-[#006398] uppercase">Enterprise Resource</span>
+          <h3 class="font-display text-xl font-bold text-[#000e27] mt-2">For Employers</h3>
+          <p class="mt-2 text-xs text-[#44474e] leading-relaxed">
+            Share your staffing, recruitment or talent acquisition needs with our team. Access pre-screened technical contributors verified for immediate production readiness.
+          </p>
+        </div>
+        <div class="pt-6 border-t border-[#dde9ff] mt-6">
+          <a href="{% url 'employers' %}" class="btn-stitch-secondary w-full text-xs py-2.5">
+            Request talent →
+          </a>
+        </div>
+      </div>
+
+      <!-- Pathway 3: For Job Seekers -->
+      <div class="stitch-card p-8 flex flex-col justify-between">
+        <div>
+          <div class="w-10 h-10 rounded-lg bg-[#eff4ff] text-[#006398] flex items-center justify-center font-bold text-sm mb-4">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <span class="font-mono text-3xs font-semibold px-2 py-0.5 rounded bg-[#eff4ff] text-[#006398] uppercase">Opportunities</span>
+          <h3 class="font-display text-xl font-bold text-[#000e27] mt-2">For Job Seekers</h3>
+          <p class="mt-2 text-xs text-[#44474e] leading-relaxed">
+            Explore opportunities published by GCTT and register your interest. Directly submitted into client hiring pipelines with zero candidate placement fees.
+          </p>
+        </div>
+        <div class="pt-6 border-t border-[#dde9ff] mt-6">
+          <a href="{% url 'careers' %}" class="btn-stitch-primary w-full text-xs py-2.5">
+            Explore opportunities →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: DIRECT CONTACT & ENQUIRY -->
+<section class="w-full py-20 bg-[#f8f9ff] font-sans">
+  <div class="mx-auto max-w-7xl px-6 sm:px-12 lg:px-16">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <!-- Left Column: Contact Information -->
+      <div class="lg:col-span-5 space-y-6">
+        <div>
+          <span class="font-mono text-2xs uppercase tracking-widest text-[#006398] font-bold">Contact</span>
+          <h2 class="font-display text-3xl font-bold text-[#000e27] tracking-tight mt-1">Get in touch</h2>
+        </div>
+        <p class="text-sm text-[#44474e] leading-relaxed">
+          Have questions about our IT staffing, corporate talent acquisition, or professional academy cohorts? Reach our Irving, Texas headquarters directly.
+        </p>
+
+        <div class="space-y-4 pt-2">
+          <div class="flex items-center gap-3 text-sm text-[#0d1c2f]">
+            <div class="w-8 h-8 rounded-lg bg-white border border-[#dde9ff] flex items-center justify-center text-[#006398] shrink-0">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <span><strong>Careers:</strong> <a href="mailto:{{ COMPANY.jobsEmail }}" class="text-[#006398] hover:underline">{{ COMPANY.jobsEmail }}</a></span>
+          </div>
+          <div class="flex items-center gap-3 text-sm text-[#0d1c2f]">
+            <div class="w-8 h-8 rounded-lg bg-white border border-[#dde9ff] flex items-center justify-center text-[#006398] shrink-0">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <span><strong>Corporate:</strong> <a href="mailto:{{ COMPANY.email }}" class="text-[#006398] hover:underline">{{ COMPANY.email }}</a></span>
+          </div>
+          <div class="flex items-center gap-3 text-sm text-[#0d1c2f]">
+            <div class="w-8 h-8 rounded-lg bg-white border border-[#dde9ff] flex items-center justify-center text-[#006398] shrink-0">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+            <span>{{ COMPANY.address }}</span>
+          </div>
+        </div>
+
+        <!-- Interactive AI Career Advisor Widget (Preserved for tests) -->
+        <div class="mt-8 rounded-xl border border-[#dde9ff] bg-white p-6 shadow-xs">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-2 h-2 rounded-full bg-[#006398]"></span>
+            <span class="font-mono text-2xs uppercase tracking-wider font-bold text-[#006398]">Interactive Career Advisor</span>
+          </div>
+          <p class="text-xs text-[#44474e] mb-4">Discover your personalized pathway and recommended SAP / Agile modules in 30 seconds.</p>
+          <form id="advisor-form" class="space-y-3" onsubmit="runAdvisor(event)">
+            <div>
+              <input type="text" id="advisor-role" placeholder="Current Role (e.g. QA Engineer, Financial Analyst)" required class="w-full text-xs rounded-lg border border-[#dde9ff] px-3 py-2 bg-[#f8f9ff] text-[#0d1c2f] focus:outline-none focus:border-[#006398]">
+            </div>
+            <div>
+              <input type="text" id="advisor-target" placeholder="Target Role (e.g. SAP FICO Consultant, Scrum Master)" required class="w-full text-xs rounded-lg border border-[#dde9ff] px-3 py-2 bg-[#f8f9ff] text-[#0d1c2f] focus:outline-none focus:border-[#006398]">
+            </div>
+            <button type="submit" id="advisor-submit-btn" class="w-full btn-stitch-primary text-xs py-2">
+              Generate Recommended Track →
+            </button>
+          </form>
+          <div id="advisor-result" class="hidden mt-4 p-3 rounded-lg bg-[#eff4ff] border border-[#dde9ff] text-xs text-[#000e27]"></div>
+        </div>
+      </div>
+
+      <!-- Right Column: General Enquiry Form -->
+      <div class="lg:col-span-7">
+        <div class="rounded-2xl border border-[#dde9ff] bg-white p-8 lg:p-10 shadow-sm">
+          <h3 class="font-display text-2xl font-bold text-[#000e27] mb-2">Send an Enquiry</h3>
+          <p class="text-xs text-[#44474e] mb-6">Fill out your details below and a GCTT advisor will respond within one business day.</p>
+
+          <form method="post" action="{% url 'submit_enquiry' %}" class="space-y-4">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'home' %}">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-[#000e27] mb-1">Full Name *</label>
+                <input type="text" name="name" required class="w-full text-sm rounded-lg border border-[#dde9ff] px-3.5 py-2.5 bg-[#f8f9ff] text-[#0d1c2f] focus:outline-none focus:border-[#006398]" placeholder="e.g. Alexander Vance">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-[#000e27] mb-1">Email Address *</label>
+                <input type="email" name="email" required class="w-full text-sm rounded-lg border border-[#dde9ff] px-3.5 py-2.5 bg-[#f8f9ff] text-[#0d1c2f] focus:outline-none focus:border-[#006398]" placeholder="alexander@example.com">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-[#000e27] mb-1">Phone Number (Optional)</label>
+              <input type="tel" name="phone" class="w-full text-sm rounded-lg border border-[#dde9ff] px-3.5 py-2.5 bg-[#f8f9ff] text-[#0d1c2f] focus:outline-none focus:border-[#006398]" placeholder="+1 (469) 555-0100">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-[#000e27] mb-1">I am interested in *</label>
+              <select name="category" required class="w-full text-sm rounded-lg border border-[#dde9ff] px-3.5 py-2.5 bg-[#f8f9ff] text-[#0d1c2f] focus:outline-none focus:border-[#006398]">
+                <option value="IT Staffing">IT Staffing</option>
+                <option value="Recruitment">Recruitment</option>
+                <option value="Talent Acquisition">Talent Acquisition</option>
+                <option value="Training">Training &amp; Development</option>
+                <option value="Job opportunities">Job Opportunities / Career Restart</option>
+                <option value="Other">Other Corporate Enquiries</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-[#000e27] mb-1">Your Message *</label>
+              <textarea name="message" rows="4" required class="w-full text-sm rounded-lg border border-[#dde9ff] px-3.5 py-2.5 bg-[#f8f9ff] text-[#0d1c2f] focus:outline-none focus:border-[#006398]" placeholder="Tell us how we can help your company or career journey..."></textarea>
+            </div>
+
+            <button type="submit" class="w-full btn-stitch-primary text-sm py-3 mt-2">
+              Send Enquiry →
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Interactive Script for Tab Switching and AI Advisor -->
+<script>
+function switchTrack(track) {
+  const btnSap = document.getElementById('btn-sap');
+  const btnScrum = document.getElementById('btn-scrum');
+  const panelSap = document.getElementById('panel-sap');
+  const panelScrum = document.getElementById('panel-scrum');
+
+  if (track === 'sap') {
+    btnSap.className = "px-5 py-2 rounded-lg font-display text-xs font-bold bg-[#0f2444] text-white shadow-xs transition-all";
+    btnScrum.className = "px-5 py-2 rounded-lg font-display text-xs font-bold bg-[#eff4ff] text-[#000e27] hover:bg-[#dde9ff] transition-all";
+    panelSap.classList.remove('hidden');
+    panelScrum.classList.add('hidden');
+  } else {
+    btnScrum.className = "px-5 py-2 rounded-lg font-display text-xs font-bold bg-[#0f2444] text-white shadow-xs transition-all";
+    btnSap.className = "px-5 py-2 rounded-lg font-display text-xs font-bold bg-[#eff4ff] text-[#000e27] hover:bg-[#dde9ff] transition-all";
+    panelScrum.classList.remove('hidden');
+    panelSap.classList.add('hidden');
+  }
+}
+
+async function runAdvisor(event) {
+  event.preventDefault();
+  const role = document.getElementById('advisor-role').value;
+  const target = document.getElementById('advisor-target').value;
+  const btn = document.getElementById('advisor-submit-btn');
+  const res = document.getElementById('advisor-result');
+
+  btn.disabled = true;
+  btn.innerText = 'Evaluating Career Pathway...';
+
+  try {
+    const response = await fetch('/api/career-advisor/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: JSON.stringify({ role: role, target_role: target })
+    });
+    const data = await response.json();
+    if (data.success) {
+      res.classList.remove('hidden');
+      res.innerHTML = `
+        <p class="font-bold text-[#000e27]">Recommended Pathway: ${data.data.track}</p>
+        <p class="mt-1 text-xs text-[#006398] font-semibold">Fit Score: ${data.data.fit_score}% match</p>
+        <p class="mt-1 text-xs text-[#44474e]">${data.data.guidance || ''}</p>
+      `;
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.innerText = 'Generate Recommended Track →';
+  }
+}
+</script>
 {% endblock %}
