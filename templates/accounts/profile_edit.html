@@ -53,10 +53,17 @@
       </p>
       <form method="post" action="{% url 'account_delete' %}" class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
         {% csrf_token %}
+        {% if user.has_usable_password %}
         <label class="block sm:w-72">
           <span class="mb-1 block text-xs font-semibold">Confirm with your password</span>
           <input type="password" name="password" required autocomplete="current-password" class="w-full rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-4 py-2.5 text-[#0d1c2f] focus:border-[#006398] focus:bg-white focus:outline-none transition-all font-sans">
         </label>
+        {% else %}
+        <label class="block sm:w-72">
+          <span class="mb-1 block text-xs font-semibold">Type your email ({{ user.email }}) to confirm</span>
+          <input type="email" name="confirm_email" required placeholder="{{ user.email }}" class="w-full rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-4 py-2.5 text-[#0d1c2f] focus:border-[#006398] focus:bg-white focus:outline-none transition-all font-sans">
+        </label>
+        {% endif %}
         <button type="submit" class="btn bg-rose-700 text-white hover:bg-rose-800">
           Permanently delete account
         </button>

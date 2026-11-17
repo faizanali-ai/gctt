@@ -28,6 +28,7 @@ from django.views.decorators.http import require_POST
 from django_otp import login as otp_login
 from django_ratelimit.decorators import ratelimit
 
+from apps.accounts.tokens import email_verification_token_generator
 from apps.enquiries.models import Enquiry
 from apps.jobs.models import Application, Job
 from apps.training.models import Programme, Registration
@@ -330,7 +331,10 @@ def verify_email(request, uidb64, token):
         pass
     if user and user.email_verified:
         messages.info(request, "Your email is already verified.")
-    elif user and default_token_generator.check_token(user, token):
+    elif user and (
+        email_verification_token_generator.check_token(user, token)
+        or default_token_generator.check_token(user, token)
+    ):
         user.email_verified = True
         user.save(update_fields=["email_verified"])
         messages.success(request, "Email verified — thank you.")
@@ -609,9 +613,16 @@ def manage_user_delete(request, pk):
 def account_delete(request):
     if request.user.role == User.Role.OWNER:
         raise PermissionDenied
-    if not request.user.check_password(request.POST.get("password", "")):
-        messages.error(request, "Password incorrect. Your account was not deleted.")
-        return redirect("profile")
+
+    if request.user.has_usable_password():
+        if not request.user.check_password(request.POST.get("password", "")):
+            messages.error(request, "Password incorrect. Your account was not deleted.")
+            return redirect("profile")
+    else:
+        confirm_email = request.POST.get("confirm_email", "").strip().lower()
+        if confirm_email != request.user.email.lower():
+            messages.error(request, "Please enter your email address to confirm account deletion.")
+            return redirect("profile")
 
     email = request.user.email
     log_action(request, "account.delete", email)

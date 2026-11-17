@@ -136,3 +136,83 @@ class AuditSecurityFixesTest(TestCase):
         with override_settings(SITE_URL="https://gctekton.com"):
             url = verification_url(self.candidate)
             self.assertTrue(url.startswith("https://gctekton.com/accounts/verify/"))
+
+    def test_verification_token_survives_login_and_invalidates_on_use(self):
+        """Email verification token must still be valid after user logs in (last_login updates)."""
+        from django.utils import timezone
+        from django.utils.encoding import force_bytes
+        from django.utils.http import urlsafe_base64_encode
+
+        from apps.accounts.tokens import email_verification_token_generator
+
+        new_user = User.objects.create_user(
+            email="fresh.candidate@example.com",
+            password="test-pass-12345",
+            email_verified=False,
+        )
+        token = email_verification_token_generator.make_token(new_user)
+        uidb64 = urlsafe_base64_encode(force_bytes(new_user.pk))
+
+        # Simulate user logging in right after signup (updates last_login)
+        new_user.last_login = timezone.now()
+        new_user.save(update_fields=["last_login"])
+
+        # Click verification link
+        verify_url = reverse("verify_email", args=[uidb64, token])
+        response = self.client.get(verify_url, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        new_user.refresh_from_db()
+        self.assertTrue(new_user.email_verified)
+        self.assertContains(response, "Email verified")
+
+    def test_passwordless_account_can_delete_with_email_confirmation(self):
+        """OAuth or passwordless users can delete account by confirming their email."""
+        oauth_user = User.objects.create_user(
+            email="google.candidate@example.com",
+            first_name="OAuth",
+            last_name="User",
+        )
+        oauth_user.set_unusable_password()
+        oauth_user.save()
+
+        self.client.force_login(oauth_user)
+
+        # Mismatched email fails
+        res_fail = self.client.post(
+            reverse("account_delete"),
+            {"confirm_email": "wrong@example.com"},
+            follow=True,
+        )
+        self.assertContains(res_fail, "Please enter your email address to confirm")
+        self.assertTrue(User.objects.filter(email="google.candidate@example.com").exists())
+
+        # Matching email succeeds
+        res_ok = self.client.post(
+            reverse("account_delete"),
+            {"confirm_email": "google.candidate@example.com"},
+            follow=True,
+        )
+        self.assertContains(res_ok, "permanently deleted")
+        self.assertFalse(User.objects.filter(email="google.candidate@example.com").exists())
+
+    def test_enquiry_auto_reply_does_not_echo_raw_message(self):
+        """Auto-reply sent to enquiry submitter must not echo back raw message (prevents spam reflection)."""
+        from django.core import mail
+
+        mail.outbox.clear()
+        spam_payload = "http://malicious-spam-target.com/click-here-now"
+        self.client.post(
+            reverse("submit_enquiry"),
+            data={
+                "name": "Target Person",
+                "email": "target@victim.org",
+                "category": "general",
+                "message": spam_payload,
+                "next": reverse("home"),
+            },
+        )
+        # Find auto-reply sent to the visitor
+        visitor_mail = next(m for m in mail.outbox if "target@victim.org" in m.to)
+        self.assertNotIn(spam_payload, visitor_mail.body)
+        self.assertIn("We have received your enquiry", visitor_mail.body)

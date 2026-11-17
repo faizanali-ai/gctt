@@ -1,11 +1,12 @@
 import logging
 
 from django.conf import settings
-from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+
+from apps.accounts.tokens import email_verification_token_generator
 
 from .constants import COMPANY
 
@@ -21,7 +22,7 @@ def send(to, subject, body):
 
 def verification_url(user, request=None):
     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-    token = default_token_generator.make_token(user)
+    token = email_verification_token_generator.make_token(user)
     base = getattr(settings, "SITE_URL", "https://gctekton.com").rstrip("/")
     path = reverse("verify_email", args=[uidb64, token])
     return f"{base}{path}"
@@ -65,9 +66,7 @@ def notify_enquiry_received(enquiry):
         "We received your enquiry — GCTT",
         f"Dear {enquiry.name},\n\n"
         f"Thank you for contacting the Global Center for Technology & Training (GCTT).\n\n"
-        f"We have received your advisory brief regarding “{enquiry.get_category_display()}”. A dedicated practice director from our Irving, Texas headquarters will review your specifications and follow up within 24 business hours.\n\n"
-        f"For your reference, a record of your submission is summarized below:\n\n"
-        f"\"{enquiry.message}\"\n\n"
+        f"We have received your enquiry regarding “{enquiry.get_category_display()}”. A dedicated practice director from our Irving, Texas headquarters will review your specifications and follow up within 24 business hours.\n\n"
         f"Warm regards,\n\n"
         f"Corporate Advisory Practice\n"
         f"Global Center for Technology & Training (GCTT)\n"
