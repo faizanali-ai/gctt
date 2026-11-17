@@ -13,7 +13,7 @@
   <div class="grid items-start gap-12 lg:grid-cols-[1.5fr_1fr]">
     <!-- Left Column: Syllabus & Delivery Info -->
     <div class="space-y-8 reveal">
-      <a href="{% url 'training' %}" class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-sky-400 transition-colors hover:text-blue-500">
+      <a href="{% url 'training' %}" class="inline-flex items-center gap-1.5 font-display text-xs font-bold uppercase tracking-wider text-brand-indigo transition-colors hover:text-brand-indigo/80">
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
@@ -23,38 +23,38 @@
       <!-- Programme Metadata Bar -->
       <div class="flex flex-wrap items-center gap-4 rounded-2xl border border-line bg-card p-5 text-xs font-medium text-ink-muted kani-card-shadow">
         <div>
-          <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Delivery Mode</span>
+          <span class="block font-display text-2xs uppercase tracking-wider text-ink-subtle">Delivery Mode</span>
           <span class="font-bold text-ink mt-0.5 block">{{ programme.get_delivery_mode_display }}</span>
         </div>
         {% if programme.duration %}
           <div class="h-6 w-px bg-line"></div>
           <div>
-            <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Duration</span>
+            <span class="block font-display text-2xs uppercase tracking-wider text-ink-subtle">Duration</span>
             <span class="font-bold text-ink mt-0.5 block">{{ programme.duration }}</span>
           </div>
         {% endif %}
         {% if programme.schedule %}
           <div class="h-6 w-px bg-line"></div>
           <div>
-            <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Schedule</span>
+            <span class="block font-display text-2xs uppercase tracking-wider text-ink-subtle">Schedule</span>
             <span class="font-bold text-ink mt-0.5 block">{{ programme.schedule }}</span>
           </div>
         {% endif %}
         {% if programme.category %}
           <div class="h-6 w-px bg-line"></div>
           <div>
-            <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Practice Area</span>
-            <span class="font-bold text-blue-600 dark:text-sky-400 mt-0.5 block">{{ programme.category.name }}</span>
+            <span class="block font-display text-2xs uppercase tracking-wider text-ink-subtle">Practice Area</span>
+            <span class="font-bold text-brand-indigo mt-0.5 block">{{ programme.category.name }}</span>
           </div>
         {% endif %}
       </div>
 
       <!-- Description & Curriculum -->
       <div class="rounded-2xl border border-line bg-card p-6 sm:p-8 kani-card-shadow">
-        <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-0.5 text-2xs font-bold uppercase tracking-wider text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border border-blue-500/20">
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-3 py-1 font-display text-2xs font-bold uppercase tracking-wider text-brand-indigo border border-indigo-500/20">
           Syllabus &amp; Outcomes
         </span>
-        <h2 class="mt-2 font-display text-xl font-bold text-ink sm:text-2xl">Curriculum Overview</h2>
+        <h2 class="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl">Curriculum Overview</h2>
         <div class="mt-4 whitespace-pre-line text-sm sm:text-base leading-relaxed text-ink-muted">
           {{ programme.description }}
         </div>
@@ -77,15 +77,15 @@
     <div class="lg:sticky lg:top-28 reveal delay-1">
       <div class="rounded-2xl border border-line bg-card p-6 sm:p-8 kani-card-shadow">
         <div class="border-b border-line-subtle pb-4">
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-0.5 text-2xs font-bold uppercase tracking-wider text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border border-blue-500/20">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-3 py-1 font-display text-2xs font-bold uppercase tracking-wider text-brand-indigo border border-indigo-500/20">
             Cohort Enrolment
           </span>
-          <h3 class="mt-2 font-display text-xl font-bold text-ink">Register Your Interest</h3>
+          <h3 class="mt-2 font-serif text-2xl font-bold text-ink">Register Your Interest</h3>
         </div>
 
         {% if registered %}
           <div class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50/60 p-5 text-sm dark:border-emerald-800/40 dark:bg-emerald-950/20">
-            <div class="flex items-center gap-2 font-bold text-emerald-900 dark:text-emerald-300">
+            <div class="flex items-center gap-2 font-bold text-emerald-900 dark:text-emerald-300 font-display">
               <svg class="h-5 w-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
@@ -101,7 +101,7 @@
 
         {% elif not programme.registration_open %}
           <div class="mt-6 rounded-xl border border-amber-200 bg-amber-50/60 p-5 text-sm dark:border-amber-800/40 dark:bg-amber-950/20">
-            <p class="font-bold text-amber-900 dark:text-amber-300">Enrolment Closed for Current Cohort</p>
+            <p class="font-bold text-amber-900 dark:text-amber-300 font-display">Enrolment Closed for Current Cohort</p>
             <p class="mt-1 text-xs text-amber-800 dark:text-amber-400">
               Registration for this session has reached capacity or is undergoing curriculum review. Submit an inquiry to be waitlisted for future dates.
             </p>
@@ -112,7 +112,7 @@
 
         {% elif user.is_authenticated %}
           <div class="mt-5 rounded-xl border border-line bg-surface p-4 text-xs text-ink-muted">
-            <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Registering as</span>
+            <span class="block font-display text-2xs uppercase tracking-wider text-ink-subtle">Registering as</span>
             <p class="mt-0.5 font-bold text-ink">
               {{ user.display_name }} · <span class="font-mono font-normal">{{ user.email }}</span>
             </p>
@@ -121,7 +121,7 @@
           <form method="post" action="{% url 'programme_register' programme.slug %}" class="mt-5 space-y-4">
             {% csrf_token %}
             <div>
-              <label class="block text-2xs font-bold uppercase tracking-wider text-ink">
+              <label class="block font-display text-2xs font-bold uppercase tracking-wider text-ink">
                 Questions or Target Outcomes
                 <span class="font-normal lowercase text-ink-subtle">(optional)</span>
               </label>
@@ -133,7 +133,7 @@
               {% endif %}
             </div>
 
-            <button type="submit" class="w-full inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3.5 text-xs font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:bg-blue-500">
+            <button type="submit" class="w-full inline-flex items-center justify-center rounded-xl bg-brand-indigo px-6 py-3.5 font-display text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-indigo-500/25 transition-all hover:bg-brand-indigo-hover">
               Confirm Cohort Registration
             </button>
             <p class="text-center text-2xs text-ink-subtle">
@@ -146,12 +146,12 @@
             <p class="text-xs text-ink-muted leading-relaxed">
               Create an account or sign in to register for this training cohort and track your certifications.
             </p>
-            <a href="{% url 'signup' %}" class="w-full inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3.5 text-xs font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:bg-blue-500">
+            <a href="{% url 'signup' %}" class="w-full inline-flex items-center justify-center rounded-xl bg-brand-indigo px-6 py-3.5 font-display text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-indigo-500/25 transition-all hover:bg-brand-indigo-hover">
               Create Student Account
             </a>
             <div class="rounded-xl border border-line bg-surface p-4 text-xs text-ink-muted">
               <span>Already registered with GCTT?</span>
-              <a href="{% url 'login' %}?next={{ request.path }}" class="mt-1 block font-bold text-blue-600 dark:text-sky-400 hover:underline">
+              <a href="{% url 'login' %}?next={{ request.path }}" class="mt-1 block font-bold text-brand-indigo hover:underline">
                 Sign in to register →
               </a>
             </div>

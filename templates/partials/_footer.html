@@ -1,32 +1,35 @@
 {% load static %}
-<!-- Site Footer: Modernist Institutional Design -->
-<footer class="mt-0 border-t border-blue-500/20 bg-[#090D16] text-slate-100 relative overflow-hidden">
-  <div class="relative mx-auto max-w-7xl px-6 py-16 lg:py-20">
+<!-- Site Footer: Modern Atmospheric Architecture -->
+<footer class="mt-0 border-t border-white/10 bg-[#0f172a] text-slate-100 relative overflow-hidden font-sans">
+  <!-- Subtle Grid Overlay Accent -->
+  <div class="absolute inset-0 grid-overlay opacity-30 pointer-events-none"></div>
+
+  <div class="relative mx-auto max-w-7xl px-6 py-16 lg:py-20 z-10">
     <div class="grid gap-12 lg:grid-cols-5">
       <!-- Col 1: Brand & Headquarters -->
       <div class="lg:col-span-2">
         <div class="flex items-center gap-3">
-          <img src="{% static 'images/logo.svg' %}" alt="GCTT — Global Center for Technology & Training" class="h-10 w-auto">
+          <img src="{% static 'images/logo.svg' %}" alt="GCTT — Global Center for Technology & Training" class="h-10 w-auto logo-spin-hover">
         </div>
-        <p class="mt-4 max-w-sm text-sm leading-relaxed text-slate-300">
-          {{ COMPANY.legal_name }}. An Irving, Texas technology staffing and workforce development consultancy connecting enterprise clients with vetted IT professionals.
+        <p class="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
+          {{ COMPANY.legal_name }}. An Irving, Texas technology staffing and workforce development consultancy connecting enterprise clients with vetted IT professionals and practical academy cohorts.
         </p>
-        <div class="mt-6 flex flex-col gap-2 text-xs text-slate-300">
+        <div class="mt-6 flex flex-col gap-2.5 text-xs text-slate-400">
           <span class="flex items-center gap-2">
-            <svg class="h-4 w-4 text-blue-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            {{ COMPANY.address }}
+            <svg class="h-4 w-4 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span>{{ COMPANY.address }}</span>
           </span>
           <span class="flex items-center gap-2">
-            <svg class="h-4 w-4 text-blue-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <svg class="h-4 w-4 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             <a href="mailto:{{ COMPANY.email }}" class="transition-colors hover:text-white">{{ COMPANY.email }}</a>
           </span>
           <span class="flex items-center gap-2">
-            <svg class="h-4 w-4 text-blue-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <svg class="h-4 w-4 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             <a href="mailto:{{ COMPANY.jobs_email }}" class="transition-colors hover:text-white">{{ COMPANY.jobs_email }}</a>
           </span>
         </div>
         <!-- Statutory Trust Badge -->
-        <div class="mt-6 inline-flex items-center gap-2 rounded-lg border border-emerald-500/25 bg-emerald-500/10 px-3 py-1.5 text-2xs font-semibold text-emerald-400">
+        <div class="mt-6 inline-flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1.5 text-2xs font-semibold text-emerald-400 font-display">
           <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           <span>Registered Texas E-Verify Employer · $0 Candidate Fees Guarantee</span>
         </div>
@@ -34,8 +37,8 @@
 
       <!-- Col 2: Enterprise Services -->
       <div>
-        <p class="text-xs font-bold uppercase tracking-[0.14em] text-blue-400">Enterprise Services</p>
-        <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
+        <p class="text-xs font-semibold uppercase tracking-[0.12em] text-indigo-400 font-display">Enterprise Services</p>
+        <ul class="mt-4 space-y-2.5 text-sm text-slate-400">
           {% for service in SERVICES %}
             <li><a href="{{ service.url }}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">{{ service.title }}</a></li>
           {% endfor %}
@@ -46,8 +49,8 @@
 
       <!-- Col 3: Talent & Training -->
       <div>
-        <p class="text-xs font-bold uppercase tracking-[0.14em] text-blue-400">Talent &amp; Academy</p>
-        <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
+        <p class="text-xs font-semibold uppercase tracking-[0.12em] text-indigo-400 font-display">Talent &amp; Academy</p>
+        <ul class="mt-4 space-y-2.5 text-sm text-slate-400">
           <li><a href="{% url 'careers' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Open Requisitions</a></li>
           <li><a href="{% url 'training' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Training Programmes</a></li>
           <li><a href="{% url 'career_restart' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Career Restart Hub</a></li>
@@ -57,27 +60,25 @@
 
       <!-- Col 4: Corporate Governance -->
       <div>
-        <p class="text-xs font-bold uppercase tracking-[0.14em] text-blue-400">Governance</p>
-        <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
+        <p class="text-xs font-semibold uppercase tracking-[0.12em] text-indigo-400 font-display">Governance</p>
+        <ul class="mt-4 space-y-2.5 text-sm text-slate-400">
           <li><a href="{% url 'about' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">About GCTT</a></li>
-          <li><a href="{% url 'contact' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Corporate Inquiries</a></li>
-          <li><a href="{% url 'privacy' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Privacy Policy</a></li>
-          <li><a href="{% url 'terms' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Terms of Service</a></li>
+          <li><a href="{% url 'contact' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Contact Headquarters</a></li>
+          <li><a href="{% url 'privacy' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Privacy Notice</a></li>
+          <li><a href="{% url 'terms' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Terms &amp; Compliance</a></li>
         </ul>
       </div>
     </div>
 
-    <!-- Bottom Bar -->
-    <div class="mt-14 border-t border-white/10 pt-8">
-      <div class="flex flex-col gap-4 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-        <p>&copy; {% now "Y" %} Global Center for Technology &amp; Training (GCTT). All rights reserved.</p>
-        <div class="flex items-center gap-6">
-          <a href="{% url 'privacy' %}" class="transition-colors hover:text-white">Privacy</a>
-          <span class="text-slate-600">·</span>
-          <a href="{% url 'terms' %}" class="transition-colors hover:text-white">Terms</a>
-          <span class="text-slate-600">·</span>
-          <span class="text-slate-400">Irving, TX</span>
-        </div>
+    <!-- Bottom Legal Bar -->
+    <div class="mt-12 flex flex-col sm:flex-row items-center justify-between border-t border-white/10 pt-8 text-xs text-slate-500 font-sans gap-4">
+      <p>© {% now "Y" %} {{ COMPANY.legal_name }}. All rights reserved. Direct Texas Employer.</p>
+      <div class="flex items-center gap-6 font-display text-2xs text-slate-400">
+        <span class="hover:text-slate-300">FEIN Registered</span>
+        <span>·</span>
+        <span class="hover:text-slate-300">E-Verify Federal ID</span>
+        <span>·</span>
+        <span class="hover:text-slate-300">Texas SOS Filings</span>
       </div>
     </div>
   </div>

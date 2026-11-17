@@ -27,35 +27,37 @@
 }
 </script>
 
-<!-- Mandate Executive Hero -->
-<section class="relative overflow-hidden border-b border-line kani-hero-bg py-12 md:py-16">
-  <div class="relative mx-auto max-w-7xl px-6">
-    <div class="flex flex-wrap items-center gap-2 text-xs font-semibold text-blue-600 dark:text-sky-400">
-      <a href="{% url 'careers' %}" class="transition-colors hover:text-blue-500">← All Open Mandates</a>
-      <span class="text-ink-subtle">/</span>
-      <span class="text-ink-subtle">Direct Client Placement</span>
+<!-- Mandate Executive Hero: Modern Atmospheric Deep Ground -->
+<section class="bg-atmospheric-dark relative overflow-hidden border-b border-white/10 py-12 md:py-16 text-white font-sans">
+  <div class="absolute inset-0 grid-overlay opacity-30 pointer-events-none"></div>
+
+  <div class="relative mx-auto max-w-7xl px-6 z-10">
+    <div class="flex flex-wrap items-center gap-2 text-xs font-semibold text-indigo-400 font-display">
+      <a href="{% url 'careers' %}" class="transition-colors hover:text-indigo-300">← All Open Mandates</a>
+      <span class="text-white/30">/</span>
+      <span class="text-slate-400">Direct Client Placement</span>
     </div>
 
     <div class="mt-4 flex flex-col justify-between gap-6 md:flex-row md:items-end">
       <div>
-        <div class="flex items-center gap-2.5">
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3.5 py-1 text-2xs font-extrabold uppercase tracking-wider text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-500/30">
-            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <div class="flex items-center gap-2.5 font-display">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 px-3.5 py-1 text-2xs font-bold uppercase tracking-wider text-emerald-400 border border-emerald-500/30">
+            <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
             Direct Client Mandate
           </span>
-          <span class="text-xs text-ink-subtle">Verified Corporate Requirement</span>
+          <span class="text-xs text-slate-400">Verified Corporate Requirement</span>
         </div>
-        <h1 class="mt-3 font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl md:text-4xl">
+        <h1 class="mt-3 font-serif text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl">
           {{ job.title }}
         </h1>
-        <p class="mt-2.5 text-xs sm:text-sm text-ink-muted">
-          Location: <span class="font-semibold text-ink">{{ job.location }}</span> · Employment: <span class="font-semibold text-ink">{{ job.get_employment_type_display }}</span> · Posted: <span class="font-semibold text-ink">{{ job.created_at|date:"F j, Y" }}</span>
+        <p class="mt-2.5 text-xs sm:text-sm text-slate-300 font-sans">
+          Location: <span class="font-semibold text-white">{{ job.location }}</span> · Employment: <span class="font-semibold text-white">{{ job.get_employment_type_display }}</span> · Posted: <span class="font-semibold text-white">{{ job.created_at|date:"F j, Y" }}</span>
         </p>
       </div>
 
       <!-- Quick Action / Jump to Apply -->
-      <div>
-        <a href="#apply-wizard" class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-xs font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:bg-blue-500 hover:shadow-blue-500/40">
+      <div class="font-display">
+        <a href="#apply-wizard" class="btn btn-indigo text-xs">
           Apply for this Mandate ↓
         </a>
       </div>
@@ -64,45 +66,45 @@
 </section>
 
 {% if not job.published %}
-  <div class="border-b border-amber-300 bg-amber-50 px-6 py-2.5 text-center text-xs font-semibold text-amber-900 dark:bg-amber-950/40 dark:text-amber-300">
+  <div class="border-b border-amber-300 bg-amber-50 px-6 py-2.5 text-center text-xs font-semibold text-amber-900 dark:bg-amber-950/40 dark:text-amber-300 font-display">
     Draft preview — this mandate is internal and unlisted from public search.
   </div>
 {% endif %}
 
-<section class="mx-auto max-w-7xl px-6 py-12 md:py-20">
+<section class="mx-auto max-w-7xl px-6 py-12 md:py-20 font-sans">
   <div class="grid items-start gap-12 lg:grid-cols-[1.45fr_1fr]">
     <!-- Left Column: Mandate Specification & Institutional Trust -->
     <div class="space-y-10">
       <!-- Role Overview & Scope Card -->
-      <div class="rounded-2xl border border-line bg-card p-6 sm:p-8 kani-card-shadow">
-        <div class="border-b border-line pb-4">
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-0.5 text-2xs font-bold uppercase tracking-wider text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border border-blue-500/20">
+      <div class="rounded-2xl border border-line bg-card p-6 sm:p-8 shadow-xs">
+        <div class="border-b border-line pb-4 font-display">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-0.5 text-2xs font-semibold uppercase tracking-wider text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300 border border-indigo-500/20">
             Mandate Specification
           </span>
-          <h2 class="mt-2 font-display text-xl font-bold text-ink sm:text-2xl">Role Overview &amp; Responsibilities</h2>
+          <h2 class="mt-2 font-serif text-xl font-bold text-ink sm:text-2xl">Role Overview &amp; Responsibilities</h2>
         </div>
-        <div class="mt-6 whitespace-pre-line text-sm leading-relaxed text-ink-muted">
+        <div class="mt-6 whitespace-pre-line text-sm leading-relaxed text-ink-muted font-sans">
           {{ job.description }}
         </div>
       </div>
 
       <!-- Requirements & Technical Qualifications -->
       {% if job.requirements %}
-        <div class="rounded-2xl border border-line bg-card p-6 sm:p-8 kani-card-shadow">
-          <div class="border-b border-line pb-4">
-            <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-0.5 text-2xs font-bold uppercase tracking-wider text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border border-blue-500/20">
+        <div class="rounded-2xl border border-line bg-card p-6 sm:p-8 shadow-xs">
+          <div class="border-b border-line pb-4 font-display">
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-0.5 text-2xs font-semibold uppercase tracking-wider text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300 border border-indigo-500/20">
               Evaluation Criteria
             </span>
-            <h2 class="mt-2 font-display text-xl font-bold text-ink sm:text-2xl">Required Qualifications &amp; Skills</h2>
+            <h2 class="mt-2 font-serif text-xl font-bold text-ink sm:text-2xl">Required Qualifications &amp; Skills</h2>
           </div>
-          <div class="mt-6 whitespace-pre-line text-sm leading-relaxed text-ink-muted">
+          <div class="mt-6 whitespace-pre-line text-sm leading-relaxed text-ink-muted font-sans">
             {{ job.requirements }}
           </div>
         </div>
       {% endif %}
 
       <!-- Institutional Trust & Candidate Protection Seal -->
-      <div class="rounded-2xl border border-emerald-200/80 bg-emerald-50/40 p-6 dark:border-emerald-900/50 dark:bg-emerald-950/20 sm:p-8 kani-card-shadow">
+      <div class="rounded-2xl border border-emerald-200/80 bg-emerald-50/40 p-6 dark:border-emerald-900/50 dark:bg-emerald-950/20 sm:p-8 shadow-xs">
         <div class="flex items-center gap-3">
           <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-600/25">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -110,32 +112,32 @@
             </svg>
           </div>
           <div>
-            <h3 class="font-display text-base font-bold text-ink sm:text-lg">GCTT Candidate Protection &amp; Verification Guarantee</h3>
-            <p class="text-xs text-ink-muted">Legitimate US Enterprise Hiring Standards</p>
+            <h3 class="font-serif text-base font-bold text-ink sm:text-lg">GCTT Candidate Protection &amp; Verification Guarantee</h3>
+            <p class="text-xs text-ink-muted font-display">Legitimate US Enterprise Hiring Standards</p>
           </div>
         </div>
 
-        <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 font-sans">
           <div class="rounded-xl border border-line bg-card p-4">
-            <span class="flex items-center gap-1.5 text-xs font-bold text-ink">
+            <span class="flex items-center gap-1.5 text-xs font-bold text-ink font-serif">
               <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Verified Texas Corporate Anchor
             </span>
             <p class="mt-1 text-2xs leading-relaxed text-ink-muted">Headquartered at 2612 Laramie St, Irving TX. Direct physical commercial presence.</p>
           </div>
           <div class="rounded-xl border border-line bg-card p-4">
-            <span class="flex items-center gap-1.5 text-xs font-bold text-ink">
+            <span class="flex items-center gap-1.5 text-xs font-bold text-ink font-serif">
               <span class="h-2 w-2 rounded-full bg-emerald-500"></span> E-Verify Participating Employer
             </span>
             <p class="mt-1 text-2xs leading-relaxed text-ink-muted">Full federal employment eligibility verification and EEOC compliant placement.</p>
           </div>
           <div class="rounded-xl border border-line bg-card p-4">
-            <span class="flex items-center gap-1.5 text-xs font-bold text-ink">
+            <span class="flex items-center gap-1.5 text-xs font-bold text-ink font-serif">
               <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Zero Candidate Placement Fees
             </span>
             <p class="mt-1 text-2xs leading-relaxed text-ink-muted">Candidates are never charged any fees. 100% enterprise client funded contracts.</p>
           </div>
           <div class="rounded-xl border border-line bg-card p-4">
-            <span class="flex items-center gap-1.5 text-xs font-bold text-ink">
+            <span class="flex items-center gap-1.5 text-xs font-bold text-ink font-serif">
               <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Direct Recruiter Advisory
             </span>
             <p class="mt-1 text-2xs leading-relaxed text-ink-muted">Dedicated practice leads review all submissions within 24 business hours.</p>
@@ -146,10 +148,10 @@
 
     <!-- Right Column: Interactive 3-Step Application Wizard -->
     <div id="apply-wizard" class="lg:sticky lg:top-28">
-      <div class="rounded-2xl border border-line bg-card p-6 sm:p-8 kani-card-shadow">
+      <div class="rounded-2xl border border-line bg-card p-6 sm:p-8 shadow-xs">
         {% if applied %}
-          <div class="rounded-xl border border-emerald-200 bg-emerald-50/70 p-6 text-sm dark:border-emerald-800/40 dark:bg-emerald-950/20">
-            <div class="flex items-center gap-2 font-bold text-emerald-900 dark:text-emerald-300">
+          <div class="rounded-xl border border-emerald-200 bg-emerald-50/70 p-6 text-sm dark:border-emerald-800/40 dark:bg-emerald-950/20 font-sans">
+            <div class="flex items-center gap-2 font-bold text-emerald-900 dark:text-emerald-300 font-serif">
               <svg class="h-5 w-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
@@ -158,70 +160,70 @@
             <p class="mt-2 text-xs leading-relaxed text-emerald-800 dark:text-emerald-400">
               Your profile and credentials have been received by GCTT's technical recruitment team. You can monitor review milestones or update your resume from your candidate dashboard.
             </p>
-            <a href="{% url 'dashboard' %}" class="btn btn-primary mt-5 w-full justify-center text-xs">
+            <a href="{% url 'dashboard' %}" class="btn btn-indigo mt-5 w-full justify-center text-xs font-display">
               Open Candidate Dashboard →
             </a>
           </div>
         {% else %}
           <!-- Wizard Header & Progress Bar -->
-          <div class="border-b border-line pb-4">
+          <div class="border-b border-line pb-4 font-display">
             <div class="flex items-center justify-between">
-              <span class="text-2xs font-bold uppercase tracking-[0.14em] text-blue-600 dark:text-sky-400">Candidate Application</span>
-              <span id="step-indicator" class="text-2xs font-bold text-ink-subtle">Step 1 of 3</span>
+              <span class="text-2xs font-semibold uppercase tracking-[0.14em] text-brand-indigo">Candidate Application</span>
+              <span id="step-indicator" class="text-2xs font-semibold text-ink-subtle">Step 1 of 3</span>
             </div>
-            <h3 class="mt-1 font-display text-xl font-bold text-ink">Submit Application</h3>
+            <h3 class="mt-1 font-serif text-xl font-bold text-ink">Submit Application</h3>
 
             <!-- 3-Segment Progress Indicator -->
             <div class="mt-4 grid grid-cols-3 gap-2">
-              <div id="progress-bar-1" class="h-1.5 rounded-full bg-blue-600 transition-colors"></div>
+              <div id="progress-bar-1" class="h-1.5 rounded-full bg-indigo-600 transition-colors"></div>
               <div id="progress-bar-2" class="h-1.5 rounded-full bg-line transition-colors"></div>
               <div id="progress-bar-3" class="h-1.5 rounded-full bg-line transition-colors"></div>
             </div>
           </div>
 
           <!-- The Form with 3 Steps -->
-          <form id="application-wizard-form" method="post" action="{% url 'job_apply' job.slug %}" enctype="multipart/form-data" class="mt-6">
+          <form id="application-wizard-form" method="post" action="{% url 'job_apply' job.slug %}" enctype="multipart/form-data" class="mt-6 font-sans">
             {% csrf_token %}
 
             <!-- STEP 1: Contact Details -->
             <div id="wizard-step-1" class="wizard-step space-y-4">
               <div class="border-b border-line/60 pb-2">
-                <h4 class="text-xs font-bold uppercase tracking-wider text-ink">Step 1: Contact Information</h4>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-ink font-display">Step 1: Contact Information</h4>
                 <p class="text-2xs text-ink-muted">Where our technical recruiting team should follow up.</p>
               </div>
 
               {% if user.is_authenticated %}
-                <div class="rounded-xl border border-line bg-surface p-3.5 text-xs text-ink-muted">
-                  <span class="text-2xs uppercase tracking-wider text-ink-subtle">Logged in as</span>
+                <div class="rounded-xl border border-line bg-paper p-3.5 text-xs text-ink-muted">
+                  <span class="text-2xs uppercase tracking-wider text-ink-subtle font-display">Logged in as</span>
                   <p class="font-semibold text-ink">{{ user.display_name }} ({{ user.email }})</p>
-                  <p class="text-2xs text-emerald-700 dark:text-emerald-400 font-medium mt-0.5">Verified Candidate Account</p>
+                  <p class="text-2xs text-emerald-700 dark:text-emerald-400 font-medium mt-0.5 font-display">Verified Candidate Account</p>
                 </div>
               {% else %}
                 <div class="grid grid-cols-2 gap-3">
                   <div>
-                    <label class="block text-2xs font-bold uppercase tracking-wider text-ink">First Name *</label>
+                    <label class="block text-2xs font-bold uppercase tracking-wider text-ink font-display">First Name *</label>
                     <div class="mt-1">{{ form.first_name }}</div>
                   </div>
                   <div>
-                    <label class="block text-2xs font-bold uppercase tracking-wider text-ink">Last Name *</label>
+                    <label class="block text-2xs font-bold uppercase tracking-wider text-ink font-display">Last Name *</label>
                     <div class="mt-1">{{ form.last_name }}</div>
                   </div>
                 </div>
 
                 <div>
-                  <label class="block text-2xs font-bold uppercase tracking-wider text-ink">Email Address *</label>
+                  <label class="block text-2xs font-bold uppercase tracking-wider text-ink font-display">Email Address *</label>
                   <div class="mt-1">{{ form.email }}</div>
                   <p class="mt-1 text-2xs text-ink-subtle">We send your review status and placement updates here.</p>
                 </div>
 
                 <div>
-                  <label class="block text-2xs font-bold uppercase tracking-wider text-ink">Phone Number</label>
+                  <label class="block text-2xs font-bold uppercase tracking-wider text-ink font-display">Phone Number</label>
                   <div class="mt-1">{{ form.phone }}</div>
                 </div>
               {% endif %}
 
-              <div class="pt-3">
-                <button type="button" id="btn-to-step-2" class="w-full inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-xs font-bold text-white shadow-md shadow-blue-500/25 transition-all hover:bg-blue-500">
+              <div class="pt-3 font-display">
+                <button type="button" id="btn-to-step-2" class="btn btn-indigo w-full justify-center text-xs">
                   Next: Resume &amp; Competencies →
                 </button>
               </div>
@@ -230,12 +232,12 @@
             <!-- STEP 2: Resume & Key Competencies -->
             <div id="wizard-step-2" class="wizard-step hidden space-y-4">
               <div class="border-b border-line/60 pb-2">
-                <h4 class="text-xs font-bold uppercase tracking-wider text-ink">Step 2: Resume &amp; Work Eligibility</h4>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-ink font-display">Step 2: Resume &amp; Work Eligibility</h4>
                 <p class="text-2xs text-ink-muted">Upload your curriculum vitae and specify authorization.</p>
               </div>
 
               <div>
-                <label class="block text-2xs font-bold uppercase tracking-wider text-ink">
+                <label class="block text-2xs font-bold uppercase tracking-wider text-ink font-display">
                   Upload Resume / CV * <span class="font-normal lowercase text-ink-subtle">(PDF, DOC, DOCX — max 5 MB)</span>
                 </label>
                 <div class="mt-1.5">
@@ -247,14 +249,14 @@
               </div>
 
               <div>
-                <label class="block text-2xs font-bold uppercase tracking-wider text-ink">U.S. Work Authorization</label>
+                <label class="block text-2xs font-bold uppercase tracking-wider text-ink font-display">U.S. Work Authorization</label>
                 <div class="mt-1">
                   {{ form.work_authorization }}
                 </div>
               </div>
 
               <div>
-                <label class="block text-2xs font-bold uppercase tracking-wider text-ink">
+                <label class="block text-2xs font-bold uppercase tracking-wider text-ink font-display">
                   Executive Summary / Key Specializations <span class="font-normal lowercase text-ink-subtle">(Optional)</span>
                 </label>
                 <div class="mt-1">
@@ -262,11 +264,11 @@
                 </div>
               </div>
 
-              <div class="flex items-center gap-2 pt-3">
+              <div class="flex items-center gap-2 pt-3 font-display">
                 <button type="button" id="btn-back-to-step-1" class="btn btn-secondary text-xs">
                   ← Back
                 </button>
-                <button type="button" id="btn-to-step-3" class="flex-1 inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-xs font-bold text-white shadow-md shadow-blue-500/25 transition-all hover:bg-blue-500">
+                <button type="button" id="btn-to-step-3" class="btn btn-indigo flex-1 justify-center text-xs">
                   Next: Review &amp; Submit →
                 </button>
               </div>
@@ -275,42 +277,42 @@
             <!-- STEP 3: Review & Submit -->
             <div id="wizard-step-3" class="wizard-step hidden space-y-4">
               <div class="border-b border-line/60 pb-2">
-                <h4 class="text-xs font-bold uppercase tracking-wider text-ink">Step 3: Verification &amp; Submission</h4>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-ink font-display">Step 3: Verification &amp; Submission</h4>
                 <p class="text-2xs text-ink-muted">Confirm your submission details before direct routing.</p>
               </div>
 
-              <div class="rounded-xl border border-line bg-surface/70 p-4 space-y-2.5 text-xs">
+              <div class="rounded-xl border border-line bg-paper p-4 space-y-2.5 text-xs font-sans">
                 <div>
-                  <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Target Role</span>
-                  <span class="font-bold text-ink">{{ job.title }}</span>
+                  <span class="block text-2xs uppercase tracking-wider text-ink-subtle font-display">Target Role</span>
+                  <span class="font-serif font-bold text-ink">{{ job.title }}</span>
                 </div>
                 <div class="border-t border-line/60 pt-2">
-                  <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Candidate Name</span>
+                  <span class="block text-2xs uppercase tracking-wider text-ink-subtle font-display">Candidate Name</span>
                   <span id="review-name" class="font-semibold text-ink">
                     {% if user.is_authenticated %}{{ user.display_name }}{% else %}—{% endif %}
                   </span>
                 </div>
                 <div class="border-t border-line/60 pt-2">
-                  <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Contact Email</span>
+                  <span class="block text-2xs uppercase tracking-wider text-ink-subtle font-display">Contact Email</span>
                   <span id="review-email" class="font-semibold text-ink">
                     {% if user.is_authenticated %}{{ user.email }}{% else %}—{% endif %}
                   </span>
                 </div>
                 <div class="border-t border-line/60 pt-2">
-                  <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Resume Attached</span>
+                  <span class="block text-2xs uppercase tracking-wider text-ink-subtle font-display">Resume Attached</span>
                   <span id="review-file" class="font-semibold text-emerald-700 dark:text-emerald-400">File selected</span>
                 </div>
               </div>
 
-              <div class="rounded-xl border border-line p-3 text-2xs text-ink-muted leading-relaxed">
+              <div class="rounded-xl border border-line p-3 text-2xs text-ink-muted leading-relaxed font-sans">
                 By submitting, you authorize GCTT's executive recruiting practice to represent your credentials for this enterprise mandate. All submissions are governed under strict confidentiality.
               </div>
 
-              <div class="flex items-center gap-2 pt-3">
+              <div class="flex items-center gap-2 pt-3 font-display">
                 <button type="button" id="btn-back-to-step-2" class="btn btn-secondary text-xs">
                   ← Back
                 </button>
-                <button type="submit" class="flex-1 inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-xs font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:bg-blue-500">
+                <button type="submit" class="btn btn-indigo flex-1 justify-center text-xs">
                   Submit Direct Application
                 </button>
               </div>
@@ -334,16 +336,15 @@
                 step2.classList.add('hidden');
                 step3.classList.add('hidden');
 
-                p1.className = 'h-1.5 rounded-full transition-colors ' + (num >= 1 ? 'bg-blue-600' : 'bg-line');
-                p2.className = 'h-1.5 rounded-full transition-colors ' + (num >= 2 ? 'bg-blue-600' : 'bg-line');
-                p3.className = 'h-1.5 rounded-full transition-colors ' + (num >= 3 ? 'bg-blue-600' : 'bg-line');
+                p1.className = 'h-1.5 rounded-full transition-colors ' + (num >= 1 ? 'bg-indigo-600' : 'bg-line');
+                p2.className = 'h-1.5 rounded-full transition-colors ' + (num >= 2 ? 'bg-indigo-600' : 'bg-line');
+                p3.className = 'h-1.5 rounded-full transition-colors ' + (num >= 3 ? 'bg-indigo-600' : 'bg-line');
                 indicator.textContent = 'Step ' + num + ' of 3';
 
                 if (num === 1) step1.classList.remove('hidden');
                 if (num === 2) step2.classList.remove('hidden');
                 if (num === 3) {
                   step3.classList.remove('hidden');
-                  // Update review block
                   if (!isAuth) {
                     const fn = document.querySelector('input[name="first_name"]')?.value || '';
                     const ln = document.querySelector('input[name="last_name"]')?.value || '';

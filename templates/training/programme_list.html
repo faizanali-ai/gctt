@@ -3,49 +3,49 @@
 {% block content %}
 {% include "partials/_hero.html" with eyebrow="Enterprise Upskilling" title="Executive & Technical Training" intro="Practitioner-led curricula engineered for enterprise IT delivery, agile transformation, and mission-critical cloud & SAP environments." %}
 
-<section class="mx-auto max-w-7xl px-6 py-12 md:py-20">
+<section class="mx-auto max-w-7xl px-6 py-12 md:py-20 font-sans">
   <!-- Value Props Matrix -->
-  <div class="grid gap-6 sm:grid-cols-3 reveal">
-    <div class="group rounded-2xl border border-line bg-card p-7 kani-card-shadow transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-xl dark:border-slate-800">
-      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md shadow-blue-500/25 group-hover:scale-110 transition-transform">
+  <div class="grid gap-6 sm:grid-cols-3 reveal font-sans">
+    <div class="group rounded-2xl border border-line bg-card p-7 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-brand-indigo/40 hover:shadow-xl dark:border-slate-800">
+      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/25 group-hover:scale-110 transition-transform">
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
       </div>
-      <h3 class="mt-5 font-display text-lg font-bold text-ink">Live Interactive &amp; Hybrid</h3>
+      <h3 class="mt-5 font-serif text-lg font-bold text-ink">Live Interactive &amp; Hybrid</h3>
       <p class="mt-2 text-xs leading-relaxed text-ink-muted">Rigorous instructor-led virtual cohorts designed for practicing professionals balancing active delivery schedules.</p>
     </div>
 
-    <div class="group rounded-2xl border border-line bg-card p-7 kani-card-shadow transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-xl dark:border-slate-800">
-      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500 text-white shadow-md shadow-sky-500/25 group-hover:scale-110 transition-transform">
+    <div class="group rounded-2xl border border-line bg-card p-7 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-brand-indigo/40 hover:shadow-xl dark:border-slate-800">
+      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-600 text-white shadow-md shadow-purple-500/25 group-hover:scale-110 transition-transform">
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
         </svg>
       </div>
-      <h3 class="mt-5 font-display text-lg font-bold text-ink">On-Site Enterprise Cohorts</h3>
+      <h3 class="mt-5 font-serif text-lg font-bold text-ink">On-Site Enterprise Cohorts</h3>
       <p class="mt-2 text-xs leading-relaxed text-ink-muted">Custom on-premise upskilling programs conducted at corporate headquarters or at our Irving, Texas training facilities.</p>
     </div>
 
-    <div class="group rounded-2xl border border-line bg-card p-7 kani-card-shadow transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-xl dark:border-slate-800">
-      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/25 group-hover:scale-110 transition-transform">
+    <div class="group rounded-2xl border border-line bg-card p-7 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-brand-indigo/40 hover:shadow-xl dark:border-slate-800">
+      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-600 text-white shadow-md shadow-sky-500/25 group-hover:scale-110 transition-transform">
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
         </svg>
       </div>
-      <h3 class="mt-5 font-display text-lg font-bold text-ink">Verifiable Credentials</h3>
-      <p class="mt-2 text-xs leading-relaxed text-ink-muted">Cryptographically stamped certificates of completion verifiable by employer procurement teams. <a href="{% url 'verify_certificate_form' %}" class="font-bold text-blue-600 hover:underline dark:text-sky-400">Verify a credential →</a></p>
+      <h3 class="mt-5 font-serif text-lg font-bold text-ink">Verifiable Credentials</h3>
+      <p class="mt-2 text-xs leading-relaxed text-ink-muted">Cryptographically stamped certificates of completion verifiable by employer procurement teams. <a href="{% url 'verify_certificate_form' %}" class="font-bold text-brand-indigo hover:underline font-display">Verify a credential →</a></p>
     </div>
   </div>
 
   <!-- AI Career Trajectory Advisor Interactive Tool -->
-  <div id="ai-advisor" class="relative mt-20 overflow-hidden rounded-3xl border border-blue-500/25 bg-gradient-to-br from-blue-900/10 via-card to-card p-6 shadow-2xl dark:border-blue-500/20 dark:from-blue-950/30 dark:via-slate-900/60 dark:to-slate-950 sm:p-12 reveal">
+  <div id="ai-advisor" class="relative mt-20 overflow-hidden rounded-3xl border border-line bg-card p-6 shadow-xs sm:p-12 reveal font-sans">
     <div class="relative max-w-2xl">
-      <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3.5 py-1 text-2xs font-extrabold uppercase tracking-wider text-blue-800 dark:bg-blue-950/60 dark:text-sky-300 border border-blue-500/30">
-        <span class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+      <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3.5 py-1 text-2xs font-semibold uppercase tracking-wider text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 border border-indigo-500/20 font-display">
+        <span class="h-2 w-2 rounded-full bg-indigo-500 animate-pulse"></span>
         AI Career Trajectory &amp; Learning Advisor
       </span>
-      <h2 class="mt-4 font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl md:text-4xl">
-        Map Your Domain Background into a <span class="kani-gradient-highlight">High-Demand Tech Track</span>
+      <h2 class="mt-4 font-serif text-2xl font-bold tracking-tight text-ink sm:text-3xl md:text-4xl">
+        Map Your Domain Background into a <span class="text-brand-indigo">High-Demand Tech Track</span>
       </h2>
       <p class="mt-3 text-xs sm:text-sm leading-relaxed text-ink-muted">
         Enter your existing experience or career history below. Our enterprise engine will analyze your transferrable competencies and chart your optimal SAP or Agile certification roadmap.
@@ -55,25 +55,25 @@
     <!-- Interactive Advisor Form -->
     <div class="relative mt-10 grid gap-8 lg:grid-cols-[1fr_1.3fr]">
       <!-- Inputs -->
-      <form id="ai-advisor-form" class="space-y-4 rounded-2xl border border-line bg-card/80 p-6 sm:p-7 kani-card-shadow backdrop-blur-sm">
+      <form id="ai-advisor-form" class="space-y-4 rounded-2xl border border-line bg-paper p-6 sm:p-7 shadow-xs">
         {% csrf_token %}
         <div>
-          <label class="block text-2xs font-bold uppercase tracking-wider text-ink">
+          <label class="block text-2xs font-bold uppercase tracking-wider text-ink font-display">
             Current or Prior Role / Background *
           </label>
           <input
             type="text"
             id="advisor-role"
             placeholder="e.g. Senior Accountant, QA Tester, Operations Lead, Returning Parent..."
-            class="mt-1.5 w-full rounded-xl border border-line bg-surface/80 px-4 py-3 text-xs text-ink focus:border-blue-500 focus:outline-hidden"
+            class="mt-1.5 w-full rounded-xl border border-line bg-card px-4 py-3 text-xs text-ink focus:border-brand-indigo focus:outline-hidden"
             required
           >
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-2xs font-bold uppercase tracking-wider text-ink">Years in Industry</label>
-            <select id="advisor-exp" class="mt-1.5 w-full rounded-xl border border-line bg-surface/80 px-3 py-3 text-xs text-ink focus:border-blue-500 focus:outline-hidden">
+            <label class="block text-2xs font-bold uppercase tracking-wider text-ink font-display">Years in Industry</label>
+            <select id="advisor-exp" class="mt-1.5 w-full rounded-xl border border-line bg-card px-3 py-3 text-xs text-ink focus:border-brand-indigo focus:outline-hidden font-display">
               <option value="0-2">0 – 2 Years (Transition)</option>
               <option value="3-5" selected>3 – 5 Years (Mid-Level)</option>
               <option value="6-10">6 – 10 Years (Senior)</option>
@@ -81,8 +81,8 @@
             </select>
           </div>
           <div>
-            <label class="block text-2xs font-bold uppercase tracking-wider text-ink">Primary Career Goal</label>
-            <select id="advisor-goal" class="mt-1.5 w-full rounded-xl border border-line bg-surface/80 px-3 py-3 text-xs text-ink focus:border-blue-500 focus:outline-hidden">
+            <label class="block text-2xs font-bold uppercase tracking-wider text-ink font-display">Primary Career Goal</label>
+            <select id="advisor-goal" class="mt-1.5 w-full rounded-xl border border-line bg-card px-3 py-3 text-xs text-ink focus:border-brand-indigo focus:outline-hidden font-display">
               <option value="high_paying_erp">High-Paying SAP / ERP</option>
               <option value="agile_leadership">Agile Scrum Leadership</option>
               <option value="career_restart">Career Relaunch &amp; Direct W2</option>
@@ -91,46 +91,46 @@
           </div>
         </div>
 
-        <button type="submit" id="advisor-submit-btn" class="mt-2 w-full inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3.5 text-xs font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:bg-blue-500 hover:shadow-blue-500/40">
+        <button type="submit" id="advisor-submit-btn" class="btn btn-indigo mt-2 w-full justify-center text-xs font-display">
           Generate My Enterprise Roadmap ✨
         </button>
       </form>
 
       <!-- Advisor Results Panel -->
-      <div id="advisor-results" class="flex flex-col justify-center rounded-2xl border border-line bg-card/80 p-6 sm:p-8 kani-card-shadow backdrop-blur-sm">
+      <div id="advisor-results" class="flex flex-col justify-center rounded-2xl border border-line bg-paper p-6 sm:p-8 shadow-xs">
         <div id="advisor-placeholder" class="text-center py-6">
-          <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-sky-400">
+          <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-brand-indigo dark:bg-indigo-950/60 dark:text-indigo-400">
             <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <h4 class="mt-4 font-display text-base font-bold text-ink">Your Custom Roadmap Awaits</h4>
-          <p class="mt-1.5 text-2xs text-ink-muted max-w-sm mx-auto">
+          <h4 class="mt-4 font-serif text-base font-bold text-ink">Your Custom Roadmap Awaits</h4>
+          <p class="mt-1.5 text-2xs text-ink-muted max-w-sm mx-auto font-sans">
             Fill out your background on the left to see recommended certification tracks, estimated timelines, and average enterprise salary bands.
           </p>
         </div>
 
-        <div id="advisor-output" class="hidden space-y-4">
+        <div id="advisor-output" class="hidden space-y-4 font-sans">
           <div class="flex items-center justify-between border-b border-line pb-3">
             <div>
-              <span class="text-2xs font-bold uppercase tracking-wider text-blue-600 dark:text-sky-400">Optimal Certification Pathway</span>
-              <h3 id="res-track" class="font-display text-lg font-bold text-ink"></h3>
+              <span class="text-2xs font-bold uppercase tracking-wider text-brand-indigo font-display">Optimal Certification Pathway</span>
+              <h3 id="res-track" class="font-serif text-lg font-bold text-ink"></h3>
             </div>
             <div class="text-right">
-              <span class="inline-block rounded-full bg-blue-100 px-3 py-1 text-2xs font-extrabold text-blue-800 dark:bg-blue-950/60 dark:text-sky-300" id="res-fit">
+              <span class="inline-block rounded-full bg-indigo-100 px-3 py-1 text-2xs font-bold text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300 font-display" id="res-fit">
                 95% Fit
               </span>
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-3 text-xs">
-            <div class="rounded-xl border border-line bg-surface p-3.5">
-              <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Estimated Timeline</span>
-              <span id="res-timeline" class="font-bold text-ink mt-0.5 block"></span>
+            <div class="rounded-xl border border-line bg-card p-3.5">
+              <span class="block text-2xs uppercase tracking-wider text-ink-subtle font-display">Estimated Timeline</span>
+              <span id="res-timeline" class="font-bold text-ink mt-0.5 block font-display"></span>
             </div>
-            <div class="rounded-xl border border-line bg-surface p-3.5">
-              <span class="block text-2xs uppercase tracking-wider text-ink-subtle">Target Compensation</span>
-              <span id="res-comp" class="font-bold text-blue-600 dark:text-sky-400 mt-0.5 block"></span>
+            <div class="rounded-xl border border-line bg-card p-3.5">
+              <span class="block text-2xs uppercase tracking-wider text-ink-subtle font-display">Target Compensation</span>
+              <span id="res-comp" class="font-bold text-brand-indigo mt-0.5 block font-display"></span>
             </div>
           </div>
 
@@ -138,13 +138,13 @@
             <p id="res-summary" class="text-xs leading-relaxed text-ink-muted"></p>
           </div>
 
-          <div class="rounded-xl border border-line bg-surface p-4">
-            <span class="block text-2xs font-bold uppercase tracking-wider text-blue-600 dark:text-sky-400 mb-2">Key Learning Milestones</span>
+          <div class="rounded-xl border border-line bg-card p-4">
+            <span class="block text-2xs font-bold uppercase tracking-wider text-brand-indigo mb-2 font-display">Key Learning Milestones</span>
             <ul id="res-milestones" class="space-y-1.5 text-2xs text-ink-muted list-disc list-inside"></ul>
           </div>
 
-          <div class="pt-2">
-            <a href="#enquiry" class="inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-xs font-bold text-white shadow-md shadow-blue-500/25 transition-colors hover:bg-blue-500">
+          <div class="pt-2 font-display">
+            <a href="#enquiry" class="btn btn-indigo w-full justify-center text-xs">
               Enquire About This Cohort →
             </a>
           </div>
@@ -205,14 +205,14 @@
   </script>
 
   <!-- Programmes Header -->
-  <div class="mb-8 mt-20 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-4 reveal">
+  <div class="mb-8 mt-20 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-4 reveal font-sans">
     <div>
-      <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-2xs font-bold uppercase tracking-wider text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border border-blue-500/20">
+      <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1 text-2xs font-semibold uppercase tracking-wider text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300 border border-indigo-500/20 font-display">
         Available Curricula
       </span>
-      <h2 class="mt-2 font-display text-2xl font-bold text-ink sm:text-3xl">Active &amp; Upcoming Cohorts</h2>
+      <h2 class="mt-2 font-serif text-2xl font-bold text-ink sm:text-3xl">Active &amp; Upcoming Cohorts</h2>
     </div>
-    <a href="#enquiry" class="btn btn-secondary text-xs">
+    <a href="#enquiry" class="btn btn-secondary text-xs font-display">
       Request Custom Cohort
     </a>
   </div>
@@ -224,45 +224,45 @@
 </section>
 
 <!-- Custom Corporate Intake Strip -->
-<section class="border-t border-line bg-surface/50 py-16 md:py-24" id="enquiry">
+<section class="border-t border-line bg-paper py-16 md:py-24 font-sans" id="enquiry">
   <div class="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[1fr_1.4fr]">
     <div class="reveal">
-      <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-2xs font-bold uppercase tracking-wider text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border border-blue-500/20">
+      <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1 text-2xs font-semibold uppercase tracking-wider text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300 border border-indigo-500/20 font-display">
         Bespoke Engagements
       </span>
-      <h2 class="mt-3 font-display text-2xl font-bold text-ink sm:text-3xl">Tailored Corporate Training Inquiries</h2>
+      <h2 class="mt-3 font-serif text-2xl font-bold text-ink sm:text-3xl">Tailored Corporate Training Inquiries</h2>
       <p class="mt-4 text-base leading-relaxed text-ink-muted">
         Need enterprise-wide Scrum master certification, SAP S/4HANA user enablement, or structured technical re-skilling for team expansion? Connect directly with our education practice director.
       </p>
-      <div class="mt-8 space-y-4 rounded-2xl border border-line bg-card p-6 text-xs text-ink-muted kani-card-shadow">
+      <div class="mt-8 space-y-4 rounded-2xl border border-line bg-card p-6 text-xs text-ink-muted shadow-xs">
         <div class="flex items-center gap-3">
-          <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-sky-400">
+          <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 text-brand-indigo">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <div>
-            <span class="block font-semibold text-ink">Turnaround Time</span>
+            <span class="block font-semibold text-ink font-serif">Turnaround Time</span>
             <span>Intake responses within 1 business day</span>
           </div>
         </div>
         <div class="flex items-center gap-3">
-          <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-sky-400">
+          <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 text-brand-indigo">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
           <div>
-            <span class="block font-semibold text-ink">Enterprise Invoicing</span>
+            <span class="block font-semibold text-ink font-serif">Enterprise Invoicing</span>
             <span>Corporate PO &amp; vendor portal compatibility</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="rounded-2xl border border-line bg-card p-6 kani-card-shadow md:p-8 reveal delay-1">
-      <h3 class="font-display text-xl font-bold text-ink">Submit Cohort Inquiry</h3>
-      <p class="mt-1 text-xs text-ink-muted">Specify your team size, target competencies, and intended delivery timeline.</p>
+    <div class="rounded-2xl border border-line bg-card p-6 shadow-xs md:p-8 reveal delay-1">
+      <h3 class="font-serif text-xl font-bold text-ink">Submit Cohort Inquiry</h3>
+      <p class="mt-1 text-xs text-ink-muted font-sans">Specify your team size, target competencies, and intended delivery timeline.</p>
       <div class="mt-6">
         {% include "enquiries/_form.html" %}
       </div>

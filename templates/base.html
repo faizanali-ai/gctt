@@ -17,12 +17,12 @@
   <link rel="icon" type="image/svg+xml" href="{% static 'images/logo-icon.svg' %}">
   <link rel="alternate icon" href="{% static 'images/logo-small.webp' %}">
 
-  <!-- Typography: Google Fonts Preconnect & Stylesheets -->
+  <!-- Typography: Google Fonts Preconnect & Stylesheets (Modern Atmospheric: Lora, Inter, Space Grotesk) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="{% static 'css/output.css' %}?v=20261117-02">
+  <link rel="stylesheet" href="{% static 'css/output.css' %}?v=20261117-03">
   <!-- Immediate Theme Detector (prevents theme flicker) -->
   <script>
     (function () {
@@ -55,7 +55,7 @@
   }
   </script>
 </head>
-<body class="min-h-screen bg-paper font-sans text-ink antialiased selection:bg-accent/15 selection:text-ink">
+<body class="min-h-screen bg-paper font-sans text-ink antialiased selection:bg-indigo-500/20 selection:text-indigo-600 dark:selection:text-indigo-300">
   <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-brand focus:px-4 focus:py-2 focus:font-semibold focus:text-white">Skip to content</a>
   {% include "partials/_header.html" %}
   {% include "partials/_messages.html" %}

@@ -4,10 +4,10 @@
   {{ enquiry_form.website }}
   {% for field in enquiry_form.visible_fields %}
     <label class="block">
-      <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-ink-muted">{{ field.label }}</span>
+      <span class="mb-1.5 block font-display text-2xs font-bold uppercase tracking-wider text-ink-muted">{{ field.label }}</span>
       {{ field }}
-      {% if field.errors %}<span class="mt-1.5 block text-xs font-medium text-accent">{{ field.errors.0 }}</span>{% endif %}
+      {% if field.errors %}<span class="mt-1.5 block text-xs font-medium text-rose-500">{{ field.errors.0 }}</span>{% endif %}
     </label>
   {% endfor %}
-  <button type="submit" class="btn btn-primary w-full py-3.5 text-sm uppercase tracking-wider font-bold">Transmit Inquiry &rarr;</button>
+  <button type="submit" class="btn btn-primary w-full py-3.5 font-display text-xs uppercase tracking-wider font-bold">Transmit Inquiry &rarr;</button>
 </form>
