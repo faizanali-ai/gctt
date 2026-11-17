@@ -72,11 +72,12 @@ def api_career_advisor(request):
     except (json.JSONDecodeError, UnicodeDecodeError):
         data = request.POST
 
-    current_role = data.get("current_role", "")
+    current_role = data.get("current_role") or data.get("role") or ""
     experience = data.get("experience", "")
-    interests = data.get("interests", "")
+    interests = data.get("interests") or data.get("target_role") or ""
 
     result = analyze_career_trajectory(current_role, experience, interests)
+    result["guidance"] = result.get("summary", "")
     return JsonResponse({"success": True, "data": result})
 
 
@@ -118,19 +119,26 @@ def programme_register(request, slug):
             first_name = parts[0]
             last_name = parts[1] if len(parts) > 1 else ""
 
-            student, created = User.objects.get_or_create(
+            existing_user = User.objects.filter(email=email).first()
+            if existing_user:
+                from django.urls import reverse
+
+                messages.error(
+                    request,
+                    "An account with this email already exists. Please sign in to complete your enrollment.",
+                )
+                return redirect(f"{reverse('login')}?next={request.path}")
+
+            student = User.objects.create_user(
                 email=email,
-                defaults={
-                    "first_name": first_name,
-                    "last_name": last_name,
-                    "phone": phone,
-                    "account_type": User.AccountType.STUDENT,
-                    "is_staff": False,
-                },
+                first_name=first_name,
+                last_name=last_name,
+                phone=phone,
+                account_type=User.AccountType.STUDENT,
+                is_staff=False,
             )
-            if created:
-                student.set_unusable_password()
-                student.save()
+            student.set_unusable_password()
+            student.save()
 
             combined_notes = []
             if career_status:

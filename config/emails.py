@@ -19,10 +19,12 @@ def send(to, subject, body):
         logger.exception("Failed to send email to %s (subject: %s)", to, subject)
 
 
-def verification_url(user, request):
+def verification_url(user, request=None):
     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
     token = default_token_generator.make_token(user)
-    return request.build_absolute_uri(reverse("verify_email", args=[uidb64, token]))
+    base = getattr(settings, "SITE_URL", "https://gctekton.com").rstrip("/")
+    path = reverse("verify_email", args=[uidb64, token])
+    return f"{base}{path}"
 
 
 def send_verification(user, request):

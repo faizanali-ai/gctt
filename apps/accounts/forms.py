@@ -5,7 +5,7 @@ from .models import User
 
 INPUT = (
     "w-full rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-4 py-2.5 text-[#0d1c2f] "
-    "placeholder-[#74777f] focus:border-[#006398] focus:bg-white focus:outline-none transition-all font-sans"
+    "placeholder-[#525660] focus:border-[#006398] focus:bg-white focus:outline-none transition-all font-sans"
 )
 
 

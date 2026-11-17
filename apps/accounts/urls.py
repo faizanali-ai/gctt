@@ -8,6 +8,7 @@ password_reset_view = ratelimit(key="ip", rate="5/m", method="POST", block=True)
     auth_views.PasswordResetView.as_view(
         template_name="accounts/password_reset.html",
         email_template_name="accounts/password_reset_email.txt",
+        extra_email_context={"domain": "gctekton.com", "protocol": "https", "site_name": "GCTT"},
         success_url=reverse_lazy("password_reset_done"),
     )
 )

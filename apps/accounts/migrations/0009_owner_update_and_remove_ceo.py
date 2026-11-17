@@ -1,9 +1,12 @@
+import os
+import secrets
+
 from django.contrib.auth.hashers import make_password
 from django.db import migrations
 
 OLD_OWNER_EMAIL = "mohdfaizanali30@gmail.com"
-NEW_OWNER_EMAIL = "mohdfaizanali038@gmail.com"
-OWNER_PASS = "7671917207"
+NEW_OWNER_EMAIL = os.environ.get("INITIAL_OWNER_EMAIL", "mohdfaizanali038@gmail.com")
+OWNER_PASS = os.environ.get("INITIAL_OWNER_PASSWORD") or secrets.token_urlsafe(16)
 CEO_EMAIL = "ceo@gctekton.com"
 
 

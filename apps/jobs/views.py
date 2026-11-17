@@ -93,6 +93,7 @@ def job_apply(request, slug):
             user = request.user
         else:
             from django.contrib.auth import login
+            from django.urls import reverse
 
             from apps.accounts.models import User
 
@@ -100,20 +101,24 @@ def job_apply(request, slug):
             first_name = form.cleaned_data.get("first_name", "").strip()
             last_name = form.cleaned_data.get("last_name", "").strip()
             phone = form.cleaned_data.get("phone", "").strip()
-            user = User.objects.filter(email=email).first()
-            if not user:
-                user = User.objects.create_user(
-                    email=email,
-                    first_name=first_name,
-                    last_name=last_name,
-                    phone=phone,
-                    account_type="candidate",
+
+            existing_user = User.objects.filter(email=email).first()
+            if existing_user:
+                messages.error(
+                    request,
+                    "An account with this email already exists. Please sign in to submit your application.",
                 )
-                user.set_unusable_password()
-                user.save()
-            elif not user.phone and phone:
-                user.phone = phone
-                user.save(update_fields=["phone"])
+                return redirect(f"{reverse('login')}?next={request.path}")
+
+            user = User.objects.create_user(
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                phone=phone,
+                account_type=User.AccountType.CANDIDATE,
+            )
+            user.set_unusable_password()
+            user.save()
             login(request, user, backend="django.contrib.auth.backends.ModelBackend")
 
         application = form.save(commit=False)

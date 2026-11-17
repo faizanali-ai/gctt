@@ -12,7 +12,7 @@ SIGNATURES = {
 }
 
 
-JOB_INPUT_CLASS = "w-full rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-4 py-2.5 text-sm text-[#0d1c2f] focus:border-[#006398] focus:outline-hidden"
+JOB_INPUT_CLASS = "w-full rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-4 py-2.5 text-sm text-[#0d1c2f] placeholder-[#525660] focus:border-[#006398] focus:bg-white focus:outline-hidden"
 
 
 class ApplicationForm(forms.ModelForm):

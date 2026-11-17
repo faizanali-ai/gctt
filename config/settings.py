@@ -20,8 +20,6 @@ base_allowed_hosts = [
     "127.0.0.1",
     "gctekton.com",
     "www.gctekton.com",
-    ".gctekton.com",
-    ".onrender.com",
 ]
 env_allowed_hosts = [
     host.strip()
@@ -33,8 +31,6 @@ ALLOWED_HOSTS = list(dict.fromkeys(base_allowed_hosts + env_allowed_hosts))
 base_csrf_origins = [
     "https://gctekton.com",
     "https://www.gctekton.com",
-    "https://*.onrender.com",
-    "https://*.gctekton.com",
 ]
 env_csrf_origins = [
     origin.strip()
@@ -42,6 +38,8 @@ env_csrf_origins = [
     if origin.strip()
 ]
 CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(base_csrf_origins + env_csrf_origins))
+
+SITE_URL = os.environ.get("SITE_URL", "https://gctekton.com").rstrip("/")
 
 # Render injects its public hostname; trust it automatically.
 RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME", "")

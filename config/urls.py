@@ -58,6 +58,7 @@ urlpatterns = [
     path("terms/", views.page, {"template": "terms"}, name="terms"),
     path("careers/", include("apps.jobs.urls")),
     path("training/", include("apps.training.urls")),
+    path("api/career-advisor/", training_views.api_career_advisor, name="api_career_advisor_alias"),
     path("enquiries/", include("apps.enquiries.urls")),
     path("accounts/", include("apps.accounts.urls")),
     path("dashboard/", accounts_views.dashboard, name="dashboard"),

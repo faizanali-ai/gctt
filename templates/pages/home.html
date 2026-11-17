@@ -523,7 +523,7 @@
             <div class="w-8 h-8 rounded-lg bg-white border border-[#dde9ff] flex items-center justify-center text-[#006398] shrink-0">
               <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             </div>
-            <span><strong>Careers:</strong> <a href="mailto:{{ COMPANY.jobsEmail }}" class="text-[#006398] hover:underline">{{ COMPANY.jobsEmail }}</a></span>
+            <span><strong>Careers:</strong> <a href="mailto:{{ COMPANY.jobs_email }}" class="text-[#006398] hover:underline">{{ COMPANY.jobs_email }}</a></span>
           </div>
           <div class="flex items-center gap-3 text-sm text-[#0d1c2f]">
             <div class="w-8 h-8 rounded-lg bg-white border border-[#dde9ff] flex items-center justify-center text-[#006398] shrink-0">
@@ -590,12 +590,12 @@
             <div>
               <label class="block text-xs font-semibold text-[#000e27] mb-1">I am interested in *</label>
               <select name="category" required class="w-full text-sm rounded-lg border border-[#dde9ff] px-3.5 py-2.5 bg-[#f8f9ff] text-[#0d1c2f] focus:outline-none focus:border-[#006398]">
-                <option value="IT Staffing">IT Staffing</option>
-                <option value="Recruitment">Recruitment</option>
-                <option value="Talent Acquisition">Talent Acquisition</option>
-                <option value="Training">Training &amp; Development</option>
-                <option value="Job opportunities">Job Opportunities / Career Restart</option>
-                <option value="Other">Other Corporate Enquiries</option>
+                <option value="it_staffing">IT Staffing</option>
+                <option value="recruitment">Recruitment</option>
+                <option value="talent_acquisition">Talent Acquisition</option>
+                <option value="training">Training &amp; Development</option>
+                <option value="career_restart">Job Opportunities / Career Restart</option>
+                <option value="general">Other Corporate Enquiries</option>
               </select>
             </div>
 
@@ -646,21 +646,22 @@ async function runAdvisor(event) {
   btn.innerText = 'Evaluating Career Pathway...';
 
   try {
-    const response = await fetch('/api/career-advisor/', {
+    const response = await fetch('{% url "api_career_advisor" %}', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-CSRFToken': '{{ csrf_token }}'
       },
-      body: JSON.stringify({ role: role, target_role: target })
+      body: JSON.stringify({ current_role: role, interests: target, experience: "" })
     });
     const data = await response.json();
-    if (data.success) {
+    if (data.success && data.data) {
       res.classList.remove('hidden');
       res.innerHTML = `
-        <p class="font-bold text-[#000e27]">Recommended Pathway: ${data.data.track}</p>
-        <p class="mt-1 text-xs text-[#006398] font-semibold">Fit Score: ${data.data.fit_score}% match</p>
-        <p class="mt-1 text-xs text-[#44474e]">${data.data.guidance || ''}</p>
+        <p class="font-bold text-[#000e27]">Recommended Pathway: ${data.data.track || ''}</p>
+        <p class="mt-1 text-xs text-[#006398] font-semibold">Fit Score: ${data.data.fit_score || 95}% match · ${data.data.timeline || ''}</p>
+        <p class="mt-1.5 text-xs text-[#44474e] leading-relaxed">${data.data.summary || data.data.guidance || ''}</p>
+        ${data.data.programme ? `<p class="mt-2 text-2xs font-mono text-[#000e27]"><strong>Curriculum:</strong> ${data.data.programme}</p>` : ''}
       `;
     }
   } catch (err) {

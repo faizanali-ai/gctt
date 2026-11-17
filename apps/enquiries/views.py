@@ -38,9 +38,13 @@ def submit_enquiry(request):
     form = EnquiryForm(request.POST)
     if form.is_valid():
         enquiry = form.save(commit=False)
-        enquiry.category = CATEGORY_BY_PAGE.get(
-            request.POST.get("next", ""), Enquiry.Category.GENERAL
-        )
+        post_cat = request.POST.get("category", "").strip().lower()
+        if post_cat in Enquiry.Category.values:
+            enquiry.category = post_cat
+        else:
+            enquiry.category = CATEGORY_BY_PAGE.get(
+                request.POST.get("next", ""), Enquiry.Category.GENERAL
+            )
         enquiry.save()
         notify_enquiry(enquiry)
         notify_enquiry_received(enquiry)

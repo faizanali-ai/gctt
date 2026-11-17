@@ -4,6 +4,7 @@ COMPANY = {
     "tagline": "Bridging Elite Talent. Delivering Enterprise Certainty.",
     "email": "accounts@gctekton.com",
     "jobs_email": "jobs@gctekton.com",
+    "jobsEmail": "jobs@gctekton.com",
     "address": "2612 Laramie St, Irving TX 75062",
     "domain": "gctekton.com",
     "url": "https://gctekton.com",

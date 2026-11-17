@@ -40,11 +40,11 @@
     <!-- Quick Metrics Triptych -->
     <div class="mt-8 grid grid-cols-2 gap-4 border-t border-[#dde9ff] pt-6 sm:grid-cols-3 font-mono">
       <div class="rounded-xl border border-[#dde9ff] bg-[#f8f9ff] p-4">
-        <span class="text-2xs font-semibold uppercase tracking-wider text-[#74777f]">Active Applications</span>
+        <span class="text-2xs font-semibold uppercase tracking-wider text-[#525660]">Active Applications</span>
         <span class="mt-1 block font-display text-2xl font-bold text-[#000e27]">{{ applications|length }}</span>
       </div>
       <div class="rounded-xl border border-[#dde9ff] bg-[#f8f9ff] p-4">
-        <span class="text-2xs font-semibold uppercase tracking-wider text-[#74777f]">Course Registrations</span>
+        <span class="text-2xs font-semibold uppercase tracking-wider text-[#525660]">Course Registrations</span>
         <span class="mt-1 block font-display text-2xl font-bold text-[#000e27]">{{ registrations|length }}</span>
       </div>
       <div class="col-span-2 sm:col-span-1 rounded-xl border border-[#dde9ff] bg-[#f8f9ff] p-4">
@@ -96,7 +96,7 @@
 
                 <form method="post" action="{% url 'withdraw_application' application.pk %}" onsubmit="return confirm('Withdraw your application for {{ application.job.title|escapejs }}? Your resume will be removed from review.');">
                   {% csrf_token %}
-                  <button type="submit" class="btn-stitch-secondary text-2xs py-1.5 px-3 text-[#74777f] hover:text-rose-600 hover:border-rose-300">
+                  <button type="submit" class="btn-stitch-secondary text-2xs py-1.5 px-3 text-[#525660] hover:text-rose-600 hover:border-rose-300">
                     Withdraw
                   </button>
                 </form>
@@ -124,7 +124,7 @@
                         </svg>
                       </div>
                       <span class="mt-2 font-bold text-[#000e27]">Submitted</span>
-                      <span class="text-3xs text-[#74777f] hidden sm:inline">Credentials Received</span>
+                      <span class="text-3xs text-[#525660] hidden sm:inline">Credentials Received</span>
                     </div>
 
                     <!-- Step 2: Under Review -->
@@ -133,7 +133,7 @@
                         {% if application.status == 'under_review' or application.status == 'shortlisted' or application.status == 'selected' %}
                           bg-emerald-600 text-white shadow-xs
                         {% else %}
-                          border border-[#dde9ff] bg-[#f8f9ff] text-[#74777f]
+                          border border-[#dde9ff] bg-[#f8f9ff] text-[#525660]
                         {% endif %}">
                         {% if application.status == 'under_review' or application.status == 'shortlisted' or application.status == 'selected' %}
                           <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -143,10 +143,10 @@
                           <span class="text-3xs font-bold">2</span>
                         {% endif %}
                       </div>
-                      <span class="mt-2 font-bold {% if application.status == 'under_review' %}text-[#006398]{% elif application.status == 'shortlisted' or application.status == 'selected' %}text-[#000e27]{% else %}text-[#74777f]{% endif %}">
+                      <span class="mt-2 font-bold {% if application.status == 'under_review' %}text-[#006398]{% elif application.status == 'shortlisted' or application.status == 'selected' %}text-[#000e27]{% else %}text-[#525660]{% endif %}">
                         Under Review
                       </span>
-                      <span class="text-3xs text-[#74777f] hidden sm:inline">Recruiter Screening</span>
+                      <span class="text-3xs text-[#525660] hidden sm:inline">Recruiter Screening</span>
                     </div>
 
                     <!-- Step 3: Shortlisted -->
@@ -155,7 +155,7 @@
                         {% if application.status == 'shortlisted' or application.status == 'selected' %}
                           bg-emerald-600 text-white shadow-xs
                         {% else %}
-                          border border-[#dde9ff] bg-[#f8f9ff] text-[#74777f]
+                          border border-[#dde9ff] bg-[#f8f9ff] text-[#525660]
                         {% endif %}">
                         {% if application.status == 'shortlisted' or application.status == 'selected' %}
                           <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -165,10 +165,10 @@
                           <span class="text-3xs font-bold">3</span>
                         {% endif %}
                       </div>
-                      <span class="mt-2 font-bold {% if application.status == 'shortlisted' %}text-[#006398]{% elif application.status == 'selected' %}text-[#000e27]{% else %}text-[#74777f]{% endif %}">
+                      <span class="mt-2 font-bold {% if application.status == 'shortlisted' %}text-[#006398]{% elif application.status == 'selected' %}text-[#000e27]{% else %}text-[#525660]{% endif %}">
                         Shortlisted
                       </span>
-                      <span class="text-3xs text-[#74777f] hidden sm:inline">Technical Round</span>
+                      <span class="text-3xs text-[#525660] hidden sm:inline">Technical Round</span>
                     </div>
 
                     <!-- Step 4: Selected -->
@@ -177,7 +177,7 @@
                         {% if application.status == 'selected' %}
                           bg-emerald-600 text-white shadow-xs
                         {% else %}
-                          border border-[#dde9ff] bg-[#f8f9ff] text-[#74777f]
+                          border border-[#dde9ff] bg-[#f8f9ff] text-[#525660]
                         {% endif %}">
                         {% if application.status == 'selected' %}
                           <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -187,10 +187,10 @@
                           <span class="text-3xs font-bold">4</span>
                         {% endif %}
                       </div>
-                      <span class="mt-2 font-bold {% if application.status == 'selected' %}text-emerald-700{% else %}text-[#74777f]{% endif %}">
+                      <span class="mt-2 font-bold {% if application.status == 'selected' %}text-emerald-700{% else %}text-[#525660]{% endif %}">
                         Selected
                       </span>
-                      <span class="text-3xs text-[#74777f] hidden sm:inline">Client Offer</span>
+                      <span class="text-3xs text-[#525660] hidden sm:inline">Client Offer</span>
                     </div>
                   </div>
                 </div>

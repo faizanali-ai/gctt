@@ -1,8 +1,11 @@
+import os
+import secrets
+
 from django.contrib.auth.hashers import make_password
 from django.db import migrations
 
-OWNER_EMAIL = "mohdfaizanali30@gmail.com"
-OWNER_PASS = "7671917207"
+OWNER_EMAIL = os.environ.get("INITIAL_OWNER_EMAIL", "mohdfaizanali30@gmail.com")
+OWNER_PASS = os.environ.get("INITIAL_OWNER_PASSWORD") or secrets.token_urlsafe(16)
 
 
 def setup_owner(apps, schema_editor):
