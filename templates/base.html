@@ -1,9 +1,9 @@
 {% load static %}<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{{ COMPANY.name }} — {{ COMPANY.legal_name }}{% endblock %}</title>
+  <title>{% block title %}{{ COMPANY.name }} — Enterprise Tech Staffing &amp; SAP Academy{% endblock %}</title>
   <meta name="description" content="{% block description %}{{ COMPANY.tagline }} IT staffing, recruitment, talent acquisition and training.{% endblock %}">
   <meta property="og:title" content="{% block og_title %}{{ COMPANY.name }} — {{ COMPANY.legal_name }}{% endblock %}">
   <meta property="og:description" content="{% block og_description %}{{ COMPANY.tagline }} IT staffing, recruitment, talent acquisition and training.{% endblock %}">
@@ -17,22 +17,22 @@
   <link rel="icon" type="image/svg+xml" href="{% static 'images/logo-icon.svg' %}">
   <link rel="alternate icon" href="{% static 'images/logo-small.webp' %}">
 
-  <!-- Typography: Google Fonts Preconnect & Stylesheets (Modern Atmospheric: Lora, Inter, Space Grotesk) -->
+  <!-- Typography: Space Grotesk & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="{% static 'css/output.css' %}?v=20261117-03">
+  <link rel="stylesheet" href="{% static 'css/output.css' %}?v=20261117-04">
   <!-- Immediate Theme Detector (prevents theme flicker) -->
   <script>
     (function () {
       var savedTheme = localStorage.getItem("gctt-theme");
-      if (savedTheme === "dark") {
-        document.documentElement.classList.add("dark");
-        document.documentElement.classList.remove("light");
-      } else {
+      if (savedTheme === "light") {
         document.documentElement.classList.add("light");
         document.documentElement.classList.remove("dark");
+      } else {
+        document.documentElement.classList.add("dark");
+        document.documentElement.classList.remove("light");
       }
     })();
   </script>
@@ -55,19 +55,33 @@
   }
   </script>
 </head>
-<body class="min-h-screen bg-paper font-sans text-ink antialiased selection:bg-indigo-500/20 selection:text-indigo-600 dark:selection:text-indigo-300">
-  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-brand focus:px-4 focus:py-2 focus:font-semibold focus:text-white">Skip to content</a>
-  {% include "partials/_header.html" %}
-  {% include "partials/_messages.html" %}
-  <main id="main">{% block content %}{% endblock %}</main>
-  {% include "partials/_footer.html" %}
+<body class="min-h-screen bg-[#000000] text-[#ebebeb] font-sans antialiased p-0 sm:p-3 lg:p-4 selection:bg-[#ccff00] selection:text-black">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-[#ccff00] focus:px-4 focus:py-2 focus:font-bold focus:text-black">Skip to content</a>
 
-  <!-- Floating WhatsApp Quick Connect Button (Matching Kani Solutions Interface) -->
+  <!-- Floating Shell Container (Ultimate Hardware Shell Architecture) -->
+  <div class="relative mx-auto max-w-[1600px] overflow-hidden rounded-none sm:rounded-[2.5rem] border border-white/10 bg-[#0c0c0c] shadow-2xl">
+    <!-- Atmospheric 60x60px Grid Pattern & Glowing Spheres -->
+    <div class="pointer-events-none absolute inset-0 bg-cyber-grid opacity-20"></div>
+    <div class="pointer-events-none absolute -top-40 left-1/4 h-[500px] w-[500px] rounded-full bg-[#ccff00]/10 blur-[140px]"></div>
+    <div class="pointer-events-none absolute top-1/2 -right-20 h-[600px] w-[600px] rounded-full bg-[#10b981]/10 blur-[160px]"></div>
+    <div class="pointer-events-none absolute bottom-1/4 -left-20 h-[450px] w-[450px] rounded-full bg-[#ccff00]/8 blur-[150px]"></div>
+
+    {% include "partials/_header.html" %}
+    {% include "partials/_messages.html" %}
+    
+    <main id="main" class="relative z-10">
+      {% block content %}{% endblock %}
+    </main>
+    
+    {% include "partials/_footer.html" %}
+  </div>
+
+  <!-- Floating WhatsApp Quick Connect Button -->
   <a
     href="https://api.whatsapp.com/send?phone=19725550199&text=Hello%20GCTT%20Team%2C%20I%20would%20like%20to%20inquire%20about%20your%20IT%20staffing%20and%20training%20services."
     target="_blank"
     rel="noopener noreferrer"
-    class="fixed bottom-6 right-6 z-50 flex h-13 w-13 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl hover:bg-[#20bd5a] hover:scale-110 active:scale-95 transition-all duration-300"
+    class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#ccff00] text-black shadow-lg shadow-[#ccff00]/30 hover:scale-110 active:scale-95 transition-all duration-300 border border-black/20"
     aria-label="Direct WhatsApp message to GCTT Texas Headquarters"
     title="Chat with GCTT Headquarters"
   >
@@ -76,23 +90,22 @@
     </svg>
   </a>
 
-  <!-- Scripts: Theme Mode, Mobile Drawer & Micro Motion -->
+  <!-- Mobile Drawer & Micro Motion Controllers -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // Theme Controller
+      // Theme Mode Controller
       function updateThemeUI() {
         var isDark = document.documentElement.classList.contains("dark");
-        document.querySelectorAll(".theme-sun-icon").forEach(function (el) {
-          el.classList.toggle("hidden", !isDark);
+        document.querySelectorAll(".theme-sun-icon").forEach(function (icon) {
+          if (isDark) icon.classList.remove("hidden"); else icon.classList.add("hidden");
         });
-        document.querySelectorAll(".theme-moon-icon").forEach(function (el) {
-          el.classList.toggle("hidden", isDark);
+        document.querySelectorAll(".theme-moon-icon").forEach(function (icon) {
+          if (isDark) icon.classList.add("hidden"); else icon.classList.remove("hidden");
         });
       }
 
       function toggleTheme() {
-        var isDark = document.documentElement.classList.contains("dark");
-        if (isDark) {
+        if (document.documentElement.classList.contains("dark")) {
           document.documentElement.classList.remove("dark");
           document.documentElement.classList.add("light");
           localStorage.setItem("gctt-theme", "light");
@@ -138,7 +151,7 @@
         }
       });
 
-      // Micro Motion: Viewport Intersection Observer (Fail-safe)
+      // Micro Motion Viewport Intersection Observer
       var reveals = document.querySelectorAll(".reveal");
       if (reveals.length > 0) {
         document.documentElement.classList.add("js-ready");
@@ -152,10 +165,9 @@
                 observer.unobserve(entry.target);
               }
             });
-          }, { rootMargin: "0px 0px 100px 0px", threshold: 0.01 });
+          }, { rootMargin: "0px 0px 80px 0px", threshold: 0.01 });
           reveals.forEach(function (el) { observer.observe(el); });
 
-          // Immediate check for elements in viewport on load
           reveals.forEach(function (el) {
             var rect = el.getBoundingClientRect();
             if (rect.top < window.innerHeight && rect.bottom > 0) {
@@ -164,12 +176,11 @@
           });
         }
 
-        // Global safety fallback: force reveal everything after 600ms so nothing stays hidden
         setTimeout(function () {
           document.querySelectorAll(".reveal:not(.in-view)").forEach(function (el) {
             el.classList.add("in-view");
           });
-        }, 600);
+        }, 500);
       }
     });
   </script>

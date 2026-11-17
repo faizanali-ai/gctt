@@ -1,14 +1,14 @@
 {% if programmes %}
   <div class="grid gap-6 md:grid-cols-2 font-sans">
     {% for programme in programmes %}
-      <a href="{% url 'programme_detail' programme.slug %}" class="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-line bg-card shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-brand-indigo/40 hover:shadow-xl dark:border-slate-800">
+      <a href="{% url 'programme_detail' programme.slug %}" class="glass-card-hover group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 shadow-xl transition-all duration-300">
         {% if programme.image_url %}
-          <div class="relative h-48 w-full overflow-hidden border-b border-line bg-paper">
+          <div class="relative h-48 w-full overflow-hidden border-b border-white/10 bg-white/[0.02]">
             <img src="{{ programme.image_url }}" alt="{{ programme.title }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
             {% if programme.category %}
-              <div class="absolute left-4 top-4 font-display">
-                <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-950/80 px-3 py-1 text-2xs font-semibold uppercase tracking-wider text-indigo-300 shadow-md backdrop-blur-md border border-indigo-500/30">
-                  <span class="h-1.5 w-1.5 rounded-full bg-indigo-400"></span>
+              <div class="absolute left-4 top-4 font-mono">
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-black/80 px-3 py-1 text-2xs font-semibold uppercase tracking-wider text-[#ccff00] shadow-md backdrop-blur-md border border-[#ccff00]/30">
+                  <span class="h-1.5 w-1.5 rounded-full bg-[#ccff00]"></span>
                   {{ programme.category.name }}
                 </span>
               </div>
@@ -18,37 +18,37 @@
 
         <div class="flex-1 p-6 sm:p-8">
           {% if not programme.image_url and programme.category %}
-            <div class="mb-3 font-display">
-              <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-0.5 text-2xs font-semibold uppercase tracking-wider text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300 border border-indigo-500/20">
-                <span class="h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
+            <div class="mb-3 font-mono">
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-[#ccff00]/10 px-3 py-0.5 text-2xs font-semibold uppercase tracking-wider text-[#ccff00] border border-[#ccff00]/30">
+                <span class="h-1.5 w-1.5 rounded-full bg-[#ccff00]"></span>
                 {{ programme.category.name }}
               </span>
             </div>
           {% endif %}
 
-          <h3 class="font-serif text-xl font-bold text-ink transition-colors group-hover:text-brand-indigo">
+          <h3 class="font-display text-xl font-bold text-white transition-colors group-hover:text-[#ccff00]">
             {{ programme.title }}
           </h3>
 
-          <div class="mt-3 flex flex-wrap items-center gap-2 text-2xs font-medium text-ink-muted font-display">
-            <span class="rounded-md border border-line bg-paper px-2.5 py-1 font-semibold text-ink">
+          <div class="mt-3 flex flex-wrap items-center gap-2 text-2xs font-medium text-slate-400 font-mono">
+            <span class="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1 font-semibold text-white">
               {{ programme.get_delivery_mode_display }}
             </span>
             {% if programme.duration %}
-              <span class="text-ink-muted">· {{ programme.duration }}</span>
+              <span class="text-slate-400">· {{ programme.duration }}</span>
             {% endif %}
             {% if programme.schedule %}
-              <span class="text-ink-muted">· {{ programme.schedule }}</span>
+              <span class="text-slate-400">· {{ programme.schedule }}</span>
             {% endif %}
           </div>
 
-          <p class="mt-4 line-clamp-3 text-sm leading-relaxed text-ink-muted font-sans">
+          <p class="mt-4 line-clamp-3 text-sm leading-relaxed text-slate-300 font-sans">
             {{ programme.description }}
           </p>
         </div>
 
-        <div class="border-t border-line-subtle bg-paper/60 px-6 py-4 text-xs dark:bg-slate-900/40 font-display">
-          <span class="inline-flex items-center gap-1.5 font-semibold text-brand-indigo transition-transform group-hover:translate-x-1">
+        <div class="border-t border-white/10 bg-white/[0.02] px-6 py-4 text-xs font-mono">
+          <span class="inline-flex items-center gap-1.5 font-semibold text-[#ccff00] transition-transform group-hover:translate-x-1">
             Review Syllabus &amp; Register
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -59,14 +59,14 @@
     {% endfor %}
   </div>
 {% else %}
-  <div class="rounded-2xl border border-dashed border-line bg-card p-12 text-center shadow-xs font-sans">
-    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-brand-indigo dark:bg-indigo-950/60 dark:text-indigo-400">
+  <div class="glass-card rounded-2xl border border-dashed border-white/10 p-12 text-center shadow-xs font-sans">
+    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ccff00]/10 text-[#ccff00] border border-[#ccff00]/30">
       <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
       </svg>
     </div>
-    <h3 class="mt-4 font-serif text-2xl font-bold text-ink">Upcoming Cohorts in Development</h3>
-    <p class="mx-auto mt-2 max-w-md text-sm text-ink-muted">New certification cohorts are released quarterly. Register your interest to receive advance syllabus notification and early enrolment access.</p>
-    <a href="#enquiry" class="btn btn-indigo mt-6 font-display">Request Cohort Alert</a>
+    <h3 class="mt-4 font-display text-2xl font-bold text-white">Upcoming Cohorts in Development</h3>
+    <p class="mx-auto mt-2 max-w-md text-sm text-slate-300">New certification cohorts are released quarterly. Register your interest to receive advance syllabus notification and early enrolment access.</p>
+    <a href="#enquiry" class="btn-lime mt-6 font-mono">Request Cohort Alert</a>
   </div>
 {% endif %}

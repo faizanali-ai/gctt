@@ -1,54 +1,53 @@
 {% extends "base.html" %}
-{% block title %}Executive Returnship Accelerator — GCTT{% endblock %}
+{% block title %}Executive Returnship Accelerator — GCTekton{% endblock %}
 {% block content %}
 {% include "partials/_hero.html" with eyebrow="Executive Returnship Initiative" title="Bridging seasoned expertise back into enterprise technology leadership." intro="Taking a planned career sabbatical, caregiving leave, or relocation pause should never diminish years of hard-won engineering and architectural depth. Our executive accelerator pairs structured re-tooling with direct enterprise re-entry." %}
 
-<section class="mx-auto max-w-7xl px-6 py-16 lg:py-24 font-sans">
-  <!-- Value & Commitment Split -->
+<section class="mx-auto max-w-7xl px-6 sm:px-12 py-16 lg:py-24 font-sans border-b border-white/10">
   <div class="grid gap-16 lg:grid-cols-[1.1fr_1.2fr] lg:items-start">
-    <div class="space-y-6 text-base leading-relaxed text-ink-muted sm:text-lg reveal">
-      <div class="inline-flex items-center gap-2 rounded-full border border-indigo-500/20 bg-indigo-50/50 px-3.5 py-1 text-2xs font-semibold uppercase tracking-wider text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300 font-display">
-        <span class="h-2 w-2 rounded-full bg-indigo-500 animate-pulse"></span>
-        Zero Fees to Candidates · Texas Workforce Ethics
+    <div class="space-y-6 text-base leading-relaxed text-white/70 sm:text-lg reveal">
+      <div class="inline-flex items-center gap-2 rounded-full border border-[#ccff00]/30 bg-[#ccff00]/10 px-4 py-1 font-mono text-2xs uppercase tracking-widest text-[#ccff00]">
+        <span class="h-2 w-2 rounded-full bg-[#ccff00] animate-pulse"></span>
+        <span>Zero Fees to Candidates · Texas Workforce Ethics</span>
       </div>
-      <h2 class="font-serif text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-        We honor your career maturity and institutional depth—not the <span class="text-brand-indigo">calendar gap</span> on your resume.
+      <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-white">
+        We honor your career maturity and institutional depth—not the <span class="text-[#ccff00]">calendar gap</span> on your resume.
       </h2>
-      <p class="text-sm sm:text-base font-sans">Whether you stepped away for family care, health restoration, military transition, or personal sabbaticals, your foundational systems engineering, project leadership, or business analysis expertise remains irreplaceable. GCTT partners with progressive enterprise employers who actively recognize that perspective, emotional intelligence, and seasoned judgment drive superior project outcomes.</p>
+      <p class="text-sm sm:text-base font-sans text-white/60">Whether you stepped away for family care, health restoration, military transition, or personal sabbaticals, your foundational systems engineering, project leadership, or business analysis expertise remains irreplaceable. GCTekton partners with progressive enterprise employers who actively recognize that perspective, emotional intelligence, and seasoned judgment drive superior project outcomes.</p>
       
-      <div class="space-y-4 border-t border-line/60 pt-6 text-sm text-ink font-sans">
-        <div class="group rounded-2xl border border-line bg-card p-5 shadow-xs transition-all hover:border-brand-indigo/40 hover:-translate-y-0.5">
+      <div class="space-y-4 border-t border-white/10 pt-6 text-sm text-white font-sans">
+        <div class="glass-card-hover p-5 border border-white/10 bg-white/[0.02]">
           <div class="flex items-start gap-4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/25">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ccff00] text-black font-bold">
               <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
             </div>
             <div>
-              <p class="font-serif text-base font-bold text-ink">Modern Toolchain &amp; Cloud Retooling</p>
-              <p class="mt-1 text-xs text-ink-muted leading-relaxed font-sans">Access intensive refresher sandboxes in SAP S/4HANA functional workflows, modern CI/CD orchestration, and Scaled Agile ceremonies to immediately restore operational confidence.</p>
+              <p class="font-display text-base font-bold text-white">Modern Toolchain &amp; Cloud Retooling</p>
+              <p class="mt-1 text-xs text-white/60 leading-relaxed font-sans">Access intensive refresher sandboxes in SAP S/4HANA functional workflows, modern CI/CD orchestration, and Scaled Agile ceremonies to immediately restore operational confidence.</p>
             </div>
           </div>
         </div>
 
-        <div class="group rounded-2xl border border-line bg-card p-5 shadow-xs transition-all hover:border-brand-indigo/40 hover:-translate-y-0.5">
+        <div class="glass-card-hover p-5 border border-white/10 bg-white/[0.02]">
           <div class="flex items-start gap-4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-600 text-white shadow-md shadow-purple-500/25">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#10b981] text-black font-bold">
               <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             </div>
             <div>
-              <p class="font-serif text-base font-bold text-ink">Direct Corporate Sponsor Introductions</p>
-              <p class="mt-1 text-xs text-ink-muted leading-relaxed font-sans">Bypass automated ATS filtering algorithms with warm executive introductions directly to engineering directors committed to structured returnship placements.</p>
+              <p class="font-display text-base font-bold text-white">Direct Corporate Sponsor Introductions</p>
+              <p class="mt-1 text-xs text-white/60 leading-relaxed font-sans">Bypass automated ATS filtering algorithms with warm executive introductions directly to engineering directors committed to structured returnship placements.</p>
             </div>
           </div>
         </div>
 
-        <div class="group rounded-2xl border border-line bg-card p-5 shadow-xs transition-all hover:border-brand-indigo/40 hover:-translate-y-0.5">
+        <div class="glass-card-hover p-5 border border-white/10 bg-white/[0.02]">
           <div class="flex items-start gap-4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-600 text-white shadow-md shadow-sky-500/25">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-black font-bold">
               <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
             </div>
             <div>
-              <p class="font-serif text-base font-bold text-ink">Mentorship &amp; Executive Coaching</p>
-              <p class="mt-1 text-xs text-ink-muted leading-relaxed font-sans">1-on-1 portfolio review, interview rehearsal, and compensation alignment conducted by seasoned industry mentors.</p>
+              <p class="font-display text-base font-bold text-white">Mentorship &amp; Executive Coaching</p>
+              <p class="mt-1 text-xs text-white/60 leading-relaxed font-sans">1-on-1 portfolio review, interview rehearsal, and compensation alignment conducted by seasoned industry mentors.</p>
             </div>
           </div>
         </div>
@@ -56,57 +55,16 @@
     </div>
 
     <!-- Intake Form Card -->
-    <div class="rounded-3xl border border-line bg-card p-8 shadow-xs sm:p-10 reveal delay-1">
-      <div class="border-b border-line pb-4 font-display">
-        <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1 text-2xs font-semibold uppercase tracking-wider text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300 border border-indigo-500/20">
-          Confidential Onboarding
+    <div class="rounded-3xl border border-white/15 bg-white/[0.03] p-8 shadow-xs sm:p-10 glass-card reveal delay-1">
+      <div class="border-b border-white/10 pb-4">
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-[#ccff00]/10 px-3 py-1 font-mono text-2xs uppercase tracking-widest text-[#ccff00] border border-[#ccff00]/30">
+          Confidential Relaunch Intake
         </span>
-        <h3 class="mt-2 font-serif text-xl font-bold text-ink sm:text-2xl">Apply for the Executive Returnship</h3>
-        <p class="mt-1.5 text-xs text-ink-muted font-sans">Share your professional background and target domain. Our returnship advisory team will schedule a confidential exploratory consultation.</p>
+        <h3 class="mt-3 font-display text-2xl font-bold text-white">Apply for Returnship Cohort</h3>
+        <p class="mt-1.5 text-xs text-white/60 font-sans">Share your professional background and target domain. Our returnship advisory team will schedule a confidential exploratory consultation.</p>
       </div>
       <div class="mt-6">
-        {% include "enquiries/_form.html" %}
-      </div>
-    </div>
-  </div>
-
-  <!-- 3-Phase Returnship Roadmap -->
-  <div class="mt-20 border-t border-line pt-16">
-    <div class="text-center reveal font-sans">
-      <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1 text-2xs font-semibold uppercase tracking-wider text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300 border border-indigo-500/20 font-display">
-        Structured Accelerator Framework
-      </span>
-      <h2 class="mt-3 font-serif text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-        The 90-Day Return-to-Leadership Roadmap
-      </h2>
-      <p class="mx-auto mt-2 max-w-xl text-xs sm:text-sm text-ink-muted font-sans">
-        A calibrated, structured progression that transitions sabbatical candidates into deployed enterprise architects.
-      </p>
-    </div>
-
-    <div class="mt-12 grid gap-6 sm:grid-cols-3 reveal font-sans">
-      <div class="rounded-2xl border border-line bg-card p-7 shadow-xs">
-        <span class="text-3xl font-bold text-brand-indigo font-display">01</span>
-        <h3 class="mt-3 font-serif text-lg font-bold text-ink">Skills Calibration &amp; Sandboxes</h3>
-        <p class="mt-2 text-xs leading-relaxed text-ink-muted">
-          Hands-on access to live SAP S/4HANA sandbox environments, cloud CI/CD pipelines, and active Jira/Scrum boards to eliminate toolchain friction.
-        </p>
-      </div>
-
-      <div class="rounded-2xl border border-line bg-card p-7 shadow-xs">
-        <span class="text-3xl font-bold text-brand-indigo font-display">02</span>
-        <h3 class="mt-3 font-serif text-lg font-bold text-ink">Simulated Enterprise Delivery</h3>
-        <p class="mt-2 text-xs leading-relaxed text-ink-muted">
-          Participate in mock architecture reviews, sprint ceremonies, and executive presentations under the supervision of principal consultants.
-        </p>
-      </div>
-
-      <div class="rounded-2xl border border-line bg-card p-7 shadow-xs">
-        <span class="text-3xl font-bold text-brand-indigo font-display">03</span>
-        <h3 class="mt-3 font-serif text-lg font-bold text-ink">Direct W2 Enterprise Placement</h3>
-        <p class="mt-2 text-xs leading-relaxed text-ink-muted">
-          Direct placement into Fortune 500 partner contracts or permanent roles with complete wage transparency and $0 candidate fees under Texas law.
-        </p>
+        {% include "enquiries/_form.html" with enquiry_category="restart" %}
       </div>
     </div>
   </div>

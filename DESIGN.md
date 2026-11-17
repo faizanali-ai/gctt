@@ -1,81 +1,51 @@
-# GCTT Design System Specification: Modern Atmospheric
-
-> **Identity**: Modern Atmospheric — High-trust, executive IT staffing, recruitment, and academy platform.
-> **Guiding Principle**: Pairs dark, deep backgrounds (`#0f172a`) in the hero, testimonials, and statutory footers with clean, off-white surfaces (`#f8f9fa`) for detailed features, candidate matrices, and job listings. Typography is a critical pillar, using **Lora** (serif) for large expressive headlines, **Inter** (sans) for high-legibility body/UI text, and **Space Grotesk** (display) for accents and branding.
+# GCTEKTON DESIGN SYSTEM CONSTITUTION
+## THE ULTIMATE FLAGSHIP SPECIFICATION: OBSIDIAN & NEON LIME KINETIC CRAFT
 
 ---
 
-## 1. Visual Language & Token Definitions
-
-### Base Palette
-| Token | Value | Role / Usage |
-|:---|:---|:---|
-| `--color-brand-dark` | `#0f172a` | Primary Dark (Hero, Testimonials, Dark CTA, Statutory Footer) |
-| `--color-brand-indigo` | `#6366f1` | Brand Indigo (Primary buttons, active indicators, accent glows) |
-| `--color-brand-indigo-hover` | `#4f46e5` | Indigo hover state |
-| `--color-surface-white` | `#f8f9fa` | Surface White (Feature cards canvas, practice bento grids) |
-| `--color-card-white` | `#ffffff` | Pure white cards on off-white surfaces |
-| `--color-border-white` | `rgba(255, 255, 255, 0.1)` | Hairline border for dark & glassmorphic surfaces |
-| `--color-border-slate` | `#e2e8f0` | Hairline border for light feature surfaces |
-| `--color-ink` | `#0f172a` | Primary typography on light surfaces |
-| `--color-ink-muted` | `#475569` | Secondary text, descriptions |
-| `--color-ink-subtle` | `#64748b` | Metadata, tags, captions |
-| `--color-text-white` | `#f8fafc` | Primary typography on dark surfaces |
-
-### Typography Hierarchy
-| Role | Family Stack | Spec |
-|:---|:---|:---|
-| **Headlines** | `"Lora", Georgia, Cambria, serif` | 400-700 weight, `tracking-tight`, `leading-[1.1]` |
-| **UI / Body** | `"Inter", -apple-system, BlinkMacSystemFont, sans-serif` | 400-600 weight, `leading-relaxed` |
-| **Accents / Branding** | `"Space Grotesk", sans-serif` | 500-700 weight, `tracking-tight` |
-
-### Glassmorphism Tokens
-- **Soft Glass (`.glass-soft`)**:
-  ```css
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  ```
-- **Strong Glass (`.glass-strong`)**:
-  ```css
-  background: rgba(30, 41, 59, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  ```
-
-### Effects & Atmosphere
-- **Outer Glow (`.outer-glow-indigo`)**:
-  `radial-gradient(from-indigo-500 via-purple-500 to-pink-500), blur(20px), opacity(0.3)`
-- **Grid Overlays (`.grid-overlay`)**:
-  Subtle 1px grid pattern with radial/linear-gradient mask:
-  ```css
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 32px 32px;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 70%, transparent 100%);
-  ```
-
-### Signature Micro-Animations
-1. **Typing Cursor (`.typing-cursor`)**:
-   Flashing terminal cursor after highlighted text:
-   `content: '|'; animation: cursor-blink 1s step-end infinite;`
-2. **180-Degree Logo Rotation (`.logo-hover-180`)**:
-   Rotates smoothly 180 degrees on hover:
-   `transform: rotate(180deg); transition: transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1);`
-3. **500ms Sticky Navigation State (`.nav-sticky-atmospheric`)**:
-   Smooth 500ms transition for background, border, and shadow when header becomes sticky.
+## 1. Visual Philosophy & Core Pillars
+The GCTekton interface is an ultra-modern, high-performance enterprise platform merging three architectural paradigms:
+1. **Obsidian & Neon Lime Glassmorphism**: Deep black outer viewport (`#000000`) enclosing a floating hardware-like shell (`#0c0c0c`, `rounded-[2.5rem]`, `ring-1 ring-white/10`, `shadow-2xl`), high-voltage Neon Lime (`#ccff00`) and Emerald Glow (`#10b981`) accents, 16px backdrop-blur glass cards, and 60px linear cyber grids.
+2. **The Maker's Kinetic Craft**: An interactive technical vetting pipeline that *draws itself* in SVG using `getTotalLength()` and `strokeDashoffset`, paired with a 3-way variant switcher (`aria-pressed`), hairline-ruled measurement rows, and a full-width spread baseline wordmark (`G C T E K T O N`) that sinks and expands on scroll.
+3. **Neo-Brutalist Layout Rhythm**: High-energy stacked sections, interactive MacOS-styled browser mockup dashboard, continuous infinite marquee, "Problem vs. Solution" comparison bento, 4-column bento feature matrix, 3-step numbered pipeline with colored glow rings, and asymmetric testimonial cards.
 
 ---
 
-## 2. Layout & Architectural Rhythm
+## 2. Color Palette & Materiality
+| Token Name | Hex / Value | Role |
+| :--- | :--- | :--- |
+| **Viewport Background** | `#000000` | Deepest black outer shell surrounding floating container |
+| **Shell Container** | `#0c0c0c` | Hardware surface of the main 1600px application container |
+| **Primary Accent** | `#ccff00` | Neon Lime — high-visibility CTA buttons, badges, glowing active states |
+| **Secondary Accent** | `#10b981` | Emerald Glow — verification badges, positive deltas, secondary glows |
+| **Dark Gray / Borders** | `#171e19` / `#272727` | Inner card fills, step connector lines, neutral darks |
+| **Hairlines & Rings** | `rgba(255, 255, 255, 0.1)` | 1px border rules, container rings, separator lines |
+| **Glass Surface** | `rgba(255, 255, 255, 0.03)` | 16px backdrop blur, soft elevated panels |
+| **Primary Text** | `#ebebeb` | High-contrast off-white heading and body copy |
+| **Secondary Text** | `rgba(235, 235, 235, 0.65)` | Subheadings, descriptions, supporting data |
+| **Muted Metadata** | `rgba(235, 235, 235, 0.35)` | Fine print, inactive tabs, hairline labels |
 
-1. **Top Utility Strip**: Deep dark ground (`#0b1120`), emerald pulsing dot, E-Verify & Direct Texas W2 badges.
-2. **Hero Band**: Deep dark `#0f172a`, grid overlay, radial outer glow, Lora headline, typing cursor, Brand Indigo CTA.
-3. **Features & Practices**: High-contrast transition to `#f8f9fa` off-white canvas with pure white elevated cards (`#ffffff`).
-4. **Testimonials**: Deep dark `#0f172a` canvas, soft glass cards (`.glass-soft`), Lora italic quotes.
-5. **Academy & Training Sandbox**: Off-white `#f8f9fa` canvas with interactive tabs and verified certificate preview.
-6. **Statutory Footer**: Deep dark `#0f172a` with Space Grotesk section titles and Irving, Texas corporate anchor.
+---
+
+## 3. Typography Hierarchy
+- **Display Headings**: `Space Grotesk` (Weights 300 to 700, tight tracking `-0.06em` to `-0.02em`, leading `0.9` to `1.15`).
+- **Technical Metadata & Code**: `JetBrains Mono` (Weights 400, 500, 700, uppercase, tracking `0.15em` to `0.2em`).
+- **Body & Editorial Copy**: `Space Grotesk` (Weight 400, leading relaxed).
+
+---
+
+## 4. Key Interactive Components
+1. **Neon Pulse Button**:
+   - `background: #ccff00`, `color: #000000`, `font-weight: 700`, `border-radius: 9999px`.
+   - `box-shadow: 0 0 30px rgba(204, 255, 0, 0.3)`. Hover: `transform: scale(1.05)`.
+2. **Glass Floating Card**:
+   - `background: rgba(255, 255, 255, 0.03)`, `backdrop-filter: blur(16px)`, `border: 1px solid rgba(255, 255, 255, 0.1)`, `border-radius: 1.5rem`.
+   - Hover state: `border-color: rgba(204, 255, 0, 0.4)`.
+3. **Pulsing System Status Indicator**:
+   - `JetBrains Mono`, `text-[10px] tracking-widest uppercase`, with 6px pulsing lime circle (`bg-[#ccff00] animate-pulse`).
+4. **Self-Drawing SVG Pipeline**:
+   - Live SVG architectural pipeline whose paths dynamically draw on scroll and re-draw when variant buttons are toggled.
+5. **Spread Baseline Wordmark**:
+   - Letter-by-letter flex row (`G · C · T · E · K · T · O · N`) with `justify-between` across the foot of the hero, cropped by the baseline.
+6. **Browser Mockup Shell**:
+   - MacOS window header with Red (`#ff5f57`), Yellow (`#febc2e`), and Green (`#28c840`) dots, displaying live candidate telemetry and placement speed indicators.

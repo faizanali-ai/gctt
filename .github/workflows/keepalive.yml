@@ -1,0 +1,23 @@
+name: Production Keepalive
+
+on:
+  schedule:
+    # Run every 10 minutes to prevent Render free tier 15-minute sleep timeout
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  ping:
+    name: Keepalive Ping
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Healthz Endpoint
+        run: |
+          echo "Pinging https://gctekton.com/healthz/ to keep instance awake..."
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}s\n" "https://gctekton.com/healthz/")
+          echo "$RESPONSE"
+          if echo "$RESPONSE" | grep -q "HTTP_STATUS:200"; then
+            echo "Service is awake, responsive, and database connection pool verified."
+          else
+            echo "Warning: Response status was not 200 OK."
+          fi

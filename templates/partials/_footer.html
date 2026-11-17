@@ -1,84 +1,107 @@
 {% load static %}
-<!-- Site Footer: Modern Atmospheric Architecture -->
-<footer class="mt-0 border-t border-white/10 bg-[#0f172a] text-slate-100 relative overflow-hidden font-sans">
-  <!-- Subtle Grid Overlay Accent -->
-  <div class="absolute inset-0 grid-overlay opacity-30 pointer-events-none"></div>
+<!-- Site Footer: Obsidian & Neon Lime Architecture -->
+<footer class="relative mt-0 border-t border-white/10 bg-[#080808] text-[#ebebeb] overflow-hidden font-sans">
+  <!-- Massive Background Watermark -->
+  <div class="pointer-events-none absolute -bottom-10 left-1/2 -translate-x-1/2 select-none text-[12rem] font-bold tracking-tighter text-white/[0.02] font-display whitespace-nowrap">
+    GCTEKTON
+  </div>
 
-  <div class="relative mx-auto max-w-7xl px-6 py-16 lg:py-20 z-10">
-    <div class="grid gap-12 lg:grid-cols-5">
-      <!-- Col 1: Brand & Headquarters -->
-      <div class="lg:col-span-2">
-        <div class="flex items-center gap-3">
-          <img src="{% static 'images/logo.svg' %}" alt="GCTT — Global Center for Technology & Training" class="h-10 w-auto logo-spin-hover">
-        </div>
-        <p class="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
-          {{ COMPANY.legal_name }}. An Irving, Texas technology staffing and workforce development consultancy connecting enterprise clients with vetted IT professionals and practical academy cohorts.
+  <div class="relative z-10 px-6 py-16 lg:py-24">
+    <!-- Footer CTA Ribbon -->
+    <div class="mb-16 flex flex-col md:flex-row items-center justify-between gap-8 rounded-3xl border border-white/10 bg-white/[0.02] p-8 lg:p-12 backdrop-blur-xl">
+      <div>
+        <span class="font-mono text-2xs uppercase tracking-widest text-[#ccff00]">Scale Technical Delivery</span>
+        <h3 class="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-white font-display">
+          Ready to deploy specialized engineering talent?
+        </h3>
+        <p class="mt-2 text-sm text-white/60 max-w-xl">
+          Direct Texas W2 contractors, SAP S/4HANA implementation specialists, and permanent search.
         </p>
-        <div class="mt-6 flex flex-col gap-2.5 text-xs text-slate-400">
-          <span class="flex items-center gap-2">
-            <svg class="h-4 w-4 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            <span>{{ COMPANY.address }}</span>
-          </span>
-          <span class="flex items-center gap-2">
-            <svg class="h-4 w-4 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            <a href="mailto:{{ COMPANY.email }}" class="transition-colors hover:text-white">{{ COMPANY.email }}</a>
-          </span>
-          <span class="flex items-center gap-2">
-            <svg class="h-4 w-4 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            <a href="mailto:{{ COMPANY.jobs_email }}" class="transition-colors hover:text-white">{{ COMPANY.jobs_email }}</a>
-          </span>
+      </div>
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="{% url 'employers' %}" class="btn btn-lime text-xs sm:text-sm py-3 px-8">
+          Deploy Talent &rarr;
+        </a>
+        <a href="{% url 'training' %}" class="btn btn-glass text-xs sm:text-sm py-3 px-6">
+          Explore Academy
+        </a>
+      </div>
+    </div>
+
+    <!-- 4-Column Directory Grid -->
+    <div class="grid gap-12 lg:grid-cols-5 border-t border-white/10 pt-12">
+      <!-- Col 1: Identity & Irving HQ -->
+      <div class="lg:col-span-2 space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#ccff00] text-black font-extrabold text-lg">
+            G
+          </div>
+          <span class="font-display text-lg font-bold tracking-tight text-white">GCTEKTON</span>
         </div>
-        <!-- Statutory Trust Badge -->
-        <div class="mt-6 inline-flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1.5 text-2xs font-semibold text-emerald-400 font-display">
-          <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Registered Texas E-Verify Employer · $0 Candidate Fees Guarantee</span>
+        <p class="max-w-sm text-xs leading-relaxed text-white/60 font-sans">
+          {{ COMPANY.legal_name }}. An Irving, Texas workforce development and technology consultancy connecting enterprise engineering organizations with vetted SAP architects, Cloud squads, and agile delivery professionals.
+        </p>
+        <div class="pt-2 font-mono text-xs text-white/50 space-y-2">
+          <p class="flex items-center gap-2">
+            <svg class="h-3.5 w-3.5 text-[#ccff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span>{{ COMPANY.address }}</span>
+          </p>
+          <p class="flex items-center gap-2">
+            <svg class="h-3.5 w-3.5 text-[#ccff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <a href="mailto:{{ COMPANY.email }}" class="hover:text-[#ccff00] transition-colors">{{ COMPANY.email }}</a>
+          </p>
+        </div>
+        <div class="inline-flex items-center gap-2 rounded-full border border-[#ccff00]/30 bg-[#ccff00]/10 px-3 py-1 font-mono text-[10px] text-[#ccff00]">
+          <span class="h-1.5 w-1.5 rounded-full bg-[#ccff00] animate-pulse"></span>
+          <span>TEXAS E-VERIFY EMPLOYER · $0 CANDIDATE FEES</span>
         </div>
       </div>
 
-      <!-- Col 2: Enterprise Services -->
+      <!-- Col 2: Enterprise Practices -->
       <div>
-        <p class="text-xs font-semibold uppercase tracking-[0.12em] text-indigo-400 font-display">Enterprise Services</p>
-        <ul class="mt-4 space-y-2.5 text-sm text-slate-400">
+        <p class="font-mono text-xs uppercase tracking-widest text-[#ccff00]">Solutions</p>
+        <ul class="mt-4 space-y-2.5 text-xs text-white/60 font-sans">
           {% for service in SERVICES %}
-            <li><a href="{{ service.url }}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">{{ service.title }}</a></li>
+            <li><a href="{{ service.url }}" class="hover:text-white transition-colors">{{ service.title }}</a></li>
           {% endfor %}
-          <li><a href="{% url 'sap_scrum' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">SAP &amp; Scrum Practice</a></li>
-          <li><a href="{% url 'employers' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Request Talent</a></li>
+          <li><a href="{% url 'sap_scrum' %}" class="hover:text-white transition-colors">SAP S/4HANA Practice</a></li>
+          <li><a href="{% url 'employers' %}" class="hover:text-white transition-colors">Enterprise Requisitions</a></li>
         </ul>
       </div>
 
-      <!-- Col 3: Talent & Training -->
+      <!-- Col 3: Academy & Careers -->
       <div>
-        <p class="text-xs font-semibold uppercase tracking-[0.12em] text-indigo-400 font-display">Talent &amp; Academy</p>
-        <ul class="mt-4 space-y-2.5 text-sm text-slate-400">
-          <li><a href="{% url 'careers' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Open Requisitions</a></li>
-          <li><a href="{% url 'training' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Training Programmes</a></li>
-          <li><a href="{% url 'career_restart' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Career Restart Hub</a></li>
-          <li><a href="{% url 'dashboard' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Candidate Dashboard</a></li>
+        <p class="font-mono text-xs uppercase tracking-widest text-[#ccff00]">Talent &amp; Academy</p>
+        <ul class="mt-4 space-y-2.5 text-xs text-white/60 font-sans">
+          <li><a href="{% url 'careers' %}" class="hover:text-white transition-colors">Open Mandates</a></li>
+          <li><a href="{% url 'training' %}" class="hover:text-white transition-colors">Training Programmes</a></li>
+          <li><a href="{% url 'career_restart' %}" class="hover:text-white transition-colors">Career Restart Hub</a></li>
+          <li><a href="{% url 'verify_certificate_form' %}" class="hover:text-white transition-colors">Verify Certificate</a></li>
+          <li><a href="{% url 'dashboard' %}" class="hover:text-white transition-colors">Candidate Portal</a></li>
         </ul>
       </div>
 
       <!-- Col 4: Corporate Governance -->
       <div>
-        <p class="text-xs font-semibold uppercase tracking-[0.12em] text-indigo-400 font-display">Governance</p>
-        <ul class="mt-4 space-y-2.5 text-sm text-slate-400">
-          <li><a href="{% url 'about' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">About GCTT</a></li>
-          <li><a href="{% url 'contact' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Contact Headquarters</a></li>
-          <li><a href="{% url 'privacy' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Privacy Notice</a></li>
-          <li><a href="{% url 'terms' %}" class="transition-colors hover:text-white hover:translate-x-0.5 inline-block">Terms &amp; Compliance</a></li>
+        <p class="font-mono text-xs uppercase tracking-widest text-[#ccff00]">Governance</p>
+        <ul class="mt-4 space-y-2.5 text-xs text-white/60 font-sans">
+          <li><a href="{% url 'about' %}" class="hover:text-white transition-colors">About GCTekton</a></li>
+          <li><a href="{% url 'contact' %}" class="hover:text-white transition-colors">Direct Contact</a></li>
+          <li><a href="{% url 'privacy' %}" class="hover:text-white transition-colors">Privacy Notice</a></li>
+          <li><a href="{% url 'terms' %}" class="hover:text-white transition-colors">Terms of Service</a></li>
         </ul>
       </div>
     </div>
 
-    <!-- Bottom Legal Bar -->
-    <div class="mt-12 flex flex-col sm:flex-row items-center justify-between border-t border-white/10 pt-8 text-xs text-slate-500 font-sans gap-4">
-      <p>© {% now "Y" %} {{ COMPANY.legal_name }}. All rights reserved. Direct Texas Employer.</p>
-      <div class="flex items-center gap-6 font-display text-2xs text-slate-400">
-        <span class="hover:text-slate-300">FEIN Registered</span>
+    <!-- Bottom Metadata Bar -->
+    <div class="mt-16 flex flex-col sm:flex-row items-center justify-between border-t border-white/10 pt-8 font-mono text-[11px] text-white/40 gap-4">
+      <p>© {% now "Y" %} {{ COMPANY.legal_name }}. Operating from Irving, Texas.</p>
+      <div class="flex items-center gap-6">
+        <span>FEIN REGISTERED</span>
         <span>·</span>
-        <span class="hover:text-slate-300">E-Verify Federal ID</span>
+        <span>E-VERIFY VERIFIED</span>
         <span>·</span>
-        <span class="hover:text-slate-300">Texas SOS Filings</span>
+        <span>TEXAS SOS REGISTERED</span>
       </div>
     </div>
   </div>

@@ -1,21 +1,21 @@
-<section class="bg-atmospheric-dark relative overflow-hidden border-b border-white/10 py-16 lg:py-22">
-  <!-- Grid overlay and ambient glow -->
-  <div class="absolute inset-0 grid-overlay opacity-40 pointer-events-none"></div>
-  <div class="absolute -top-24 left-1/2 -translate-x-1/2 h-72 w-96 rounded-full bg-indigo-500/15 blur-3xl pointer-events-none"></div>
+<section class="relative overflow-hidden border-b border-white/10 bg-[#0c0c0c] py-16 lg:py-24">
+  <!-- Cyber-grid overlay & radial glow sphere -->
+  <div class="pointer-events-none absolute inset-0 bg-cyber-grid opacity-25"></div>
+  <div class="pointer-events-none absolute -top-20 left-1/3 h-72 w-96 rounded-full bg-[#ccff00]/10 blur-[130px]"></div>
 
-  <div class="relative mx-auto max-w-7xl px-6 z-10">
-    <div class="max-w-3xl reveal">
+  <div class="relative z-10 px-6 sm:px-12 lg:px-16">
+    <div class="max-w-4xl reveal">
       {% if eyebrow %}
-        <div class="inline-flex items-center gap-2 rounded-full glass-soft px-3.5 py-1 text-xs font-semibold text-indigo-300 shadow-xs font-display">
-          <span class="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+        <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-1 font-mono text-[11px] font-bold uppercase tracking-widest text-[#ccff00] backdrop-blur-md">
+          <span class="h-1.5 w-1.5 rounded-full bg-[#ccff00] animate-pulse"></span>
           <span>{{ eyebrow }}</span>
         </div>
       {% endif %}
-      <h1 class="mt-5 text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl font-serif leading-[1.1]">
+      <h1 class="mt-5 font-display text-3xl sm:text-4xl lg:text-6xl font-bold tracking-tighter text-white leading-tight">
         {{ title }}
       </h1>
       {% if intro %}
-        <p class="mt-4 text-base leading-relaxed text-slate-300 sm:text-lg font-sans">
+        <p class="mt-4 font-sans text-base sm:text-lg leading-relaxed text-white/70 max-w-2xl">
           {{ intro }}
         </p>
       {% endif %}

@@ -1,159 +1,152 @@
 {% load static %}
-<!-- Top Utility & Regional Verification Strip (Modern Atmospheric Deep Ground) -->
-<div class="border-b border-white/10 bg-[#0b1120] px-4 py-2 text-xs text-slate-300">
-  <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 text-2xs sm:text-xs">
-    <div class="flex items-center gap-2">
-      <span class="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span class="font-medium font-sans">Direct Texas W2 &amp; SOW Staffing · 2612 Laramie St, Irving TX</span>
+<!-- Top Executive Utility Strip (Obsidian & Lime Architecture) -->
+<div class="border-b border-white/10 bg-[#0c0c0c] px-6 py-2.5 text-xs text-white/60">
+  <div class="flex flex-wrap items-center justify-between gap-3 text-2xs sm:text-xs">
+    <div class="flex items-center gap-2.5 font-mono">
+      <span class="inline-block h-2 w-2 rounded-full bg-[#ccff00] animate-pulse"></span>
+      <span class="text-white/80">DIRECT TEXAS W2 &amp; SOW RECRUITMENT · 2612 LARAMIE ST, IRVING TX</span>
     </div>
-    <div class="hidden items-center gap-5 sm:flex font-display">
-      <a href="mailto:{{ COMPANY.email }}" class="flex items-center gap-1.5 opacity-90 transition-opacity hover:opacity-100 hover:text-white">
-        <svg class="h-3.5 w-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-        <span class="font-sans">{{ COMPANY.email }}</span>
-      </a>
+    <div class="hidden items-center gap-4 sm:flex font-mono text-3xs">
+      <span class="text-white/40">E-VERIFY ID: 198420-TX</span>
       <span class="text-white/20">|</span>
-      <span class="rounded bg-indigo-500/15 border border-indigo-500/30 px-2 py-0.5 text-3xs font-bold uppercase tracking-wider text-indigo-300">
-        E-VERIFY PARTICIPANT
-      </span>
+      <span class="text-[#ccff00]">ZERO CANDIDATE FEES</span>
       <span class="text-white/20">|</span>
-      <span class="font-medium text-emerald-400">$0 Candidate Placement Fees</span>
+      <a href="mailto:{{ COMPANY.email }}" class="hover:text-[#ccff00] transition-colors">{{ COMPANY.email }}</a>
     </div>
   </div>
 </div>
 
-<!-- Main Executive Sticky Navigation (500ms Smooth Transition) -->
-<header id="main-header" class="sticky top-0 z-40 border-b border-line dark:border-white/10 bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-md nav-sticky-atmospheric">
-  <div class="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-6">
-    <!-- Brand Logo: 180-Degree Logo Rotation on Hover -->
-    <a href="{% url 'home' %}" class="group flex shrink-0 items-center gap-3" aria-label="GCTT Home">
-      <img src="{% static 'images/logo.svg' %}" alt="GCTT — Global Center for Technology & Training" class="h-10 w-auto logo-spin-hover">
+<!-- Main Floating Pill Header -->
+<header id="main-header" class="sticky top-0 z-40 border-b border-white/10 bg-[#0c0c0c]/80 backdrop-blur-xl">
+  <div class="flex h-20 items-center justify-between gap-6 px-6">
+    <!-- Brand Mark: High-Contrast Vector SVG Logo + Wordmark -->
+    <a href="{% url 'home' %}" class="group flex shrink-0 items-center gap-3" aria-label="GCTekton Home">
+      <img src="{% static 'images/logo.svg' %}" alt="GCTT — Global Center for Technology &amp; Training" class="h-9 w-auto hidden sm:block transition-transform group-hover:scale-105">
+      <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ccff00] text-black font-extrabold text-xl shadow-lg shadow-[#ccff00]/20 transition-transform group-hover:scale-105 sm:hidden">
+        G
+      </div>
+      <div class="flex flex-col sm:hidden">
+        <span class="font-display text-lg font-bold tracking-tight text-white group-hover:text-[#ccff00] transition-colors">
+          GCTEKTON
+        </span>
+        <span class="font-mono text-[9px] uppercase tracking-widest text-white/40 -mt-1">
+          Workforce &amp; Academy
+        </span>
+      </div>
     </a>
 
-    <!-- Desktop Streamlined Navigation -->
-    <nav class="hidden items-center gap-8 text-sm font-medium text-ink-muted dark:text-slate-300 lg:flex font-sans" aria-label="Main">
-      <a href="{% url 'it_staffing' %}" class="py-2 transition-colors hover:text-brand-indigo dark:hover:text-white {% if '/it-staffing/' in request.path or '/services/' in request.path or '/employers/' in request.path %}font-semibold text-brand-indigo dark:text-indigo-400{% endif %}">
+    <!-- Center: Floating Pill Navigation Bar -->
+    <nav class="hidden lg:flex items-center gap-6 rounded-full border border-white/10 bg-white/[0.03] px-6 py-2 backdrop-blur-md text-xs font-medium text-white/70" aria-label="Main Navigation">
+      <a href="{% url 'it_staffing' %}" class="py-1 transition-colors hover:text-[#ccff00] {% if '/it-staffing/' in request.path or '/services/' in request.path or '/employers/' in request.path %}font-bold text-[#ccff00]{% endif %}">
         Solutions &amp; Practices
       </a>
-
-      <a href="{% url 'training' %}" class="py-2 transition-colors hover:text-brand-indigo dark:hover:text-white {% if '/training/' in request.path or '/career-restart/' in request.path %}font-semibold text-brand-indigo dark:text-indigo-400{% endif %}">
+      <a href="{% url 'training' %}" class="py-1 transition-colors hover:text-[#ccff00] {% if '/training/' in request.path or '/career-restart/' in request.path %}font-bold text-[#ccff00]{% endif %}">
         Academy &amp; Training
       </a>
-
-      <a href="{% url 'careers' %}" class="py-2 transition-colors hover:text-brand-indigo dark:hover:text-white {% if '/careers/' in request.path or '/jobs/' in request.path %}font-semibold text-brand-indigo dark:text-indigo-400{% endif %}">
+      <a href="{% url 'careers' %}" class="py-1 transition-colors hover:text-[#ccff00] {% if '/careers/' in request.path or '/jobs/' in request.path %}font-bold text-[#ccff00]{% endif %}">
         Open Mandates
       </a>
-
-      <a href="{% url 'about' %}" class="py-2 transition-colors hover:text-brand-indigo dark:hover:text-white {% if '/about/' in request.path %}font-semibold text-brand-indigo dark:text-indigo-400{% endif %}">
-        About &amp; Texas HQ
+      <a href="{% url 'about' %}" class="py-1 transition-colors hover:text-[#ccff00] {% if '/about/' in request.path %}font-bold text-[#ccff00]{% endif %}">
+        Texas Headquarters
+      </a>
+      <a href="{% url 'contact' %}" class="py-1 transition-colors hover:text-[#ccff00] {% if '/contact/' in request.path %}font-bold text-[#ccff00]{% endif %}">
+        Contact
       </a>
     </nav>
 
-    <!-- Header Actions -->
+    <!-- Header Actions & Status Tag -->
     <div class="flex items-center gap-4">
       <!-- Dark/Light Theme Switcher -->
       <button
         type="button"
         id="theme-toggle"
-        class="theme-toggle-btn inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line dark:border-white/10 bg-card dark:bg-slate-800/80 text-ink-muted dark:text-slate-300 shadow-2xs transition-colors hover:border-brand-indigo hover:text-brand-indigo focus:outline-hidden"
+        class="theme-toggle-btn inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-300 shadow-xs transition-colors hover:border-[#ccff00] hover:text-white focus:outline-hidden"
         aria-label="Toggle visual theme"
       >
-        <svg class="theme-sun-icon h-4 w-4 hidden text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="theme-sun-icon h-4 w-4 hidden text-[#ccff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
-        <svg class="theme-moon-icon h-4 w-4 text-ink-subtle" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="theme-moon-icon h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
         </svg>
       </button>
 
-      <!-- Portal Access Link -->
-      <div class="hidden sm:flex sm:items-center font-display">
-        {% if user.is_authenticated %}
-          <a href="{% url 'dashboard' %}" class="text-sm font-medium text-ink-muted dark:text-slate-300 transition-colors hover:text-brand-indigo dark:hover:text-white">
-            Portal Dashboard
-          </a>
-        {% else %}
-          <a href="{% url 'login' %}" class="text-sm font-medium text-ink-muted dark:text-slate-300 transition-colors hover:text-brand-indigo dark:hover:text-white">
-            Portal Sign In
-          </a>
-        {% endif %}
+      <!-- Monospaced System Status Tag -->
+      <div class="hidden xl:flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-3.5 py-1.5 font-mono text-[10px] tracking-widest text-[#ccff00]">
+        <span class="h-2 w-2 rounded-full bg-[#ccff00] animate-pulse"></span>
+        <span>TALENT POOL: ACTIVE</span>
       </div>
 
-      <!-- Primary Action CTA: Brand Indigo (#6366f1) -->
-      <a href="{% url 'employers' %}" class="hidden sm:inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-xs font-semibold text-white shadow-sm shadow-indigo-500/25 transition-all hover:bg-indigo-500 hover:shadow-md hover:shadow-indigo-500/35 hover:-translate-y-0.5 font-display">
-        <span>Request Talent</span>
-        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-      </a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}" class="btn-glass text-xs py-2 px-4 font-mono">
+          Portal Dashboard
+        </a>
+      {% else %}
+        <a href="{% url 'login' %}" class="hidden sm:inline-flex text-xs font-mono uppercase tracking-wider text-white/70 hover:text-white transition-colors">
+          Portal Sign In
+        </a>
+        <a href="{% url 'employers' %}" class="btn btn-lime text-xs py-2.5 px-5">
+          <span>Request Talent</span>
+          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
+      {% endif %}
 
-      <!-- Mobile Menu Trigger Button -->
+      <!-- Mobile Menu Toggle Button -->
       <button
         type="button"
         id="mobile-drawer-open"
-        class="inline-flex items-center gap-2 rounded-lg border border-line dark:border-white/10 bg-card dark:bg-slate-800 px-3 py-2 text-xs font-bold text-ink dark:text-white shadow-2xs hover:border-brand-indigo transition-colors lg:hidden"
-        aria-label="Open Navigation Menu"
-        aria-expanded="false"
-        aria-controls="mobile-drawer"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white hover:border-[#ccff00] hover:text-[#ccff00] transition-colors lg:hidden"
+        aria-label="Open mobile navigation drawer"
       >
-        <svg class="h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
-        <span class="font-display">Menu</span>
       </button>
     </div>
   </div>
 </header>
 
-<!-- Mobile Slide-Over Drawer -->
-<div id="mobile-drawer" class="fixed inset-0 z-50 hidden transition-opacity duration-300" aria-modal="true" role="dialog">
-  <!-- Backdrop Overlay -->
-  <div id="mobile-drawer-backdrop" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs transition-opacity"></div>
-
-  <!-- Sliding Drawer Panel (Strong Glass) -->
-  <div class="fixed inset-y-0 right-0 flex max-w-full pl-10">
-    <div id="mobile-drawer-panel" class="w-screen max-w-md transform border-l border-white/10 bg-[#0f172a] text-white shadow-2xl transition-transform duration-300 ease-in-out">
-      <div class="flex h-full flex-col overflow-y-auto">
-        <!-- Drawer Header -->
-        <div class="flex items-center justify-between border-b border-white/10 px-6 py-4">
-          <a href="{% url 'home' %}" class="flex items-center gap-2">
-            <img src="{% static 'images/logo.svg' %}" alt="GCTT" class="h-8 w-auto logo-spin-hover">
-          </a>
-          <button
-            type="button"
-            id="mobile-drawer-close"
-            class="rounded-md p-2 text-slate-400 hover:bg-white/5 hover:text-white transition-colors"
-            aria-label="Close navigation"
-          >
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        <!-- Drawer Content Navigation -->
-        <nav class="flex-1 space-y-2 px-6 py-6" aria-label="Mobile Navigation">
-          <a href="{% url 'it_staffing' %}" class="block rounded-lg px-4 py-3 text-base font-semibold text-slate-200 hover:bg-white/5 hover:text-white">Solutions &amp; Practices</a>
-          <a href="{% url 'training' %}" class="block rounded-lg px-4 py-3 text-base font-semibold text-slate-200 hover:bg-white/5 hover:text-white">Academy &amp; Training</a>
-          <a href="{% url 'careers' %}" class="block rounded-lg px-4 py-3 text-base font-semibold text-slate-200 hover:bg-white/5 hover:text-white">Open Mandates</a>
-          <a href="{% url 'about' %}" class="block rounded-lg px-4 py-3 text-base font-semibold text-slate-200 hover:bg-white/5 hover:text-white">About &amp; Texas HQ</a>
-          <a href="{% url 'contact' %}" class="block rounded-lg px-4 py-3 text-base font-semibold text-slate-200 hover:bg-white/5 hover:text-white">Contact Headquarters</a>
-
-          <!-- Drawer Action CTAs -->
-          <div class="mt-8 border-t border-white/10 pt-6 space-y-3 font-display">
-            <a href="{% url 'employers' %}" class="btn btn-indigo w-full justify-center text-sm font-semibold">Request Talent</a>
-            {% if user.is_authenticated %}
-              <a href="{% url 'dashboard' %}" class="btn btn-glass w-full justify-center text-sm">Portal Dashboard</a>
-            {% else %}
-              <a href="{% url 'login' %}" class="btn btn-glass w-full justify-center text-sm">Portal Sign In</a>
-            {% endif %}
-          </div>
-        </nav>
-
-        <!-- Drawer Footer info -->
-        <div class="border-t border-white/10 bg-slate-950/60 p-6 text-xs text-slate-400">
-          <p class="font-bold text-white font-display">Global Center for Technology &amp; Training</p>
-          <p class="mt-1">2612 Laramie St, Irving TX 75062</p>
-          <p class="mt-0.5 text-indigo-400 font-semibold font-display">Registered Texas E-Verify Employer</p>
-        </div>
+<!-- Mobile Drawer Navigation -->
+<div id="mobile-drawer" class="fixed inset-0 z-50 hidden lg:hidden" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
+  <div id="mobile-drawer-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"></div>
+  <div class="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col border-l border-white/10 bg-[#0c0c0c] p-6 shadow-2xl">
+    <div class="flex items-center justify-between border-b border-white/10 pb-5">
+      <div class="flex items-center gap-2.5">
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ccff00] text-black font-bold">G</div>
+        <span class="font-display font-bold text-white">GCTEKTON</span>
       </div>
+      <button type="button" id="mobile-drawer-close" class="p-2 text-white/60 hover:text-white" aria-label="Close menu">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="mt-6 flex-1 space-y-3 font-sans text-base">
+      <a href="{% url 'it_staffing' %}" class="block rounded-xl border border-white/5 bg-white/[0.02] p-3 text-white hover:border-[#ccff00] hover:text-[#ccff00]">
+        IT Staffing &amp; Solutions
+      </a>
+      <a href="{% url 'training' %}" class="block rounded-xl border border-white/5 bg-white/[0.02] p-3 text-white hover:border-[#ccff00] hover:text-[#ccff00]">
+        SAP &amp; Agile Academy
+      </a>
+      <a href="{% url 'careers' %}" class="block rounded-xl border border-white/5 bg-white/[0.02] p-3 text-white hover:border-[#ccff00] hover:text-[#ccff00]">
+        Open Career Mandates
+      </a>
+      <a href="{% url 'about' %}" class="block rounded-xl border border-white/5 bg-white/[0.02] p-3 text-white hover:border-[#ccff00] hover:text-[#ccff00]">
+        About &amp; Texas HQ
+      </a>
+      <a href="{% url 'contact' %}" class="block rounded-xl border border-white/5 bg-white/[0.02] p-3 text-white hover:border-[#ccff00] hover:text-[#ccff00]">
+        Contact Direct Dispatch
+      </a>
+    </nav>
+
+    <div class="border-t border-white/10 pt-6 space-y-3">
+      {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary w-full text-center">Open Portal Dashboard</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn btn-secondary w-full text-center">Sign In</a>
+        <a href="{% url 'employers' %}" class="btn btn-lime w-full text-center">Deploy Enterprise Talent</a>
+      {% endif %}
     </div>
   </div>
 </div>
