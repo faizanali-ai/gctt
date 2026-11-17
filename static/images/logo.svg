@@ -15,16 +15,16 @@
 
   <!-- High-Contrast Wordmark -->
   <g transform="translate(68, 14)">
-    <!-- Primary Acronym: GCTT (Stark Pure White Vector) -->
-    <text x="0" y="24" font-family="'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif" font-size="28" font-weight="900" letter-spacing="0.08em" fill="#FFFFFF">
+    <!-- Primary Acronym: GCTT (Stark Navy Vector) -->
+    <text x="0" y="24" font-family="'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif" font-size="28" font-weight="900" letter-spacing="0.08em" fill="#000e27">
       GCTT
     </text>
 
     <!-- Cobalt Accent Dot -->
-    <circle cx="96" cy="18" r="3" fill="#2563EB" />
+    <circle cx="96" cy="18" r="3" fill="#006398" />
 
     <!-- Subtitle: Crisp High-Contrast Steel Blue -->
-    <text x="0" y="40" font-family="'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif" font-size="8.5" font-weight="800" letter-spacing="0.18em" text-transform="uppercase" fill="#38BDF8">
+    <text x="0" y="40" font-family="'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif" font-size="8.5" font-weight="800" letter-spacing="0.18em" text-transform="uppercase" fill="#006398">
       GLOBAL CENTER FOR TECH &amp; TRAINING · TEXAS
     </text>
   </g>
