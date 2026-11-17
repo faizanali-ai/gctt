@@ -1,102 +1,98 @@
 {% load static %}
-<!-- Site Footer: Obsidian & Neon Lime Architecture -->
-<footer class="relative mt-0 border-t border-white/10 bg-[#080808] text-[#ebebeb] overflow-hidden font-sans">
-  <!-- Massive Background Watermark -->
-  <div class="pointer-events-none absolute -bottom-10 left-1/2 -translate-x-1/2 select-none text-[12rem] font-bold tracking-tighter text-white/[0.02] font-display whitespace-nowrap">
-    GCTEKTON
-  </div>
-
-  <div class="relative z-10 px-6 py-16 lg:py-24">
+<!-- Site Footer: Neo-Brutalist Charcoal & Yellow Ground -->
+<footer class="relative mt-0 border-t-2 border-black bg-[#171e19] text-[#ffffff] overflow-hidden font-sans">
+  <div class="relative z-10 mx-auto max-w-7xl px-6 py-16 lg:py-20">
     <!-- Footer CTA Ribbon -->
-    <div class="mb-16 flex flex-col md:flex-row items-center justify-between gap-8 rounded-3xl border border-white/10 bg-white/[0.02] p-8 lg:p-12 backdrop-blur-xl">
+    <div class="mb-14 flex flex-col md:flex-row items-center justify-between gap-8 rounded-2xl border-2 border-black bg-[#ffe17c] p-8 lg:p-10 shadow-[6px_6px_0px_#000000]">
       <div>
-        <span class="font-mono text-2xs uppercase tracking-widest text-[#ccff00]">Scale Technical Delivery</span>
-        <h3 class="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-white font-display">
+        <span class="font-mono text-xs font-bold uppercase tracking-wider text-black">Scale Technical Delivery</span>
+        <h3 class="mt-1 text-2xl sm:text-3xl font-extrabold tracking-tight text-black font-display">
           Ready to deploy specialized engineering talent?
         </h3>
-        <p class="mt-2 text-sm text-white/60 max-w-xl">
-          Direct Texas W2 contractors, SAP S/4HANA implementation specialists, and permanent search.
+        <p class="mt-2 text-xs sm:text-sm text-black/80 max-w-xl font-medium">
+          Direct Texas W2 contractors, SAP S/4HANA implementation specialists, and verified technical search.
         </p>
       </div>
       <div class="flex flex-wrap items-center gap-4">
-        <a href="{% url 'employers' %}" class="btn btn-lime text-xs sm:text-sm py-3 px-8">
-          Deploy Talent &rarr;
+        <a href="{% url 'employers' %}" class="btn-brutal-primary text-xs sm:text-sm py-3 px-8">
+          <span>Request Talent</span>
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
         </a>
-        <a href="{% url 'training' %}" class="btn btn-glass text-xs sm:text-sm py-3 px-6">
+        <a href="{% url 'training' %}" class="btn-brutal-secondary text-xs sm:text-sm py-3 px-6">
           Explore Academy
         </a>
       </div>
     </div>
 
     <!-- 4-Column Directory Grid -->
-    <div class="grid gap-12 lg:grid-cols-5 border-t border-white/10 pt-12">
+    <div class="grid gap-10 lg:grid-cols-5 border-t border-white/20 pt-12">
       <!-- Col 1: Identity & Irving HQ -->
       <div class="lg:col-span-2 space-y-4">
         <div class="flex items-center gap-3">
-          <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#ccff00] text-black font-extrabold text-lg">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ffe17c] text-black font-black text-xl border-2 border-black shadow-[2px_2px_0px_#000000]">
             G
           </div>
-          <span class="font-display text-lg font-bold tracking-tight text-white">GCTEKTON</span>
+          <span class="font-display text-xl font-extrabold tracking-tight text-[#ffe17c]">GCTEKTON</span>
         </div>
-        <p class="max-w-sm text-xs leading-relaxed text-white/60 font-sans">
+        <p class="max-w-sm text-xs leading-relaxed text-[#b7c6c2] font-sans">
           {{ COMPANY.legal_name }}. An Irving, Texas workforce development and technology consultancy connecting enterprise engineering organizations with vetted SAP architects, Cloud squads, and agile delivery professionals.
         </p>
-        <div class="pt-2 font-mono text-xs text-white/50 space-y-2">
+        <div class="pt-2 font-mono text-xs text-[#b7c6c2] space-y-2">
           <p class="flex items-center gap-2">
-            <svg class="h-3.5 w-3.5 text-[#ccff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <svg class="h-4 w-4 text-[#ffe17c]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             <span>{{ COMPANY.address }}</span>
           </p>
           <p class="flex items-center gap-2">
-            <svg class="h-3.5 w-3.5 text-[#ccff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            <a href="mailto:{{ COMPANY.email }}" class="hover:text-[#ccff00] transition-colors">{{ COMPANY.email }}</a>
+            <svg class="h-4 w-4 text-[#ffe17c]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <a href="mailto:{{ COMPANY.email }}" class="hover:text-[#ffe17c] transition-colors">{{ COMPANY.email }}</a>
           </p>
         </div>
-        <div class="inline-flex items-center gap-2 rounded-full border border-[#ccff00]/30 bg-[#ccff00]/10 px-3 py-1 font-mono text-[10px] text-[#ccff00]">
-          <span class="h-1.5 w-1.5 rounded-full bg-[#ccff00] animate-pulse"></span>
+        <div class="inline-flex items-center gap-2 rounded-lg border border-black bg-[#ffe17c] px-3 py-1 font-mono text-[10px] font-bold text-black shadow-[2px_2px_0px_#000000]">
+          <span class="h-2 w-2 rounded-full bg-black"></span>
           <span>TEXAS E-VERIFY EMPLOYER · $0 CANDIDATE FEES</span>
         </div>
       </div>
 
       <!-- Col 2: Enterprise Practices -->
       <div>
-        <p class="font-mono text-xs uppercase tracking-widest text-[#ccff00]">Solutions</p>
-        <ul class="mt-4 space-y-2.5 text-xs text-white/60 font-sans">
+        <p class="font-mono text-xs font-bold uppercase tracking-widest text-[#b7c6c2]">Solutions</p>
+        <ul class="mt-4 space-y-2 text-xs text-white/80 font-medium">
           {% for service in SERVICES %}
-            <li><a href="{{ service.url }}" class="hover:text-white transition-colors">{{ service.title }}</a></li>
+            <li><a href="{{ service.url }}" class="hover:text-[#ffe17c] transition-colors">{{ service.title }}</a></li>
           {% endfor %}
-          <li><a href="{% url 'sap_scrum' %}" class="hover:text-white transition-colors">SAP S/4HANA Practice</a></li>
-          <li><a href="{% url 'employers' %}" class="hover:text-white transition-colors">Enterprise Requisitions</a></li>
+          <li><a href="{% url 'sap_scrum' %}" class="hover:text-[#ffe17c] transition-colors">SAP S/4HANA Practice</a></li>
+          <li><a href="{% url 'employers' %}" class="hover:text-[#ffe17c] transition-colors">Enterprise Requisitions</a></li>
         </ul>
       </div>
 
       <!-- Col 3: Academy & Careers -->
       <div>
-        <p class="font-mono text-xs uppercase tracking-widest text-[#ccff00]">Talent &amp; Academy</p>
-        <ul class="mt-4 space-y-2.5 text-xs text-white/60 font-sans">
-          <li><a href="{% url 'careers' %}" class="hover:text-white transition-colors">Open Mandates</a></li>
-          <li><a href="{% url 'training' %}" class="hover:text-white transition-colors">Training Programmes</a></li>
-          <li><a href="{% url 'career_restart' %}" class="hover:text-white transition-colors">Career Restart Hub</a></li>
-          <li><a href="{% url 'verify_certificate_form' %}" class="hover:text-white transition-colors">Verify Certificate</a></li>
-          <li><a href="{% url 'dashboard' %}" class="hover:text-white transition-colors">Candidate Portal</a></li>
+        <p class="font-mono text-xs font-bold uppercase tracking-widest text-[#b7c6c2]">Academy</p>
+        <ul class="mt-4 space-y-2 text-xs text-white/80 font-medium">
+          <li><a href="{% url 'careers' %}" class="hover:text-[#ffe17c] transition-colors">Open Mandates</a></li>
+          <li><a href="{% url 'training' %}" class="hover:text-[#ffe17c] transition-colors">Training Programmes</a></li>
+          <li><a href="{% url 'career_restart' %}" class="hover:text-[#ffe17c] transition-colors">Career Restart Hub</a></li>
+          <li><a href="{% url 'verify_certificate_form' %}" class="hover:text-[#ffe17c] transition-colors">Verify Certificate</a></li>
+          <li><a href="{% url 'dashboard' %}" class="hover:text-[#ffe17c] transition-colors">Candidate Portal</a></li>
         </ul>
       </div>
 
       <!-- Col 4: Corporate Governance -->
       <div>
-        <p class="font-mono text-xs uppercase tracking-widest text-[#ccff00]">Governance</p>
-        <ul class="mt-4 space-y-2.5 text-xs text-white/60 font-sans">
-          <li><a href="{% url 'about' %}" class="hover:text-white transition-colors">About GCTekton</a></li>
-          <li><a href="{% url 'contact' %}" class="hover:text-white transition-colors">Direct Contact</a></li>
-          <li><a href="{% url 'privacy' %}" class="hover:text-white transition-colors">Privacy Notice</a></li>
-          <li><a href="{% url 'terms' %}" class="hover:text-white transition-colors">Terms of Service</a></li>
+        <p class="font-mono text-xs font-bold uppercase tracking-widest text-[#b7c6c2]">Governance</p>
+        <ul class="mt-4 space-y-2 text-xs text-white/80 font-medium">
+          <li><a href="{% url 'about' %}" class="hover:text-[#ffe17c] transition-colors">About GCTekton</a></li>
+          <li><a href="{% url 'contact' %}" class="hover:text-[#ffe17c] transition-colors">Direct Contact</a></li>
+          <li><a href="{% url 'privacy' %}" class="hover:text-[#ffe17c] transition-colors">Privacy Notice</a></li>
+          <li><a href="{% url 'terms' %}" class="hover:text-[#ffe17c] transition-colors">Terms of Service</a></li>
         </ul>
       </div>
     </div>
 
     <!-- Bottom Metadata Bar -->
-    <div class="mt-16 flex flex-col sm:flex-row items-center justify-between border-t border-white/10 pt-8 font-mono text-[11px] text-white/40 gap-4">
+    <div class="mt-14 flex flex-col sm:flex-row items-center justify-between border-t border-white/20 pt-8 font-mono text-[11px] text-white/50 gap-4">
       <p>© {% now "Y" %} {{ COMPANY.legal_name }}. Operating from Irving, Texas.</p>
-      <div class="flex items-center gap-6">
+      <div class="flex items-center gap-4">
         <span>FEIN REGISTERED</span>
         <span>·</span>
         <span>E-VERIFY VERIFIED</span>

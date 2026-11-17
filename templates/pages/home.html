@@ -3,824 +3,655 @@
 {% block title %}GCTekton — Enterprise IT Staffing &amp; SAP Academy{% endblock %}
 
 {% block content %}
-<!-- Section 1: Split 12-Column Hero (Obsidian & Neon Lime Architecture) -->
-<section class="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-32 px-6 sm:px-12 lg:px-16 border-b border-white/10">
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-    <!-- Left Column (7 cols): Giant Typography & Core Action -->
-    <div class="lg:col-span-7 space-y-8 reveal">
-      <!-- Monospaced System Tag -->
-      <div class="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.03] px-4 py-1.5 font-mono text-2xs tracking-widest text-[#ccff00] backdrop-blur-md">
-        <span class="h-2 w-2 rounded-full bg-[#ccff00] animate-pulse"></span>
-        <span>[ SYSTEM // SPECIFICATION: TEXAS W2 TALENT PIPELINE ]</span>
-      </div>
+<!-- Section 1: Hero Section (Lumina Neo-Brutalist Ground: #ffe17c) -->
+<section class="relative overflow-hidden bg-[#ffe17c] border-b-2 border-black pt-12 pb-20 lg:pt-20 lg:pb-28 px-6 sm:px-12 lg:px-16 font-sans">
+  <!-- Radial Dot Pattern Overlay (32x32px, 10% opacity) -->
+  <div class="pointer-events-none absolute inset-0 bg-dot-pattern opacity-10"></div>
 
-      <!-- Hero Headline with Lime-to-Emerald Gradient Span -->
-      <h1 class="font-display text-4xl sm:text-6xl lg:text-[5.25rem] font-bold tracking-tighter text-white leading-[0.92]">
-        SCALE YOUR TECH <span class="bg-gradient-to-r from-[#ccff00] via-white to-[#10b981] bg-clip-text text-transparent italic">CAPABILITY</span> INTO ENTERPRISE POWER.
-      </h1>
-
-      <!-- Body Lede -->
-      <p class="font-sans text-base sm:text-lg text-white/70 max-w-xl leading-relaxed">
-        Stop juggling fragmented recruiters and unverified resumes. GCTekton delivers pre-vetted SAP S/4HANA architects, Cloud squads, and Texas W2 engineering specialists within 48 hours.
-      </p>
-
-      <!-- Dual CTA Buttons -->
-      <div class="flex flex-wrap items-center gap-4 pt-2">
-        <a href="{% url 'employers' %}" class="btn btn-lime text-xs sm:text-sm py-3.5 px-8">
-          Deploy Talent Roster &rarr;
-        </a>
-        <a href="{% url 'training' %}" class="btn btn-glass text-xs sm:text-sm py-3.5 px-6">
-          Explore SAP Academy
-        </a>
-      </div>
-
-      <!-- Trust Vectors -->
-      <div class="flex flex-wrap items-center gap-6 font-mono text-xs text-white/50 pt-4 border-t border-white/10">
-        <span class="flex items-center gap-2">
-          <span class="text-[#ccff00]">✓</span> 48-Hour Shortlist SLA
-        </span>
-        <span class="flex items-center gap-2">
-          <span class="text-[#ccff00]">✓</span> Zero Candidate Placement Fees
-        </span>
-        <span class="flex items-center gap-2">
-          <span class="text-[#ccff00]">✓</span> Direct Texas W2 Vetting
-        </span>
-      </div>
-    </div>
-
-    <!-- Right Column (5 cols): Floating Glass Mockup Shell -->
-    <div class="lg:col-span-5 relative reveal delay-1">
-      <div class="glass-card float-anim p-6 sm:p-8 relative overflow-hidden border border-white/15 bg-white/[0.02]">
-        <!-- MacOS Window Header -->
-        <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
-          <div class="flex items-center gap-2">
-            <span class="h-3 w-3 rounded-full bg-[#ff5f57]"></span>
-            <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
-            <span class="h-3 w-3 rounded-full bg-[#28c840]"></span>
-          </div>
-          <span class="font-mono text-2xs tracking-widest text-white/40">GCTEKTON // TALENT ROSTER V3.2</span>
+  <div class="relative z-10 mx-auto max-w-7xl">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
+      <!-- Left Column: Typography & CTAs (7 cols) -->
+      <div class="lg:col-span-7 space-y-6 reveal">
+        <!-- White Pill Badge with 2px Border -->
+        <div class="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-4 py-1.5 font-mono text-2xs font-bold uppercase tracking-wider text-black shadow-[2px_2px_0px_#000000]">
+          <span class="h-2 w-2 rounded-full bg-black"></span>
+          <span>DIRECT TEXAS IT RECRUITMENT &amp; TRAINING</span>
         </div>
 
-        <!-- Telemetry Metrics Header -->
-        <div class="space-y-1">
-          <span class="font-mono text-2xs uppercase tracking-wider text-white/50">ACTIVE VETTED POOL</span>
-          <div class="flex items-baseline justify-between">
-            <span class="font-display text-3xl sm:text-4xl font-bold text-white">$142,500</span>
-            <span class="inline-flex items-center rounded-full bg-[#ccff00]/15 px-2.5 py-0.5 font-mono text-xs font-bold text-[#ccff00]">
-              +24% VELOCITY
-            </span>
-          </div>
-          <p class="font-mono text-2xs text-white/40">Average Texas W2 Direct Compensation</p>
-        </div>
+        <!-- Hero Headline with Stroked Keyword -->
+        <h1 class="font-display text-4xl sm:text-6xl lg:text-[4.75rem] font-extrabold tracking-tight text-black leading-[1.0]">
+          SCALE YOUR TECH <span class="[text-stroke:2px_black] text-transparent inline-block">WORKFORCE</span> INTO ENTERPRISE CERTAINTY.
+        </h1>
 
-        <!-- Bento Internal Cards -->
-        <div class="mt-6 grid grid-cols-2 gap-3">
-          <div class="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-            <span class="font-mono text-2xs text-white/40 uppercase block">Engineers</span>
-            <span class="font-display text-2xl font-bold text-[#ccff00] mt-1 block">850+</span>
-            <span class="font-mono text-3xs text-white/50">SAP &amp; Cloud Vetted</span>
-          </div>
-          <div class="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-            <span class="font-mono text-2xs text-white/40 uppercase block">Deployed</span>
-            <span class="font-display text-2xl font-bold text-[#10b981] mt-1 block">420+</span>
-            <span class="font-mono text-3xs text-white/50">Enterprise Placements</span>
-          </div>
-        </div>
+        <!-- Body Lede -->
+        <p class="font-sans text-base sm:text-lg text-black/85 max-w-xl leading-relaxed font-medium">
+          Stop gambling on unvetted resumes. Headquartered in Irving, Texas, GCTekton bridges elite software engineers, SAP architects, and certified Scrum leaders into mission-critical corporate delivery.
+        </p>
 
-        <!-- Action inside Mockup -->
-        <div class="mt-6">
-          <a href="{% url 'careers' %}" class="w-full flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] py-3 text-xs font-mono uppercase tracking-wider text-white hover:border-[#ccff00] hover:text-[#ccff00] transition-colors">
-            Inspect Candidate Dossiers &rarr;
+        <!-- CTA Group (Primary Black Button + Secondary White Button) -->
+        <div class="flex flex-wrap items-center gap-4 pt-2">
+          <a href="{% url 'employers' %}" class="btn-brutal-primary text-xs sm:text-sm py-3.5 px-8 shadow-[6px_6px_0px_#000000]">
+            <span>Request Talent Shortlist</span>
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+          <a href="{% url 'careers' %}" class="btn-brutal-secondary text-xs sm:text-sm py-3.5 px-7 shadow-[4px_4px_0px_#000000]">
+            Explore Open Mandates
           </a>
         </div>
-      </div>
 
-      <!-- Floating Placement Toast (Bottom Right) -->
-      <div class="absolute -bottom-6 -right-2 sm:right-4 z-20 rounded-2xl border border-white/15 bg-[#141414]/95 p-3.5 shadow-2xl backdrop-blur-xl flex items-center gap-3 max-w-xs">
-        <div class="h-9 w-9 rounded-full bg-[#ccff00] flex items-center justify-center text-black font-bold text-xs shrink-0">
-          SJ
+        <!-- Trust Vector Strip -->
+        <div class="flex flex-wrap items-center gap-5 font-mono text-2xs font-bold text-black/80 pt-4 border-t-2 border-black/20">
+          <span class="flex items-center gap-1.5">
+            <span class="text-black font-black">✓</span> 48-Hour Shortlist SLA
+          </span>
+          <span class="flex items-center gap-1.5">
+            <span class="text-black font-black">✓</span> E-Verify Certified Employer
+          </span>
+          <span class="flex items-center gap-1.5">
+            <span class="text-black font-black">✓</span> $0 Candidate Placement Fees
+          </span>
         </div>
-        <div class="text-xs">
-          <p class="font-bold text-white">Sarah J. Placed</p>
-          <p class="font-mono text-2xs text-white/60">SAP S/4HANA Principal · Dallas Hub</p>
+      </div>
+
+      <!-- Right Column: Neo-Brutalist Browser Mockup (5 cols) -->
+      <div class="lg:col-span-5 reveal delay-1">
+        <div class="relative mx-auto max-w-lg lg:max-w-none">
+          <!-- Browser Shell (White, 2px solid border, 12px hard shadow) -->
+          <div class="overflow-hidden rounded-2xl border-2 border-black bg-white shadow-[12px_12px_0px_#000000]">
+            <!-- Browser Header Bar with Colored Dots -->
+            <div class="flex items-center justify-between border-b-2 border-black bg-[#f4f4f5] px-4 py-3">
+              <div class="flex items-center gap-2">
+                <span class="h-3 w-3 rounded-full bg-[#ff5f57] border border-black/40"></span>
+                <span class="h-3 w-3 rounded-full bg-[#febc2e] border border-black/40"></span>
+                <span class="h-3 w-3 rounded-full bg-[#28c840] border border-black/40"></span>
+              </div>
+              <div class="rounded-md border border-black/20 bg-white px-3 py-0.5 font-mono text-3xs text-black/60">
+                gctt.enterprise/operations-console
+              </div>
+              <div class="w-8"></div>
+            </div>
+
+            <!-- Browser Mockup Body -->
+            <div class="p-6 space-y-5 bg-white">
+              <!-- Top Metrics Bar -->
+              <div>
+                <span class="font-mono text-3xs font-bold uppercase tracking-wider text-black/50">Active Verified Roster</span>
+                <div class="mt-1 flex items-baseline justify-between">
+                  <span class="font-display text-3xl sm:text-4xl font-extrabold text-black">1,420+ Candidates</span>
+                  <span class="rounded-full border border-black bg-[#ffe17c] px-2.5 py-0.5 font-mono text-3xs font-bold text-black">
+                    +24% Available
+                  </span>
+                </div>
+              </div>
+
+              <!-- Two Metric Cards (Subscribers & Sales Style -> Verified Engineers & Texas Placements) -->
+              <div class="grid grid-cols-2 gap-3 font-sans">
+                <div class="rounded-xl border-2 border-black bg-[#f8f9fa] p-3.5">
+                  <div class="flex items-center gap-1.5 font-mono text-3xs text-black/60 font-bold uppercase">
+                    <svg class="h-3.5 w-3.5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span>Vetted Talent</span>
+                  </div>
+                  <span class="mt-1 block font-display text-xl font-extrabold text-black">850+ Eng</span>
+                </div>
+
+                <div class="rounded-xl border-2 border-black bg-[#b7c6c2] p-3.5">
+                  <div class="flex items-center gap-1.5 font-mono text-3xs text-black font-bold uppercase">
+                    <svg class="h-3.5 w-3.5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                    </svg>
+                    <span>Compliance</span>
+                  </div>
+                  <span class="mt-1 block font-display text-xl font-extrabold text-black">100% W2</span>
+                </div>
+              </div>
+
+              <!-- Console CTA Button -->
+              <div class="pt-1">
+                <a href="{% url 'employers' %}" class="block w-full text-center rounded-xl border-2 border-black bg-[#f4f4f5] py-2.5 text-xs font-bold text-black hover:bg-[#ffe17c] transition-colors shadow-[2px_2px_0px_#000000]">
+                  Technical Screening View →
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating Toast Badge at Bottom Right of Mockup -->
+          <div class="absolute -bottom-5 -right-4 hidden sm:flex items-center gap-2.5 rounded-xl border-2 border-black bg-[#ffe17c] px-3.5 py-2 shadow-[4px_4px_0px_#000000]">
+            <span class="h-2 w-2 rounded-full bg-black"></span>
+            <span class="font-mono text-2xs font-bold text-black">Verified Texas Placement: SAP MM Lead in Dallas</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- Spread Baseline Wordmark (Maker's Kinetic Craft) -->
-  <div class="mt-16 sm:mt-24 pt-8 border-t border-white/10 overflow-hidden select-none">
-    <div class="flex justify-between items-baseline font-display font-extrabold text-3xl sm:text-6xl lg:text-[7rem] tracking-tight text-white/15 hover:text-white/30 transition-colors uppercase">
-      <span>G</span>
-      <span>C</span>
-      <span>T</span>
-      <span>E</span>
-      <span>K</span>
-      <span>T</span>
-      <span>O</span>
-      <span>N</span>
-    </div>
+<!-- Section 2: Social Proof / Technology Marquee (Lumina Charcoal Bar: #171e19) -->
+<section class="border-b-2 border-black bg-[#171e19] py-5 overflow-hidden font-display">
+  <div class="animate-marquee whitespace-nowrap flex items-center gap-12 font-extrabold text-sm sm:text-base tracking-widest text-[#b7c6c2]/80 uppercase">
+    <span>SAP S/4HANA</span>
+    <span class="text-white/30">•</span>
+    <span>AWS CLOUD</span>
+    <span class="text-white/30">•</span>
+    <span>MICROSOFT AZURE</span>
+    <span class="text-white/30">•</span>
+    <span>SCRUM ALLIANCE</span>
+    <span class="text-white/30">•</span>
+    <span>SNOWFLAKE</span>
+    <span class="text-white/30">•</span>
+    <span>KUBERNETES</span>
+    <span class="text-white/30">•</span>
+    <span>ORACLE ERP</span>
+    <span class="text-white/30">•</span>
+    <span>TERRAFORM</span>
+    <span class="text-white/30">•</span>
+    <span>SAP S/4HANA</span>
+    <span class="text-white/30">•</span>
+    <span>AWS CLOUD</span>
+    <span class="text-white/30">•</span>
+    <span>MICROSOFT AZURE</span>
+    <span class="text-white/30">•</span>
+    <span>SCRUM ALLIANCE</span>
+    <span class="text-white/30">•</span>
+    <span>SNOWFLAKE</span>
+    <span class="text-white/30">•</span>
+    <span>KUBERNETES</span>
   </div>
 </section>
 
-<!-- Section 2: Continuous Infinite Social Proof Marquee -->
-<section class="border-b border-white/10 bg-[#080808] py-5 overflow-hidden">
-  <div class="animate-marquee items-center gap-8 font-mono text-xs uppercase tracking-widest text-white/40 whitespace-nowrap select-none">
-    <span class="flex items-center gap-8">
-      <span>SAP S/4HANA MIGRATIONS</span>
-      <span class="text-[#ccff00]">●</span>
-      <span>AWS &amp; AZURE CLOUD</span>
-      <span class="text-[#ccff00]">●</span>
-      <span>SCALED AGILE FRAMEWORK (SAFe)</span>
-      <span class="text-[#ccff00]">●</span>
-      <span>DIRECT TEXAS W2 TALENT</span>
-      <span class="text-[#ccff00]">●</span>
-      <span>DFW ENTERPRISE SQUADS</span>
-      <span class="text-[#ccff00]">●</span>
-      <span>IRVING HEADQUARTERS</span>
-      <span class="text-[#ccff00]">●</span>
-      <span>90-DAY DELIVERY GUARANTEE</span>
-      <span class="text-[#ccff00]">●</span>
-    </span>
-    <span class="flex items-center gap-8">
-      <span>SAP S/4HANA MIGRATIONS</span>
-      <span class="text-[#ccff00]">●</span>
-      <span>AWS &amp; AZURE CLOUD</span>
-      <span class="text-[#ccff00]">●</span>
-      <span>SCALED AGILE FRAMEWORK (SAFe)</span>
-      <span class="text-[#ccff00]">●</span>
-      <span>DIRECT TEXAS W2 TALENT</span>
-      <span class="text-[#ccff00]">●</span>
-      <span>DFW ENTERPRISE SQUADS</span>
-      <span class="text-[#ccff00]">●</span>
-      <span>IRVING HEADQUARTERS</span>
-      <span class="text-[#ccff00]">●</span>
-      <span>90-DAY DELIVERY GUARANTEE</span>
-      <span class="text-[#ccff00]">●</span>
-    </span>
-  </div>
-</section>
-
-<!-- Section 3: The Kinetic Self-Drawing Demonstration (The Maker's Craft) -->
-<section class="py-20 lg:py-28 px-6 sm:px-12 lg:px-16 border-b border-white/10 relative" id="pipeline-demo">
-  <div class="max-w-4xl mx-auto text-center space-y-4 reveal">
-    <span class="font-mono text-2xs uppercase tracking-widest text-[#ccff00] glass-pill px-4 py-1.5 inline-block">
-      KINETIC VERIFICATION ENGINE
-    </span>
-    <h2 class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-white">
-      A DEMONSTRATION THAT DRAWS ITSELF.
-    </h2>
-    <p class="font-sans text-sm sm:text-base text-white/70 max-w-2xl mx-auto">
-      Watch how candidate capability is verified through live sandbox milestones before touching client production environments. Select a track to inspect real-time metrics.
-    </p>
-
-    <!-- Variant Picker Buttons (aria-pressed) -->
-    <div class="pt-6 flex flex-wrap items-center justify-center gap-3 font-mono text-xs" role="tablist">
-      <button
-        type="button"
-        id="var-sap"
-        class="variant-btn px-5 py-2.5 rounded-full border border-[#ccff00] bg-[#ccff00] text-black font-bold shadow-md transition-all"
-        aria-pressed="true"
-        onclick="switchVariant('sap', this)"
-      >
-        SAP S/4HANA Enterprise
-      </button>
-      <button
-        type="button"
-        id="var-cloud"
-        class="variant-btn px-5 py-2.5 rounded-full border border-white/20 bg-white/[0.04] text-white/80 hover:text-white hover:border-white/40 transition-all"
-        aria-pressed="false"
-        onclick="switchVariant('cloud', this)"
-      >
-        Cloud &amp; DevOps Squads
-      </button>
-      <button
-        type="button"
-        id="var-agile"
-        class="variant-btn px-5 py-2.5 rounded-full border border-white/20 bg-white/[0.04] text-white/80 hover:text-white hover:border-white/40 transition-all"
-        aria-pressed="false"
-        onclick="switchVariant('agile', this)"
-      >
-        Scaled Agile &amp; Scrum
-      </button>
-    </div>
-  </div>
-
-  <!-- Interactive SVG Schematic Console -->
-  <div class="mt-12 max-w-4xl mx-auto glass-card p-6 sm:p-10 border border-white/15 bg-white/[0.02] relative overflow-hidden reveal">
-    <div class="flex items-center justify-between font-mono text-2xs text-white/40 border-b border-white/10 pb-4 mb-6">
-      <span id="demo-track-label">ACTIVE TRACK: SAP S/4HANA ARCHITECTURE</span>
-      <span class="text-[#ccff00]">LIVE DRAW STATE: OPTIMAL</span>
-    </div>
-
-    <!-- Self-Drawing SVG Diagram -->
-    <div class="w-full py-4 overflow-x-auto">
-      <svg viewBox="0 0 800 200" class="w-full h-auto min-w-[600px] text-white" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Background Tracks -->
-        <path d="M 50 100 H 750" stroke="rgba(255,255,255,0.1)" stroke-width="2" stroke-dasharray="4 4" />
-        
-        <!-- Animated Active Draw Path -->
-        <path id="svg-active-path" class="draw-path" d="M 50 100 Q 200 40 400 100 T 750 100" stroke="#ccff00" stroke-width="3" stroke-linecap="round" />
-        
-        <!-- Nodes -->
-        <g transform="translate(50, 100)">
-          <circle r="16" fill="#0c0c0c" stroke="#ccff00" stroke-width="2"/>
-          <text y="4" text-anchor="middle" fill="#ccff00" font-family="'JetBrains Mono'" font-size="11" font-weight="bold">01</text>
-          <text y="36" text-anchor="middle" fill="#ebebeb" font-family="'Space Grotesk'" font-size="11">Intake Scope</text>
-        </g>
-        <g transform="translate(280, 65)">
-          <circle r="16" fill="#0c0c0c" stroke="#10b981" stroke-width="2"/>
-          <text y="4" text-anchor="middle" fill="#10b981" font-family="'JetBrains Mono'" font-size="11" font-weight="bold">02</text>
-          <text y="36" text-anchor="middle" fill="#ebebeb" font-family="'Space Grotesk'" font-size="11">Sandbox Audit</text>
-        </g>
-        <g transform="translate(520, 135)">
-          <circle r="16" fill="#0c0c0c" stroke="#ccff00" stroke-width="2"/>
-          <text y="4" text-anchor="middle" fill="#ccff00" font-family="'JetBrains Mono'" font-size="11" font-weight="bold">03</text>
-          <text y="36" text-anchor="middle" fill="#ebebeb" font-family="'Space Grotesk'" font-size="11">Dossier Match</text>
-        </g>
-        <g transform="translate(750, 100)">
-          <circle r="16" fill="#0c0c0c" stroke="#ffffff" stroke-width="2"/>
-          <text y="4" text-anchor="middle" fill="#ffffff" font-family="'JetBrains Mono'" font-size="11" font-weight="bold">04</text>
-          <text y="36" text-anchor="middle" fill="#ebebeb" font-family="'Space Grotesk'" font-size="11">48h Deploy</text>
-        </g>
-      </svg>
-    </div>
-
-    <!-- 3 Hairline Ruled Specification Rows (Maker's Spec) -->
-    <div class="mt-8 space-y-1">
-      <div class="hairline-row">
-        <span class="text-white/50 uppercase">VETTING PROTOCOL</span>
-        <span class="text-white font-medium" id="spec-protocol">4-Stage Live ERP Sandbox Assessment &amp; BTP Config</span>
-      </div>
-      <div class="hairline-row">
-        <span class="text-white/50 uppercase">DFW W2 RATE BENCHMARK</span>
-        <span class="text-[#ccff00] font-bold" id="spec-rate">$115 – $155 / hour direct</span>
-      </div>
-      <div class="hairline-row">
-        <span class="text-white/50 uppercase">DEPLOYMENT VELOCITY SLA</span>
-        <span class="text-[#10b981] font-bold" id="spec-sla">48 Hours to Verified Shortlist</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 4: Problem vs Solution Bento ("Stop The Hiring Madness") -->
-<section class="py-20 lg:py-28 px-6 sm:px-12 lg:px-16 border-b border-white/10">
-  <div class="max-w-3xl mx-auto text-center space-y-4 reveal">
-    <h2 class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-white">
-      STOP THE RECRUITMENT BOTTLENECK.
-    </h2>
-    <p class="font-sans text-sm sm:text-base text-white/70">
-      Most enterprise engineering teams lose 60+ days dealing with unvetted agencies. Here is how GCTekton flips the paradigm.
-    </p>
-  </div>
-
-  <div class="mt-14 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch reveal">
-    <!-- Card A: The Traditional Way (Dashed, Muted, 70% opacity) -->
-    <div class="rounded-3xl border-2 border-dashed border-white/20 bg-white/[0.02] p-8 sm:p-10 opacity-70 flex flex-col justify-between">
-      <div>
-        <span class="font-mono text-xs uppercase tracking-widest text-rose-400">TRADITIONAL RECRUITMENT</span>
-        <h3 class="mt-3 font-display text-2xl font-bold text-white/80">The Fragmented Agency Way</h3>
-        <ul class="mt-6 space-y-4 font-sans text-sm text-white/60">
-          <li class="flex items-start gap-3">
-            <span class="text-rose-400 font-bold">✕</span>
-            <span>Unvetted keyword-matched resumes flood your inbox with zero validation</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="text-rose-400 font-bold">✕</span>
-            <span>60 to 90 days average cycle to land a qualified technical hire</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="text-rose-400 font-bold">✕</span>
-            <span>Engineers lack verified hands-on SAP or cloud sandbox experience</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="text-rose-400 font-bold">✕</span>
-            <span>Zero post-placement warranty or performance guarantee</span>
-          </li>
-        </ul>
-      </div>
-      <p class="mt-8 pt-4 border-t border-white/10 font-mono text-2xs text-rose-400/80">
-        RESULT: PROJECT DELAYS &amp; BUDGET DRAIN
+<!-- Section 3: Problem vs. Solution (Lumina White Ground: #ffffff) -->
+<section class="border-b-2 border-black bg-white py-20 px-6 sm:px-12 lg:px-16 font-sans">
+  <div class="mx-auto max-w-7xl">
+    <!-- Header -->
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight">
+        STOP THE TALENT BOTTLENECK.
+      </h2>
+      <p class="mt-4 text-base text-black/70 leading-relaxed font-medium">
+        Most enterprise hiring teams spend 80% of their time filtering through unvetted keyword resumes. It's time to partner with practitioners who assess real engineering execution.
       </p>
     </div>
 
-    <!-- Card B: The GCTekton Way (Solid Neon Lime Border, Glowing, High-Energy) -->
-    <div class="rounded-3xl border-2 border-[#ccff00]/60 bg-[#121612] p-8 sm:p-10 shadow-xl shadow-[#ccff00]/10 flex flex-col justify-between relative overflow-hidden">
-      <div class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-[#ccff00]/15 blur-2xl pointer-events-none"></div>
-      <div>
-        <span class="font-mono text-xs uppercase tracking-widest text-[#ccff00]">THE GCTEKTON STANDARD</span>
-        <h3 class="mt-3 font-display text-2xl font-bold text-white">The Precision Engine</h3>
-        <ul class="mt-6 space-y-4 font-sans text-sm text-white/90">
+    <!-- Side-by-Side Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto reveal delay-1">
+      <!-- Card A (The Old Agency Way) -->
+      <div class="rounded-3xl border-2 border-dashed border-black/40 bg-[#f4f4f5] p-8 sm:p-10 opacity-75">
+        <span class="font-mono text-xs font-bold uppercase tracking-wider text-black/60">THE FRAGMENTED WAY</span>
+        <h3 class="mt-2 font-display text-2xl font-bold text-black">Traditional Staffing Agencies</h3>
+        
+        <ul class="mt-6 space-y-4 font-sans text-sm text-black/80 font-medium">
           <li class="flex items-start gap-3">
-            <span class="text-[#ccff00] font-bold">✓</span>
-            <span><strong>48-Hour Shortlists:</strong> Vetted candidate dossiers delivered with sandbox benchmarks</span>
+            <span class="text-rose-600 font-bold">✕</span>
+            <span>Keyword-matching bots with zero hands-on technical evaluation</span>
           </li>
           <li class="flex items-start gap-3">
-            <span class="text-[#ccff00] font-bold">✓</span>
-            <span><strong>Live Sandbox Testing:</strong> Validated on SAP S/4HANA Universal Journal &amp; Cloud architectures</span>
+            <span class="text-rose-600 font-bold">✕</span>
+            <span>Weeks of ghosting, interview dropouts, and mismatched seniority</span>
           </li>
           <li class="flex items-start gap-3">
-            <span class="text-[#ccff00] font-bold">✓</span>
-            <span><strong>Direct Texas W2 Compliance:</strong> Full statutory payroll, E-Verify, and insurance compliance</span>
+            <span class="text-rose-600 font-bold">✕</span>
+            <span>Unverified right-to-work compliance risking enterprise audits</span>
           </li>
           <li class="flex items-start gap-3">
-            <span class="text-[#ccff00] font-bold">✓</span>
-            <span><strong>90-Day Placement Guarantee:</strong> Zero financial risk with instant technical replacements</span>
+            <span class="text-rose-600 font-bold">✕</span>
+            <span>Excessive broker layers and zero candidate post-placement support</span>
           </li>
         </ul>
       </div>
-      <div class="mt-8 pt-4 border-t border-white/15 flex items-center justify-between font-mono text-2xs">
-        <span class="text-[#ccff00]">RESULT: 100% PRODUCTION READY</span>
-        <a href="{% url 'employers' %}" class="font-bold underline hover:text-[#ccff00]">Deploy Squad &rarr;</a>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- Section 5: 4-Column Bento Feature Matrix ("Built For Velocity") -->
-<section class="py-20 lg:py-28 px-6 sm:px-12 lg:px-16 border-b border-white/10">
-  <div class="max-w-3xl mb-14 reveal">
-    <span class="font-mono text-2xs uppercase tracking-widest text-[#ccff00] glass-pill px-4 py-1.5 inline-block">
-      CORE CAPABILITIES
-    </span>
-    <h2 class="mt-4 font-display text-3xl sm:text-5xl font-bold tracking-tight text-white">
-      BUILT FOR VELOCITY.
-      <span class="block text-white/50 text-2xl sm:text-4xl mt-1">No fluff. Just enterprise delivery.</span>
-    </h2>
-  </div>
-
-  <!-- 4-Column Bento Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
-    <!-- Card 1: 2x2 Large Card - Market Rate Telemetry with Vertical Bars -->
-    <div class="lg:col-span-2 lg:row-span-2 glass-card p-8 flex flex-col justify-between border border-white/15 bg-white/[0.02]">
-      <div>
+      <!-- Card B (The GCTT Way - Yellow, 2px border, 8px hard shadow) -->
+      <div class="rounded-3xl border-2 border-black bg-[#ffe17c] p-8 sm:p-10 shadow-[8px_8px_0px_#000000]">
         <div class="flex items-center justify-between">
-          <span class="font-mono text-2xs uppercase tracking-widest text-[#ccff00]">TELEMETRY // DATA</span>
-          <span class="h-2 w-2 rounded-full bg-[#ccff00] animate-pulse"></span>
+          <span class="font-mono text-xs font-extrabold uppercase tracking-wider text-black">THE GCTT PRECISION WAY</span>
+          <svg class="h-6 w-6 text-black" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+          </svg>
         </div>
-        <h3 class="mt-3 font-display text-2xl font-bold text-white">Dallas-Fort Worth Compensation Benchmark</h3>
-        <p class="mt-2 font-sans text-xs text-white/60">
-          Direct Texas W2 hourly rates and annual benchmarks across core technical verticals.
-        </p>
+        <h3 class="mt-2 font-display text-2xl font-extrabold text-black">The GCTekton Standard</h3>
 
-        <!-- Vertical Data Visualization Bars -->
-        <div class="mt-8 grid grid-cols-4 gap-4 items-end h-44 border-b border-white/10 pb-4">
-          <div class="flex flex-col items-center gap-2 h-full justify-end">
-            <span class="font-mono text-2xs text-[#ccff00] font-bold">$135k</span>
-            <div class="w-full bg-[#ccff00]/80 rounded-t-lg transition-all duration-700" style="height: 75%;"></div>
-            <span class="font-mono text-[10px] text-white/60">SAP MM</span>
-          </div>
-          <div class="flex flex-col items-center gap-2 h-full justify-end">
-            <span class="font-mono text-2xs text-[#10b981] font-bold">$155k</span>
-            <div class="w-full bg-[#10b981]/80 rounded-t-lg transition-all duration-700" style="height: 90%;"></div>
-            <span class="font-mono text-[10px] text-white/60">S/4HANA</span>
-          </div>
-          <div class="flex flex-col items-center gap-2 h-full justify-end">
-            <span class="font-mono text-2xs text-white font-bold">$140k</span>
-            <div class="w-full bg-white/70 rounded-t-lg transition-all duration-700" style="height: 80%;"></div>
-            <span class="font-mono text-[10px] text-white/60">DevOps</span>
-          </div>
-          <div class="flex flex-col items-center gap-2 h-full justify-end">
-            <span class="font-mono text-2xs text-[#ccff00] font-bold">$130k</span>
-            <div class="w-full bg-[#ccff00]/60 rounded-t-lg transition-all duration-700" style="height: 70%;"></div>
-            <span class="font-mono text-[10px] text-white/60">Agile</span>
-          </div>
-        </div>
+        <ul class="mt-6 space-y-4 font-sans text-sm text-black font-semibold">
+          <li class="flex items-start gap-3">
+            <span class="text-black font-extrabold">✓</span>
+            <span>Technically screened by practicing architects before client submission</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-black font-extrabold">✓</span>
+            <span>48-hour interview-ready shortlists with verified references</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-black font-extrabold">✓</span>
+            <span>100% E-Verify, Form I-9, and US federal compliance documentation</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-black font-extrabold">✓</span>
+            <span>$0 candidate placement fees and transparent direct corporate terms</span>
+          </li>
+        </ul>
       </div>
-
-      <div class="mt-6 flex items-center justify-between font-mono text-xs text-white/50">
-        <span>VETTING CRITERIA: 100% CODE &amp; ARCH AUDITED</span>
-        <a href="{% url 'it_staffing' %}" class="text-[#ccff00] hover:underline">Explore Staffing &rarr;</a>
-      </div>
-    </div>
-
-    <!-- Card 2: 1x2 Tall Card - SAP Enterprise Mastery -->
-    <div class="lg:col-span-1 lg:row-span-2 glass-card p-8 flex flex-col justify-between border border-white/15 bg-white/[0.02]">
-      <div>
-        <span class="font-mono text-2xs uppercase tracking-widest text-[#10b981]">MODULE MASTERY</span>
-        <h3 class="mt-3 font-display text-xl font-bold text-white">SAP S/4HANA Architecture</h3>
-        <p class="mt-2 font-sans text-xs text-white/60">
-          End-to-end implementation and functional module mastery.
-        </p>
-
-        <!-- Token Swatches List -->
-        <div class="mt-6 space-y-3 font-mono text-xs">
-          <div class="flex items-center justify-between p-2.5 rounded-lg border border-white/10 bg-white/[0.02]">
-            <span>FICO Financials</span>
-            <span class="text-[#ccff00]">Universal Journal</span>
-          </div>
-          <div class="flex items-center justify-between p-2.5 rounded-lg border border-white/10 bg-white/[0.02]">
-            <span>MM / SCM</span>
-            <span class="text-[#10b981]">Procure-to-Pay</span>
-          </div>
-          <div class="flex items-center justify-between p-2.5 rounded-lg border border-white/10 bg-white/[0.02]">
-            <span>SD / OTC</span>
-            <span class="text-white">Order-to-Cash</span>
-          </div>
-          <div class="flex items-center justify-between p-2.5 rounded-lg border border-white/10 bg-white/[0.02]">
-            <span>BTP Integration</span>
-            <span class="text-[#ccff00]">CAP / RAP</span>
-          </div>
-        </div>
-      </div>
-
-      <a href="{% url 'sap_scrum' %}" class="mt-6 font-mono text-xs text-[#ccff00] hover:underline">
-        View SAP Practice &rarr;
-      </a>
-    </div>
-
-    <!-- Card 3: Solid Neon Lime Accent Card -->
-    <div class="rounded-3xl bg-[#ccff00] p-8 text-black flex flex-col justify-between shadow-xl shadow-[#ccff00]/20">
-      <div>
-        <span class="font-mono text-2xs uppercase tracking-widest font-bold opacity-75">SLA COMMITMENT</span>
-        <h3 class="mt-2 font-display text-2xl font-bold leading-tight">48-Hour Talent Delivery</h3>
-        <p class="mt-2 font-sans text-xs font-medium text-black/80">
-          Curated candidate shortlists with validated sandbox dossiers ready for client interview.
-        </p>
-      </div>
-      <a href="{% url 'employers' %}" class="mt-6 inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-black underline">
-        Request SLA Intake &rarr;
-      </a>
-    </div>
-
-    <!-- Card 4: Workforce Reskilling & Returnship -->
-    <div class="rounded-3xl glass-card p-8 flex flex-col justify-between border border-white/15 bg-white/[0.02]">
-      <div>
-        <span class="font-mono text-2xs uppercase tracking-widest text-white/50">WORKFORCE ACADEMY</span>
-        <h3 class="mt-2 font-display text-xl font-bold text-white">90-Day Returnship</h3>
-        <p class="mt-2 font-sans text-xs text-white/60">
-          Bridging industry sabbaticals into high-paying enterprise technology careers.
-        </p>
-      </div>
-      <a href="{% url 'career_restart' %}" class="mt-6 font-mono text-xs text-[#ccff00] hover:underline">
-        Returnship Hub &rarr;
-      </a>
     </div>
   </div>
 </section>
 
-<!-- Section 6: How It Works ("Simple As 1-2-3") -->
-<section class="py-20 lg:py-28 px-6 sm:px-12 lg:px-16 border-b border-white/10 bg-[#080808]">
-  <div class="max-w-4xl mx-auto text-center space-y-4 reveal">
-    <span class="font-mono text-2xs uppercase tracking-widest text-[#ccff00] glass-pill px-4 py-1.5 inline-block">
-      EXECUTION LIFECYCLE
-    </span>
-    <h2 class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-white">
-      SIMPLE AS 1-2-3.
-    </h2>
-    <p class="font-sans text-sm sm:text-base text-white/70 max-w-xl mx-auto">
-      Complex technical search, simple execution. From initial architecture intake to production squad acceleration.
-    </p>
-  </div>
-
-  <!-- 3-Step Horizontal Flow with Colored Glow Circles -->
-  <div class="mt-16 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 relative reveal">
-    <!-- Step 1 -->
-    <div class="glass-card p-8 border border-white/10 bg-white/[0.02] flex flex-col items-center text-center space-y-4">
-      <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#ccff00] bg-black text-[#ccff00] font-mono text-xl font-bold shadow-[0_0_20px_rgba(204,255,0,0.3)]">
-        01
+<!-- Section 4: Practice Areas Feature Grid (Lumina Yellow Ground: #ffe17c) -->
+<section class="border-b-2 border-black bg-[#ffe17c] py-20 px-6 sm:px-12 lg:px-16 font-sans">
+  <div class="mx-auto max-w-7xl">
+    <!-- Header with Pill -->
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+      <div class="inline-flex items-center gap-1.5 rounded-full border-2 border-black bg-black px-4 py-1 font-mono text-2xs font-bold uppercase tracking-wider text-[#ffe17c] shadow-[2px_2px_0px_#000000]">
+        CORE PRACTICES
       </div>
-      <h3 class="font-display text-xl font-bold text-white">Scope &amp; Architecture</h3>
-      <p class="font-sans text-xs text-white/60 leading-relaxed">
-        We analyze your tech stack, ERP modules, Cloud frameworks, and budget parameters to formulate the exact talent profile.
+      <h2 class="mt-4 font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight">
+        EVERYTHING YOUR TECH DELIVERY NEEDS.
+      </h2>
+      <p class="mt-3 text-base text-black/80 font-medium">
+        No fluff. Just enterprise-tested technical expertise.
       </p>
     </div>
 
-    <!-- Step 2 -->
-    <div class="glass-card p-8 border border-white/10 bg-white/[0.02] flex flex-col items-center text-center space-y-4">
-      <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#10b981] bg-black text-[#10b981] font-mono text-xl font-bold shadow-[0_0_20px_rgba(16,185,129,0.3)]">
-        02
+    <!-- 3-Column White Card Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal delay-1">
+      <!-- Card 1: IT Staffing -->
+      <div class="group rounded-2xl border-2 border-black bg-white p-8 shadow-[4px_4px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
+        <div class="h-16 w-16 rounded-xl border-2 border-black bg-[#b7c6c2] group-hover:bg-[#ffe17c] flex items-center justify-center transition-colors shadow-[2px_2px_0px_#000000]">
+          <svg class="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <h3 class="mt-6 font-display text-2xl font-extrabold text-black">
+          IT Staffing &amp; Augmentation
+        </h3>
+        <p class="mt-3 text-sm text-black/75 leading-relaxed font-medium">
+          Rapid-deployment contract and direct-hire engineers across Java, Python, AWS, DevOps, and cloud systems with guaranteed 48-hour SLAs.
+        </p>
+        <a href="{% url 'it_staffing' %}" class="mt-6 inline-flex items-center gap-2 font-display text-xs font-bold text-black uppercase tracking-wider underline hover:text-black/70">
+          Explore Staffing Models →
+        </a>
       </div>
-      <h3 class="font-display text-xl font-bold text-white">Sandbox Verification</h3>
-      <p class="font-sans text-xs text-white/60 leading-relaxed">
-        Candidates undergo hands-on technical assessments, live ERP sandbox drills, and Texas W2 statutory verification.
-      </p>
-    </div>
 
-    <!-- Step 3 -->
-    <div class="glass-card p-8 border border-white/10 bg-white/[0.02] flex flex-col items-center text-center space-y-4">
-      <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-white bg-black text-white font-mono text-xl font-bold shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-        03
+      <!-- Card 2: SAP S/4HANA -->
+      <div class="group rounded-2xl border-2 border-black bg-white p-8 shadow-[4px_4px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
+        <div class="h-16 w-16 rounded-xl border-2 border-black bg-[#b7c6c2] group-hover:bg-[#ffe17c] flex items-center justify-center transition-colors shadow-[2px_2px_0px_#000000]">
+          <svg class="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+        </div>
+        <h3 class="mt-6 font-display text-2xl font-extrabold text-black">
+          SAP &amp; ERP Solutions
+        </h3>
+        <p class="mt-3 text-sm text-black/75 leading-relaxed font-medium">
+          Specialized implementation and migration consultants across SAP MM, FICO, SD, PP, and ABAP environments for Fortune 500 accounts.
+        </p>
+        <a href="{% url 'sap_scrum' %}" class="mt-6 inline-flex items-center gap-2 font-display text-xs font-bold text-black uppercase tracking-wider underline hover:text-black/70">
+          Review SAP Modules →
+        </a>
       </div>
-      <h3 class="font-display text-xl font-bold text-white">Deploy &amp; Accelerate</h3>
-      <p class="font-sans text-xs text-white/60 leading-relaxed">
-        Rapid 48-hour onboarding, ongoing contractor payroll support, and 90-day comprehensive replacement guarantee.
-      </p>
+
+      <!-- Card 3: Agile Scrum & Training -->
+      <div class="group rounded-2xl border-2 border-black bg-white p-8 shadow-[4px_4px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
+        <div class="h-16 w-16 rounded-xl border-2 border-black bg-[#b7c6c2] group-hover:bg-[#ffe17c] flex items-center justify-center transition-colors shadow-[2px_2px_0px_#000000]">
+          <svg class="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        </div>
+        <h3 class="mt-6 font-display text-2xl font-extrabold text-black">
+          Agile Enablement &amp; Academy
+        </h3>
+        <p class="mt-3 text-sm text-black/75 leading-relaxed font-medium">
+          Certified Scrum Masters and practical corporate cohorts that transform sprint velocity and align technical teams with business ROI.
+        </p>
+        <a href="{% url 'training' %}" class="mt-6 inline-flex items-center gap-2 font-display text-xs font-bold text-black uppercase tracking-wider underline hover:text-black/70">
+          View Training Curricula →
+        </a>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- Section 7: Use Case Personas ("Who Is GCTekton For?") -->
-<section class="py-20 lg:py-28 px-6 sm:px-12 lg:px-16 border-b border-white/10">
-  <div class="max-w-3xl mb-14 reveal">
-    <span class="font-mono text-2xs uppercase tracking-widest text-[#ccff00] glass-pill px-4 py-1.5 inline-block">
-      TARGET AUDIENCE
-    </span>
-    <h2 class="mt-4 font-display text-3xl sm:text-5xl font-bold tracking-tight text-white">
-      WHO IS GCTEKTON FOR?
-    </h2>
-  </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto reveal">
-    <!-- Persona 1: Enterprise Leaders -->
-    <div class="glass-card p-8 flex flex-col justify-between border border-white/15 bg-white/[0.02]">
+<!-- Section 5: Simple As 1-2-3 (Lumina Dark Section: #171e19) -->
+<section class="border-b-2 border-black bg-[#171e19] py-20 px-6 sm:px-12 lg:px-16 text-white font-sans">
+  <div class="mx-auto max-w-7xl">
+    <div class="flex flex-wrap items-end justify-between gap-6 mb-16 reveal">
       <div>
-        <div class="inline-flex rounded-full bg-white/[0.08] px-3 py-1 font-mono text-3xs uppercase tracking-wider text-white/80">
+        <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+          SIMPLE AS 1-2-3.
+        </h2>
+        <p class="mt-2 text-sm sm:text-base text-[#b7c6c2]">
+          From requirement definition to on-site or remote technical deployment.
+        </p>
+      </div>
+      <a href="{% url 'employers' %}" class="font-display text-xs font-bold uppercase tracking-wider text-[#ffe17c] hover:underline flex items-center gap-1.5">
+        See Full Client SLA Documentation →
+      </a>
+    </div>
+
+    <!-- 3-Step Flow with Circles & Connecting Line -->
+    <div class="relative grid grid-cols-1 md:grid-cols-3 gap-10 reveal delay-1">
+      <!-- Step 1: Requisition -->
+      <div class="space-y-4">
+        <div class="flex h-16 w-16 items-center justify-center rounded-full border-4 border-[#b7c6c2] bg-[#171e19] text-2xl font-extrabold text-white">
+          1
+        </div>
+        <h3 class="font-display text-xl font-bold text-white">Scope &amp; Intake</h3>
+        <p class="text-xs sm:text-sm text-[#b7c6c2] leading-relaxed">
+          Specify your technology stack, architectural milestones, and headcount requirements with our Texas practice director.
+        </p>
+      </div>
+
+      <!-- Step 2: Technical Vetting -->
+      <div class="space-y-4">
+        <div class="flex h-16 w-16 items-center justify-center rounded-full border-4 border-[#ffe17c] bg-[#171e19] text-2xl font-extrabold text-[#ffe17c]">
+          2
+        </div>
+        <h3 class="font-display text-xl font-bold text-white">Practitioner Vetting</h3>
+        <p class="text-xs sm:text-sm text-[#b7c6c2] leading-relaxed">
+          Our senior leads evaluate candidate code, architectural case history, and communication skills before shortlist dispatch.
+        </p>
+      </div>
+
+      <!-- Step 3: Deployment -->
+      <div class="space-y-4">
+        <div class="flex h-16 w-16 items-center justify-center rounded-full border-4 border-white bg-[#171e19] text-2xl font-extrabold text-white">
+          3
+        </div>
+        <h3 class="font-display text-xl font-bold text-white">Deploy &amp; Scale</h3>
+        <p class="text-xs sm:text-sm text-[#b7c6c2] leading-relaxed">
+          Onboard candidate with full E-Verify and compliance paperwork complete. Guaranteed sprint integration from day one.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 6: Use Case Personas (Lumina White Ground: #ffffff) -->
+<section class="border-b-2 border-black bg-white py-20 px-6 sm:px-12 lg:px-16 font-sans">
+  <div class="mx-auto max-w-7xl">
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight">
+        WHO IS GCTEKTON FOR?
+      </h2>
+      <p class="mt-3 text-base text-black/70 font-medium">
+        Engineered for both high-growth enterprise leaders and technical specialists.
+      </p>
+    </div>
+
+    <!-- 3-Column Bento -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal delay-1">
+      <!-- Card 1: Enterprise Leaders (Sage Ground) -->
+      <div class="rounded-3xl border-2 border-black bg-[#b7c6c2] p-8 shadow-[4px_4px_0px_#000000]">
+        <span class="inline-block rounded-full border-2 border-black bg-white px-3.5 py-1 font-mono text-3xs font-bold uppercase text-black mb-6">
           For Engineering Leaders
-        </div>
-        <h3 class="mt-4 font-display text-2xl font-bold text-white">Enterprise Clients</h3>
-        <p class="mt-3 font-sans text-xs text-white/60 leading-relaxed">
-          CTOs, VPs of Engineering, and Project Managers needing immediate technical firepower without the 90-day agency runaround.
+        </span>
+        <h3 class="font-display text-2xl font-extrabold text-black">VPs &amp; Delivery Directors</h3>
+        <p class="mt-3 text-xs sm:text-sm text-black/80 leading-relaxed font-medium">
+          Scale technical project bandwidth without the overhead of reviewing unqualified resumes. Get pre-vetted contractors ready for direct sprint delivery.
         </p>
+        <div class="mt-8 pt-4 border-t border-black/20 font-mono text-xs font-bold text-black flex items-center gap-2">
+          <span>✓ 48h Shortlist SLA</span>
+        </div>
       </div>
-      <div class="mt-8 pt-4 border-t border-white/10">
-        <a href="{% url 'employers' %}" class="btn btn-lime text-xs w-full text-center">
-          Hire Specialized Talent
-        </a>
-      </div>
-    </div>
 
-    <!-- Persona 2: Technical Candidates -->
-    <div class="glass-card p-8 flex flex-col justify-between border border-[#ccff00]/40 bg-[#121612]">
-      <div>
-        <div class="inline-flex rounded-full bg-[#ccff00]/15 px-3 py-1 font-mono text-3xs uppercase tracking-wider text-[#ccff00] font-bold">
-          High Demand
-        </div>
-        <h3 class="mt-4 font-display text-2xl font-bold text-white">Technical Specialists</h3>
-        <p class="mt-3 font-sans text-xs text-white/80 leading-relaxed">
-          SAP consultants, Cloud architects, and full-stack developers seeking direct Texas W2 contract engagements or permanent roles.
+      <!-- Card 2: Technical Specialists (Yellow Ground, 8px shadow) -->
+      <div class="rounded-3xl border-2 border-black bg-[#ffe17c] p-8 shadow-[8px_8px_0px_#000000]">
+        <span class="inline-block rounded-full border-2 border-black bg-black px-3.5 py-1 font-mono text-3xs font-bold uppercase text-[#ffe17c] mb-6">
+          Most Popular
+        </span>
+        <h3 class="font-display text-2xl font-extrabold text-black">Technical Specialists</h3>
+        <p class="mt-3 text-xs sm:text-sm text-black/80 leading-relaxed font-medium">
+          Direct representation into Fortune 500 enterprise mandates. Zero candidate fees, dedicated recruiters, and legitimate corporate contracts.
         </p>
+        <div class="mt-8 pt-4 border-t border-black/20 font-mono text-xs font-bold text-black flex items-center gap-2">
+          <span>✓ Direct Corporate W2</span>
+        </div>
       </div>
-      <div class="mt-8 pt-4 border-t border-white/15">
-        <a href="{% url 'careers' %}" class="btn btn-secondary text-xs w-full text-center text-white">
-          Browse Open Mandates
-        </a>
-      </div>
-    </div>
 
-    <!-- Persona 3: Career Returnships -->
-    <div class="glass-card p-8 flex flex-col justify-between border border-white/15 bg-white/[0.02]">
-      <div>
-        <div class="inline-flex rounded-full bg-white/[0.08] px-3 py-1 font-mono text-3xs uppercase tracking-wider text-white/80">
-          Career Relaunch
-        </div>
-        <h3 class="mt-4 font-display text-2xl font-bold text-white">Reskilling Engineers</h3>
-        <p class="mt-3 font-sans text-xs text-white/60 leading-relaxed">
-          Engineers returning to the workforce or pivoting into SAP S/4HANA through rigorous hands-on cohort training and placement.
+      <!-- Card 3: Career Returners (Dark Charcoal Ground) -->
+      <div class="rounded-3xl border-2 border-black bg-[#171e19] text-white p-8 shadow-[4px_4px_0px_#000000]">
+        <span class="inline-block rounded-full border-2 border-white bg-white px-3.5 py-1 font-mono text-3xs font-bold uppercase text-black mb-6">
+          For Career Returners
+        </span>
+        <h3 class="font-display text-2xl font-extrabold text-white">90-Day Returnships</h3>
+        <p class="mt-3 text-xs sm:text-sm text-[#b7c6c2] leading-relaxed font-medium">
+          Structured re-skilling and hands-on project refreshers for professionals re-entering the technical workforce after a career hiatus.
         </p>
-      </div>
-      <div class="mt-8 pt-4 border-t border-white/10">
-        <a href="{% url 'career_restart' %}" class="btn btn-secondary text-xs w-full text-center text-white">
-          Join Returnship Hub
-        </a>
+        <div class="mt-8 pt-4 border-t border-white/20 font-mono text-xs font-bold text-white flex items-center gap-2">
+          <span class="text-[#ffe17c]">✓ 1-on-1 Mentorship</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Section 8: Asymmetric Testimonials Bento -->
-<section class="py-20 lg:py-28 px-6 sm:px-12 lg:px-16 border-b border-white/10 bg-[#080808]">
-  <div class="max-w-3xl mb-14 reveal">
-    <span class="font-mono text-2xs uppercase tracking-widest text-[#ccff00] glass-pill px-4 py-1.5 inline-block">
-      VALIDATION RECORD
-    </span>
-    <h2 class="mt-4 font-display text-3xl sm:text-5xl font-bold tracking-tight text-white">
-      LOVED BY 500+ ENTERPRISES &amp; LEARNERS.
+<!-- Section 7: Authentic Enterprise Testimonials (Lumina Sage Ground: #b7c6c2) -->
+<section class="border-b-2 border-black bg-[#b7c6c2] py-20 px-6 sm:px-12 lg:px-16 font-sans">
+  <div class="mx-auto max-w-7xl">
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight">
+        LOVED BY CLIENTS &amp; ALUMNI.
+      </h2>
+      <p class="mt-3 text-base text-black/80 font-medium">
+        Real feedback from enterprise delivery managers and certified practitioners.
+      </p>
+    </div>
+
+    <!-- 3 White Cards with Asymmetric Corner Rounding -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal delay-1">
+      <!-- Testimonial 1 -->
+      <div class="rounded-asymmetric border-2 border-black bg-white p-8 shadow-[6px_6px_0px_#000000] space-y-4">
+        <div class="flex items-center text-amber-500 text-lg">
+          ★★★★★
+        </div>
+        <p class="text-xs sm:text-sm text-black/85 leading-relaxed font-medium italic">
+          "GCTT solved our SAP MM deployment crunch within 3 business days. The architect they provided had real migration experience and integrated into our sprint on day one."
+        </p>
+        <div class="pt-4 border-t-2 border-black/10">
+          <p class="font-display text-sm font-bold text-black">David M.</p>
+          <p class="font-mono text-3xs text-black/60">VP of Enterprise Applications · Dallas, TX</p>
+        </div>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div class="rounded-asymmetric border-2 border-black bg-white p-8 shadow-[6px_6px_0px_#000000] space-y-4">
+        <div class="flex items-center text-amber-500 text-lg">
+          ★★★★★
+        </div>
+        <p class="text-xs sm:text-sm text-black/85 leading-relaxed font-medium italic">
+          "Unlike traditional agencies who just match keywords on resumes, GCTT's technical recruiters actually understood our AWS containerization and Kubernetes requirements."
+        </p>
+        <div class="pt-4 border-t-2 border-black/10">
+          <p class="font-display text-sm font-bold text-black">Sarah K.</p>
+          <p class="font-mono text-3xs text-black/60">Cloud Engineering Director</p>
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="rounded-asymmetric border-2 border-black bg-white p-8 shadow-[6px_6px_0px_#000000] space-y-4">
+        <div class="flex items-center text-amber-500 text-lg">
+          ★★★★★
+        </div>
+        <p class="text-xs sm:text-sm text-black/85 leading-relaxed font-medium italic">
+          "GCTT's certified Scrum master cohort gave me the hands-on practical framework I needed to transition from project management to leading agile releases."
+        </p>
+        <div class="pt-4 border-t-2 border-black/10">
+          <p class="font-display text-sm font-bold text-black">Rajesh P.</p>
+          <p class="font-mono text-3xs text-black/60">Certified Scrum Master &amp; Alum</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 8: Interactive AI Career Advisor Engine (Neo-Brutalist White Card) -->
+<section class="border-b-2 border-black bg-white py-20 px-6 sm:px-12 lg:px-16 font-sans">
+  <div class="mx-auto max-w-5xl">
+    <div id="ai-advisor" class="rounded-3xl border-2 border-black bg-[#ffe17c] p-8 sm:p-12 shadow-[8px_8px_0px_#000000] reveal">
+      <div class="max-w-2xl mb-8">
+        <span class="inline-flex items-center gap-1.5 rounded-full border-2 border-black bg-black px-3.5 py-1 font-mono text-3xs font-bold uppercase tracking-wider text-[#ffe17c]">
+          AI LEARNING &amp; CAREER ENGINE
+        </span>
+        <h2 class="mt-4 font-display text-3xl sm:text-4xl font-extrabold text-black">
+          Map Your Background into an Enterprise Tech Track
+        </h2>
+        <p class="mt-2 text-xs sm:text-sm text-black/80 font-medium">
+          Enter your current domain experience. Our engine charts your high-demand SAP or Agile certification roadmap.
+        </p>
+      </div>
+
+      <!-- Form & Results Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Form -->
+        <form id="ai-advisor-form" class="space-y-4 rounded-2xl border-2 border-black bg-white p-6 shadow-[4px_4px_0px_#000000]">
+          {% csrf_token %}
+          <div>
+            <label class="block font-mono text-2xs font-bold uppercase text-black">
+              Current or Prior Role *
+            </label>
+            <input
+              type="text"
+              id="advisor-role"
+              placeholder="e.g. Accountant, QA Tester, Returning Professional..."
+              class="mt-1.5 w-full rounded-xl border-2 border-black bg-white px-4 py-2.5 text-xs text-black font-medium focus:outline-hidden"
+              required
+            >
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-mono text-2xs font-bold uppercase text-black">Years Experience</label>
+              <select id="advisor-exp" class="mt-1.5 w-full rounded-xl border-2 border-black bg-white px-3 py-2.5 text-xs text-black font-medium focus:outline-hidden">
+                <option value="0-2">0 – 2 Years</option>
+                <option value="3-5" selected>3 – 5 Years</option>
+                <option value="6-10">6 – 10 Years</option>
+                <option value="10+">10+ Years</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-mono text-2xs font-bold uppercase text-black">Target Track</label>
+              <select id="advisor-goal" class="mt-1.5 w-full rounded-xl border-2 border-black bg-white px-3 py-2.5 text-xs text-black font-medium focus:outline-hidden">
+                <option value="high_paying_erp">SAP ERP Practice</option>
+                <option value="agile_leadership">Agile Scrum Lead</option>
+                <option value="career_restart">Career Returnship</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" id="advisor-submit-btn" class="btn-brutal-primary w-full justify-center text-xs py-3 shadow-[3px_3px_0px_#000000]">
+            Generate Enterprise Roadmap ✨
+          </button>
+        </form>
+
+        <!-- Results Panel -->
+        <div id="advisor-results" class="flex flex-col justify-center rounded-2xl border-2 border-black bg-white p-6 shadow-[4px_4px_0px_#000000]">
+          <div id="advisor-placeholder" class="text-center py-6">
+            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[#ffe17c] border-2 border-black text-black">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h4 class="mt-3 font-display text-base font-bold text-black">Your Custom Roadmap Awaits</h4>
+            <p class="mt-1 text-2xs text-black/60 font-medium">
+              Fill in your background on the left to see recommended certification tracks, estimated timelines, and average enterprise salary bands.
+            </p>
+          </div>
+
+          <div id="advisor-output" class="hidden space-y-4">
+            <div class="flex items-center justify-between border-b-2 border-black pb-3">
+              <div>
+                <span class="font-mono text-3xs font-bold uppercase tracking-wider text-black/60">Optimal Certification</span>
+                <h3 id="res-track" class="font-display text-lg font-extrabold text-black"></h3>
+              </div>
+              <span class="rounded-full border-2 border-black bg-[#ffe17c] px-3 py-0.5 font-mono text-2xs font-extrabold text-black" id="res-fit">
+                95% Fit
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div class="rounded-xl border-2 border-black bg-[#f8f9fa] p-3">
+                <span class="block font-mono text-3xs font-bold uppercase text-black/50">Timeline</span>
+                <span id="res-timeline" class="font-bold text-black font-mono"></span>
+              </div>
+              <div class="rounded-xl border-2 border-black bg-[#f8f9fa] p-3">
+                <span class="block font-mono text-3xs font-bold uppercase text-black/50">Market Band</span>
+                <span id="res-comp" class="font-bold text-black font-mono"></span>
+              </div>
+            </div>
+
+            <p id="res-summary" class="text-xs text-black/80 font-medium"></p>
+            <a href="{% url 'training' %}" class="btn-brutal-primary w-full justify-center text-xs py-2.5">
+              Review Cohort Syllabus →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('ai-advisor-form')?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const role = document.getElementById('advisor-role').value;
+      const exp = document.getElementById('advisor-exp').value;
+      const goal = document.getElementById('advisor-goal').value;
+      const btn = document.getElementById('advisor-submit-btn');
+      const placeholder = document.getElementById('advisor-placeholder');
+      const output = document.getElementById('advisor-output');
+
+      btn.disabled = true;
+      btn.textContent = 'Analyzing Competencies...';
+
+      try {
+        const resp = await fetch('{% url "api_career_advisor" %}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+          },
+          body: JSON.stringify({ current_role: role, experience: exp, interests: goal })
+        });
+        const json = await resp.json();
+        if (json.success && json.data) {
+          const d = json.data;
+          document.getElementById('res-track').textContent = d.track;
+          document.getElementById('res-fit').textContent = d.fit_score + '% Fit';
+          document.getElementById('res-timeline').textContent = d.timeline;
+          document.getElementById('res-comp').textContent = d.market_comp;
+          document.getElementById('res-summary').textContent = d.summary;
+
+          placeholder.classList.add('hidden');
+          output.classList.remove('hidden');
+        }
+      } catch (err) {
+        console.error('Advisor error:', err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Generate Enterprise Roadmap ✨';
+      }
+    });
+  </script>
+</section>
+
+<!-- Section 9: Ready to Scale Close (Lumina Yellow Ground: #ffe17c) -->
+<section class="border-b-2 border-black bg-[#ffe17c] py-24 px-6 sm:px-12 lg:px-16 text-center font-sans">
+  <div class="mx-auto max-w-3xl reveal">
+    <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-black tracking-tight leading-tight">
+      READY TO ELEVATE YOUR TECH DELIVERY?
     </h2>
-  </div>
-
-  <!-- Testimonials Grid with Asymmetric Corners -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto reveal">
-    <!-- Testimonial 1 -->
-    <div class="rounded-asymmetric border border-white/15 bg-white/[0.03] p-8 flex flex-col justify-between backdrop-blur-xl">
-      <div>
-        <div class="flex items-center gap-1 text-[#ccff00] text-sm">
-          ★★★★★
-        </div>
-        <p class="mt-4 font-sans text-xs sm:text-sm text-white/80 leading-relaxed">
-          “GCTekton deployed two SAP S/4HANA functional consultants to our Dallas project in under 72 hours. Both passed technical audits on day one.”
-        </p>
-      </div>
-      <div class="mt-6 pt-4 border-t border-white/10 flex items-center gap-3">
-        <div class="h-9 w-9 rounded-full bg-[#ccff00] text-black font-bold flex items-center justify-center text-xs">
-          MR
-        </div>
-        <div>
-          <p class="font-bold text-white text-xs">Marcus R.</p>
-          <p class="font-mono text-2xs text-white/50">VP of Technology · DFW Enterprise</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Testimonial 2 -->
-    <div class="rounded-asymmetric border border-[#ccff00]/30 bg-white/[0.04] p-8 flex flex-col justify-between backdrop-blur-xl">
-      <div>
-        <div class="flex items-center gap-1 text-[#ccff00] text-sm">
-          ★★★★★
-        </div>
-        <p class="mt-4 font-sans text-xs sm:text-sm text-white/90 leading-relaxed">
-          “After an 18-month family sabbatical, GCTekton’s returnship program refreshed my SAP FICO skills and placed me on a direct Texas W2 contract.”
-        </p>
-      </div>
-      <div class="mt-6 pt-4 border-t border-white/10 flex items-center gap-3">
-        <div class="h-9 w-9 rounded-full bg-[#10b981] text-black font-bold flex items-center justify-center text-xs">
-          AL
-        </div>
-        <div>
-          <p class="font-bold text-white text-xs">Anita L.</p>
-          <p class="font-mono text-2xs text-white/50">Senior SAP FICO Consultant</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Testimonial 3 -->
-    <div class="rounded-asymmetric border border-white/15 bg-white/[0.03] p-8 flex flex-col justify-between backdrop-blur-xl">
-      <div>
-        <div class="flex items-center gap-1 text-[#ccff00] text-sm">
-          ★★★★★
-        </div>
-        <p class="mt-4 font-sans text-xs sm:text-sm text-white/80 leading-relaxed">
-          “The zero candidate fee guarantee is real. Transparent W2 compensation, weekly payroll, and direct recruiter communication throughout.”
-        </p>
-      </div>
-      <div class="mt-6 pt-4 border-t border-white/10 flex items-center gap-3">
-        <div class="h-9 w-9 rounded-full bg-white text-black font-bold flex items-center justify-center text-xs">
-          DK
-        </div>
-        <div>
-          <p class="font-bold text-white text-xs">David K.</p>
-          <p class="font-mono text-2xs text-white/50">Cloud Infrastructure Architect</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 9: Interactive AI Career Trajectory Engine -->
-<section class="py-20 lg:py-28 px-6 sm:px-12 lg:px-16 border-b border-white/10" id="ai-advisor-section">
-  <div class="max-w-4xl mx-auto glass-card p-8 sm:p-12 border border-white/20 bg-white/[0.02] relative overflow-hidden reveal">
-    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6 mb-8">
-      <div>
-        <span class="font-mono text-2xs uppercase tracking-widest text-[#ccff00]">NEURAL SKILL MAPPING</span>
-        <h2 class="mt-1 font-display text-2xl sm:text-3xl font-bold text-white">AI Career Trajectory Engine</h2>
-      </div>
-      <span class="font-mono text-2xs text-white/40">API ENDPOINT: /TRAINING/AI-ADVISOR/</span>
-    </div>
-
-    <form id="ai-advisor-form" class="space-y-6">
-      {% csrf_token %}
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div>
-          <label for="advisor-role" class="block font-mono text-2xs uppercase tracking-wider text-white/60 mb-2">Current Title / Domain</label>
-          <input type="text" id="advisor-role" placeholder="e.g. Java Dev, Accountant, QA" class="w-full" required>
-        </div>
-        <div>
-          <label for="advisor-exp" class="block font-mono text-2xs uppercase tracking-wider text-white/60 mb-2">Years of Experience</label>
-          <select id="advisor-exp" class="w-full">
-            <option value="0-2">0 – 2 Years (Entry / Pivot)</option>
-            <option value="3-5" selected>3 – 5 Years (Mid-Level)</option>
-            <option value="6-10">6 – 10 Years (Senior)</option>
-            <option value="10+">10+ Years (Principal / Lead)</option>
-          </select>
-        </div>
-        <div>
-          <label for="advisor-goal" class="block font-mono text-2xs uppercase tracking-wider text-white/60 mb-2">Target Outcome</label>
-          <select id="advisor-goal" class="w-full">
-            <option value="sap">SAP S/4HANA Transition</option>
-            <option value="cloud">Cloud &amp; DevOps Certification</option>
-            <option value="returnship">Post-Sabbatical Career Restart</option>
-          </select>
-        </div>
-      </div>
-
-      <button type="submit" id="advisor-submit-btn" class="btn btn-lime text-xs sm:text-sm py-3 px-8 w-full sm:w-auto">
-        Analyze Career Pathway &rarr;
-      </button>
-    </form>
-
-    <!-- Terminal Output Container -->
-    <div id="advisor-output-box" class="mt-8 rounded-2xl border border-white/10 bg-black/60 p-6 font-mono text-xs hidden">
-      <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-4 text-white/40 text-2xs">
-        <span>ENGINE OUTPUT // TELEMETRY ANALYSIS</span>
-        <span class="text-[#ccff00]" id="adv-fit">95% MATCH</span>
-      </div>
-      <div class="space-y-3 text-white/80">
-        <p><span class="text-white/40">RECOMMENDED TRACK:</span> <span class="font-bold text-[#ccff00]" id="adv-track">SAP S/4HANA Functional &amp; Integration Track</span></p>
-        <p><span class="text-white/40">ESTIMATED TIMELINE:</span> <span class="text-white" id="adv-timeline">12 – 16 Weeks (Intensive Sandbox)</span></p>
-        <p><span class="text-white/40">TARGET COMPENSATION:</span> <span class="text-[#10b981]" id="adv-comp">$120,000 – $155,000 W2</span></p>
-        <p><span class="text-white/40">SYNTHESIS:</span> <span class="text-white/70" id="adv-summary">Direct transition pathway mapped from your experience.</span></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 10: Close CTA with Massive Watermark -->
-<section class="py-24 lg:py-36 px-6 sm:px-12 lg:px-16 text-center relative overflow-hidden">
-  <div class="max-w-4xl mx-auto space-y-6 relative z-10 reveal">
-    <span class="font-mono text-2xs uppercase tracking-widest text-[#ccff00] glass-pill px-4 py-1.5 inline-block">
-      START ENGAGEMENT
-    </span>
-    <h2 class="font-display text-4xl sm:text-6xl font-bold tracking-tight text-white leading-tight">
-      READY TO ACCELERATE YOUR TECHNICAL TEAM?
-    </h2>
-    <p class="font-sans text-base sm:text-lg text-white/70 max-w-xl mx-auto">
-      Connect with our practice directors at our Irving, Texas headquarters to access vetted squads or register for academy cohorts.
+    <p class="mt-4 text-base sm:text-lg text-black/80 font-medium max-w-xl mx-auto">
+      Submit your technical requisition details or connect directly with our Texas recruitment practice.
     </p>
-    <div class="pt-4 flex flex-wrap items-center justify-center gap-4">
-      <a href="{% url 'employers' %}" class="btn btn-lime text-sm py-4 px-10">
-        Deploy Enterprise Squad &rarr;
+
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+      <a href="{% url 'employers' %}" class="btn-brutal-primary text-sm py-4 px-9 shadow-[6px_6px_0px_#000000]">
+        Submit Enterprise Requisition
       </a>
-      <a href="{% url 'contact' %}" class="btn btn-glass text-sm py-4 px-8">
-        Contact Irving HQ
+      <a href="{% url 'careers' %}" class="btn-brutal-secondary text-sm py-4 px-8 shadow-[4px_4px_0px_#000000]">
+        Explore Open Roles
       </a>
     </div>
+
+    <p class="mt-6 font-mono text-2xs font-bold text-black/60 uppercase tracking-wider">
+      E-Verify Verified · Zero Candidate Fees · 48-Hour Shortlist Guarantee
+    </p>
   </div>
 </section>
-
-<!-- Interactive Script for Self-Drawing Demonstration & AI Advisor -->
-<script>
-  // 1. Kinetic Variant Switcher Logic
-  const variantData = {
-    sap: {
-      label: 'ACTIVE TRACK: SAP S/4HANA ARCHITECTURE',
-      path: 'M 50 100 Q 200 40 400 100 T 750 100',
-      protocol: '4-Stage Live ERP Sandbox Assessment & BTP Config',
-      rate: '$115 – $155 / hour direct W2',
-      sla: '48 Hours to Verified Shortlist'
-    },
-    cloud: {
-      label: 'ACTIVE TRACK: CLOUD INFRASTRUCTURE & DEVOPS',
-      path: 'M 50 100 Q 250 160 450 60 T 750 100',
-      protocol: 'Kubernetes Cluster Provisioning & Terraform CI/CD Audit',
-      rate: '$120 – $165 / hour direct W2',
-      sla: '24 – 48 Hours to Client Review'
-    },
-    agile: {
-      label: 'ACTIVE TRACK: SCALED AGILE & SCRUM SQUADS',
-      path: 'M 50 100 Q 300 20 500 140 T 750 100',
-      protocol: 'SAFe PI Planning Simulation & Backlog Grooming Audit',
-      rate: '$95 – $130 / hour direct W2',
-      sla: '48 Hours to Squad Mobilization'
-    }
-  };
-
-  function switchVariant(track, btn) {
-    document.querySelectorAll('.variant-btn').forEach(b => {
-      b.setAttribute('aria-pressed', 'false');
-      b.className = 'variant-btn px-5 py-2.5 rounded-full border border-white/20 bg-white/[0.04] text-white/80 hover:text-white hover:border-white/40 transition-all';
-    });
-    btn.setAttribute('aria-pressed', 'true');
-    btn.className = 'variant-btn px-5 py-2.5 rounded-full border border-[#ccff00] bg-[#ccff00] text-black font-bold shadow-md transition-all';
-
-    const data = variantData[track];
-    if (!data) return;
-
-    document.getElementById('demo-track-label').textContent = data.label;
-    document.getElementById('spec-protocol').textContent = data.protocol;
-    document.getElementById('spec-rate').textContent = data.rate;
-    document.getElementById('spec-sla').textContent = data.sla;
-
-    const path = document.getElementById('svg-active-path');
-    path.setAttribute('d', data.path);
-    // Trigger redraw
-    path.style.strokeDashoffset = '1000';
-    setTimeout(() => { path.style.strokeDashoffset = '0'; }, 50);
-  }
-
-  // 2. AI Advisor Interactive Submission
-  document.getElementById('ai-advisor-form')?.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const role = document.getElementById('advisor-role').value;
-    const exp = document.getElementById('advisor-exp').value;
-    const goal = document.getElementById('advisor-goal').value;
-    const submitBtn = document.getElementById('advisor-submit-btn');
-
-    submitBtn.textContent = 'Calculating Trajectory...';
-
-    fetch('{% url "api_career_advisor" %}', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-      },
-      body: JSON.stringify({ role: role, experience_years: exp, primary_goal: goal })
-    })
-    .then(r => r.json())
-    .then(data => {
-      submitBtn.textContent = 'Analyze Career Pathway →';
-      const outBox = document.getElementById('advisor-output-box');
-      outBox.classList.remove('hidden');
-
-      document.getElementById('adv-fit').textContent = (data.fit_percentage || 95) + '% MATCH';
-      document.getElementById('adv-track').textContent = data.recommended_track || 'SAP S/4HANA Functional & Integration Track';
-      document.getElementById('adv-timeline').textContent = data.estimated_timeline || '12 – 16 Weeks (Intensive Sandbox)';
-      document.getElementById('adv-comp').textContent = data.target_comp || '$120,000 – $155,000 W2';
-      document.getElementById('adv-summary').textContent = data.summary || 'Direct transition pathway mapped from your experience.';
-    })
-    .catch(() => {
-      submitBtn.textContent = 'Analyze Career Pathway →';
-    });
-  });
-</script>
 {% endblock %}

@@ -1,26 +1,24 @@
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700;800&display=swap");
 @import "tailwindcss";
 
 :root {
-  color-scheme: dark;
-  --paper: #0c0c0c;
-  --surface: #111111;
+  color-scheme: light;
+  --paper: #ffe17c;
+  --surface: #ffffff;
   --surface-white: #ffffff;
-  --card: #141414;
-  --ink: #ebebeb;
-  --ink-muted: rgba(235, 235, 235, 0.65);
-  --ink-subtle: rgba(235, 235, 235, 0.4);
-  --brand: #0c0c0c;
-  --brand-dark: #000000;
-  --brand-2: #171e19;
-  --brand-lime: #ccff00;
-  --brand-emerald: #10b981;
-  --accent: #ccff00;
-  --accent-hover: #b8e600;
-  --line: rgba(255, 255, 255, 0.1);
-  --line-subtle: rgba(255, 255, 255, 0.05);
-  --border-white: rgba(255, 255, 255, 0.1);
-  --border-slate: rgba(255, 255, 255, 0.1);
+  --card: #ffffff;
+  --ink: #171e19;
+  --ink-muted: #4a5364;
+  --ink-subtle: #767e8c;
+  --brand: #ffe17c;
+  --brand-yellow: #ffe17c;
+  --brand-charcoal: #171e19;
+  --brand-sage: #b7c6c2;
+  --accent: #171e19;
+  --accent-hover: #000000;
+  --line: #000000;
+  --line-subtle: rgba(0, 0, 0, 0.15);
+  --border-black: #000000;
 }
 
 @theme {
@@ -32,151 +30,168 @@
   --color-ink-muted: var(--ink-muted);
   --color-ink-subtle: var(--ink-subtle);
   --color-brand: var(--brand);
-  --color-brand-dark: var(--brand-dark);
-  --color-brand-2: var(--brand-2);
-  --color-brand-lime: var(--brand-lime);
-  --color-brand-emerald: var(--brand-emerald);
+  --color-brand-yellow: #ffe17c;
+  --color-brand-charcoal: #171e19;
+  --color-brand-sage: #b7c6c2;
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-line: var(--line);
   --color-line-subtle: var(--line-subtle);
-  --color-border-white: var(--border-white);
-  --color-border-slate: var(--border-slate);
-  --font-sans: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
   --font-display: "Space Grotesk", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 @layer components {
-  /* Cyber-Industrial Typography */
+  /* Neo-Brutalist Typography */
   .eyebrow {
     font-size: 0.6875rem;
     font-weight: 700;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #ccff00;
     font-family: var(--font-mono);
   }
   .display-xl {
     font-family: var(--font-display);
-    font-weight: 700;
+    font-weight: 800;
     font-size: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
-    line-height: 0.95;
-    letter-spacing: -0.05em;
-    color: #ebebeb;
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+    color: #171e19;
   }
   .display-lg {
     font-family: var(--font-display);
-    font-weight: 700;
+    font-weight: 800;
     font-size: clamp(1.85rem, 1.25rem + 2vw, 3rem);
     line-height: 1.05;
-    letter-spacing: -0.04em;
-    color: #ebebeb;
+    letter-spacing: -0.03em;
+    color: #171e19;
   }
 
-  /* Glassmorphism Classes (Obsidian & Lime Spec) */
-  .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1.5rem;
+  /* Neo-Brutalist Cards & Surfaces */
+  .brutal-card {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    box-shadow: 4px 4px 0px 0px #000000;
+    border-radius: 1rem;
   }
-  .glass-card-hover {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1.5rem;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  .brutal-card-lg {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    box-shadow: 8px 8px 0px 0px #000000;
+    border-radius: 1.25rem;
   }
-  .glass-card-hover:hover {
-    border-color: rgba(204, 255, 0, 0.4);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px -10px rgba(204, 255, 0, 0.15);
+  .brutal-card-yellow {
+    background-color: #ffe17c;
+    border: 2px solid #000000;
+    box-shadow: 6px 6px 0px 0px #000000;
+    border-radius: 1rem;
+  }
+  .brutal-card-sage {
+    background-color: #b7c6c2;
+    border: 2px solid #000000;
+    box-shadow: 6px 6px 0px 0px #000000;
+    border-radius: 1rem;
+  }
+  .brutal-card-charcoal {
+    background-color: #171e19;
+    color: #ffffff;
+    border: 2px solid #000000;
+    box-shadow: 6px 6px 0px 0px #000000;
+    border-radius: 1rem;
+  }
+
+  /* Compatibility Aliases for Existing Templates */
+  .glass-card,
+  .card {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    box-shadow: 4px 4px 0px 0px #000000;
+    border-radius: 1rem;
+  }
+  .glass-card-hover,
+  .card-hover {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    box-shadow: 4px 4px 0px 0px #000000;
+    border-radius: 1rem;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .glass-card-hover:hover,
+  .card-hover:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px 0px #000000;
   }
   .glass-pill {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #ffffff;
+    border: 2px solid #000000;
+    box-shadow: 2px 2px 0px 0px #000000;
     border-radius: 9999px;
   }
 
-  /* Legacy & Surface Cards */
-  .card {
-    background-color: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1.5rem;
-    padding: 1.5rem;
-  }
-  .card-hover {
-    background-color: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1.5rem;
-    padding: 1.5rem;
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.15s ease;
-  }
-  .card-hover:hover {
-    transform: translateY(-2px);
-    border-color: rgba(204, 255, 0, 0.4);
-    box-shadow: 0 10px 30px -10px rgba(204, 255, 0, 0.15);
-  }
-
-  /* Interactive Buttons */
+  /* Neo-Brutalist Mechanical Buttons */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border-radius: 9999px;
+    border-radius: 0.75rem;
     font-weight: 700;
     font-size: 0.875rem;
     line-height: 1.25rem;
     padding: 0.75rem 1.75rem;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: var(--font-sans);
+    transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    font-family: var(--font-display);
   }
+
+  /* Primary Black Button (Lumina Style) */
+  .btn-brutal-primary,
   .btn-lime,
   .btn-primary,
   .btn-indigo {
-    background-color: #ccff00;
-    color: #000000;
-    box-shadow: 0 0 25px rgba(204, 255, 0, 0.25);
+    background-color: #171e19;
+    color: #ffffff;
+    border: 2px solid #000000;
+    box-shadow: 4px 4px 0px 0px #000000;
   }
+  .btn-brutal-primary:hover,
   .btn-lime:hover,
   .btn-primary:hover,
   .btn-indigo:hover {
-    background-color: #b8e600;
-    box-shadow: 0 0 35px rgba(204, 255, 0, 0.45);
-    transform: scale(1.03);
-  }
-  .btn-secondary {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #ebebeb;
-  }
-  .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(204, 255, 0, 0.3);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px 0px #000000;
     color: #ffffff;
   }
+  .btn-brutal-primary:active,
+  .btn-lime:active,
+  .btn-primary:active,
+  .btn-indigo:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0px 0px #000000;
+  }
+
+  /* Secondary White Button (Lumina Style) */
+  .btn-brutal-secondary,
+  .btn-secondary,
   .btn-glass {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #ebebeb;
+    background-color: #ffffff;
+    color: #171e19;
+    border: 2px solid #000000;
+    box-shadow: 4px 4px 0px 0px #000000;
   }
+  .btn-brutal-secondary:hover,
+  .btn-secondary:hover,
   .btn-glass:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: #ccff00;
-    color: #ffffff;
-    transform: scale(1.02);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px 0px #000000;
+    background-color: #fbfbfb;
+    color: #000000;
+  }
+  .btn-brutal-secondary:active,
+  .btn-secondary:active,
+  .btn-glass:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0px 0px #000000;
   }
 
   /* Form Controls */
@@ -189,56 +204,33 @@
   input[type="file"],
   select,
   textarea {
-    background-color: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background-color: #ffffff;
+    border: 2px solid #000000;
     border-radius: 0.75rem;
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
-    color: #ebebeb;
+    color: #171e19;
+    box-shadow: 3px 3px 0px 0px #000000;
     outline: none;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    transition: all 0.15s ease;
     font-family: var(--font-sans);
   }
   input:focus,
   select:focus,
   textarea:focus {
-    border-color: #ccff00;
-    box-shadow: 0 0 0 1px #ccff00;
+    border-color: #000000;
+    box-shadow: 5px 5px 0px 0px #171e19;
+    transform: translate(-1px, -1px);
   }
 }
 
-/* Atmospheric Effects & Overlays */
-.bg-cyber-grid {
-  background-size: 60px 60px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+/* Neo-Brutalist Dot Grid Pattern (Lumina Ground) */
+.bg-dot-pattern {
+  background-image: radial-gradient(#000000 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
 }
 
-.glow-sphere-lime {
-  background: radial-gradient(circle, rgba(204, 255, 0, 0.15) 0%, transparent 70%);
-  filter: blur(120px);
-}
-
-.glow-sphere-emerald {
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
-  filter: blur(120px);
-}
-
-/* Keyframes & Animations */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.float-anim {
-  animation: float 6s ease-in-out infinite;
-}
-
+/* Continuous Marquee */
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
@@ -250,34 +242,17 @@
   animation: marquee 25s linear infinite;
 }
 
-@keyframes pulse-lime {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-    box-shadow: 0 0 8px #ccff00;
-  }
-  50% {
-    opacity: 0.4;
-    transform: scale(0.85);
-    box-shadow: 0 0 2px #ccff00;
-  }
-}
-
-.animate-pulse-lime {
-  animation: pulse-lime 2s infinite ease-in-out;
-}
-
-/* Asymmetric Corners for Testimonials & Bentos */
+/* Asymmetric Corners for Testimonials */
 .rounded-asymmetric {
-  border-top-left-radius: 4px;
-  border-top-right-radius: 2rem;
-  border-bottom-right-radius: 4px;
-  border-bottom-left-radius: 2rem;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 1.75rem;
+  border-bottom-right-radius: 0.25rem;
+  border-bottom-left-radius: 1.75rem;
 }
 
 /* Hairline Ruled Spec Rows */
 .hairline-row {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
   padding: 0.875rem 0;
   display: flex;
   align-items: center;
@@ -304,7 +279,7 @@
 html.js-ready .reveal {
   opacity: 0;
   transform: translateY(16px);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }
 html.js-ready .reveal.in-view {
   opacity: 1;

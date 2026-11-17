@@ -55,21 +55,15 @@
   }
   </script>
 </head>
-<body class="min-h-screen bg-[#000000] text-[#ebebeb] font-sans antialiased p-0 sm:p-3 lg:p-4 selection:bg-[#ccff00] selection:text-black">
-  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-[#ccff00] focus:px-4 focus:py-2 focus:font-bold focus:text-black">Skip to content</a>
+<body class="min-h-screen bg-[#f8f9fa] text-[#171e19] font-sans antialiased selection:bg-[#ffe17c] selection:text-black">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-[#ffe17c] focus:border-2 focus:border-black focus:px-4 focus:py-2 focus:font-bold focus:text-black focus:shadow-[4px_4px_0px_#000000]">Skip to content</a>
 
-  <!-- Floating Shell Container (Ultimate Hardware Shell Architecture) -->
-  <div class="relative mx-auto max-w-[1600px] overflow-hidden rounded-none sm:rounded-[2.5rem] border border-white/10 bg-[#0c0c0c] shadow-2xl">
-    <!-- Atmospheric 60x60px Grid Pattern & Glowing Spheres -->
-    <div class="pointer-events-none absolute inset-0 bg-cyber-grid opacity-20"></div>
-    <div class="pointer-events-none absolute -top-40 left-1/4 h-[500px] w-[500px] rounded-full bg-[#ccff00]/10 blur-[140px]"></div>
-    <div class="pointer-events-none absolute top-1/2 -right-20 h-[600px] w-[600px] rounded-full bg-[#10b981]/10 blur-[160px]"></div>
-    <div class="pointer-events-none absolute bottom-1/4 -left-20 h-[450px] w-[450px] rounded-full bg-[#ccff00]/8 blur-[150px]"></div>
-
+  <!-- Main Application Wrapper -->
+  <div class="relative min-h-screen flex flex-col bg-white">
     {% include "partials/_header.html" %}
     {% include "partials/_messages.html" %}
     
-    <main id="main" class="relative z-10">
+    <main id="main" class="relative z-10 flex-1">
       {% block content %}{% endblock %}
     </main>
     
@@ -81,7 +75,7 @@
     href="https://api.whatsapp.com/send?phone=19725550199&text=Hello%20GCTT%20Team%2C%20I%20would%20like%20to%20inquire%20about%20your%20IT%20staffing%20and%20training%20services."
     target="_blank"
     rel="noopener noreferrer"
-    class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#ccff00] text-black shadow-lg shadow-[#ccff00]/30 hover:scale-110 active:scale-95 transition-all duration-300 border border-black/20"
+    class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ffe17c] text-black shadow-[4px_4px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_#000000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-150 border-2 border-black"
     aria-label="Direct WhatsApp message to GCTT Texas Headquarters"
     title="Chat with GCTT Headquarters"
   >

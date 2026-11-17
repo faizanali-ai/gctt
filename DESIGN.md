@@ -1,51 +1,50 @@
 # GCTEKTON DESIGN SYSTEM CONSTITUTION
-## THE ULTIMATE FLAGSHIP SPECIFICATION: OBSIDIAN & NEON LIME KINETIC CRAFT
+## VIBRANT NEO-BRUTALIST ENTERPRISE SPECIFICATION (LUMINA STYLE)
 
 ---
 
 ## 1. Visual Philosophy & Core Pillars
-The GCTekton interface is an ultra-modern, high-performance enterprise platform merging three architectural paradigms:
-1. **Obsidian & Neon Lime Glassmorphism**: Deep black outer viewport (`#000000`) enclosing a floating hardware-like shell (`#0c0c0c`, `rounded-[2.5rem]`, `ring-1 ring-white/10`, `shadow-2xl`), high-voltage Neon Lime (`#ccff00`) and Emerald Glow (`#10b981`) accents, 16px backdrop-blur glass cards, and 60px linear cyber grids.
-2. **The Maker's Kinetic Craft**: An interactive technical vetting pipeline that *draws itself* in SVG using `getTotalLength()` and `strokeDashoffset`, paired with a 3-way variant switcher (`aria-pressed`), hairline-ruled measurement rows, and a full-width spread baseline wordmark (`G C T E K T O N`) that sinks and expands on scroll.
-3. **Neo-Brutalist Layout Rhythm**: High-energy stacked sections, interactive MacOS-styled browser mockup dashboard, continuous infinite marquee, "Problem vs. Solution" comparison bento, 4-column bento feature matrix, 3-step numbered pipeline with colored glow rings, and asymmetric testimonial cards.
+The GCTekton interface is a bold, high-energy Neo-Brutalist enterprise staffing & technical academy platform:
+1. **Dominant Palette**: Vibrant golden yellow (`#ffe17c`) primary ground, grounded by deep charcoal (`#171e19`) and sage (`#b7c6c2`) accents, clean white (`#ffffff`) card surfaces, and deep black (`#000000`) typography.
+2. **Physical Neo-Brutalist Geometry**: 2px solid black borders on cards, buttons, badges, and section dividers. Hard offset shadows (`box-shadow: 4px 4px 0px #000000` on cards/buttons and `8px 8px 0px #000000` on containers) with **zero blur**.
+3. **Mechanical Tactile Micro-Interactions**: Hover states physically translate elements (`transform: translate(2px, 2px)` or `translate(4px, 4px)`) while removing or collapsing the shadow to simulate pressing a physical button or mechanical switch.
+4. **100% Truthful Enterprise Content (Zero Fictional SaaS Copy)**: GCTT is Global Center for Technology & Training (Irving, Texas). All copy, dashboards, metrics, and testimonials reflect real IT staffing, SAP S/4HANA & Cloud upskilling, E-Verify compliance, and Texas corporate operations.
 
 ---
 
 ## 2. Color Palette & Materiality
 | Token Name | Hex / Value | Role |
 | :--- | :--- | :--- |
-| **Viewport Background** | `#000000` | Deepest black outer shell surrounding floating container |
-| **Shell Container** | `#0c0c0c` | Hardware surface of the main 1600px application container |
-| **Primary Accent** | `#ccff00` | Neon Lime — high-visibility CTA buttons, badges, glowing active states |
-| **Secondary Accent** | `#10b981` | Emerald Glow — verification badges, positive deltas, secondary glows |
-| **Dark Gray / Borders** | `#171e19` / `#272727` | Inner card fills, step connector lines, neutral darks |
-| **Hairlines & Rings** | `rgba(255, 255, 255, 0.1)` | 1px border rules, container rings, separator lines |
-| **Glass Surface** | `rgba(255, 255, 255, 0.03)` | 16px backdrop blur, soft elevated panels |
-| **Primary Text** | `#ebebeb` | High-contrast off-white heading and body copy |
-| **Secondary Text** | `rgba(235, 235, 235, 0.65)` | Subheadings, descriptions, supporting data |
-| **Muted Metadata** | `rgba(235, 235, 235, 0.35)` | Fine print, inactive tabs, hairline labels |
+| **Primary Ground** | `#ffe17c` | Vibrant golden yellow for hero, feature grids, and high-impact sections |
+| **Deep Charcoal** | `#171e19` | High-contrast dark sections, primary buttons, social proof bar, and footer |
+| **Sage Accent** | `#b7c6c2` | Feature icon boxes, testimonial background, subtle tag highlights |
+| **Surface White** | `#ffffff` | Elevated cards, browser mockup body, secondary button surfaces |
+| **Text Primary** | `#000000` | Deepest high-contrast ink for headlines, body copy, and icons |
+| **Text Inverted** | `#ffffff` | High-contrast white text for charcoal backgrounds |
+| **Borders** | `#000000` | Universal 2px solid black borders |
+| **Hard Shadow 4px** | `4px 4px 0px #000000` | Standard cards, buttons, badges |
+| **Hard Shadow 8px** | `8px 8px 0px #000000` | Large container blocks, browser mockup, primary CTA cards |
+| **Hard Shadow 12px** | `12px 12px 0px #000000` | Hero browser window mockup |
 
 ---
 
 ## 3. Typography Hierarchy
-- **Display Headings**: `Space Grotesk` (Weights 300 to 700, tight tracking `-0.06em` to `-0.02em`, leading `0.9` to `1.15`).
-- **Technical Metadata & Code**: `JetBrains Mono` (Weights 400, 500, 700, uppercase, tracking `0.15em` to `0.2em`).
-- **Body & Editorial Copy**: `Space Grotesk` (Weight 400, leading relaxed).
+- **Display Headings**: `Space Grotesk` (Weights 600 to 800, tight tracking `-0.04em`, bold industrial punch).
+- **Body & Interface**: `Inter` / `Space Grotesk` (Weight 500, crisp high-legibility sans).
+- **Technical Badges & Meta**: `JetBrains Mono` (Weights 500 to 700, uppercase, tracking `0.1em`).
 
 ---
 
 ## 4. Key Interactive Components
-1. **Neon Pulse Button**:
-   - `background: #ccff00`, `color: #000000`, `font-weight: 700`, `border-radius: 9999px`.
-   - `box-shadow: 0 0 30px rgba(204, 255, 0, 0.3)`. Hover: `transform: scale(1.05)`.
-2. **Glass Floating Card**:
-   - `background: rgba(255, 255, 255, 0.03)`, `backdrop-filter: blur(16px)`, `border: 1px solid rgba(255, 255, 255, 0.1)`, `border-radius: 1.5rem`.
-   - Hover state: `border-color: rgba(204, 255, 0, 0.4)`.
-3. **Pulsing System Status Indicator**:
-   - `JetBrains Mono`, `text-[10px] tracking-widest uppercase`, with 6px pulsing lime circle (`bg-[#ccff00] animate-pulse`).
-4. **Self-Drawing SVG Pipeline**:
-   - Live SVG architectural pipeline whose paths dynamically draw on scroll and re-draw when variant buttons are toggled.
-5. **Spread Baseline Wordmark**:
-   - Letter-by-letter flex row (`G · C · T · E · K · T · O · N`) with `justify-between` across the foot of the hero, cropped by the baseline.
-6. **Browser Mockup Shell**:
-   - MacOS window header with Red (`#ff5f57`), Yellow (`#febc2e`), and Green (`#28c840`) dots, displaying live candidate telemetry and placement speed indicators.
+1. **Neo-Brutalist Primary Button**:
+   - `background: #171e19`, `color: #ffffff`, `border: 2px solid #000000`, `box-shadow: 4px 4px 0px #000000`, `border-radius: 0.75rem`.
+   - Hover: `transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000000;`.
+2. **Neo-Brutalist Secondary Button**:
+   - `background: #ffffff`, `color: #000000`, `border: 2px solid #000000`, `box-shadow: 4px 4px 0px #000000`, `border-radius: 0.75rem`.
+   - Hover: `transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000000;`.
+3. **Brutalist Card**:
+   - `background: #ffffff`, `border: 2px solid #000000`, `box-shadow: 4px 4px 0px #000000`, `border-radius: 1rem`.
+4. **Hero Browser Mockup**:
+   - White window with 2px solid black border, 12px hard shadow, macOS window dots (red, yellow, green), containing truthful GCTT Texas staffing operations telemetry.
+5. **Radial Dot Pattern**:
+   - `background-image: radial-gradient(#000000 1.5px, transparent 1.5px)`, size `28px 28px`, opacity `8%` on yellow backgrounds.
