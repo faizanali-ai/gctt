@@ -101,3 +101,21 @@ class Registration(models.Model):
         self.certificate_ref = None
         self.certificate_issued_at = None
         self.save(update_fields=["certificate_issued", "certificate_ref", "certificate_issued_at"])
+
+
+class PendingRegistration(models.Model):
+    programme = models.ForeignKey(
+        Programme, on_delete=models.CASCADE, related_name="pending_registrations"
+    )
+    email = models.EmailField(max_length=200)
+    message = models.TextField(max_length=4000, blank=True)
+    token_hash = models.CharField(max_length=64, unique=True)
+    expires_at = models.DateTimeField(db_index=True)
+    consumed_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.email} → {self.programme}"

@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path("", views.job_list, name="careers"),
+    path("pending/<str:token>/", views.pending_application, name="pending_application"),
     path("<slug:slug>/", views.job_detail, name="job_detail"),
     path("<slug:slug>/apply/", views.job_apply, name="job_apply"),
 ]

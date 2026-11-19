@@ -1,26 +1,31 @@
 import logging
 
 from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.audit import log_action
 from apps.accounts.decorators import staff_required
+from apps.accounts.models import User
+from apps.accounts.pending import expiry, hash_token, make_token
 from config.emails import (
     notify_application,
     notify_application_status,
     notify_staff_new_application,
     send_password_setup,
+    send_pending_application,
 )
 
 from .forms import ApplicationForm
-from .models import Application, Job
+from .models import Application, Job, PendingApplication
 
 STAFF_STATUSES = {
     Application.Status.UNDER_REVIEW,
@@ -30,6 +35,29 @@ STAFF_STATUSES = {
 }
 
 logger = logging.getLogger(__name__)
+
+
+def _message_with_work_auth(form):
+    message = form.cleaned_data["message"]
+    work_auth = form.cleaned_data.get("work_authorization")
+    if work_auth:
+        label = dict(form.fields["work_authorization"].choices).get(work_auth, work_auth)
+        message = f"[Work Auth: {label}]\n{message}"
+    return message
+
+
+def _create_pending_application(job, email, resume, message):
+    token, token_hash = make_token()
+    pending = PendingApplication.objects.create(
+        job=job,
+        email=email,
+        resume=resume,
+        message=message,
+        token_hash=token_hash,
+        expires_at=expiry(),
+    )
+    send_pending_application(pending, token)
+    return pending
 
 
 def job_list(request):
@@ -92,14 +120,14 @@ def job_apply(request, slug):
     form = ApplicationForm(request.POST, request.FILES, is_authenticated=is_auth)
     if form.is_valid():
         generic_message = "If this email can be used, check your inbox to continue."
+        message = _message_with_work_auth(form)
+        resume = form.cleaned_data["resume"]
         if is_auth:
             user = request.user
             if not user.is_candidate:
                 messages.error(request, "Use a candidate account to apply for roles.")
                 return redirect("job_detail", slug=job.slug)
         else:
-            from apps.accounts.models import User
-
             email = form.cleaned_data["email"].strip().lower()
             first_name = form.cleaned_data.get("first_name", "").strip()
             last_name = form.cleaned_data.get("last_name", "").strip()
@@ -107,8 +135,9 @@ def job_apply(request, slug):
 
             existing_user = User.objects.filter(email__iexact=email).first()
             if existing_user:
-                # shortcut: existing users reapply after login; add a tokenized continuation if conversion drops.
-                send_password_setup(existing_user)
+                _create_pending_application(
+                    job, existing_user.email, resume, message
+                )
                 messages.info(request, generic_message)
                 return redirect("job_detail", slug=job.slug)
 
@@ -125,19 +154,18 @@ def job_apply(request, slug):
             except IntegrityError:
                 existing_user = User.objects.filter(email__iexact=email).first()
                 if existing_user:
-                    send_password_setup(existing_user)
+                    _create_pending_application(
+                        job, existing_user.email, resume, message
+                    )
                 messages.info(request, generic_message)
                 return redirect("job_detail", slug=job.slug)
 
-        application = form.save(commit=False)
-        application.job = job
-        application.applicant = user
-        work_auth = form.cleaned_data.get("work_authorization")
-        if work_auth:
-            label = dict(form.fields["work_authorization"].choices).get(work_auth, work_auth)
-            prefix = f"[Work Auth: {label}]\n"
-            if prefix not in application.message:
-                application.message = f"{prefix}{application.message}"
+        application = Application(
+            job=job,
+            applicant=user,
+            resume=resume,
+            message=message,
+        )
         try:
             with transaction.atomic():
                 application.save()
@@ -165,6 +193,60 @@ def job_apply(request, slug):
         request,
         "jobs/job_detail.html",
         {"job": job, "form": form, "applied": False},
+    )
+
+
+@ratelimit(key="ip", rate="30/m", block=True)
+def pending_application(request, token):
+    pending = get_object_or_404(
+        PendingApplication,
+        token_hash=hash_token(token),
+        consumed_at__isnull=True,
+        expires_at__gt=timezone.now(),
+    )
+    user = User.objects.filter(email__iexact=pending.email, is_active=True).first()
+    if not user:
+        raise Http404
+    if request.user.is_authenticated and request.user.pk != user.pk:
+        raise Http404
+    if not request.user.is_authenticated:
+        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+    if not user.is_candidate:
+        messages.error(request, "Use a candidate account to apply for roles.")
+        return redirect("dashboard")
+
+    if request.method == "POST":
+        if Application.objects.filter(job=pending.job, applicant=user).exists():
+            pending.consumed_at = timezone.now()
+            pending.save(update_fields=["consumed_at"])
+            messages.info(request, "You have already applied to this job.")
+            return redirect("dashboard")
+        application = Application(
+            job=pending.job,
+            applicant=user,
+            resume=pending.resume.name,
+            message=request.POST.get("message", pending.message)[:4000],
+        )
+        try:
+            with transaction.atomic():
+                application.save()
+                pending.consumed_at = timezone.now()
+                pending.save(update_fields=["consumed_at"])
+            notify_application(application)
+            notify_staff_new_application(application)
+            messages.success(
+                request,
+                "Your application has been received by GCTT technical recruitment directors.",
+            )
+            return redirect("dashboard")
+        except IntegrityError:
+            messages.info(request, "You have already applied to this job.")
+            return redirect("dashboard")
+
+    return render(
+        request,
+        "jobs/pending_application.html",
+        {"pending": pending},
     )
 
 

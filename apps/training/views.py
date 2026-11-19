@@ -1,30 +1,48 @@
 import json
 
 from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
 from django.db.models import Q
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.audit import log_action
 from apps.accounts.decorators import staff_2fa_redirect, staff_required
 from apps.accounts.models import User
+from apps.accounts.pending import expiry, hash_token, make_token
 from config.emails import (
     notify_certificate,
     notify_registration,
     notify_registration_status,
     notify_staff_new_registration,
     send_password_setup,
+    send_pending_registration,
 )
 
 from .ai_advisor import analyze_career_trajectory
 from .certificates import generate_certificate_pdf
 from .forms import InboundEnrollmentForm, RegistrationForm
-from .models import Programme, Registration
+from .models import PendingRegistration, Programme, Registration
+
+
+def _create_pending_registration(programme, email, message):
+    token, token_hash = make_token()
+    pending = PendingRegistration.objects.create(
+        programme=programme,
+        email=email,
+        message=message,
+        token_hash=token_hash,
+        expires_at=expiry(),
+    )
+    send_pending_registration(pending, token)
+    return pending
+
 
 STAFF_STATUSES = {
     Registration.Status.UNDER_REVIEW,
@@ -124,10 +142,18 @@ def programme_register(request, slug):
             first_name = parts[0]
             last_name = parts[1] if len(parts) > 1 else ""
 
+            combined_notes = []
+            if career_status:
+                combined_notes.append(f"[Career Status: {career_status}]")
+            if linkedin_url:
+                combined_notes.append(f"[LinkedIn: {linkedin_url}]")
+            if user_msg:
+                combined_notes.append(user_msg)
+            message = "\n".join(combined_notes)
+
             existing_user = User.objects.filter(email__iexact=email).first()
             if existing_user:
-                # shortcut: existing users re-register after login; add a tokenized continuation if conversion drops.
-                send_password_setup(existing_user)
+                _create_pending_registration(programme, existing_user.email, message)
                 messages.info(request, generic_message)
                 return redirect("programme_detail", slug=programme.slug)
 
@@ -145,22 +171,16 @@ def programme_register(request, slug):
             except IntegrityError:
                 existing_user = User.objects.filter(email__iexact=email).first()
                 if existing_user:
-                    send_password_setup(existing_user)
+                    _create_pending_registration(
+                        programme, existing_user.email, message
+                    )
                 messages.info(request, generic_message)
                 return redirect("programme_detail", slug=programme.slug)
-
-            combined_notes = []
-            if career_status:
-                combined_notes.append(f"[Career Status: {career_status}]")
-            if linkedin_url:
-                combined_notes.append(f"[LinkedIn: {linkedin_url}]")
-            if user_msg:
-                combined_notes.append(user_msg)
 
             registration, reg_created = Registration.objects.get_or_create(
                 programme=programme,
                 student=student,
-                defaults={"message": "\n".join(combined_notes)},
+                defaults={"message": message},
             )
             if reg_created:
                 notify_registration(registration)
@@ -170,6 +190,58 @@ def programme_register(request, slug):
             return redirect("programme_detail", slug=programme.slug)
 
     return redirect("programme_detail", slug=programme.slug)
+
+
+@ratelimit(key="ip", rate="30/m", block=True)
+def pending_registration(request, token):
+    pending = get_object_or_404(
+        PendingRegistration,
+        token_hash=hash_token(token),
+        consumed_at__isnull=True,
+        expires_at__gt=timezone.now(),
+    )
+    user = User.objects.filter(email__iexact=pending.email, is_active=True).first()
+    if not user:
+        raise Http404
+    if request.user.is_authenticated and request.user.pk != user.pk:
+        raise Http404
+    if not request.user.is_authenticated:
+        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+    if not user.is_student:
+        messages.error(request, "Use a student account to register for training.")
+        return redirect("dashboard")
+
+    if request.method == "POST":
+        if Registration.objects.filter(
+            programme=pending.programme, student=user
+        ).exists():
+            pending.consumed_at = timezone.now()
+            pending.save(update_fields=["consumed_at"])
+            messages.info(request, "You are already registered for this programme.")
+            return redirect("dashboard")
+        registration = Registration(
+            programme=pending.programme,
+            student=user,
+            message=request.POST.get("message", pending.message)[:4000],
+        )
+        try:
+            with transaction.atomic():
+                registration.save()
+                pending.consumed_at = timezone.now()
+                pending.save(update_fields=["consumed_at"])
+            notify_registration(registration)
+            notify_staff_new_registration(registration)
+            messages.success(request, "Your registration has been sent.")
+            return redirect("dashboard")
+        except IntegrityError:
+            messages.info(request, "You are already registered for this programme.")
+            return redirect("dashboard")
+
+    return render(
+        request,
+        "training/pending_registration.html",
+        {"pending": pending},
+    )
 
 
 def sap_scrum(request):

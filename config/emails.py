@@ -44,23 +44,11 @@ def staff_recipients(subgroup):
     from django.contrib.auth import get_user_model
 
     User = get_user_model()
-    recipients = list(
+    return list(
         User.objects.filter(is_active=True, is_staff=True, groups__name=subgroup)
         .values_list("email", flat=True)
         .distinct()
     )
-    if not recipients:
-        # Never let a queue alert vanish because a subgroup is empty.
-        recipients = list(
-            User.objects.filter(is_active=True, role=User.Role.ADMIN)
-            .values_list("email", flat=True)
-            .distinct()
-        )
-        if recipients:
-            logger.warning(
-                "No active %s staff; falling back to active admins", subgroup
-            )
-    return recipients
 
 
 def notify_subgroup(subgroup, subject, body):
@@ -119,6 +107,36 @@ def send_verification(user, request):
         f"Global Center for Technology & Training (GCTT)\n"
         f"{COMPANY['address']}\n"
         f"{COMPANY['email']}",
+    )
+
+
+def send_pending_application(pending, token):
+    link = (
+        f"{getattr(settings, 'SITE_URL', 'https://gctekton.com').rstrip('/')}"
+        f"{reverse('pending_application', args=[token])}"
+    )
+    send(
+        pending.email,
+        f"Continue your application: {pending.job.title}",
+        "Use the single-use link below to sign in and confirm your application. "
+        "It expires in 24 hours.\n\n"
+        f"{link}\n\n"
+        "Global Center for Technology & Training (GCTT)",
+    )
+
+
+def send_pending_registration(pending, token):
+    link = (
+        f"{getattr(settings, 'SITE_URL', 'https://gctekton.com').rstrip('/')}"
+        f"{reverse('pending_registration', args=[token])}"
+    )
+    send(
+        pending.email,
+        f"Continue your registration: {pending.programme.title}",
+        "Use the single-use link below to sign in and confirm your registration. "
+        "It expires in 24 hours.\n\n"
+        f"{link}\n\n"
+        "Global Center for Technology & Training (GCTT)",
     )
 
 
