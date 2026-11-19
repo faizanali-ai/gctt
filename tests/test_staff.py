@@ -93,7 +93,7 @@ class StaffPortalTests(TestCase):
     def test_recruiter_moves_application_forward(self):
         self.client.force_login(self.recruiter)
         self.client.post(
-            reverse("staff_application_status", args=[self.application.pk]),
+            reverse("staff_application_status", args=[self.application.uuid]),
             {"status": "shortlisted"},
         )
         self.application.refresh_from_db()

@@ -94,7 +94,7 @@
                 {{ registration.created_at|date:"M j, Y" }}
               </td>
               <td class="px-4 py-4">
-                <form method="post" action="{% url 'staff_registration_status' registration.pk %}" class="flex items-center gap-2">
+                <form method="post" action="{% url 'staff_registration_status' registration.uuid %}" class="flex items-center gap-2">
                   {% csrf_token %}
                   <select name="status" aria-label="Registration status" class="w-36 py-1 text-xs">
                     {% for value, label in statuses %}
@@ -115,7 +115,7 @@
                         PDF ↗
                       </a>
                     </div>
-                    <form method="post" action="{% url 'staff_registration_certificate' registration.pk %}">
+                    <form method="post" action="{% url 'staff_registration_certificate' registration.uuid %}">
                       {% csrf_token %}
                       <input type="hidden" name="action" value="revoke">
                       <button type="submit" class="text-2xs font-semibold text-rose-600 hover:underline">
@@ -124,7 +124,7 @@
                     </form>
                   </div>
                 {% elif registration.status == "completed" %}
-                  <form method="post" action="{% url 'staff_registration_certificate' registration.pk %}">
+                  <form method="post" action="{% url 'staff_registration_certificate' registration.uuid %}">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary text-2xs py-1 px-3">
                       Award &amp; Issue Certificate

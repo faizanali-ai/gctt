@@ -252,8 +252,12 @@ def pending_application(request, token):
 
 @login_required
 @require_POST
-def withdraw_application(request, pk):
-    application = get_object_or_404(Application, pk=pk, applicant=request.user)
+def withdraw_application(request, uuid=None, pk=None):
+    applications = Application.objects.filter(applicant=request.user)
+    application = get_object_or_404(
+        applications,
+        **({"uuid": uuid} if uuid else {"pk": pk}),
+    )
     role = application.job.title
     log_action(request, "application.withdraw", f"{application.pk}", role)
     application.delete()
@@ -340,9 +344,10 @@ def staff_applications(request):
 @staff_required
 @permission_required("jobs.change_application", raise_exception=True)
 @require_POST
-def staff_application_status(request, pk):
+def staff_application_status(request, uuid=None, pk=None):
     application = get_object_or_404(
-        Application.objects.filter(applicant__is_staff=False), pk=pk
+        Application.objects.filter(applicant__is_staff=False),
+        **({"uuid": uuid} if uuid else {"pk": pk}),
     )
     status = request.POST.get("status", "")
     if status in STAFF_STATUSES:

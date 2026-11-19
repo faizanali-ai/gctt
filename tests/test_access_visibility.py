@@ -75,6 +75,31 @@ class VisibilityTests(TestCase):
         self.assertNotContains(response, other.email)
         self.assertNotContains(response, "Manage Staff")
 
+    def test_uuid_and_legacy_urls_resolve(self):
+        self.assertIn(str(self.application.uuid), reverse("withdraw_application", args=[self.application.uuid]))
+        self.assertIn(str(self.application.pk), reverse("withdraw_application_legacy", args=[self.application.pk]))
+        self.assertIn(str(self.application.uuid), reverse("staff_application_status", args=[self.application.uuid]))
+        self.assertIn(str(self.registration.uuid), reverse("staff_registration_status", args=[self.registration.uuid]))
+        self.assertIn(str(self.registration.uuid), reverse("staff_registration_certificate", args=[self.registration.uuid]))
+
+    def test_staff_can_update_application_by_uuid(self):
+        self.client.force_login(self.recruiter)
+        response = self.client.post(
+            reverse("staff_application_status", args=[self.application.uuid]),
+            {"status": "shortlisted"},
+        )
+        self.assertRedirects(response, reverse("staff_applications"))
+        self.application.refresh_from_db()
+        self.assertEqual(self.application.status, Application.Status.SHORTLISTED)
+
+    def test_candidate_can_withdraw_by_uuid(self):
+        self.client.force_login(self.candidate)
+        response = self.client.post(
+            reverse("withdraw_application", args=[self.application.uuid])
+        )
+        self.assertRedirects(response, reverse("dashboard"))
+        self.assertFalse(Application.objects.filter(pk=self.application.pk).exists())
+
     def test_staff_records_do_not_appear_in_operational_lists(self):
         other_staff = staff_user("hidden.staff@example.com", "Trainer")
         Application.objects.create(

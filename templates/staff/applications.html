@@ -113,7 +113,7 @@
                     {% else %}bg-brand/10 text-brand border border-brand/20{% endif %}">
                     {{ application.get_status_display }}
                   </span>
-                  <form method="post" action="{% url 'staff_application_status' application.pk %}" class="inline-flex items-center gap-1.5">
+                  <form method="post" action="{% url 'staff_application_status' application.uuid %}" class="inline-flex items-center gap-1.5">
                     {% csrf_token %}
                     <select name="status" aria-label="Application status" class="w-32 py-1 text-xs">
                       {% for value, label in statuses %}

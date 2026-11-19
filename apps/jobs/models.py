@@ -62,6 +62,7 @@ class Application(models.Model):
         REJECTED = "rejected", "Rejected"
         SELECTED = "selected", "Selected"
 
+    uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, db_index=True)
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="applications")
     applicant = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="applications"

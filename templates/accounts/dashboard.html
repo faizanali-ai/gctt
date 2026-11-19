@@ -80,7 +80,7 @@
                 </a>
                 {% endif %}
 
-                <form method="post" action="{% url 'withdraw_application' application.pk %}" onsubmit="return confirm('Withdraw your application for {{ application.job.title|escapejs }}? Your resume will be removed from review.');">
+                <form method="post" action="{% url 'withdraw_application' application.uuid %}" onsubmit="return confirm('Withdraw your application for {{ application.job.title|escapejs }}? Your resume will be removed from review.');">
                   {% csrf_token %}
                   <button type="submit" class="btn-stitch-secondary text-2xs py-1.5 px-3 text-[#525660] hover:text-rose-600 hover:border-rose-300">
                     Withdraw

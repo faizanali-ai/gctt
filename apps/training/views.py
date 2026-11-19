@@ -388,9 +388,10 @@ def staff_registrations(request):
 @staff_required
 @permission_required("training.change_registration", raise_exception=True)
 @require_POST
-def staff_registration_status(request, pk):
+def staff_registration_status(request, uuid=None, pk=None):
     registration = get_object_or_404(
-        Registration.objects.filter(student__is_staff=False), pk=pk
+        Registration.objects.filter(student__is_staff=False),
+        **({"uuid": uuid} if uuid else {"pk": pk}),
     )
     status = request.POST.get("status", "")
     if status in STAFF_STATUSES:
@@ -410,9 +411,10 @@ def staff_registration_status(request, pk):
 @staff_required
 @permission_required("training.change_registration", raise_exception=True)
 @require_POST
-def staff_registration_certificate(request, pk):
+def staff_registration_certificate(request, uuid=None, pk=None):
     registration = get_object_or_404(
-        Registration.objects.filter(student__is_staff=False), pk=pk
+        Registration.objects.filter(student__is_staff=False),
+        **({"uuid": uuid} if uuid else {"pk": pk}),
     )
     if request.POST.get("action") == "revoke":
         ref = registration.certificate_ref or ""

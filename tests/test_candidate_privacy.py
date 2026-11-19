@@ -94,7 +94,7 @@ class CandidatePrivacyAndDataIsolationTests(TestCase):
     def test_candidate_a_cannot_withdraw_candidate_b_application(self):
         """Candidate A attempting to withdraw Candidate B's application must return 404."""
         self.client.force_login(self.candidate_a)
-        response = self.client.post(reverse("withdraw_application", args=[self.app_b.pk]))
+        response = self.client.post(reverse("withdraw_application", args=[self.app_b.uuid]))
         self.assertEqual(response.status_code, 404)
         # Verify app_b still exists
         self.assertTrue(Application.objects.filter(pk=self.app_b.pk).exists())

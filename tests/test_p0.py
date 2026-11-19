@@ -135,13 +135,13 @@ class CertificateTests(TestCase):
         self.registration.status = Registration.Status.ACCEPTED
         self.registration.save()
         self.client.force_login(self.trainer)
-        self.client.post(reverse("staff_registration_certificate", args=[self.registration.pk]))
+        self.client.post(reverse("staff_registration_certificate", args=[self.registration.uuid]))
         self.registration.refresh_from_db()
         self.assertFalse(self.registration.certificate_issued)
 
     def test_trainer_issues_certificate(self):
         self.client.force_login(self.trainer)
-        self.client.post(reverse("staff_registration_certificate", args=[self.registration.pk]))
+        self.client.post(reverse("staff_registration_certificate", args=[self.registration.uuid]))
         self.registration.refresh_from_db()
         self.assertTrue(self.registration.certificate_issued)
         self.assertTrue(self.registration.certificate_ref.startswith("GCTT-"))
@@ -296,7 +296,7 @@ class ApplicationRuleTests(TestCase):
         job = Job.objects.create(title="Dev", location="x", description="x", published=True)
         application = Application.objects.create(job=job, applicant=user, resume="resumes/x.pdf")
         self.client.force_login(user)
-        response = self.client.post(reverse("withdraw_application", args=[application.pk]))
+        response = self.client.post(reverse("withdraw_application", args=[application.uuid]))
         self.assertRedirects(response, reverse("dashboard"))
         self.assertFalse(Application.objects.exists())
         audit = AuditLog.objects.get(action="application.withdraw")
@@ -309,7 +309,7 @@ class ApplicationRuleTests(TestCase):
         job = Job.objects.create(title="Dev", location="x", description="x", published=True)
         application = Application.objects.create(job=job, applicant=owner, resume="resumes/x.pdf")
         self.client.force_login(other)
-        response = self.client.post(reverse("withdraw_application", args=[application.pk]))
+        response = self.client.post(reverse("withdraw_application", args=[application.uuid]))
         self.assertEqual(response.status_code, 404)
         self.assertTrue(Application.objects.exists())
 

@@ -29,7 +29,7 @@ class AuditLogTests(TestCase):
     def test_status_change_is_recorded(self):
         self.client.force_login(self.recruiter)
         self.client.post(
-            reverse("staff_application_status", args=[self.application.pk]),
+            reverse("staff_application_status", args=[self.application.uuid]),
             {"status": "shortlisted"},
         )
         entry = AuditLog.objects.get(action="application.status")
@@ -43,7 +43,7 @@ class AuditLogTests(TestCase):
 
         self.client.force_login(self.recruiter)
         self.client.post(
-            reverse("staff_application_status", args=[self.application.pk]),
+            reverse("staff_application_status", args=[self.application.uuid]),
             {"status": "shortlisted"},
         )
         self.assertEqual(len(mail.outbox), 1)

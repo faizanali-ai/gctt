@@ -95,7 +95,7 @@ class ResumeUploadAndCleanupTests(TestCase):
         self.assertTrue(default_storage.exists(file_path))
 
         self.client.force_login(self.user)
-        response = self.client.post(reverse("withdraw_application", args=[application.pk]))
+        response = self.client.post(reverse("withdraw_application", args=[application.uuid]))
         self.assertRedirects(response, reverse("dashboard"))
         self.assertFalse(default_storage.exists(file_path))
 
@@ -136,7 +136,7 @@ class CertificateBugTests(TestCase):
 
         self.client.force_login(self.trainer)
         response = self.client.post(
-            reverse("staff_registration_certificate", args=[self.registration.pk]),
+            reverse("staff_registration_certificate", args=[self.registration.uuid]),
             {"action": "revoke"},
         )
         self.assertEqual(response.status_code, 302)
@@ -182,7 +182,7 @@ class StatusChangeDeduplicationTests(TestCase):
         self.client.force_login(self.recruiter)
         # First transition: submitted -> shortlisted
         self.client.post(
-            reverse("staff_application_status", args=[self.application.pk]),
+            reverse("staff_application_status", args=[self.application.uuid]),
             {"status": Application.Status.SHORTLISTED},
         )
         self.assertEqual(len(mail.outbox), 1)
@@ -190,7 +190,7 @@ class StatusChangeDeduplicationTests(TestCase):
 
         # Duplicate post with same status
         self.client.post(
-            reverse("staff_application_status", args=[self.application.pk]),
+            reverse("staff_application_status", args=[self.application.uuid]),
             {"status": Application.Status.SHORTLISTED},
         )
         # Should NOT send second email or log duplicate audit
@@ -202,7 +202,7 @@ class StatusChangeDeduplicationTests(TestCase):
         self.client.force_login(self.trainer)
         # First transition: under_review -> accepted
         self.client.post(
-            reverse("staff_registration_status", args=[self.registration.pk]),
+            reverse("staff_registration_status", args=[self.registration.uuid]),
             {"status": Registration.Status.ACCEPTED},
         )
         self.assertEqual(len(mail.outbox), 1)
@@ -210,7 +210,7 @@ class StatusChangeDeduplicationTests(TestCase):
 
         # Duplicate post with same status
         self.client.post(
-            reverse("staff_registration_status", args=[self.registration.pk]),
+            reverse("staff_registration_status", args=[self.registration.uuid]),
             {"status": Registration.Status.ACCEPTED},
         )
         self.assertEqual(len(mail.outbox), 1)

@@ -65,6 +65,7 @@ class Registration(models.Model):
         REJECTED = "rejected", "Rejected"
         COMPLETED = "completed", "Completed"
 
+    uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, db_index=True)
     programme = models.ForeignKey(Programme, on_delete=models.CASCADE, related_name="registrations")
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="registrations"

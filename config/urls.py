@@ -72,9 +72,14 @@ urlpatterns = [
     path("accounts/", include("apps.accounts.urls")),
     path("dashboard/", accounts_views.dashboard, name="dashboard"),
     path(
-        "dashboard/applications/<int:pk>/withdraw/",
+        "dashboard/applications/<uuid:uuid>/withdraw/",
         jobs_views.withdraw_application,
         name="withdraw_application",
+    ),
+    path(
+        "dashboard/applications/<int:pk>/withdraw/",
+        jobs_views.withdraw_application,
+        name="withdraw_application_legacy",
     ),
     path("profile/", accounts_views.profile_edit, name="profile"),
     path("manage/users/", accounts_views.manage_users, name="manage_users"),
@@ -100,9 +105,14 @@ urlpatterns = [
     ),
     path("staff/applications/", jobs_views.staff_applications, name="staff_applications"),
     path(
-        "staff/applications/<int:pk>/status/",
+        "staff/applications/<uuid:uuid>/status/",
         jobs_views.staff_application_status,
         name="staff_application_status",
+    ),
+    path(
+        "staff/applications/<int:pk>/status/",
+        jobs_views.staff_application_status,
+        name="staff_application_status_legacy",
     ),
     path("staff/programmes/", training_views.staff_programmes, name="staff_programmes"),
     path(
@@ -114,14 +124,24 @@ urlpatterns = [
         "staff/registrations/", training_views.staff_registrations, name="staff_registrations"
     ),
     path(
-        "staff/registrations/<int:pk>/status/",
+        "staff/registrations/<uuid:uuid>/status/",
         training_views.staff_registration_status,
         name="staff_registration_status",
     ),
     path(
-        "staff/registrations/<int:pk>/certificate/",
+        "staff/registrations/<int:pk>/status/",
+        training_views.staff_registration_status,
+        name="staff_registration_status_legacy",
+    ),
+    path(
+        "staff/registrations/<uuid:uuid>/certificate/",
         training_views.staff_registration_certificate,
         name="staff_registration_certificate",
+    ),
+    path(
+        "staff/registrations/<int:pk>/certificate/",
+        training_views.staff_registration_certificate,
+        name="staff_registration_certificate_legacy",
     ),
     path("admin/", admin.site.urls),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
