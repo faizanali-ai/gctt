@@ -17,6 +17,9 @@ password_reset_view = ratelimit(key="ip", rate="5/m", method="POST", block=True)
 urlpatterns = [
     path("signup/", views.signup, name="signup"),
     path("login/", views.login_view, name="login"),
+    path("login/email/", views.email_otp_request, name="email_otp_request"),
+    path("login/email/verify/", views.email_otp_verify, name="email_otp_verify"),
+    path("login/email/resend/", views.email_otp_resend, name="email_otp_resend"),
     path("login/2fa/", views.login_2fa, name="login_2fa"),
     path("login/2fa/enroll/", views.login_2fa_enroll, name="login_2fa_enroll"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),

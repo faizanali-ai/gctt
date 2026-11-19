@@ -85,6 +85,18 @@ def send_password_setup(user):
     return bool(sent)
 
 
+def send_login_otp(email, code):
+    minutes = max(1, int(getattr(settings, "EMAIL_OTP_TTL_SECONDS", 600)) // 60)
+    send(
+        email,
+        "Your GCTT sign-in code",
+        "Your one-time GCTT sign-in code is:\n\n"
+        f"{code}\n\n"
+        f"It expires in {minutes} minutes. If you did not request it, ignore this email.\n\n"
+        "Global Center for Technology & Training (GCTT)",
+    )
+
+
 def verification_url(user, request=None):
     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
     token = email_verification_token_generator.make_token(user)

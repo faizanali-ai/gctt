@@ -33,10 +33,11 @@ from apps.accounts.tokens import email_verification_token_generator
 from apps.enquiries.models import Enquiry
 from apps.jobs.models import Application, Job
 from apps.training.models import Programme, Registration
-from config.emails import send_password_setup, send_verification
+from config.emails import send_login_otp, send_password_setup, send_verification
 
 from .audit import log_action
 from .decorators import staff_2fa_redirect, staff_required
+from .email_otp import issue_code, verify_code
 from .forms import ProfileForm, SignupForm, StyledAuthenticationForm
 from .models import STAFF_SUBGROUPS, User, sync_access
 
@@ -104,6 +105,124 @@ class CustomLoginView(LoginView):
 @ratelimit(key="ip", rate="10/m", method="POST", block=True)
 def login_view(request, *args, **kwargs):
     return CustomLoginView.as_view()(request, *args, **kwargs)
+
+
+def _safe_next(request, value):
+    if value and url_has_allowed_host_and_scheme(
+        value, allowed_hosts={request.get_host()}
+    ):
+        return value
+    return None
+
+
+def _complete_email_otp_login(request, user):
+    next_url = request.session.pop("email_otp_next", None)
+    if user.is_staff and (
+        settings.REQUIRE_STAFF_2FA
+        or user.totpdevice_set.filter(confirmed=True).exists()
+    ):
+        request.session["pre_2fa_user_id"] = user.pk
+        if next_url:
+            request.session["pre_2fa_next"] = next_url
+        return redirect("login_2fa")
+
+    login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+    if next_url:
+        return redirect(next_url)
+    return redirect("dashboard")
+
+
+@ratelimit(key="ip", rate="10/m", method="POST", block=True)
+def email_otp_request(request):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+
+    if request.method == "POST":
+        email = request.POST.get("email", "").strip().lower()
+        next_url = _safe_next(request, request.POST.get("next", ""))
+        request.session["email_otp_email"] = email
+        if next_url:
+            request.session["email_otp_next"] = next_url
+        else:
+            request.session.pop("email_otp_next", None)
+
+        user = User.objects.filter(email__iexact=email, is_active=True).first()
+        if user:
+            issued = issue_code(email)
+            if issued:
+                send_login_otp(email, issued[1])
+                log_action(request, "auth.email_otp_request", email)
+        else:
+            log_action(
+                request, "auth.email_otp_request_unknown", _mask_email(email)
+            )
+
+        messages.info(
+            request,
+            "If this email can be used, check your inbox for a sign-in code.",
+        )
+        return redirect("email_otp_verify")
+
+    return render(
+        request,
+        "accounts/login_email_otp.html",
+        {"next": _safe_next(request, request.GET.get("next", "")) or ""},
+    )
+
+
+@ratelimit(key="ip", rate="10/m", method="POST", block=True)
+def email_otp_verify(request):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+
+    email = request.session.get("email_otp_email", "")
+    if not email:
+        return redirect("email_otp_request")
+
+    if request.method == "POST":
+        code = request.POST.get("code", "").strip()
+        if verify_code(email, code):
+            user = User.objects.filter(
+                email__iexact=email, is_active=True
+            ).first()
+            if user:
+                if not user.email_verified:
+                    user.email_verified = True
+                    user.save(update_fields=["email_verified"])
+                request.session.pop("email_otp_email", None)
+                log_action(request, "auth.email_otp", user.email)
+                return _complete_email_otp_login(request, user)
+            messages.error(request, "That code is invalid or expired.")
+        else:
+            log_action(request, "auth.email_otp_failed", _mask_email(email))
+            messages.error(request, "That code is invalid or expired.")
+
+    return render(
+        request,
+        "accounts/login_email_otp_verify.html",
+        {"masked_email": _mask_email(email)},
+    )
+
+
+@require_POST
+@ratelimit(key="ip", rate="5/m", method="POST", block=True)
+def email_otp_resend(request):
+    email = request.session.get("email_otp_email", "")
+    if not email:
+        return redirect("email_otp_request")
+
+    user = User.objects.filter(email__iexact=email, is_active=True).first()
+    if user:
+        issued = issue_code(email)
+        if issued:
+            send_login_otp(email, issued[1])
+            log_action(request, "auth.email_otp_resend", email)
+
+    messages.info(
+        request,
+        "If this email can be used, check your inbox for a sign-in code.",
+    )
+    return redirect("email_otp_verify")
 
 
 @ratelimit(key="ip", rate="10/m", method="POST", block=True)
