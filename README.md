@@ -2,6 +2,16 @@
 
 Marketing site, careers, training registrations and enquiries for GCTT.
 
+## Access levels & visibility
+
+- **Admin** (`role=admin`) — merged CEO/owner/superadmin level. Only admins can list users, see account totals or subgroup membership, manage accounts, or use Django Admin.
+- **Staff** (`role=staff`) — exactly one subgroup: `Recruiter`, `Trainer`, or `Enquiry Manager`. Staff see only their own account and their subgroup's work queue. They cannot discover other staff accounts or cross into another subgroup.
+- **Candidate / Student** — external portal users. Candidates see their own applications; students see their own registrations. Neither can discover another external account.
+
+Employers do not have accounts. Employer requests enter the enquiry queue and notify only the `Enquiry Manager` subgroup. Operational notifications are sent one recipient at a time; admins are not default recipients.
+
+Certificate verification shows validity and programme only, never the holder's identity. Unauthorized certificate downloads return 404. Signup, guest applications, and guest registrations return the same generic "check your email" response for new and existing addresses.
+
 ## Run
 
 Debug is off by default; enable it for local development:
@@ -42,7 +52,7 @@ Stack: **Render** (web, free) + **Neon** (Postgres, free) + **Resend** (email, f
    password, and the R2 keys.
 3. The start command runs `migrate`, `createcachetable`, `collectstatic` and gunicorn
    on every boot — no paid release phase needed.
-4. Verify `/healthz/` returns `ok`, then create the CEO account:
+4. Verify `/healthz/` returns `ok`, then create the admin account:
    `uv run python manage.py createsuperuser` (Render shell) or via Django Admin invite.
 5. Optional custom domain: add it in Render, then append it to
    `DJANGO_ALLOWED_HOSTS` and `DJANGO_CSRF_TRUSTED_ORIGINS`; DNS is free on Cloudflare.
