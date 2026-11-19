@@ -1,92 +1,61 @@
 # GCTT Session Handoff
 
 ## Goal & Core Objective
-Harden the existing Django GCTT site backend-first. Access is three levels: Admin (owner/superadmin/CEO merged), Staff (one subgroup), Candidate/Student. Task 1 (visibility/isolation), Task 2 (migration correction + audit), and the local migrate/audit are complete.
+Harden the existing Django GCTT site backend-first. Access is three levels: Admin (owner/superadmin/CEO merged), Staff (one subgroup), Candidate/Student. Access model, audit, 2FA, certificate hardening, tokenized guest continuation, and UUID URLs are complete.
 
-## Completed Edits & Architecture Decisions
-- Merged `owner`/`superadmin`/`ceo` into `admin`; kept `staff`.
-- Kept Staff subgroups `Recruiter`, `Trainer`, `Enquiry Manager` intact; no flattening.
-- Kept Candidate/Student separation via `account_type`.
-- `sync_access` enforces role -> flags + exactly one group and clears direct permissions.
+## Completed Work
+- Merged `owner`/`superadmin`/`ceo` into `admin`; kept `staff` and subgroups `Recruiter`, `Trainer`, `Enquiry Manager`.
+- Kept Candidate/Student separation via `account_type`; cross-actions blocked.
+- `sync_access` enforces role -> flags + one group and clears direct permissions.
 - Last-active-admin/self-protection guards in portal and Django Admin.
-- Admin-only: user lists, account totals, subgroup membership, Django Admin.
-- Staff isolation: no staff directory/counts; staff-owned records excluded from operational queues; notices sent one recipient at a time.
-- Candidate/Student isolation: own records only; cross-actions blocked.
-- Removed non-admin aggregate counters: staff dashboard stats, per-record counts, pagination totals, candidate dashboard counts.
-- Public certificate verification hides holder identity; unauthorized downloads return 404.
-- Signup/guest apply/guest register return identical generic responses for new/existing emails; no auto-login.
-- Notifications route only to relevant subgroup; Admin is not a default recipient.
-- Added Staff 2FA enforcement + enrollment flow (`staff_required`, `login_2fa_enroll`).
-- Added read-only `audit_access` command with optional `--strict`.
-- Cleaned up staff subgroup UI: required selector, admin-only role hides it, renamed labels.
+- Admin-only user lists, account totals, subgroup membership, Django Admin.
+- Staff isolation: no staff directory/counts; staff-owned records excluded from queues; notices sent individually.
+- Non-admin counters removed/hidden: dashboards, per-record counts, pagination totals.
+- Certificate verification hides holder identity; unauthorized downloads return 404.
+- New certificate refs use 16 hex chars; legacy 8-char refs remain valid.
+- Signup/guest flows use generic responses; no account-existence messages.
+- Existing-email guests get a 24h single-use magic link to confirm a saved application/registration; resumes use private temp storage.
+- UUIDs now drive application/registration routes; legacy numeric URLs still work.
+- Staff 2FA enforcement + enrollment flow; read-only `audit_access` with `--strict`.
+- Expired pending submissions/temp resumes purged via `purge_pending`.
 
 ## Verification
-- 164 tests pass.
+- 174 tests pass.
 - `ruff check .`, `manage.py check`, `makemigrations --check`, `check --deploy` clean.
-- Migration `0010` verified on fresh and seeded legacy-role DBs.
-- Local `migrate` applied and `audit_access --strict` is clean.
-- No commit created; all changes are in the working tree.
+- Local migrations applied through `jobs.0006`, `training.0005`; local `audit_access --strict` clean.
+- Commits created: access, enforcement/UI, docs, handoff, certificate refs, tokenized continuation, UUID routes.
 
-## Modified Files
-- `README.md` — access/visibility contract; admin wording.
-- `RUNBOOK.md` — internal 2FA, admin-only offboarding, access audit procedure.
-- `apps/accounts/admin.py` — last-admin/self guards; admin save normalization.
-- `apps/accounts/apps.py` — four permission groups; single admin gate; post_migrate sync.
-- `apps/accounts/forms.py` — removed public email-exists validation.
-- `apps/accounts/models.py` — admin/staff roles, `is_admin`, `sync_access`, lowercased emails, direct-perm clearing.
-- `apps/accounts/urls.py` — 2FA enrollment route; verified wrapper on password change.
-- `apps/accounts/views.py` — 2FA login/enroll, staff_required, role/subgroup management, dashboard scoping, generic signup.
-- `apps/enquiries/views.py` — staff_required on staff enquiry views.
-- `apps/jobs/views.py` — guest apply without login, student block, external-only queues, staff_required.
-- `apps/training/views.py` — guest register without login, candidate block, cert privacy/404, staff_required.
-- `config/emails.py` — subgroup recipients, individual sends, password setup link.
-- `config/middleware.py` — 2FA for all internal users.
-- `config/urls.py` — removed duplicate Django Admin permission gate.
-- `templates/accounts/dashboard.html` — candidate/student-only sections; removed counters.
-- `templates/accounts/profile_edit.html` — admin self-deletion hidden.
-- `templates/accounts/security.html` — disable requires current TOTP code.
-- `templates/accounts/staff_dashboard.html` — admin-only stats/account totals; `is_admin`.
-- `templates/partials/_pagination.html` — no page totals for staff.
-- `templates/portals/base_portal.html` — admin link admin-only.
-- `templates/portals/user_form.html` — required Staff subgroup; hidden for Admin; no read-only option.
-- `templates/portals/users.html` — admin role wording/delete guard; subgroup label.
-- `templates/staff/jobs.html` — per-job counts admin-only.
-- `templates/staff/programmes.html` — per-programme counts admin-only.
-- `templates/training/verify.html` — removed holder identity.
-- `tests/test_2fa_login.py` — admin role constants.
-- `tests/test_audit_security_fixes.py` — generic redirects; no session.
-- `tests/test_bugfixes.py` — metrics removed; subgroup notification fixture.
-- `tests/test_candidate_privacy.py` — candidate-only context; cert 404.
-- `tests/test_google_oauth.py` — admin role constants.
-- `tests/test_ops.py` — admin role constants.
-- `tests/test_p0.py` — signup redirect, subgroup recipients, cert privacy/404.
-- `tests/test_roles.py` — two-role/subgroup matrix; required-subgroup form test.
-- `tests/test_security_hardening.py` — admin role constants.
-- `tests/test_staff.py` — admin role constants.
-- `tests/test_ui_linkedin_ai.py` — guest apply redirect/no session.
-
-## Created Files
-- `HANDOFF.md` — this handoff.
-- `apps/accounts/decorators.py` — `staff_required`, 2FA redirect helpers.
-- `apps/accounts/management/commands/audit_access.py` — read-only access audit.
+## Key Files
+- `apps/accounts/models.py` — roles, `is_admin`, `sync_access` (clears direct perms).
 - `apps/accounts/migrations/0010_consolidate_roles.py` — merged top-level -> admin; subgroup normalization; reverse restore.
-- `templates/accounts/login_2fa_enroll.html` — pending-session 2FA enrollment.
-- `tests/test_2fa_enforcement.py` — 2FA enforcement, admin guards, direct-permission isolation.
-- `tests/test_access_visibility.py` — admin-only visibility, staff isolation, counts, cert access.
-- `tests/test_account_enumeration.py` — generic new/existing email responses.
-- `tests/test_audit_access_command.py` — audit command coverage.
-- `tests/test_migration_0010.py` — migration/reverse behavior.
+- `apps/accounts/management/commands/audit_access.py` — read-only access audit.
+- `apps/accounts/pending.py` — 24h pending token helpers.
+- `apps/accounts/management/commands/purge_pending.py` — expired pending/temp file cleanup.
+- `apps/accounts/decorators.py` — `staff_required`, 2FA redirect helpers.
+- `apps/accounts/views.py`, `admin.py`, `urls.py` — 2FA, role management, scoped dashboards, admin guards.
+- `apps/jobs/models.py` — `PendingApplication`, `Application.uuid`.
+- `apps/jobs/views.py`, `urls.py` — tokenized application continuation, UUID/legacy routes.
+- `apps/jobs/migrations/0005_pendingapplication.py`, `0006_application_uuid.py`.
+- `apps/training/models.py` — `PendingRegistration`, `Registration.uuid`, 16-char refs.
+- `apps/training/views.py`, `urls.py` — tokenized registration, certificate privacy, UUID/legacy routes.
+- `apps/training/migrations/0004_pendingregistration.py`, `0005_registration_uuid.py`.
+- `config/emails.py` — subgroup recipients, individual sends, password setup, pending links.
+- `config/middleware.py`, `config/urls.py` — internal 2FA; single admin gate.
+- `templates/jobs/pending_application.html`, `templates/training/pending_registration.html` — confirm pages.
+- Other templates — visibility scoping, counters removed, UUID form actions, subgroup UI.
+- Tests — access/visibility, enumeration, 2FA, migration, audit, pending submissions.
+- `README.md`, `RUNBOOK.md` — access contract, 2FA, audit, pending cleanup.
 
 ## Known Issues & Blockers
+- Production `migrate` and `audit_access --strict` still need to be run by the user.
 - Legacy staff with multiple subgroups reduce to `Recruiter` priority; admin review required.
 - Staff queues contain candidate/student PII by design (permitted subgroup context).
-- Existing-email guests must log in and re-submit; no tokenized continuation.
-- Certificate refs are 8 hex and only IP rate-limited.
-- Numeric operational record PKs remain in URLs; no account/user IDs are exposed.
+- Numeric operational URLs remain as temporary compatibility routes.
 - `REQUIRE_STAFF_2FA=1` is set in `render.yaml`; ensure internal users enroll.
+- Public redesign not started; it requires page-by-page copy approval, starting with Home.
 
 ## Exact Next Steps
 1. Deploy `migrate`; run `audit_access --strict` in production and fix flagged accounts.
-2. Continue UI phase: admin account summary is present; next is the public/content phase.
-3. Consider tokenized guest continuation and UUID operational URLs if those gaps matter.
-4. Commit the current working tree after review; no commit exists yet.
+2. Review and approve the Home page copy draft.
+3. Implement the full public redesign page-by-page using current Stitch CSS; Home first.
+4. Final verification/commit and refresh this handoff.
