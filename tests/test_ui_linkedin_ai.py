@@ -65,9 +65,9 @@ class UIUXLinkedInAITests(TestCase):
                 "resume": resume,
             },
         )
-        # Should redirect to candidate dashboard upon successful auto-provision & application
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse("dashboard"))
+        self.assertEqual(response.url, reverse("job_detail", args=[self.job.slug]))
+        self.assertNotIn("_auth_user_id", self.client.session)
 
         # Verify candidate account was auto-provisioned
         candidate = User.objects.get(email="jane.doe.candidate@example.com")

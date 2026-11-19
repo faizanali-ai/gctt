@@ -19,6 +19,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
+from django.db import IntegrityError
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -32,11 +33,12 @@ from apps.accounts.tokens import email_verification_token_generator
 from apps.enquiries.models import Enquiry
 from apps.jobs.models import Application, Job
 from apps.training.models import Programme, Registration
-from config.emails import send_verification
+from config.emails import send_password_setup, send_verification
 
 from .audit import log_action
+from .decorators import staff_2fa_redirect, staff_required
 from .forms import ProfileForm, SignupForm, StyledAuthenticationForm
-from .models import User
+from .models import STAFF_SUBGROUPS, User, sync_access
 
 INPUT = "w-full rounded-sm border border-line bg-white px-4 py-2.5"
 
@@ -46,13 +48,38 @@ def signup(request):
     if request.user.is_authenticated:
         return redirect("dashboard")
     form = SignupForm(request.POST or None)
-    if request.method == "POST" and form.is_valid():
-        user = form.save()
-        login(request, user)
-        send_verification(user, request)
-        messages.success(request, "Welcome to GCTT. Check your inbox to verify your email.")
-        return redirect("dashboard")
+    if request.method == "POST":
+        email = request.POST.get("email", "").strip().lower()
+        existing = User.objects.filter(email__iexact=email).first()
+        if existing:
+            send_password_setup(existing)
+            messages.success(
+                request, "If this email can be used, check your inbox to continue."
+            )
+            return redirect("login")
+        if form.is_valid():
+            try:
+                user = form.save()
+            except IntegrityError:
+                messages.info(
+                    request, "If this email can be used, check your inbox to continue."
+                )
+                return redirect("login")
+            send_verification(user, request)
+            messages.success(
+                request, "If this email can be used, check your inbox to continue."
+            )
+            return redirect("login")
     return render(request, "accounts/signup.html", {"form": form})
+
+
+def _mask_email(email):
+    if "@" in email:
+        local, domain = email.split("@", 1)
+        if len(local) > 2:
+            return f"{local[:2]}***@{domain}"
+        return f"{local[:1]}***@{domain}"
+    return email
 
 
 class CustomLoginView(LoginView):
@@ -62,12 +89,10 @@ class CustomLoginView(LoginView):
 
     def form_valid(self, form):
         user = form.get_user()
-        is_executive = (
-            getattr(user, "is_owner", False)
-            or getattr(user, "role", "") in (User.Role.OWNER, User.Role.SUPERADMIN)
-            or getattr(user, "is_superuser", False)
-        )
-        if user.totpdevice_set.filter(confirmed=True).exists() and is_executive:
+        if user.is_staff and (
+            settings.REQUIRE_STAFF_2FA
+            or user.totpdevice_set.filter(confirmed=True).exists()
+        ):
             self.request.session["pre_2fa_user_id"] = user.pk
             next_url = self.get_success_url()
             if next_url:
@@ -96,19 +121,17 @@ def login_2fa(request):
         request.session.pop("pre_2fa_user_id", None)
         return redirect("login")
 
+    if request.method == "POST" and request.POST.get("action") == "cancel":
+        request.session.pop("pre_2fa_user_id", None)
+        request.session.pop("pre_2fa_next", None)
+        return redirect("login")
+
     device = user.totpdevice_set.filter(confirmed=True).first()
     if not device:
-        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-        request.session.pop("pre_2fa_user_id", None)
-        return redirect("dashboard")
+        # Never issue a password-only session to an internal user; enroll instead.
+        return redirect("login_2fa_enroll")
 
     if request.method == "POST":
-        action = request.POST.get("action", "")
-        if action == "cancel":
-            request.session.pop("pre_2fa_user_id", None)
-            request.session.pop("pre_2fa_next", None)
-            return redirect("login")
-
         token = request.POST.get("token", "").strip()
         if device.verify_token(token):
             request.session.pop("pre_2fa_user_id", None)
@@ -128,20 +151,61 @@ def login_2fa(request):
                 "Invalid 6-digit verification code. Please check your Google Authenticator app and try again.",
             )
 
-    email = user.email
-    masked_email = email
-    if "@" in email:
-        local, domain = email.split("@", 1)
-        if len(local) > 2:
-            masked_email = f"{local[:2]}***@{domain}"
-        else:
-            masked_email = f"{local[:1]}***@{domain}"
-
     return render(
         request,
         "accounts/login_2fa.html",
         {
-            "masked_email": masked_email,
+            "masked_email": _mask_email(user.email),
+        },
+    )
+
+
+@ratelimit(key="ip", rate="5/m", method="POST", block=True)
+def login_2fa_enroll(request):
+    """Enroll the pending (not yet logged-in) internal user without a full session."""
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+
+    user_id = request.session.get("pre_2fa_user_id")
+    if not user_id:
+        return redirect("login")
+
+    user = User.objects.filter(pk=user_id, is_active=True).first()
+    if user is None:
+        request.session.pop("pre_2fa_user_id", None)
+        return redirect("login")
+
+    if user.totpdevice_set.filter(confirmed=True).exists():
+        return redirect("login_2fa")
+
+    pending = user.totpdevice_set.filter(confirmed=False).last()
+    if request.method == "POST":
+        token = request.POST.get("token", "").strip()
+        if pending and pending.verify_token(token):
+            pending.confirmed = True
+            pending.save(update_fields=["confirmed"])
+            request.session.pop("pre_2fa_user_id", None)
+            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+            otp_login(request, pending)
+            log_action(request, "auth.login_2fa_enroll", user.email)
+
+            next_url = request.session.pop("pre_2fa_next", None)
+            if next_url and url_has_allowed_host_and_scheme(
+                next_url, allowed_hosts={request.get_host()}
+            ):
+                return redirect(next_url)
+            return redirect("dashboard")
+        messages.error(request, "That code is not valid. Try again.")
+
+    if pending is None:
+        pending = user.totpdevice_set.create(name="default", confirmed=False)
+    return render(
+        request,
+        "accounts/login_2fa_enroll.html",
+        {
+            "masked_email": _mask_email(user.email),
+            "qr_svg": _qr_svg(pending.config_url),
+            "secret": base64.b32encode(pending.bin_key).decode("utf-8"),
         },
     )
 
@@ -262,21 +326,19 @@ def google_callback(request):
         messages.error(request, "Google account does not have a verified email address.")
         return redirect("login")
 
-    user = User.objects.filter(email=email).first()
+    user = User.objects.filter(email__iexact=email).first()
     if user:
         if not user.is_active:
-            messages.error(request, "This account is inactive. Please contact administration.")
+            messages.error(request, "Unable to sign in with this Google account. Please contact support.")
             return redirect("login")
         if not user.email_verified:
             user.email_verified = True
             user.save(update_fields=["email_verified"])
 
-        is_executive = (
-            getattr(user, "is_owner", False)
-            or getattr(user, "role", "") in (User.Role.OWNER, User.Role.SUPERADMIN)
-            or getattr(user, "is_superuser", False)
-        )
-        if user.totpdevice_set.filter(confirmed=True).exists() and is_executive:
+        if user.is_staff and (
+            settings.REQUIRE_STAFF_2FA
+            or user.totpdevice_set.filter(confirmed=True).exists()
+        ):
             request.session["pre_2fa_user_id"] = user.pk
             next_url = request.session.pop("google_oauth_next", None)
             if next_url and url_has_allowed_host_and_scheme(
@@ -301,12 +363,16 @@ def google_callback(request):
             if len(names) > 1:
                 last_name = names[1][:150]
 
-        user = User.objects.create_user(
-            email=email,
-            first_name=first_name,
-            last_name=last_name,
-            account_type=account_type,
-        )
+        try:
+            user = User.objects.create_user(
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                account_type=account_type,
+            )
+        except IntegrityError:
+            messages.error(request, "Unable to complete sign-in. Please try again.")
+            return redirect("login")
         user.is_staff = False
         user.is_superuser = False
         user.email_verified = True
@@ -358,49 +424,54 @@ def resend_verification(request):
 @login_required
 def dashboard(request):
     if request.user.is_staff:
+        blocked = staff_2fa_redirect(request)
+        if blocked:
+            return blocked
         return _staff_dashboard(request)
-    return render(
-        request,
-        "accounts/dashboard.html",
-        {
-            "applications": request.user.applications.select_related("job"),
-            "registrations": request.user.registrations.select_related("programme"),
-        },
-    )
+    context = {}
+    if request.user.is_candidate:
+        context["applications"] = request.user.applications.select_related("job")
+    elif request.user.is_student:
+        context["registrations"] = request.user.registrations.select_related("programme")
+    return render(request, "accounts/dashboard.html", context)
 
 
 def _staff_dashboard(request):
     user = request.user
     stats = {}
 
-    if user.has_perm("enquiries.view_enquiry"):
-        stats["enquiries_new"] = Enquiry.objects.filter(status=Enquiry.Status.NEW).count()
-        stats["enquiries_total"] = Enquiry.objects.count()
-
-    if user.has_perm("jobs.view_job"):
-        stats["jobs_active"] = Job.objects.filter(published=True).count()
-        stats["jobs_drafts"] = Job.objects.filter(published=False).count()
-
-    if user.has_perm("jobs.view_application"):
-        stats["applications_total"] = Application.objects.count()
-        stats["applications_submitted"] = Application.objects.filter(
-            status=Application.Status.SUBMITTED
-        ).count()
-
-    if user.has_perm("training.view_programme"):
-        stats["programmes_total"] = Programme.objects.count()
-        stats["programmes_drafts"] = Programme.objects.filter(published=False).count()
-
-    if user.has_perm("training.view_registration"):
-        stats["registrations_total"] = Registration.objects.count()
-        stats["registrations_pending"] = Registration.objects.filter(
-            status=Registration.Status.SUBMITTED
-        ).count()
+    if user.is_admin:
+        stats = {
+            "accounts_total": User.objects.count(),
+            "admins_total": User.objects.filter(role=User.Role.ADMIN, is_active=True).count(),
+            "staff_total": User.objects.filter(role=User.Role.STAFF, is_staff=True).count(),
+            "candidates_total": User.objects.filter(
+                account_type=User.AccountType.CANDIDATE, is_staff=False
+            ).count(),
+            "students_total": User.objects.filter(
+                account_type=User.AccountType.STUDENT, is_staff=False
+            ).count(),
+            "enquiries_new": Enquiry.objects.filter(status=Enquiry.Status.NEW).count(),
+            "enquiries_total": Enquiry.objects.count(),
+            "jobs_active": Job.objects.filter(published=True).count(),
+            "jobs_drafts": Job.objects.filter(published=False).count(),
+            "applications_total": Application.objects.count(),
+            "applications_submitted": Application.objects.filter(
+                status=Application.Status.SUBMITTED
+            ).count(),
+            "programmes_total": Programme.objects.count(),
+            "programmes_drafts": Programme.objects.filter(published=False).count(),
+            "registrations_total": Registration.objects.count(),
+            "registrations_pending": Registration.objects.filter(
+                status=Registration.Status.SUBMITTED
+            ).count(),
+        }
 
     recent_applications = []
     if user.has_perm("jobs.view_application"):
         recent_applications = (
             Application.objects.select_related("job", "applicant")
+            .filter(applicant__is_staff=False)
             .order_by("-created_at")[:5]
         )
 
@@ -412,6 +483,7 @@ def _staff_dashboard(request):
     if user.has_perm("training.view_registration"):
         recent_registrations = (
             Registration.objects.select_related("programme", "student")
+            .filter(student__is_staff=False)
             .order_by("-created_at")[:5]
         )
 
@@ -424,7 +496,7 @@ def _staff_dashboard(request):
             "recent_enquiries": recent_enquiries,
             "recent_registrations": recent_registrations,
             "can_manage_users": user.can_manage_users,
-            "can_use_admin": user.is_owner,
+            "can_use_admin": user.is_admin,
         },
     )
 
@@ -444,10 +516,17 @@ def _require_user_manager(request):
         raise PermissionDenied
 
 
+def _active_admin_count():
+    return User.objects.filter(
+        role=User.Role.ADMIN, is_active=True, is_staff=True
+    ).count()
+
+
 @login_required
+@staff_required
 def manage_users(request):
     _require_user_manager(request)
-    users = User.objects.filter(is_staff=True).exclude(role=User.Role.OWNER).select_related()
+    users = User.objects.filter(is_staff=True).select_related()
     q = request.GET.get("q", "").strip()
     role = request.GET.get("role", "")
     if q:
@@ -466,28 +545,32 @@ def manage_users(request):
             "page_obj": page_obj,
             "q": q,
             "role": role,
-            "roles": [choice for choice in User.Role.choices if choice[0] != User.Role.OWNER],
+            "roles": User.Role.choices,
         },
     )
 
 
 @login_required
+@staff_required
 def manage_user_create(request):
     _require_user_manager(request)
     assignable = request.user.assignable_roles()
+    subgroups = Group.objects.filter(name__in=STAFF_SUBGROUPS)
     if request.method == "POST":
         email = request.POST.get("email", "").strip().lower()
         role = request.POST.get("role", "")
         first_name = request.POST.get("first_name", "").strip()
         last_name = request.POST.get("last_name", "").strip()
-        group_name = request.POST.get("group", "")
+        subgroup = request.POST.get("group", "")
         password = request.POST.get("password", "")
         error = None
         if role not in [value for value, _ in assignable]:
             error = "You cannot assign that role."
+        elif role == User.Role.STAFF and subgroup not in STAFF_SUBGROUPS:
+            error = "Select a valid staff subgroup."
         elif not email:
             error = "Email is required."
-        elif User.objects.filter(email=email).exists():
+        elif User.objects.filter(email__iexact=email).exists():
             error = "A user with that email already exists."
         else:
             try:
@@ -497,19 +580,27 @@ def manage_user_create(request):
         if error:
             messages.error(request, error)
         else:
-            user = User.objects.create_user(
-                email=email,
-                password=password,
-                first_name=first_name,
-                last_name=last_name,
-                role=role,
-                is_staff=True,
-            )
-            if role == User.Role.STAFF and group_name:
-                user.groups.set(Group.objects.filter(name=group_name))
-            elif role != User.Role.STAFF:
-                # CEO and superadmins get full business permissions.
-                user.groups.set(Group.objects.filter(name="Admin"))
+            try:
+                user = User.objects.create_user(
+                    email=email,
+                    password=password,
+                    first_name=first_name,
+                    last_name=last_name,
+                    role=role,
+                    is_staff=True,
+                )
+                sync_access(user, subgroup if role == User.Role.STAFF else None)
+            except IntegrityError:
+                messages.error(request, "A user with that email already exists.")
+                return render(
+                    request,
+                    "portals/user_form.html",
+                    {
+                        "mode": "create",
+                        "assignable": assignable,
+                        "groups": subgroups,
+                    },
+                )
             log_action(request, "user.create", user.email, f"role={user.role}")
             messages.success(
                 request, f"{email} added as {user.get_role_display()}."
@@ -521,26 +612,40 @@ def manage_user_create(request):
         {
             "mode": "create",
             "assignable": assignable,
-            "groups": Group.objects.all(),
+            "groups": subgroups,
         },
     )
 
 
 @login_required
+@staff_required
 def manage_user_edit(request, pk):
     _require_user_manager(request)
-    target = get_object_or_404(User.objects.exclude(role=User.Role.OWNER), pk=pk)
+    target = get_object_or_404(User.objects.filter(is_staff=True), pk=pk)
     if not request.user.can_manage_account(target):
         raise PermissionDenied
-    assignable = list(request.user.assignable_roles())
-    if target.role not in [value for value, _ in assignable]:
-        assignable.append((target.role, target.get_role_display()))
+    assignable = request.user.assignable_roles()
+    subgroups = Group.objects.filter(name__in=STAFF_SUBGROUPS)
+    current_subgroup = target.groups.filter(name__in=STAFF_SUBGROUPS).values_list(
+        "name", flat=True
+    ).first()
     if request.method == "POST":
         role = request.POST.get("role", target.role)
+        subgroup = request.POST.get("group", current_subgroup or "")
+        is_active = request.POST.get("is_active") == "on"
+        error = None
         if role not in [value for value, _ in assignable]:
-            messages.error(request, "You cannot assign that role.")
-        elif target == request.user and request.POST.get("is_active") != "on":
-            messages.error(request, "You cannot deactivate your own account.")
+            error = "You cannot assign that role."
+        elif role == User.Role.STAFF and subgroup not in STAFF_SUBGROUPS:
+            error = "Select a valid staff subgroup."
+        elif target == request.user and role != User.Role.ADMIN:
+            error = "You cannot change your own admin role."
+        elif target == request.user and not is_active:
+            error = "You cannot deactivate your own account."
+        elif target.is_admin and (role != User.Role.ADMIN or not is_active) and _active_admin_count() <= 1:
+            error = "You cannot remove the last active admin."
+        if error:
+            messages.error(request, error)
         else:
             new_password = request.POST.get("password", "").strip()
             if new_password:
@@ -556,20 +661,17 @@ def manage_user_edit(request, pk):
                             "mode": "edit",
                             "target": target,
                             "assignable": assignable,
-                            "groups": Group.objects.all(),
+                            "groups": subgroups,
                         },
                     )
             target.first_name = request.POST.get("first_name", "").strip()
             target.last_name = request.POST.get("last_name", "").strip()
             target.phone = request.POST.get("phone", "").strip()
             target.role = role
-            target.is_active = request.POST.get("is_active") == "on"
+            target.is_active = is_active
             target.is_staff = True
             target.save()
-            if role == User.Role.STAFF:
-                target.groups.set(Group.objects.filter(name=request.POST.get("group", "")))
-            else:
-                target.groups.set(Group.objects.filter(name="Admin"))
+            sync_access(target, subgroup if role == User.Role.STAFF else None)
             if new_password:
                 target.set_password(new_password)
                 target.save(update_fields=["password"])
@@ -585,20 +687,24 @@ def manage_user_edit(request, pk):
             "mode": "edit",
             "target": target,
             "assignable": assignable,
-            "groups": Group.objects.all(),
+            "groups": subgroups,
         },
     )
 
 
 @login_required
+@staff_required
 @require_POST
 def manage_user_delete(request, pk):
     _require_user_manager(request)
-    target = get_object_or_404(User.objects.exclude(role=User.Role.OWNER), pk=pk)
+    target = get_object_or_404(User.objects.filter(is_staff=True), pk=pk)
     if not request.user.can_manage_account(target):
         raise PermissionDenied
     if target == request.user:
         messages.error(request, "You cannot delete your own account from user management.")
+        return redirect("manage_users")
+    if target.is_admin and _active_admin_count() <= 1:
+        messages.error(request, "You cannot delete the last active admin.")
         return redirect("manage_users")
 
     target_email = target.email
@@ -611,7 +717,10 @@ def manage_user_delete(request, pk):
 @login_required
 @require_POST
 def account_delete(request):
-    if request.user.role == User.Role.OWNER:
+    blocked = staff_2fa_redirect(request)
+    if blocked:
+        return blocked
+    if request.user.is_admin:
         raise PermissionDenied
 
     if request.user.has_usable_password():
@@ -640,6 +749,7 @@ def _qr_svg(url):
 
 
 @login_required
+@ratelimit(key="user", rate="10/m", method="POST", block=True)
 def security(request):
     user = request.user
 
@@ -647,12 +757,23 @@ def security(request):
     if request.method == "POST":
         action = request.POST.get("action", "")
         if action == "disable":
-            if user.check_password(request.POST.get("password", "")):
+            token = request.POST.get("token", "").strip()
+            if not getattr(user, "is_verified", lambda: False)():
+                messages.error(
+                    request,
+                    "Verify this session with your authenticator before disabling 2FA.",
+                )
+            elif not user.check_password(request.POST.get("password", "")):
+                messages.error(request, "Password incorrect.")
+            elif not device or not device.verify_token(token):
+                messages.error(
+                    request,
+                    "A valid current 6-digit authenticator code is required to disable 2FA.",
+                )
+            else:
                 user.totpdevice_set.all().delete()
                 log_action(request, "security.2fa.disable", user.email)
                 messages.success(request, "Two-factor authentication disabled.")
-            else:
-                messages.error(request, "Password incorrect.")
             return redirect("security")
         target = device or user.totpdevice_set.filter(confirmed=False).last()
         if target and target.verify_token(request.POST.get("token", "").strip()):
@@ -687,6 +808,6 @@ def security(request):
             "device": device,
             "qr_svg": qr_svg,
             "secret": secret,
-            "required": settings.REQUIRE_STAFF_2FA,
+            "required": settings.REQUIRE_STAFF_2FA and user.is_staff,
         },
     )

@@ -1,23 +1,24 @@
 import json
 
 from django.contrib import messages
-from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
 from django.db.models import Q
-from django.http import Http404, HttpResponse, HttpResponseForbidden, JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.audit import log_action
+from apps.accounts.decorators import staff_2fa_redirect, staff_required
 from apps.accounts.models import User
 from config.emails import (
     notify_certificate,
     notify_registration,
     notify_registration_status,
     notify_staff_new_registration,
+    send_password_setup,
 )
 
 from .ai_advisor import analyze_career_trajectory
@@ -90,6 +91,9 @@ def programme_register(request, slug):
         return redirect("programme_detail", slug=programme.slug)
 
     if request.user.is_authenticated:
+        if not request.user.is_student:
+            messages.error(request, "Use a student account to register for training.")
+            return redirect("programme_detail", slug=programme.slug)
         form = RegistrationForm(request.POST)
         if form.is_valid():
             registration = form.save(commit=False)
@@ -114,31 +118,36 @@ def programme_register(request, slug):
             linkedin_url = form.cleaned_data.get("linkedin_url", "").strip()
             career_status = form.cleaned_data.get("career_status", "").strip()
             user_msg = form.cleaned_data.get("message", "").strip()
+            generic_message = "If this email can be used, check your inbox to continue."
 
             parts = full_name.split(" ", 1)
             first_name = parts[0]
             last_name = parts[1] if len(parts) > 1 else ""
 
-            existing_user = User.objects.filter(email=email).first()
+            existing_user = User.objects.filter(email__iexact=email).first()
             if existing_user:
-                from django.urls import reverse
+                # shortcut: existing users re-register after login; add a tokenized continuation if conversion drops.
+                send_password_setup(existing_user)
+                messages.info(request, generic_message)
+                return redirect("programme_detail", slug=programme.slug)
 
-                messages.error(
-                    request,
-                    "An account with this email already exists. Please sign in to complete your enrollment.",
+            try:
+                student = User.objects.create_user(
+                    email=email,
+                    first_name=first_name,
+                    last_name=last_name,
+                    phone=phone,
+                    account_type=User.AccountType.STUDENT,
+                    is_staff=False,
                 )
-                return redirect(f"{reverse('login')}?next={request.path}")
-
-            student = User.objects.create_user(
-                email=email,
-                first_name=first_name,
-                last_name=last_name,
-                phone=phone,
-                account_type=User.AccountType.STUDENT,
-                is_staff=False,
-            )
-            student.set_unusable_password()
-            student.save()
+                student.set_unusable_password()
+                student.save()
+            except IntegrityError:
+                existing_user = User.objects.filter(email__iexact=email).first()
+                if existing_user:
+                    send_password_setup(existing_user)
+                messages.info(request, generic_message)
+                return redirect("programme_detail", slug=programme.slug)
 
             combined_notes = []
             if career_status:
@@ -153,17 +162,11 @@ def programme_register(request, slug):
                 student=student,
                 defaults={"message": "\n".join(combined_notes)},
             )
-            if not reg_created:
-                messages.error(request, "You are already registered for this programme.")
-            else:
-                messages.success(
-                    request,
-                    "Enrollment confirmed! Check your email for syllabus materials and schedule details.",
-                )
+            if reg_created:
                 notify_registration(registration)
                 notify_staff_new_registration(registration)
-
-            login(request, student)
+            send_password_setup(student)
+            messages.info(request, generic_message)
             return redirect("programme_detail", slug=programme.slug)
 
     return redirect("programme_detail", slug=programme.slug)
@@ -176,6 +179,8 @@ def sap_scrum(request):
     return render(request, "pages/sap_scrum.html", {"programmes": programmes})
 
 
+# shortcut: IP rate limit only; lengthen new certificate refs if enumeration becomes a concern.
+@ratelimit(key="ip", rate="20/m", method="GET", block=True)
 def verify_certificate(request, ref=""):
     ref = ref or request.GET.get("ref", "").strip()
     registration = (
@@ -190,13 +195,22 @@ def verify_certificate(request, ref=""):
 
 @login_required
 def download_certificate(request, ref):
+    if request.user.is_staff:
+        blocked = staff_2fa_redirect(request)
+        if blocked:
+            return blocked
+    registrations = Registration.objects.select_related("programme", "student")
+    if request.user.is_admin:
+        pass
+    elif request.user.has_perm("training.view_registration"):
+        registrations = registrations.filter(student__is_staff=False)
+    else:
+        if not request.user.is_student:
+            raise Http404
+        registrations = registrations.filter(student=request.user)
     registration = get_object_or_404(
-        Registration.objects.select_related("programme", "student"),
-        certificate_ref=ref,
-        certificate_issued=True,
+        registrations, certificate_ref=ref, certificate_issued=True
     )
-    if request.user != registration.student and not request.user.is_staff:
-        return HttpResponseForbidden("This certificate belongs to another account.")
     response = HttpResponse(
         generate_certificate_pdf(registration), content_type="application/pdf"
     )
@@ -206,6 +220,7 @@ def download_certificate(request, ref):
 
 
 @login_required
+@staff_required
 @permission_required("training.view_programme", raise_exception=True)
 def staff_programmes(request):
     programmes = Programme.objects.select_related("category")
@@ -235,6 +250,7 @@ def staff_programmes(request):
 
 
 @login_required
+@staff_required
 @permission_required("training.change_programme", raise_exception=True)
 @require_POST
 def staff_programme_toggle(request, pk):
@@ -254,9 +270,12 @@ def staff_programme_toggle(request, pk):
 
 
 @login_required
+@staff_required
 @permission_required("training.view_registration", raise_exception=True)
 def staff_registrations(request):
-    registrations = Registration.objects.select_related("programme", "student")
+    registrations = Registration.objects.select_related("programme", "student").filter(
+        student__is_staff=False
+    )
     q = request.GET.get("q", "").strip()
     status = request.GET.get("status", "")
     programme = request.GET.get("programme", "")
@@ -270,7 +289,11 @@ def staff_registrations(request):
     if status:
         registrations = registrations.filter(status=status)
     if programme:
-        registrations = registrations.filter(programme_id=programme)
+        registrations = (
+            registrations.filter(programme_id=programme)
+            if programme.isdigit()
+            else registrations.none()
+        )
     page_obj = Paginator(registrations, 25).get_page(request.GET.get("page"))
     return render(
         request,
@@ -290,10 +313,13 @@ def staff_registrations(request):
 
 
 @login_required
+@staff_required
 @permission_required("training.change_registration", raise_exception=True)
 @require_POST
 def staff_registration_status(request, pk):
-    registration = get_object_or_404(Registration, pk=pk)
+    registration = get_object_or_404(
+        Registration.objects.filter(student__is_staff=False), pk=pk
+    )
     status = request.POST.get("status", "")
     if status in STAFF_STATUSES:
         previous = registration.status
@@ -309,10 +335,13 @@ def staff_registration_status(request, pk):
 
 
 @login_required
+@staff_required
 @permission_required("training.change_registration", raise_exception=True)
 @require_POST
 def staff_registration_certificate(request, pk):
-    registration = get_object_or_404(Registration, pk=pk)
+    registration = get_object_or_404(
+        Registration.objects.filter(student__is_staff=False), pk=pk
+    )
     if request.POST.get("action") == "revoke":
         ref = registration.certificate_ref or ""
         registration.revoke_certificate()

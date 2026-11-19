@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group
 from django.contrib.auth.tokens import default_token_generator
 from django.core import mail
 from django.test import TestCase, override_settings
@@ -5,6 +6,7 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
+from apps.accounts.apps import assign_permissions
 from apps.accounts.models import AuditLog, TeamProfile, User
 from apps.jobs.models import Application, Job
 from apps.training.models import Programme, Registration
@@ -26,7 +28,7 @@ class VerificationTests(TestCase):
                 "password2": "test-pass-12345",
             },
         )
-        self.assertRedirects(response, reverse("dashboard"))
+        self.assertRedirects(response, reverse("login"))
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn("Verify your GCTT email", mail.outbox[0].subject)
 
@@ -53,12 +55,17 @@ class VerificationTests(TestCase):
 @override_settings(EMAIL_BACKEND=LOCMEM)
 class NotificationTests(TestCase):
     def test_enquiry_alerts_staff(self):
+        assign_permissions()
+        staff = User.objects.create_user(
+            email="enquiries@example.com", password="test-pass-12345", is_staff=True
+        )
+        staff.groups.add(Group.objects.get(name="Enquiry Manager"))
         self.client.post(
             reverse("submit_enquiry"),
             {"name": "A", "email": "a@example.com", "category": "general", "message": "Hi"},
         )
         recipients = [message.to[0] for message in mail.outbox]
-        self.assertIn("accounts@gctekton.com", recipients)
+        self.assertIn("enquiries@example.com", recipients)
         self.assertIn("a@example.com", recipients)
 
     def test_enquiry_error_preserves_typed_input(self):
@@ -76,6 +83,11 @@ class NotificationTests(TestCase):
         self.assertContains(response, "Please check:")
 
     def test_application_confirms_to_candidate(self):
+        assign_permissions()
+        recruiter = User.objects.create_user(
+            email="recruiter@example.com", password="test-pass-12345", is_staff=True
+        )
+        recruiter.groups.add(Group.objects.get(name="Recruiter"))
         user = User.objects.create_user(email="c@example.com", password="test-pass-12345")
         job = Job.objects.create(title="Dev", location="Remote", description="x", published=True)
         self.client.force_login(user)
@@ -91,7 +103,7 @@ class NotificationTests(TestCase):
         self.assertTrue(Application.objects.exists())
         recipients = [message.to[0] for message in mail.outbox]
         self.assertIn("c@example.com", recipients)
-        self.assertIn("jobs@gctekton.com", recipients)
+        self.assertIn("recruiter@example.com", recipients)
 
 
 class CertificateTests(TestCase):
@@ -106,7 +118,11 @@ class CertificateTests(TestCase):
             email="trainer@example.com", password="test-pass-12345", is_staff=True
         )
         cls.trainer.groups.add(Group.objects.get(name="Trainer"))
-        cls.student = User.objects.create_user(email="s@example.com", password="test-pass-12345")
+        cls.student = User.objects.create_user(
+            email="s@example.com",
+            password="test-pass-12345",
+            account_type=User.AccountType.STUDENT,
+        )
         cls.other = User.objects.create_user(email="o@example.com", password="test-pass-12345")
         cls.programme = Programme.objects.create(title="SAP", description="x", published=True)
         cls.registration = Registration.objects.create(
@@ -136,7 +152,8 @@ class CertificateTests(TestCase):
             reverse("verify_certificate", args=[self.registration.certificate_ref])
         )
         self.assertContains(response, "Valid certificate")
-        self.assertContains(response, self.student.display_name)
+        self.assertNotContains(response, self.student.display_name)
+        self.assertNotContains(response, self.student.email)
 
     def test_unknown_reference_is_not_found(self):
         response = self.client.get(reverse("verify_certificate", args=["GCTT-NOPE"]))
@@ -158,7 +175,7 @@ class CertificateTests(TestCase):
         response = self.client.get(
             reverse("download_certificate", args=[self.registration.certificate_ref])
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)
 
 
 class DraftPreviewTests(TestCase):

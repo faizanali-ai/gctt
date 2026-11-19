@@ -50,6 +50,10 @@
             <label class="block text-2xs font-semibold uppercase tracking-wider text-ink">Confirm Account Password</label>
             <input type="password" name="password" required autocomplete="current-password" placeholder="Enter current password" class="mt-1 max-w-sm">
           </div>
+          <div>
+            <label class="block text-2xs font-semibold uppercase tracking-wider text-ink">Current Authenticator Code</label>
+            <input type="text" name="token" inputmode="numeric" autocomplete="one-time-code" placeholder="000000" maxlength="6" required class="mt-1 max-w-sm font-mono text-center tracking-widest">
+          </div>
           <button type="submit" class="btn btn-secondary text-xs text-rose-700 hover:border-rose-300 hover:bg-rose-50">
             Disable 2FA Device
           </button>

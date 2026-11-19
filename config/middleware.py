@@ -25,31 +25,36 @@ class SecurityHeadersMiddleware:
 
 
 class StaffTwoFactorMiddleware:
-    """Blocks executive staff pages until the session is verified with a TOTP device.
+    """Default-deny for unverified internal users when 2FA is enforced.
 
-    Only active when REQUIRE_STAFF_2FA is on, restricted strictly to
-    Owner and Superadmin roles.
+    Only active when REQUIRE_STAFF_2FA is on. Candidates and students are
+    unaffected. Unverified staff may only reach logout and enrollment /
+    verification endpoints; everything else redirects to /accounts/security/.
     """
 
-    PROTECTED_PREFIXES = ("/admin/", "/staff/", "/dashboard/", "/profile/", "/manage/")
-    ALLOWED_PREFIXES = ("/accounts/", "/static/", "/media/")
+    ALLOWED_PREFIXES = (
+        "/accounts/login/",
+        "/accounts/logout/",
+        "/accounts/google/",
+        "/accounts/security/",
+        "/accounts/verify/",
+        "/accounts/password-reset/",
+        "/static/",
+        "/media/",
+        "/healthz/",
+        "/health/",
+    )
 
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
         user = request.user
-        is_executive = (
-            getattr(user, "is_owner", False)
-            or getattr(user, "role", "") in ("owner", "superadmin")
-            or getattr(user, "is_superuser", False)
-        )
         if (
             settings.REQUIRE_STAFF_2FA
             and user.is_authenticated
-            and is_executive
+            and user.is_staff
             and not getattr(user, "is_verified", lambda: False)()
-            and request.path.startswith(self.PROTECTED_PREFIXES)
             and not request.path.startswith(self.ALLOWED_PREFIXES)
         ):
             from urllib.parse import quote

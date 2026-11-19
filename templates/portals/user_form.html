@@ -44,22 +44,22 @@
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wider text-ink">Assigned Role</label>
           <div class="mt-1.5">
-            <select name="role">
+            <select name="role" id="id_role">
               {% for value, label in assignable %}
                 <option value="{{ value }}" {% if target.role == value %}selected{% endif %}>{{ label }}</option>
               {% endfor %}
             </select>
           </div>
         </div>
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-ink">Staff Group (Perms)</label>
+        <div id="subgroup-field">
+          <label for="id_group" class="block text-xs font-semibold uppercase tracking-wider text-ink">Staff Subgroup</label>
           <div class="mt-1.5">
-            <select name="group">
-              <option value="">— None (Read Only) —</option>
+            <select name="group" id="id_group">
               {% for group in groups %}
                 <option value="{{ group.name }}" {% if group in target.groups.all %}selected{% endif %}>{{ group.name }}</option>
               {% endfor %}
             </select>
+            <p class="mt-1 text-2xs text-ink-muted">Required for Staff. Ignored for Admin.</p>
           </div>
         </div>
       </div>
@@ -99,7 +99,21 @@
     </form>
   </div>
 
-  {% if mode == "edit" and target != user and target.role != "owner" %}
+  <script>
+    (function () {
+      var role = document.getElementById("id_role");
+      var field = document.getElementById("subgroup-field");
+      function sync() {
+        if (role && field) field.style.display = role.value === "staff" ? "" : "none";
+      }
+      if (role) {
+        role.addEventListener("change", sync);
+        sync();
+      }
+    })();
+  </script>
+
+  {% if mode == "edit" and target != user and target.role != "admin" %}
     <div class="mt-8 rounded-lg border border-rose-200 bg-rose-50/50 p-6 shadow-xs">
       <h3 class="text-xs font-bold uppercase tracking-wider text-rose-900">Danger Zone: Remove Account</h3>
       <p class="mt-1 text-xs text-rose-700">Permanently delete this user account. All permissions and access will be immediately terminated.</p>

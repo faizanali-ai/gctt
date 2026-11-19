@@ -35,7 +35,7 @@ class CspAndSecurityHeadersTests(TestCase):
         staff = User.objects.create_user(
             email="manager@example.com",
             password="test-pass-12345",
-            role=User.Role.SUPERADMIN,
+            role=User.Role.ADMIN,
             is_staff=True,
         )
         self.client.force_login(staff)
@@ -108,7 +108,11 @@ class CertificateBugTests(TestCase):
             email="trainer@example.com", password="test-pass-12345", is_staff=True
         )
         cls.trainer.groups.add(Group.objects.get(name="Trainer"))
-        cls.student = User.objects.create_user(email="student@example.com", password="test-pass-12345")
+        cls.student = User.objects.create_user(
+            email="student@example.com",
+            password="test-pass-12345",
+            account_type=User.AccountType.STUDENT,
+        )
         cls.programme = Programme.objects.create(title="SAP MM", description="x", published=True)
         cls.registration = Registration.objects.create(
             programme=cls.programme,
@@ -232,6 +236,11 @@ class StatusChangeDeduplicationTests(TestCase):
 @override_settings(EMAIL_BACKEND=LOCMEM)
 class EnquiryAndSearchBugTests(TestCase):
     def test_enquiry_email_contains_area_and_how_heard(self):
+        assign_permissions()
+        staff = User.objects.create_user(
+            email="enquiries@example.com", password="test-pass-12345", is_staff=True
+        )
+        staff.groups.add(Group.objects.get(name="Enquiry Manager"))
         self.client.post(
             reverse("submit_enquiry"),
             {
@@ -244,7 +253,7 @@ class EnquiryAndSearchBugTests(TestCase):
                 "next": "training",
             },
         )
-        staff_email = next(m for m in mail.outbox if "accounts@gctekton.com" in m.to)
+        staff_email = next(m for m in mail.outbox if "enquiries@example.com" in m.to)
         self.assertIn("Area: SAP", staff_email.body)
         self.assertIn("How heard: LinkedIn", staff_email.body)
 
@@ -280,10 +289,10 @@ class UserManagementAndAuthBugTests(TestCase):
     def setUpTestData(cls):
         assign_permissions()
         cls.owner = User.objects.create_user(
-            email="owner@example.com", password="test-pass-12345", role=User.Role.OWNER, is_staff=True, is_superuser=True
+            email="owner@example.com", password="test-pass-12345", role=User.Role.ADMIN, is_staff=True, is_superuser=True
         )
         cls.superadmin = User.objects.create_user(
-            email="superadmin@example.com", password="test-pass-12345", role=User.Role.SUPERADMIN, is_staff=True
+            email="superadmin@example.com", password="test-pass-12345", role=User.Role.ADMIN, is_staff=True
         )
         cls.user = User.objects.create_user(
             email="regular@example.com", password="test-pass-12345"
@@ -343,7 +352,22 @@ class UserManagementAndAuthBugTests(TestCase):
         self.client.post(reverse("security"), {"action": "enable", "token": code})
         self.assertTrue(AuditLog.objects.filter(action="security.2fa.enable", target=self.superadmin.email).exists())
 
-        self.client.post(reverse("security"), {"action": "disable", "password": "test-pass-12345"})
+        device.refresh_from_db()
+        device.last_t = -1
+        device.throttling_failure_count = 0
+        device.throttling_failure_timestamp = None
+        device.save(
+            update_fields=[
+                "last_t",
+                "throttling_failure_count",
+                "throttling_failure_timestamp",
+            ]
+        )
+        code = totp(device.bin_key, device.step, device.t0, device.digits)
+        self.client.post(
+            reverse("security"),
+            {"action": "disable", "password": "test-pass-12345", "token": code},
+        )
         self.assertTrue(AuditLog.objects.filter(action="security.2fa.disable", target=self.superadmin.email).exists())
 
     def test_audit_log_admin_has_no_delete_permission(self):
@@ -392,7 +416,7 @@ class UiUxOverhaulTests(TestCase):
         self.assertContains(response, "Senior SAP MM Architect")
         self.assertContains(response, '"hiringOrganization"')
 
-    def test_candidate_dashboard_renders_pipeline_stepper_and_metrics(self):
+    def test_candidate_dashboard_renders_pipeline_stepper(self):
         Application.objects.create(
             job=self.job,
             applicant=self.candidate,
@@ -405,7 +429,7 @@ class UiUxOverhaulTests(TestCase):
         self.assertContains(response, "Under Review")
         self.assertContains(response, "Shortlisted")
         self.assertContains(response, "Selected")
-        self.assertContains(response, "Active Applications")
+        self.assertNotContains(response, "Active Applications")
 
     def test_training_verify_renders_gold_trimmed_credential_plaque(self):
         cat = Category.objects.create(name="Executive IT", published=True)

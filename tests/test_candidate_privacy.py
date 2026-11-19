@@ -78,22 +78,16 @@ class CandidatePrivacyAndDataIsolationTests(TestCase):
         )
 
     def test_candidate_a_cannot_see_candidate_b_on_dashboard(self):
-        """Candidate A's dashboard must only list Candidate A's own applications and registrations."""
+        """Candidate A's dashboard must list only Candidate A's applications."""
         self.client.force_login(self.candidate_a)
         response = self.client.get(reverse("dashboard"))
         self.assertEqual(response.status_code, 200)
 
-        # Context isolation
         applications = response.context["applications"]
-        registrations = response.context["registrations"]
-
         self.assertIn(self.app_a, applications)
         self.assertNotIn(self.app_b, applications)
+        self.assertNotIn("registrations", response.context)
 
-        self.assertIn(self.reg_a, registrations)
-        self.assertNotIn(self.reg_b, registrations)
-
-        # HTML isolation
         self.assertNotContains(response, self.candidate_b.email)
         self.assertNotContains(response, "GCTT-BBBB2222")
 
@@ -106,10 +100,10 @@ class CandidatePrivacyAndDataIsolationTests(TestCase):
         self.assertTrue(Application.objects.filter(pk=self.app_b.pk).exists())
 
     def test_candidate_a_cannot_download_candidate_b_certificate(self):
-        """Candidate A attempting to download Candidate B's certificate PDF must receive 403 Forbidden."""
+        """Unauthorized certificate access must not reveal whether the record exists."""
         self.client.force_login(self.candidate_a)
         response = self.client.get(reverse("download_certificate", args=[self.reg_b.certificate_ref]))
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)
 
     def test_candidate_cannot_access_staff_application_list(self):
         """Non-staff candidate attempting to access /staff/applications/ must receive 403."""

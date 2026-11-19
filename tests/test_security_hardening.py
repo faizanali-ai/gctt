@@ -57,7 +57,7 @@ class StaffPasswordValidationTests(TestCase):
         cls.owner = User.objects.create_user(
             email="owner2@example.com",
             password="test-pass-12345",
-            role=User.Role.OWNER,
+            role=User.Role.ADMIN,
             is_staff=True,
             is_superuser=True,
         )
@@ -129,7 +129,7 @@ class AccountDeletionTests(TestCase):
         cls.owner = User.objects.create_user(
             email="owner-del@example.com",
             password="test-pass-12345",
-            role=User.Role.OWNER,
+            role=User.Role.ADMIN,
             is_staff=True,
             is_superuser=True,
         )

@@ -11,10 +11,12 @@ from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.audit import log_action
+from apps.accounts.decorators import staff_required
 from config.emails import (
     notify_application,
     notify_application_status,
     notify_staff_new_application,
+    send_password_setup,
 )
 
 from .forms import ApplicationForm
@@ -89,12 +91,13 @@ def job_apply(request, slug):
     is_auth = request.user.is_authenticated
     form = ApplicationForm(request.POST, request.FILES, is_authenticated=is_auth)
     if form.is_valid():
+        generic_message = "If this email can be used, check your inbox to continue."
         if is_auth:
             user = request.user
+            if not user.is_candidate:
+                messages.error(request, "Use a candidate account to apply for roles.")
+                return redirect("job_detail", slug=job.slug)
         else:
-            from django.contrib.auth import login
-            from django.urls import reverse
-
             from apps.accounts.models import User
 
             email = form.cleaned_data["email"].strip().lower()
@@ -102,24 +105,29 @@ def job_apply(request, slug):
             last_name = form.cleaned_data.get("last_name", "").strip()
             phone = form.cleaned_data.get("phone", "").strip()
 
-            existing_user = User.objects.filter(email=email).first()
+            existing_user = User.objects.filter(email__iexact=email).first()
             if existing_user:
-                messages.error(
-                    request,
-                    "An account with this email already exists. Please sign in to submit your application.",
-                )
-                return redirect(f"{reverse('login')}?next={request.path}")
+                # shortcut: existing users reapply after login; add a tokenized continuation if conversion drops.
+                send_password_setup(existing_user)
+                messages.info(request, generic_message)
+                return redirect("job_detail", slug=job.slug)
 
-            user = User.objects.create_user(
-                email=email,
-                first_name=first_name,
-                last_name=last_name,
-                phone=phone,
-                account_type=User.AccountType.CANDIDATE,
-            )
-            user.set_unusable_password()
-            user.save()
-            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+            try:
+                user = User.objects.create_user(
+                    email=email,
+                    first_name=first_name,
+                    last_name=last_name,
+                    phone=phone,
+                    account_type=User.AccountType.CANDIDATE,
+                )
+                user.set_unusable_password()
+                user.save()
+            except IntegrityError:
+                existing_user = User.objects.filter(email__iexact=email).first()
+                if existing_user:
+                    send_password_setup(existing_user)
+                messages.info(request, generic_message)
+                return redirect("job_detail", slug=job.slug)
 
         application = form.save(commit=False)
         application.job = job
@@ -133,10 +141,14 @@ def job_apply(request, slug):
         try:
             with transaction.atomic():
                 application.save()
-            messages.success(request, "Your application has been received by GCTT technical recruitment directors.")
             notify_application(application)
             notify_staff_new_application(application)
-            return redirect("dashboard")
+            if is_auth:
+                messages.success(request, "Your application has been received by GCTT technical recruitment directors.")
+                return redirect("dashboard")
+            send_password_setup(user)
+            messages.info(request, generic_message)
+            return redirect("job_detail", slug=job.slug)
         except IntegrityError:
             messages.error(request, "You have already applied to this job.")
             return redirect("job_detail", slug=job.slug)
@@ -168,6 +180,7 @@ def withdraw_application(request, pk):
 
 
 @login_required
+@staff_required
 @permission_required("jobs.view_job", raise_exception=True)
 def staff_jobs(request):
     jobs = Job.objects.all()
@@ -186,6 +199,7 @@ def staff_jobs(request):
 
 
 @login_required
+@staff_required
 @permission_required("jobs.change_job", raise_exception=True)
 @require_POST
 def staff_job_publish(request, pk):
@@ -198,9 +212,12 @@ def staff_job_publish(request, pk):
 
 
 @login_required
+@staff_required
 @permission_required("jobs.view_application", raise_exception=True)
 def staff_applications(request):
-    applications = Application.objects.select_related("job", "applicant")
+    applications = Application.objects.select_related("job", "applicant").filter(
+        applicant__is_staff=False
+    )
     q = request.GET.get("q", "").strip()
     status = request.GET.get("status", "")
     job = request.GET.get("job", "")
@@ -214,7 +231,11 @@ def staff_applications(request):
     if status:
         applications = applications.filter(status=status)
     if job:
-        applications = applications.filter(job_id=job)
+        applications = (
+            applications.filter(job_id=job)
+            if job.isdigit()
+            else applications.none()
+        )
     page_obj = Paginator(applications, 25).get_page(request.GET.get("page"))
     return render(
         request,
@@ -234,10 +255,13 @@ def staff_applications(request):
 
 
 @login_required
+@staff_required
 @permission_required("jobs.change_application", raise_exception=True)
 @require_POST
 def staff_application_status(request, pk):
-    application = get_object_or_404(Application, pk=pk)
+    application = get_object_or_404(
+        Application.objects.filter(applicant__is_staff=False), pk=pk
+    )
     status = request.POST.get("status", "")
     if status in STAFF_STATUSES:
         previous = application.status
@@ -251,6 +275,7 @@ def staff_application_status(request, pk):
 
 
 @login_required
+@staff_required
 @permission_required("jobs.change_job", raise_exception=True)
 @require_POST
 def staff_job_linkedin_post(request, pk):

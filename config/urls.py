@@ -1,8 +1,11 @@
+from urllib.parse import urlencode
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
-from django.urls import include, path
+from django.shortcuts import redirect
+from django.urls import include, path, reverse
 from django.views.generic import TemplateView
 from django_ratelimit.decorators import ratelimit
 
@@ -17,15 +20,21 @@ from .sitemaps import JobSitemap, ProgrammeSitemap, StaticSitemap
 admin.site.site_header = "GCTT Administration"
 admin.site.site_title = "GCTT Admin"
 admin.site.index_title = "Operations"
-# Only the Owner uses raw Django Admin; everyone else works in the portal.
-admin.site.has_permission = lambda request: (
-    request.user.is_active and request.user.is_superuser and request.user.is_owner
-)
 
-# Throttle the admin login before admin.site.urls builds its URL patterns.
-admin.site.login = ratelimit(key="ip", rate="10/m", method="POST", block=True)(
-    admin.site.login
-)
+# With enforced 2FA, /admin/login/ must not mint password-only sessions.
+_admin_login = admin.site.login
+
+
+@ratelimit(key="ip", rate="10/m", method="POST", block=True)
+def _admin_login_guard(request, extra_context=None):
+    if settings.REQUIRE_STAFF_2FA:
+        return redirect(
+            f"{reverse('login')}?{urlencode({'next': request.get_full_path()})}"
+        )
+    return _admin_login(request, extra_context)
+
+
+admin.site.login = _admin_login_guard
 
 sitemaps = {
     "static": StaticSitemap,

@@ -25,12 +25,12 @@ class StaffPortalTests(TestCase):
         cls.trainer = make_employee("trainer@gcttekton.com", "Trainer")
         cls.enquiry_manager = make_employee("enquiries@gcttekton.com", "Enquiry Manager")
         cls.ceo = User.objects.create_superuser(email="ceo@gcttekton.com", password="test-pass-12345")
-        cls.owner = User.objects.filter(role=User.Role.OWNER).first()
+        cls.owner = User.objects.filter(role=User.Role.ADMIN).first()
         if not cls.owner:
             cls.owner = User.objects.create_superuser(
                 email="owner.test@gcttekton.com",
                 password="test-pass-12345",
-                role=User.Role.OWNER,
+                role=User.Role.ADMIN,
             )
         cls.candidate = User.objects.create_user(
             email="candidate@example.com", password="test-pass-12345"

@@ -9,7 +9,7 @@
       <h1 class="mt-1 font-display text-2xl font-bold text-ink sm:text-3xl">Professional Curricula &amp; Cohorts</h1>
       <p class="mt-1 text-xs text-ink-muted">Manage cohort scheduling, publish public syllabi, and open or freeze cohort registration.</p>
     </div>
-    {% if user.is_owner %}
+    {% if user.is_admin %}
     <a href="{% url 'admin:training_programme_add' %}" class="btn btn-primary text-xs">
       + Create New Programme
     </a>
@@ -95,7 +95,7 @@
               </td>
               <td class="px-4 py-4 text-center">
                 <a href="{% url 'staff_registrations' %}?programme={{ programme.pk }}" class="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-surface px-2 text-xs font-bold text-brand border border-line hover:border-accent">
-                  {{ programme.registrations.count }}
+                  {% if user.is_admin %}{{ programme.registrations.count }}{% else %}View{% endif %}
                 </a>
               </td>
               <td class="px-4 py-4 text-center">

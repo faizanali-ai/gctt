@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.audit import log_action
+from apps.accounts.decorators import staff_required
 from config.emails import notify_enquiry, notify_enquiry_received
 
 from .forms import EnquiryForm
@@ -64,6 +65,7 @@ def submit_enquiry(request):
 
 
 @login_required
+@staff_required
 @permission_required("enquiries.view_enquiry", raise_exception=True)
 def staff_enquiries(request):
     enquiries = Enquiry.objects.all()
@@ -94,6 +96,7 @@ def staff_enquiries(request):
 
 
 @login_required
+@staff_required
 @permission_required("enquiries.change_enquiry", raise_exception=True)
 @require_POST
 def staff_enquiry_status(request, pk):

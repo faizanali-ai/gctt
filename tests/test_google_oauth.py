@@ -14,7 +14,7 @@ class GoogleOAuthTests(TestCase):
             self.owner = User.objects.create_superuser(
                 email="mohdfaizanali038@gmail.com",
                 password="testpassword123",
-                role=User.Role.OWNER,
+                role=User.Role.ADMIN,
             )
 
     def test_google_login_redirects_when_not_configured(self):

@@ -14,7 +14,7 @@ class AuditSecurityFixesTest(TestCase):
             email="ceo@gctekton.com",
             first_name="Executive",
             last_name="Leader",
-            role=User.Role.CEO,
+            role=User.Role.ADMIN,
             is_staff=True,
         )
         self.staff_user.set_password("Secret123!")
@@ -62,9 +62,8 @@ class AuditSecurityFixesTest(TestCase):
             },
             follow=False,
         )
-        # Must redirect to login, NOT dashboard
         self.assertEqual(response.status_code, 302)
-        self.assertIn(reverse("login"), response.url)
+        self.assertEqual(response.url, reverse("job_detail", args=[self.job.slug]))
         # Session must NOT be authenticated as CEO
         self.assertNotIn("_auth_user_id", self.client.session)
 
@@ -81,9 +80,8 @@ class AuditSecurityFixesTest(TestCase):
             },
             follow=False,
         )
-        # Must redirect to login
         self.assertEqual(response.status_code, 302)
-        self.assertIn(reverse("login"), response.url)
+        self.assertEqual(response.url, reverse("programme_detail", args=[self.programme.slug]))
         # Session must NOT be authenticated as CEO
         self.assertNotIn("_auth_user_id", self.client.session)
 

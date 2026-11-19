@@ -57,7 +57,7 @@
           <p class="mt-6 px-3 text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Administration</p>
           <a href="{% url 'manage_users' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white {% if '/manage/users/' in request.path %}bg-white/10 font-semibold text-accent{% endif %}">Users &amp; roles</a>
         {% endif %}
-        {% if user.is_owner %}
+        {% if user.is_admin %}
           <a href="{% url 'admin:index' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white">Database admin</a>
         {% endif %}
         <p class="mt-6 px-3 text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Security</p>

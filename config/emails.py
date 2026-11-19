@@ -1,6 +1,8 @@
 import logging
 
 from django.conf import settings
+from django.contrib.auth.tokens import default_token_generator
+from django.core.cache import cache
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.utils.encoding import force_bytes
@@ -12,12 +14,87 @@ from .constants import COMPANY
 
 logger = logging.getLogger(__name__)
 
+PASSWORD_SETUP_COOLDOWN = 900  # seconds
+
+
+def _mask_email(email):
+    local, _, domain = (email or "").partition("@")
+    return f"{local[:2]}***@{domain}" if domain else "***"
+
 
 def send(to, subject, body):
-    try:
-        send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [to], fail_silently=False)
-    except Exception:
-        logger.exception("Failed to send email to %s (subject: %s)", to, subject)
+    recipients = [to] if isinstance(to, str) else list(to)
+    sent = 0
+    for recipient in recipients:
+        try:
+            send_mail(
+                subject, body, settings.DEFAULT_FROM_EMAIL, [recipient], fail_silently=False
+            )
+            sent += 1
+        except Exception:
+            logger.exception(
+                "Failed to send email to %s (subject: %s)",
+                _mask_email(recipient),
+                subject,
+            )
+    return sent
+
+
+def staff_recipients(subgroup):
+    from django.contrib.auth import get_user_model
+
+    User = get_user_model()
+    recipients = list(
+        User.objects.filter(is_active=True, is_staff=True, groups__name=subgroup)
+        .values_list("email", flat=True)
+        .distinct()
+    )
+    if not recipients:
+        # Never let a queue alert vanish because a subgroup is empty.
+        recipients = list(
+            User.objects.filter(is_active=True, role=User.Role.ADMIN)
+            .values_list("email", flat=True)
+            .distinct()
+        )
+        if recipients:
+            logger.warning(
+                "No active %s staff; falling back to active admins", subgroup
+            )
+    return recipients
+
+
+def notify_subgroup(subgroup, subject, body):
+    recipients = staff_recipients(subgroup)
+    if recipients:
+        send(recipients, subject, body)
+    else:
+        logger.warning("No active %s staff recipient for: %s", subgroup, subject)
+
+
+def send_password_setup(user):
+    key = f"password-setup:{user.email.lower()}"
+    if not cache.add(key, True, PASSWORD_SETUP_COOLDOWN):
+        logger.info(
+            "Password setup email throttled for %s", _mask_email(user.email)
+        )
+        return False
+
+    uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+    token = default_token_generator.make_token(user)
+    base = getattr(settings, "SITE_URL", "https://gctekton.com").rstrip("/")
+    link = f"{base}{reverse('password_reset_confirm', args=[uidb64, token])}"
+    sent = send(
+        user.email,
+        "Set your GCTT account password",
+        f"Dear {user.display_name},\n\n"
+        "Use the secure link below to set or reset the password for your GCTT account:\n\n"
+        f"{link}\n\n"
+        "If you did not request this, no action is required.\n\n"
+        "Global Center for Technology & Training (GCTT)",
+    )
+    if not sent:
+        cache.delete(key)
+    return bool(sent)
 
 
 def verification_url(user, request=None):
@@ -46,8 +123,8 @@ def send_verification(user, request):
 
 
 def notify_enquiry(enquiry):
-    send(
-        settings.DEFAULT_FROM_EMAIL,
+    notify_subgroup(
+        "Enquiry Manager",
         f"New enterprise enquiry: {enquiry.get_category_display()}",
         f"From: {enquiry.name} <{enquiry.email}>\n"
         f"Phone: {enquiry.phone or '—'}\n"
@@ -91,8 +168,8 @@ def notify_application(application):
 
 
 def notify_staff_new_application(application):
-    send(
-        COMPANY["jobs_email"],
+    notify_subgroup(
+        "Recruiter",
         f"New application: {application.job.title}",
         f"Candidate: {application.applicant.display_name} <{application.applicant.email}>\n"
         f"Phone: {application.applicant.phone or '—'}\n"
@@ -138,8 +215,8 @@ def notify_registration(registration):
 
 
 def notify_staff_new_registration(registration):
-    send(
-        settings.DEFAULT_FROM_EMAIL,
+    notify_subgroup(
+        "Trainer",
         f"New training registration: {registration.programme.title}",
         f"Student: {registration.student.display_name} <{registration.student.email}>\n"
         f"Phone: {registration.student.phone or '—'}\n"

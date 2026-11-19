@@ -11,7 +11,7 @@ class TwoFactorPreAuthLoginTests(TestCase):
         self.user = User.objects.create_user(
             email="faizan.test@gctekton.com",
             password="securePassword123!",
-            role=User.Role.SUPERADMIN,
+            role=User.Role.ADMIN,
         )
         self.user.email_verified = True
         self.user.is_staff = True
