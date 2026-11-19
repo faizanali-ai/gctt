@@ -91,7 +91,7 @@ class Registration(models.Model):
         from django.utils import timezone
 
         if not self.certificate_ref:
-            self.certificate_ref = f"GCTT-{uuid.uuid4().hex[:8].upper()}"
+            self.certificate_ref = f"GCTT-{uuid.uuid4().hex[:16].upper()}"
         self.certificate_issued = True
         self.certificate_issued_at = timezone.now()
         self.save(update_fields=["certificate_issued", "certificate_ref", "certificate_issued_at"])

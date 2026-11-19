@@ -146,6 +146,12 @@ class CertificateTests(TestCase):
         self.assertTrue(self.registration.certificate_issued)
         self.assertTrue(self.registration.certificate_ref.startswith("GCTT-"))
 
+    def test_new_certificate_reference_has_16_hex_chars(self):
+        self.registration.issue_certificate()
+        suffix = self.registration.certificate_ref.removeprefix("GCTT-")
+        self.assertEqual(len(suffix), 16)
+        int(suffix, 16)
+
     def test_public_verification_page(self):
         self.registration.issue_certificate()
         response = self.client.get(
