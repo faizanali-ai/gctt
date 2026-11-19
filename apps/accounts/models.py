@@ -116,6 +116,22 @@ def sync_access(user, subgroup=None):
     return user
 
 
+class EmailOTP(models.Model):
+    email = models.EmailField(db_index=True)
+    code_hash = models.CharField(max_length=128)
+    expires_at = models.DateTimeField(db_index=True)
+    consumed_at = models.DateTimeField(null=True, blank=True)
+    attempts = models.PositiveSmallIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [models.Index(fields=["email", "created_at"])]
+
+    def __str__(self):
+        return f"{self.email} OTP"
+
+
 class TeamProfile(models.Model):
     class Section(models.TextChoices):
         TEAM = "team", "Team"

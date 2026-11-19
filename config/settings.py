@@ -223,6 +223,11 @@ EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "1" if EMAIL_PORT == 465 else "0
 EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "0" if EMAIL_USE_SSL else "1") == "1"
 EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", "10"))
 
+# Email OTP login
+EMAIL_OTP_TTL_SECONDS = int(os.environ.get("EMAIL_OTP_TTL_SECONDS", "600"))
+EMAIL_OTP_MAX_ATTEMPTS = int(os.environ.get("EMAIL_OTP_MAX_ATTEMPTS", "5"))
+EMAIL_OTP_RESEND_SECONDS = int(os.environ.get("EMAIL_OTP_RESEND_SECONDS", "60"))
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
