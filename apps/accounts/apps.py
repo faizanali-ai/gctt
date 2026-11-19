@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from django.conf import settings
 from django.db.models.signals import post_migrate
 
 ROLE_PERMISSIONS = {
@@ -59,16 +60,22 @@ class AccountsConfig(AppConfig):
     name = "apps.accounts"
 
     def ready(self):
-        post_migrate.connect(sync_role_groups)
+        post_migrate.connect(sync_role_groups, dispatch_uid="accounts.sync_role_groups")
         from django.contrib import admin
 
-        def owner_only_admin_permission(request):
+        def admin_only_permission(request):
             user = request.user
             return bool(
                 user
                 and user.is_authenticated
                 and user.is_active
-                and (getattr(user, "is_owner", False) or getattr(user, "role", "") == "owner")
+                and user.is_staff
+                and user.is_superuser
+                and getattr(user, "role", "") == "admin"
+                and (
+                    not settings.REQUIRE_STAFF_2FA
+                    or getattr(user, "is_verified", lambda: False)()
+                )
             )
 
-        admin.site.has_permission = owner_only_admin_permission
+        admin.site.has_permission = admin_only_permission

@@ -2,21 +2,25 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager as DjangoUserManager
 from django.db import models
 
+STAFF_SUBGROUPS = ("Recruiter", "Trainer", "Enquiry Manager")
+
 
 class UserManager(DjangoUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("Email is required")
-        user = self.model(email=self.normalize_email(email), **extra_fields)
+        user = self.model(email=self.normalize_email(email).lower(), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields["role"] = self.model.Role.ADMIN
         extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("email_verified", True)
-        return self.create_user(email, password, **extra_fields)
+        user = self.create_user(email, password, **extra_fields)
+        sync_access(user)
+        return user
 
 
 class User(AbstractUser):
@@ -25,9 +29,7 @@ class User(AbstractUser):
         STUDENT = "student", "Training Student"
 
     class Role(models.TextChoices):
-        OWNER = "owner", "Owner"
-        SUPERADMIN = "superadmin", "Superadmin"
-        CEO = "ceo", "CEO"
+        ADMIN = "admin", "Admin"
         STAFF = "staff", "Staff"
 
     username = None
@@ -60,16 +62,8 @@ class User(AbstractUser):
         return self.account_type == self.AccountType.STUDENT
 
     @property
-    def is_owner(self):
-        return self.role == self.Role.OWNER and self.is_active
-
-    @property
-    def is_superadmin(self):
-        return self.role == self.Role.SUPERADMIN and self.is_active
-
-    @property
-    def is_ceo(self):
-        return self.role == self.Role.CEO and self.is_active
+    def is_admin(self):
+        return self.role == self.Role.ADMIN and self.is_active and self.is_staff
 
     @property
     def is_portal_staff(self):
@@ -77,30 +71,49 @@ class User(AbstractUser):
 
     @property
     def can_manage_users(self):
-        return self.is_superuser or self.role in (self.Role.OWNER, self.Role.SUPERADMIN, self.Role.CEO)
+        return self.is_admin
 
     def assignable_roles(self):
         """(value, label) pairs this account may grant to someone else."""
-        if self.role == self.Role.OWNER:
-            roles = [self.Role.SUPERADMIN, self.Role.CEO, self.Role.STAFF]
-        elif self.role == self.Role.SUPERADMIN:
-            roles = [self.Role.CEO, self.Role.STAFF]
-        elif self.role == self.Role.CEO:
-            roles = [self.Role.STAFF]
-        else:
-            roles = []
-        return [(role.value, role.label) for role in roles]
+        if self.is_admin:
+            return [
+                (self.Role.ADMIN.value, self.Role.ADMIN.label),
+                (self.Role.STAFF.value, self.Role.STAFF.label),
+            ]
+        return []
 
     def can_manage_account(self, other):
-        if other.role == self.Role.OWNER:
-            return False
-        if self.role == self.Role.OWNER:
-            return True
-        if self.role == self.Role.SUPERADMIN:
-            return other.role != self.Role.SUPERADMIN
-        if self.role == self.Role.CEO:
-            return other.role == self.Role.STAFF
-        return False
+        return self.is_admin
+
+
+def sync_access(user, subgroup=None):
+    """Apply the role's flags and exactly one permission group.
+
+    Staff must supply one of STAFF_SUBGROUPS. No subgroup means no access,
+    which is safe and visible to an administrator.
+    """
+    from django.contrib.auth.models import Group
+
+    if user.role == User.Role.ADMIN:
+        user.is_staff = True
+        user.is_superuser = True
+        group = Group.objects.get_or_create(name="Admin")[0]
+    elif user.is_staff:
+        user.is_superuser = False
+        group = (
+            Group.objects.get_or_create(name=subgroup)[0]
+            if subgroup in STAFF_SUBGROUPS
+            else None
+        )
+    else:
+        user.is_superuser = False
+        group = None
+
+    user.save(update_fields=["is_staff", "is_superuser"])
+    user.groups.set([group] if group else [])
+    # Groups are the single source of truth; never leave direct permissions behind.
+    user.user_permissions.clear()
+    return user
 
 
 class TeamProfile(models.Model):
