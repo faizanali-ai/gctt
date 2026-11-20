@@ -52,18 +52,23 @@ production settings are `smtp.resend.com`, port `587`, user `resend`, and
 `DEFAULT_FROM_EMAIL=accounts@gctekton.com`. `EMAIL_HOST_PASSWORD` must contain a
 valid Resend API key.
 
-Verify delivery from the Render shell:
+Check the public DNS records without a Render Shell:
 
 ```bash
-uv run python manage.py test_email your-address@example.com
+dig +short TXT resend._domainkey.gctekton.com
+dig +short TXT send.gctekton.com
+dig +short TXT gctekton.com
 ```
 
-It prints whether the password is configured and fails loudly on SMTP errors.
-Check the Audit log for `auth.email_otp_send_failed` if the UI still shows the
-generic “check your inbox” message.
+The Resend DKIM record must exist, the `send` subdomain must carry Resend's
+records, and the root SPF must include Resend's SPF include. If those are absent,
+Resend cannot authenticate `accounts@gctekton.com`; messages may be rejected,
+quarantined by DMARC, or never delivered. Add the domain in Resend, publish the
+records it provides, wait for verification, then retest OTP login.
 
-Common causes: missing `EMAIL_HOST_PASSWORD`, unverified Resend domain, wrong
-API key, or sending from an address the Resend account does not own.
+Check the Render dashboard logs for `Failed to send email` and the Django Audit
+log for `auth.email_otp_send_failed`. Common causes: unverified Resend domain,
+missing SPF/DKIM, wrong API key, or a sender the Resend account does not own.
 
 ## Email OTP cleanup
 
