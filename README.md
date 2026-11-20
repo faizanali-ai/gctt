@@ -74,6 +74,7 @@ Railway/paid hosts still work unchanged via `Procfile` if you outgrow the free t
 ## Operations
 
 - **Staff two-factor auth** — each staff member opens `/accounts/security/` once and scans the QR code with an authenticator app. After everyone has enrolled, set `REQUIRE_STAFF_2FA=1`; staff pages then require a verified session.
+- **Email OTP login** — `/accounts/login/email/` sends a one-time code through the configured SMTP service. Candidates/students sign in directly; internal users still complete TOTP/2FA. Configure `EMAIL_OTP_TTL_SECONDS`, `EMAIL_OTP_MAX_ATTEMPTS`, and `EMAIL_OTP_RESEND_SECONDS` as needed, and run `manage.py purge_email_otp` periodically.
 - **Audit log** — staff actions (application/registration/enquiry status, job publishing, programme toggles, certificates) are recorded and visible read-only in Django Admin → Audit log entries.
 - **Error monitoring** — set `SENTRY_DSN` to report exceptions.
 - **Backups** — enable point-in-time recovery on Neon, enable object versioning on the R2 bucket, and take a periodic dump: `pg_dump "$DATABASE_URL" > backup-$(date +%F).sql`.
