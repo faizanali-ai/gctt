@@ -21,15 +21,19 @@ admin.site.site_header = "GCTT Administration"
 admin.site.site_title = "GCTT Admin"
 admin.site.index_title = "Operations"
 
-# Admin accounts sign in with email OTP only; never mint a password session.
+_admin_login = admin.site.login
+
+
 @ratelimit(key="ip", rate="10/m", method="POST", block=True)
 def _admin_login_guard(request, extra_context=None):
-    if request.user.is_authenticated and getattr(request.user, "is_admin", False):
-        return redirect("/admin/")
-    target = request.GET.get("next") or request.POST.get("next") or "/admin/"
-    return redirect(
-        f"{reverse('email_otp_request')}?{urlencode({'next': target})}"
-    )
+    if settings.REQUIRE_EMAIL_OTP:
+        if request.user.is_authenticated and getattr(request.user, "is_admin", False):
+            return redirect("/admin/")
+        target = request.GET.get("next") or request.POST.get("next") or "/admin/"
+        return redirect(
+            f"{reverse('email_otp_request')}?{urlencode({'next': target})}"
+        )
+    return _admin_login(request, extra_context)
 
 
 admin.site.login = _admin_login_guard

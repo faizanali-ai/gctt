@@ -3,7 +3,7 @@ from io import StringIO
 from django.contrib.auth.models import Group, Permission
 from django.core.management import call_command
 from django.core.management.base import CommandError
-from django.test import TestCase, override_settings
+from django.test import TestCase
 
 from apps.accounts.apps import assign_permissions
 from apps.accounts.models import User
@@ -145,11 +145,4 @@ class AuditAccessCommandTests(TestCase):
         with self.assertRaises(CommandError):
             self.run_command("--strict")
 
-    @override_settings(REQUIRE_STAFF_2FA=True)
-    def test_two_factor_readiness_is_warning_only(self):
-        output = self.run_command("--strict")
-        self.assertIn("2FA enrollment pending:", output)
-        self.assertIn(self.admin.email, output)
-        self.assertIn(self.staff.email, output)
-        self.assertNotIn(self.candidate.email, output)
-        self.assertIn("No access issues found.", output)
+

@@ -1,7 +1,7 @@
 # GCTT Session Handoff
 
 ## Goal & Core Objective
-Harden the existing Django GCTT site backend-first. Access is three levels: Admin (owner/superadmin/CEO merged), Staff (one subgroup), Candidate/Student. Access model, audit, 2FA, certificate hardening, tokenized guest continuation, UUID URLs, and email OTP login are complete.
+Harden the existing Django GCTT site backend-first. Access is three levels: Admin (owner/superadmin/CEO merged), Staff (one subgroup), Candidate/Student. Access model, audit, certificate hardening, tokenized guest continuation, UUID URLs, and optional internal email OTP are complete. Authenticator/TOTP login is disabled.
 
 ## Completed Work
 - Merged `owner`/`superadmin`/`ceo` into `admin`; kept `staff` and subgroups `Recruiter`, `Trainer`, `Enquiry Manager`.
@@ -16,10 +16,10 @@ Harden the existing Django GCTT site backend-first. Access is three levels: Admi
 - Signup/guest flows use generic responses; no account-existence messages.
 - Existing-email guests get a 24h single-use magic link to confirm a saved application/registration; resumes use private temp storage.
 - UUIDs now drive application/registration routes; legacy numeric URLs still work.
-- Staff 2FA enforcement + enrollment flow; read-only `audit_access` with `--strict`.
-- Email OTP login at `/accounts/login/email/`: 6-digit code, 10-minute expiry, attempt limits, resend cooldown, generic responses.
-- Admins sign in with email OTP only; password/Google/admin-login paths redirect to email OTP and skip TOTP.
-- Staff still complete TOTP/enrollment; candidates/students go directly to their dashboard.
+- Authenticator/TOTP login, enrollment, middleware, and UI are disabled; old 2FA URLs redirect to login; tables are kept for rollback.
+- Optional internal email OTP: 6-digit code, 10-minute expiry, attempt limits, resend cooldown, generic responses.
+- `REQUIRE_EMAIL_OTP=1` requires email OTP for admin/staff; `0` keeps password-only fallback.
+- Candidates/students keep normal password login; no forced OTP.
 - OTP request/verify/resend audited without logging codes; expired/consumed rows purged via `purge_email_otp`.
 - Expired pending submissions/temp resumes purged via `purge_pending`.
 
@@ -39,8 +39,8 @@ Harden the existing Django GCTT site backend-first. Access is three levels: Admi
 - `apps/accounts/management/commands/purge_email_otp.py` — expired/consumed OTP cleanup.
 - `apps/accounts/pending.py` — 24h pending token helpers.
 - `apps/accounts/management/commands/purge_pending.py` — expired pending/temp file cleanup.
-- `apps/accounts/decorators.py` — `staff_required`, 2FA redirect helpers.
-- `apps/accounts/views.py`, `admin.py`, `urls.py` — 2FA, role management, scoped dashboards, admin guards.
+- `apps/accounts/decorators.py` — `staff_required` only; no 2FA redirects.
+- `apps/accounts/views.py`, `admin.py`, `urls.py` — email OTP, role management, scoped dashboards, admin guards; no TOTP.
 - `apps/jobs/models.py` — `PendingApplication`, `Application.uuid`.
 - `apps/jobs/views.py`, `urls.py` — tokenized application continuation, UUID/legacy routes.
 - `apps/jobs/migrations/0005_pendingapplication.py`, `0006_application_uuid.py`.
@@ -48,25 +48,26 @@ Harden the existing Django GCTT site backend-first. Access is three levels: Admi
 - `apps/training/views.py`, `urls.py` — tokenized registration, certificate privacy, UUID/legacy routes.
 - `apps/training/migrations/0004_pendingregistration.py`, `0005_registration_uuid.py`.
 - `config/emails.py` — subgroup notifications, individual sends, password setup, pending links, OTP email.
-- `config/middleware.py`, `config/urls.py` — internal 2FA; single admin gate.
+- `config/middleware.py`, `config/urls.py` — security headers; single admin gate; no 2FA middleware.
 - `templates/accounts/login_email_otp.html`, `login_email_otp_verify.html` — OTP request/verify pages.
 - `templates/jobs/pending_application.html`, `templates/training/pending_registration.html` — confirm pages.
 - Other templates — visibility scoping, counters removed, UUID form actions, subgroup UI.
-- Tests — access/visibility, enumeration, 2FA, migration, audit, pending submissions, OTP service/login.
-- `README.md`, `RUNBOOK.md` — access contract, 2FA, audit, pending cleanup.
+- Tests — access/visibility, enumeration, login fallback/OTP, migration, audit, pending submissions.
+- `README.md`, `RUNBOOK.md` — access contract, email OTP, audit, pending cleanup.
 
 ## Known Issues & Blockers
-- Latest admin email-OTP routing commit needs the automatic Render redeploy to complete.
+- Latest auth/TOTP-removal commit needs the automatic Render redeploy to complete.
 - Production `audit_access --strict` still needs to be run by the user.
-- Live SMTP OTP delivery and internal staff 2FA enrollment remain to be verified in production.
+- Live SMTP OTP delivery remains unverified; `REQUIRE_EMAIL_OTP` stays `0` until Resend domain verification.
 - Legacy staff with multiple subgroups reduce to `Recruiter` priority; admin review required.
 - Staff queues contain candidate/student PII by design (permitted subgroup context).
 - Numeric operational URLs remain as temporary compatibility routes.
-- `REQUIRE_STAFF_2FA=1` is set in `render.yaml`; ensure internal users enroll.
+- Old `REQUIRE_STAFF_2FA` env is ignored; use `REQUIRE_EMAIL_OTP`.
 - Public redesign not started; it requires page-by-page copy approval, starting with Home.
 
 ## Exact Next Steps
-1. Confirm the latest Render redeploy is live; run `audit_access --strict` and test admin/staff/candidate OTP login.
-2. Review and approve the Home page copy draft.
-3. Implement the full public redesign page-by-page using current Stitch CSS; Home first.
-4. After monitoring, remove legacy numeric operational routes; final verification and handoff refresh.
+1. Deploy the auth/TOTP-removal commit; verify password-only fallback works for admin/staff and candidates.
+2. After Resend domain verification, set `REQUIRE_EMAIL_OTP=1` and test admin/staff email OTP.
+3. Review and approve the Home page copy draft.
+4. Implement the public redesign page-by-page using current Stitch CSS; Home first.
+5. After monitoring, remove legacy numeric operational routes; final verification and handoff refresh.

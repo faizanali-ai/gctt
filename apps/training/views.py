@@ -13,7 +13,7 @@ from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.audit import log_action
-from apps.accounts.decorators import staff_2fa_redirect, staff_required
+from apps.accounts.decorators import staff_required
 from apps.accounts.models import User
 from apps.accounts.pending import expiry, hash_token, make_token
 from config.emails import (
@@ -267,10 +267,6 @@ def verify_certificate(request, ref=""):
 
 @login_required
 def download_certificate(request, ref):
-    if request.user.is_staff:
-        blocked = staff_2fa_redirect(request)
-        if blocked:
-            return blocked
     registrations = Registration.objects.select_related("programme", "student")
     if request.user.is_admin:
         pass

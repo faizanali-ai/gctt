@@ -73,8 +73,6 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django_otp.middleware.OTPMiddleware",
-    "config.middleware.StaffTwoFactorMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "config.middleware.SecurityHeadersMiddleware",
@@ -245,9 +243,9 @@ LOGGING = {
     },
 }
 
-# Staff two-factor authentication (TOTP). Enable after every staff account has
-# enrolled at /account/security/.
-REQUIRE_STAFF_2FA = (os.environ.get("REQUIRE_STAFF_2FA", "0") == "1") and not TESTING
+# Internal email OTP. Keep disabled as a password-only fallback until email
+# delivery is verified; enable with REQUIRE_EMAIL_OTP=1.
+REQUIRE_EMAIL_OTP = (os.environ.get("REQUIRE_EMAIL_OTP", "0") == "1") and not TESTING
 
 # Google OAuth 2.0 Credentials
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "").strip()

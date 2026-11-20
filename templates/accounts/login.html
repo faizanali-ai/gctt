@@ -63,9 +63,11 @@
       New candidate or enterprise client?
       <a href="{% url 'signup' %}" class="font-semibold text-[#006398] hover:underline">Create an account</a>
     </p>
-    <p>
-      <a href="{% url 'email_otp_request' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}" class="font-semibold text-[#006398] hover:underline">Email me a one-time sign-in code</a>
-    </p>
+    {% if EMAIL_OTP_ENABLED %}
+      <p>
+        <a href="{% url 'email_otp_request' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}" class="font-semibold text-[#006398] hover:underline">Email me a one-time sign-in code</a>
+      </p>
+    {% endif %}
     <p>
       <a href="{% url 'password_reset' %}" class="text-[#525660] hover:text-[#000e27]">Forgot your password?</a>
     </p>

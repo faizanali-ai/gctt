@@ -1,87 +1,78 @@
-from django.test import TestCase
+from django.core import mail
+from django.core.cache import cache
+from django.test import TestCase, override_settings
 from django.urls import reverse
-from django_otp import DEVICE_ID_SESSION_KEY
-from django_otp.oath import totp
 
 from apps.accounts.models import User
 
+LOCMEM = "django.core.mail.backends.locmem.EmailBackend"
 
-class TwoFactorPreAuthLoginTests(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(
-            email="faizan.test@gctekton.com",
-            password="securePassword123!",
+
+@override_settings(EMAIL_BACKEND=LOCMEM)
+class LoginFlowTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.admin = User.objects.create_superuser(
+            email="admin@example.com", password="test-pass-12345"
+        )
+        cls.staff = User.objects.create_user(
+            email="staff@example.com",
+            password="test-pass-12345",
             role=User.Role.STAFF,
+            is_staff=True,
         )
-        self.user.email_verified = True
-        self.user.is_staff = True
-        self.user.save()
+        cls.candidate = User.objects.create_user(
+            email="candidate@example.com", password="test-pass-12345"
+        )
 
-    def _token(self, device):
-        return totp(device.bin_key, device.step, device.t0, device.digits)
+    def setUp(self):
+        cache.clear()
 
-    def test_login_without_2fa_logs_in_directly(self):
-        response = self.client.post(
+    def login(self, email):
+        return self.client.post(
             reverse("login"),
-            {"username": self.user.email, "password": "securePassword123!"},
+            {"username": email, "password": "test-pass-12345"},
         )
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse("dashboard"))
-        self.assertEqual(int(self.client.session["_auth_user_id"]), self.user.id)
 
-    def test_login_with_2fa_requires_code_before_authenticating(self):
-        device = self.user.totpdevice_set.create(name="default", confirmed=True)
+    def test_staff_password_login_without_otp_logs_in(self):
+        response = self.login(self.staff.email)
+        self.assertRedirects(response, reverse("dashboard"))
+        self.assertIn("_auth_user_id", self.client.session)
 
-        # Step 1: Submit email & password
-        response = self.client.post(
-            reverse("login"),
-            {"username": self.user.email, "password": "securePassword123!"},
-        )
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse("login_2fa"))
-
-        # User MUST NOT be authenticated yet
+    @override_settings(REQUIRE_EMAIL_OTP=True)
+    def test_staff_password_login_with_otp_sends_code(self):
+        response = self.login(self.staff.email)
+        self.assertRedirects(response, reverse("email_otp_verify"))
         self.assertNotIn("_auth_user_id", self.client.session)
-        self.assertEqual(self.client.session.get("pre_2fa_user_id"), self.user.id)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, [self.staff.email])
 
-        # Protected pages must deny access because user is not logged in
-        dash_res = self.client.get(reverse("dashboard"))
-        self.assertEqual(dash_res.status_code, 302)
-        self.assertIn(reverse("login"), dash_res.url)
+    def test_admin_password_login_without_otp_logs_in(self):
+        response = self.login(self.admin.email)
+        self.assertRedirects(response, reverse("dashboard"))
+        self.assertIn("_auth_user_id", self.client.session)
 
-        # Step 2: Submit valid 6-digit code
-        valid_res = self.client.post(reverse("login_2fa"), {"token": self._token(device)})
-        self.assertEqual(valid_res.status_code, 302)
-        self.assertEqual(valid_res.url, reverse("dashboard"))
-
-        # User IS authenticated and verified
-        self.assertEqual(int(self.client.session["_auth_user_id"]), self.user.id)
-        self.assertEqual(self.client.session[DEVICE_ID_SESSION_KEY], device.persistent_id)
-
-    def test_login_2fa_invalid_token_is_rejected(self):
-        self.user.totpdevice_set.create(name="default", confirmed=True)
-
-        self.client.post(
-            reverse("login"),
-            {"username": self.user.email, "password": "securePassword123!"},
-        )
-        self.assertEqual(self.client.session.get("pre_2fa_user_id"), self.user.id)
-
-        bad_res = self.client.post(reverse("login_2fa"), {"token": "000000"})
-        self.assertEqual(bad_res.status_code, 200)
+    @override_settings(REQUIRE_EMAIL_OTP=True)
+    def test_admin_password_login_with_otp_sends_code(self):
+        response = self.login(self.admin.email)
+        self.assertRedirects(response, reverse("email_otp_verify"))
         self.assertNotIn("_auth_user_id", self.client.session)
-        self.assertContains(bad_res, "Invalid 6-digit verification code")
+        self.assertEqual(len(mail.outbox), 1)
 
-    def test_login_2fa_cancel_clears_pre_auth_state(self):
-        self.user.totpdevice_set.create(name="default", confirmed=True)
+    @override_settings(REQUIRE_EMAIL_OTP=True)
+    def test_candidate_password_login_is_unchanged(self):
+        response = self.login(self.candidate.email)
+        self.assertRedirects(response, reverse("dashboard"))
+        self.assertIn("_auth_user_id", self.client.session)
 
-        self.client.post(
-            reverse("login"),
-            {"username": self.user.email, "password": "securePassword123!"},
+    def test_old_2fa_url_redirects_to_login(self):
+        response = self.client.get(reverse("login_2fa"))
+        self.assertRedirects(response, reverse("login"))
+
+    def test_email_otp_link_and_page_are_disabled_by_default(self):
+        self.assertNotContains(
+            self.client.get(reverse("login")), "one-time sign-in code"
         )
-        self.assertEqual(self.client.session.get("pre_2fa_user_id"), self.user.id)
-
-        cancel_res = self.client.post(reverse("login_2fa"), {"action": "cancel"})
-        self.assertEqual(cancel_res.status_code, 302)
-        self.assertEqual(cancel_res.url, reverse("login"))
-        self.assertNotIn("pre_2fa_user_id", self.client.session)
+        self.assertRedirects(
+            self.client.get(reverse("email_otp_request")), reverse("login")
+        )

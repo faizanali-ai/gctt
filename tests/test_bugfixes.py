@@ -7,8 +7,6 @@ from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from django.urls import reverse
-from django_otp.oath import totp
-from django_otp.plugins.otp_totp.models import TOTPDevice
 
 from apps.accounts.admin import AuditLogAdmin
 from apps.accounts.apps import assign_permissions
@@ -28,21 +26,6 @@ class CspAndSecurityHeadersTests(TestCase):
         csp = response.headers.get("Content-Security-Policy", "")
         self.assertIn("https://fonts.googleapis.com", csp)
         self.assertIn("https://fonts.gstatic.com", csp)
-
-    @override_settings(REQUIRE_STAFF_2FA=True)
-    def test_two_factor_middleware_protects_staff_pages(self):
-        assign_permissions()
-        staff = User.objects.create_user(
-            email="manager@example.com",
-            password="test-pass-12345",
-            role=User.Role.STAFF,
-            is_staff=True,
-        )
-        self.client.force_login(staff)
-        response = self.client.get(reverse("staff_jobs"))
-        self.assertEqual(response.status_code, 302)
-        self.assertIn(reverse("security"), response.url)
-
 
 class ResumeUploadAndCleanupTests(TestCase):
     def setUp(self):
@@ -343,32 +326,6 @@ class UserManagementAndAuthBugTests(TestCase):
             },
         )
         self.assertTrue(AuditLog.objects.filter(action="user.edit", target="newstaff@example.com").exists())
-
-    def test_security_2fa_enable_and_disable_logged_in_audit_log(self):
-        self.client.force_login(self.superadmin)
-        self.client.get(reverse("security"))  # creates pending device
-        device = TOTPDevice.objects.get(user=self.superadmin)
-        code = totp(device.bin_key, device.step, device.t0, device.digits)
-        self.client.post(reverse("security"), {"action": "enable", "token": code})
-        self.assertTrue(AuditLog.objects.filter(action="security.2fa.enable", target=self.superadmin.email).exists())
-
-        device.refresh_from_db()
-        device.last_t = -1
-        device.throttling_failure_count = 0
-        device.throttling_failure_timestamp = None
-        device.save(
-            update_fields=[
-                "last_t",
-                "throttling_failure_count",
-                "throttling_failure_timestamp",
-            ]
-        )
-        code = totp(device.bin_key, device.step, device.t0, device.digits)
-        self.client.post(
-            reverse("security"),
-            {"action": "disable", "password": "test-pass-12345", "token": code},
-        )
-        self.assertTrue(AuditLog.objects.filter(action="security.2fa.disable", target=self.superadmin.email).exists())
 
     def test_audit_log_admin_has_no_delete_permission(self):
         admin_instance = AuditLogAdmin(AuditLog, None)

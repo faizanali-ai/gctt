@@ -13,15 +13,6 @@
           <span>{{ user.email }}</span>
           <span>·</span>
           <span class="rounded bg-brand/10 px-2 py-0.5 font-semibold text-brand">{{ user.get_role_display }}</span>
-          <span>·</span>
-          <span>
-            Two-Factor Auth:
-            {% if user.is_verified %}
-              <span class="font-semibold text-emerald-600">● Active</span>
-            {% else %}
-              <a href="{% url 'security' %}" class="font-semibold text-accent underline">Setup Required</a>
-            {% endif %}
-          </span>
           {% if user.is_admin %}
             <span>·</span>
             <span>

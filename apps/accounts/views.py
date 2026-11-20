@@ -1,13 +1,9 @@
-import base64
-import io
 import json
 import secrets
 import urllib.error
 import urllib.parse
 import urllib.request
 
-import qrcode
-import qrcode.image.svg
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
@@ -26,7 +22,6 @@ from django.urls import reverse
 from django.utils.encoding import force_str
 from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_decode
 from django.views.decorators.http import require_POST
-from django_otp import login as otp_login
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.tokens import email_verification_token_generator
@@ -36,7 +31,7 @@ from apps.training.models import Programme, Registration
 from config.emails import send_login_otp, send_password_setup, send_verification
 
 from .audit import log_action
-from .decorators import staff_2fa_redirect, staff_required
+from .decorators import staff_required
 from .email_otp import issue_code, verify_code
 from .forms import ProfileForm, SignupForm, StyledAuthenticationForm
 from .models import STAFF_SUBGROUPS, User, sync_access
@@ -90,19 +85,10 @@ class CustomLoginView(LoginView):
 
     def form_valid(self, form):
         user = form.get_user()
-        if user.is_admin:
+        if user.is_staff and settings.REQUIRE_EMAIL_OTP:
             return _start_email_otp(
                 self.request, user, self.get_success_url()
             )
-        if user.is_staff and (
-            settings.REQUIRE_STAFF_2FA
-            or user.totpdevice_set.filter(confirmed=True).exists()
-        ):
-            self.request.session["pre_2fa_user_id"] = user.pk
-            next_url = self.get_success_url()
-            if next_url:
-                self.request.session["pre_2fa_next"] = next_url
-            return redirect("login_2fa")
         return super().form_valid(form)
 
 
@@ -145,19 +131,6 @@ def _start_email_otp(request, user, next_url=None):
 
 def _complete_email_otp_login(request, user):
     next_url = request.session.pop("email_otp_next", None)
-    if (
-        user.is_staff
-        and not user.is_admin
-        and (
-            settings.REQUIRE_STAFF_2FA
-            or user.totpdevice_set.filter(confirmed=True).exists()
-        )
-    ):
-        request.session["pre_2fa_user_id"] = user.pk
-        if next_url:
-            request.session["pre_2fa_next"] = next_url
-        return redirect("login_2fa")
-
     login(request, user, backend="django.contrib.auth.backends.ModelBackend")
     if next_url:
         return redirect(next_url)
@@ -168,13 +141,18 @@ def _complete_email_otp_login(request, user):
 def email_otp_request(request):
     if request.user.is_authenticated:
         return redirect("dashboard")
+    if not settings.REQUIRE_EMAIL_OTP:
+        messages.info(request, "Email code sign-in is currently disabled.")
+        return redirect("login")
 
     if request.method == "POST":
         email = request.POST.get("email", "").strip().lower()
         next_url = _safe_next(request, request.POST.get("next", ""))
 
-        user = User.objects.filter(email__iexact=email, is_active=True).first()
-        if user and (user.email_verified or user.is_staff):
+        user = User.objects.filter(
+            email__iexact=email, is_active=True, is_staff=True
+        ).first()
+        if user:
             return _start_email_otp(request, user, next_url)
 
         request.session["email_otp_email"] = email
@@ -183,16 +161,9 @@ def email_otp_request(request):
         else:
             request.session.pop("email_otp_next", None)
 
-        if user:
-            log_action(
-                request,
-                "auth.email_otp_request_unverified",
-                _mask_email(email),
-            )
-        else:
-            log_action(
-                request, "auth.email_otp_request_unknown", _mask_email(email)
-            )
+        log_action(
+            request, "auth.email_otp_request_unknown", _mask_email(email)
+        )
 
         messages.info(
             request,
@@ -211,6 +182,8 @@ def email_otp_request(request):
 def email_otp_verify(request):
     if request.user.is_authenticated:
         return redirect("dashboard")
+    if not settings.REQUIRE_EMAIL_OTP:
+        return redirect("login")
 
     email = request.session.get("email_otp_email", "")
     if not email:
@@ -244,11 +217,16 @@ def email_otp_verify(request):
 @require_POST
 @ratelimit(key="ip", rate="5/m", method="POST", block=True)
 def email_otp_resend(request):
+    if not settings.REQUIRE_EMAIL_OTP:
+        return redirect("login")
+
     email = request.session.get("email_otp_email", "")
     if not email:
         return redirect("email_otp_request")
 
-    user = User.objects.filter(email__iexact=email, is_active=True).first()
+    user = User.objects.filter(
+        email__iexact=email, is_active=True, is_staff=True
+    ).first()
     if user:
         issued = issue_code(email)
         if issued:
@@ -266,118 +244,8 @@ def email_otp_resend(request):
     return redirect("email_otp_verify")
 
 
-@ratelimit(key="ip", rate="10/m", method="POST", block=True)
-def login_2fa(request):
-    if request.user.is_authenticated:
-        return redirect("dashboard")
-
-    user_id = request.session.get("pre_2fa_user_id")
-    if not user_id:
-        return redirect("login")
-
-    try:
-        user = User.objects.get(pk=user_id, is_active=True)
-    except User.DoesNotExist:
-        request.session.pop("pre_2fa_user_id", None)
-        return redirect("login")
-
-    if user.is_admin:
-        next_url = request.session.pop("pre_2fa_next", None)
-        request.session.pop("pre_2fa_user_id", None)
-        return _start_email_otp(request, user, next_url)
-
-    if request.method == "POST" and request.POST.get("action") == "cancel":
-        request.session.pop("pre_2fa_user_id", None)
-        request.session.pop("pre_2fa_next", None)
-        return redirect("login")
-
-    device = user.totpdevice_set.filter(confirmed=True).first()
-    if not device:
-        # Never issue a password-only session to an internal user; enroll instead.
-        return redirect("login_2fa_enroll")
-
-    if request.method == "POST":
-        token = request.POST.get("token", "").strip()
-        if device.verify_token(token):
-            request.session.pop("pre_2fa_user_id", None)
-            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-            otp_login(request, device)
-            log_action(request, "auth.login_2fa", user.email)
-
-            next_url = request.session.pop("pre_2fa_next", None)
-            if next_url and url_has_allowed_host_and_scheme(
-                next_url, allowed_hosts={request.get_host()}
-            ):
-                return redirect(next_url)
-            return redirect("dashboard")
-        else:
-            messages.error(
-                request,
-                "Invalid 6-digit verification code. Please check your Google Authenticator app and try again.",
-            )
-
-    return render(
-        request,
-        "accounts/login_2fa.html",
-        {
-            "masked_email": _mask_email(user.email),
-        },
-    )
-
-
-@ratelimit(key="ip", rate="5/m", method="POST", block=True)
-def login_2fa_enroll(request):
-    """Enroll the pending (not yet logged-in) internal user without a full session."""
-    if request.user.is_authenticated:
-        return redirect("dashboard")
-
-    user_id = request.session.get("pre_2fa_user_id")
-    if not user_id:
-        return redirect("login")
-
-    user = User.objects.filter(pk=user_id, is_active=True).first()
-    if user is None:
-        request.session.pop("pre_2fa_user_id", None)
-        return redirect("login")
-
-    if user.is_admin:
-        next_url = request.session.pop("pre_2fa_next", None)
-        request.session.pop("pre_2fa_user_id", None)
-        return _start_email_otp(request, user, next_url)
-
-    if user.totpdevice_set.filter(confirmed=True).exists():
-        return redirect("login_2fa")
-
-    pending = user.totpdevice_set.filter(confirmed=False).last()
-    if request.method == "POST":
-        token = request.POST.get("token", "").strip()
-        if pending and pending.verify_token(token):
-            pending.confirmed = True
-            pending.save(update_fields=["confirmed"])
-            request.session.pop("pre_2fa_user_id", None)
-            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-            otp_login(request, pending)
-            log_action(request, "auth.login_2fa_enroll", user.email)
-
-            next_url = request.session.pop("pre_2fa_next", None)
-            if next_url and url_has_allowed_host_and_scheme(
-                next_url, allowed_hosts={request.get_host()}
-            ):
-                return redirect(next_url)
-            return redirect("dashboard")
-        messages.error(request, "That code is not valid. Try again.")
-
-    if pending is None:
-        pending = user.totpdevice_set.create(name="default", confirmed=False)
-    return render(
-        request,
-        "accounts/login_2fa_enroll.html",
-        {
-            "masked_email": _mask_email(user.email),
-            "qr_svg": _qr_svg(pending.config_url),
-            "secret": base64.b32encode(pending.bin_key).decode("utf-8"),
-        },
-    )
+def legacy_2fa_redirect(request):
+    return redirect("login")
 
 
 @ratelimit(key="ip", rate="20/m", method="GET", block=True)
@@ -505,22 +373,10 @@ def google_callback(request):
             user.email_verified = True
             user.save(update_fields=["email_verified"])
 
-        if user.is_admin:
+        if user.is_staff and settings.REQUIRE_EMAIL_OTP:
             return _start_email_otp(
                 request, user, request.session.pop("google_oauth_next", None)
             )
-
-        if user.is_staff and (
-            settings.REQUIRE_STAFF_2FA
-            or user.totpdevice_set.filter(confirmed=True).exists()
-        ):
-            request.session["pre_2fa_user_id"] = user.pk
-            next_url = request.session.pop("google_oauth_next", None)
-            if next_url and url_has_allowed_host_and_scheme(
-                next_url, allowed_hosts={request.get_host()}
-            ):
-                request.session["pre_2fa_next"] = next_url
-            return redirect("login_2fa")
 
         log_action(request, "auth.google_login", user.email)
     else:
@@ -599,9 +455,6 @@ def resend_verification(request):
 @login_required
 def dashboard(request):
     if request.user.is_staff:
-        blocked = staff_2fa_redirect(request)
-        if blocked:
-            return blocked
         return _staff_dashboard(request)
     context = {}
     if request.user.is_candidate:
@@ -892,9 +745,6 @@ def manage_user_delete(request, pk):
 @login_required
 @require_POST
 def account_delete(request):
-    blocked = staff_2fa_redirect(request)
-    if blocked:
-        return blocked
     if request.user.is_admin:
         raise PermissionDenied
 
@@ -916,77 +766,14 @@ def account_delete(request):
     return redirect("home")
 
 
-def _qr_svg(url):
-    image = qrcode.make(url, image_factory=qrcode.image.svg.SvgPathImage)
-    buffer = io.BytesIO()
-    image.save(buffer)
-    return buffer.getvalue().decode()
-
-
 @login_required
-@ratelimit(key="user", rate="10/m", method="POST", block=True)
 def security(request):
-    user = request.user
-
-    device = user.totpdevice_set.filter(confirmed=True).first()
-    if request.method == "POST":
-        action = request.POST.get("action", "")
-        if action == "disable":
-            token = request.POST.get("token", "").strip()
-            if not getattr(user, "is_verified", lambda: False)():
-                messages.error(
-                    request,
-                    "Verify this session with your authenticator before disabling 2FA.",
-                )
-            elif not user.check_password(request.POST.get("password", "")):
-                messages.error(request, "Password incorrect.")
-            elif not device or not device.verify_token(token):
-                messages.error(
-                    request,
-                    "A valid current 6-digit authenticator code is required to disable 2FA.",
-                )
-            else:
-                user.totpdevice_set.all().delete()
-                log_action(request, "security.2fa.disable", user.email)
-                messages.success(request, "Two-factor authentication disabled.")
-            return redirect("security")
-        target = device or user.totpdevice_set.filter(confirmed=False).last()
-        if target and target.verify_token(request.POST.get("token", "").strip()):
-            if not target.confirmed:
-                target.confirmed = True
-                target.save(update_fields=["confirmed"])
-                log_action(request, "security.2fa.enable", user.email)
-            otp_login(request, target)
-            messages.success(request, "Two-factor authentication is active.")
-            next_url = request.POST.get("next") or request.GET.get("next")
-            if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
-                return redirect(next_url)
-            return redirect("security")
-        else:
-            messages.error(request, "That code is not valid. Try again.")
-        next_url = request.POST.get("next") or request.GET.get("next")
-        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
-            return redirect(f"{reverse('security')}?next={urllib.parse.quote(next_url)}")
-        return redirect("security")
-
-    qr_svg = secret = None
-    if not device:
-        pending = user.totpdevice_set.filter(confirmed=False).last()
-        if pending is None:
-            pending = user.totpdevice_set.create(name="default", confirmed=False)
-        qr_svg = _qr_svg(pending.config_url)
-        secret = base64.b32encode(pending.bin_key).decode("utf-8")
     return render(
         request,
         "accounts/security.html",
         {
-            "device": device,
-            "qr_svg": qr_svg,
-            "secret": secret,
-            "required": (
-                settings.REQUIRE_STAFF_2FA
-                and user.is_staff
-                and not user.is_admin
+            "email_otp_required": (
+                settings.REQUIRE_EMAIL_OTP and request.user.is_staff
             ),
         },
     )

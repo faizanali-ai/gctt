@@ -3,7 +3,6 @@ from django.urls import path, reverse_lazy
 from django_ratelimit.decorators import ratelimit
 
 from . import views
-from .decorators import verified_staff_required
 
 password_reset_view = ratelimit(key="ip", rate="5/m", method="POST", block=True)(
     auth_views.PasswordResetView.as_view(
@@ -20,8 +19,8 @@ urlpatterns = [
     path("login/email/", views.email_otp_request, name="email_otp_request"),
     path("login/email/verify/", views.email_otp_verify, name="email_otp_verify"),
     path("login/email/resend/", views.email_otp_resend, name="email_otp_resend"),
-    path("login/2fa/", views.login_2fa, name="login_2fa"),
-    path("login/2fa/enroll/", views.login_2fa_enroll, name="login_2fa_enroll"),
+    path("login/2fa/", views.legacy_2fa_redirect, name="login_2fa"),
+    path("login/2fa/enroll/", views.legacy_2fa_redirect, name="login_2fa_enroll"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("google/login/", views.google_login, name="google_login"),
     path("google/callback/", views.google_callback, name="google_callback"),
@@ -31,11 +30,9 @@ urlpatterns = [
     path("delete/", views.account_delete, name="account_delete"),
     path(
         "password-change/",
-        verified_staff_required(
-            auth_views.PasswordChangeView.as_view(
-                template_name="accounts/password_change.html",
-                success_url=reverse_lazy("profile"),
-            )
+        auth_views.PasswordChangeView.as_view(
+            template_name="accounts/password_change.html",
+            success_url=reverse_lazy("profile"),
         ),
         name="password_change",
     ),

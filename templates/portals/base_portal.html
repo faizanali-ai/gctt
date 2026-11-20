@@ -61,7 +61,7 @@
           <a href="{% url 'admin:index' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white">Database admin</a>
         {% endif %}
         <p class="mt-6 px-3 text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Security</p>
-        <a href="{% url 'security' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white {% if '/accounts/security/' in request.path %}bg-white/10 font-semibold text-accent{% endif %}">Security &amp; 2FA</a>
+        <a href="{% url 'security' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white {% if '/accounts/security/' in request.path %}bg-white/10 font-semibold text-accent{% endif %}">Account security</a>
       </nav>
       <div class="border-t border-white/10 p-4 text-xs">
         <p class="truncate text-slate-200 font-medium">{{ user.email }}</p>
@@ -86,7 +86,7 @@
               {% if perms.training.view_programme %}<a href="{% url 'staff_programmes' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Programmes</a>{% endif %}
               {% if perms.training.view_registration %}<a href="{% url 'staff_registrations' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Registrations</a>{% endif %}
               {% if user.can_manage_users %}<a href="{% url 'manage_users' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Users &amp; roles</a>{% endif %}
-              <a href="{% url 'security' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Security &amp; 2FA</a>
+              <a href="{% url 'security' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Account security</a>
               <form method="post" action="{% url 'logout' %}" class="px-3 pt-2">{% csrf_token %}<button type="submit" class="font-semibold text-accent hover:underline">Log out</button></form>
             </nav>
           </details>

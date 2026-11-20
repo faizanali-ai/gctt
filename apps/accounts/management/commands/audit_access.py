@@ -1,7 +1,5 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand, CommandError
-from django_otp.plugins.otp_totp.models import TOTPDevice
 
 from apps.accounts.models import STAFF_SUBGROUPS
 
@@ -113,24 +111,6 @@ class Command(BaseCommand):
                         self.stdout.write(f"  - {message}")
         else:
             self.stdout.write(self.style.SUCCESS("No access issues found."))
-
-        if settings.REQUIRE_STAFF_2FA:
-            confirmed = set(
-                TOTPDevice.objects.filter(confirmed=True, user__is_staff=True)
-                .values_list("user_id", flat=True)
-            )
-            pending = [
-                user
-                for user in users
-                if user.is_staff and user.is_active and user.pk not in confirmed
-            ]
-            if pending:
-                self.stdout.write(
-                    self.style.WARNING(
-                        "2FA enrollment pending: "
-                        + ", ".join(user.email for user in pending)
-                    )
-                )
 
         if options["strict"] and issues:
             raise CommandError(f"Access audit found {len(issues)} issue(s).")

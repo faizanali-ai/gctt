@@ -1,7 +1,5 @@
 from django.test import TestCase, override_settings
 from django.urls import reverse
-from django_otp.oath import totp
-from django_otp.plugins.otp_totp.models import TOTPDevice
 
 from apps.accounts.apps import assign_permissions
 from apps.accounts.models import AuditLog, User
@@ -9,30 +7,16 @@ from apps.jobs.models import Application, Job
 
 
 @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
-class OpenTwoFactorTests(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.candidate = User.objects.create_user(
+class AccountSecurityPageTests(TestCase):
+    def test_candidate_can_open_security_page(self):
+        candidate = User.objects.create_user(
             email="cand2fa@example.com", password="test-pass-12345"
         )
-
-    def test_candidate_can_open_security_page(self):
-        self.client.force_login(self.candidate)
+        self.client.force_login(candidate)
         response = self.client.get(reverse("security"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Two-Factor Authentication")
-
-    def test_candidate_can_enrol_totp(self):
-        self.client.force_login(self.candidate)
-        self.client.get(reverse("security"))
-        device = TOTPDevice.objects.get(user=self.candidate)
-        token = totp(device.bin_key, device.step, device.t0, device.digits)
-        response = self.client.post(
-            reverse("security"), {"action": "enable", "token": token}, follow=True
-        )
-        self.assertContains(response, "Two-factor authentication is active")
-        device.refresh_from_db()
-        self.assertTrue(device.confirmed)
+        self.assertContains(response, "Account Security")
+        self.assertNotContains(response, "Two-Factor Authentication")
 
 
 class PasswordResetRateLimitTests(TestCase):

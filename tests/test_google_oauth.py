@@ -42,7 +42,11 @@ class GoogleOAuthTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse("login"))
 
-    @override_settings(GOOGLE_CLIENT_ID="mock-client-id", GOOGLE_CLIENT_SECRET="mock-client-secret")
+    @override_settings(
+        GOOGLE_CLIENT_ID="mock-client-id",
+        GOOGLE_CLIENT_SECRET="mock-client-secret",
+        REQUIRE_EMAIL_OTP=True,
+    )
     def test_google_callback_sends_admin_to_email_otp(self):
         session = self.client.session
         session["google_oauth_state"] = "valid-state"

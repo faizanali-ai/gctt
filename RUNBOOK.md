@@ -42,8 +42,8 @@ uv run python manage.py audit_access --strict
 
 It reports staff with no/multiple subgroups, unexpected or direct permissions,
 invalid roles, external accounts with internal access, missing admin flags/groups,
-zero active admins, and pending 2FA enrollment. It never changes data. Fix flagged
-accounts in `/manage/users/` or Django Admin, then rerun with `--strict`.
+zero active admins. It never changes data. Fix flagged accounts in
+`/manage/users/` or Django Admin, then rerun with `--strict`.
 
 ## Email OTP delivery
 
@@ -64,7 +64,8 @@ The Resend DKIM record must exist, the `send` subdomain must carry Resend's
 records, and the root SPF must include Resend's SPF include. If those are absent,
 Resend cannot authenticate `accounts@gctekton.com`; messages may be rejected,
 quarantined by DMARC, or never delivered. Add the domain in Resend, publish the
-records it provides, wait for verification, then retest OTP login.
+records it provides, wait for verification, then set `REQUIRE_EMAIL_OTP=1` and
+retest OTP login. Keep it at `0` for password-only fallback until then.
 
 Check the Render dashboard logs for `Failed to send email` and the Django Audit
 log for `auth.email_otp_send_failed`. Common causes: unverified Resend domain,
@@ -98,19 +99,18 @@ Rotate `DJANGO_SECRET_KEY` by generating a new value and redeploying — this si
 everyone out. Also rotate `EMAIL_HOST_PASSWORD` and the R2 keys on suspicion of leak.
 Never commit `.env`; it is gitignored.
 
-## Internal 2FA
+## Internal email OTP
 
-When `REQUIRE_STAFF_2FA=1`, staff members must enroll at `/accounts/security/`
-before using internal pages. Admin accounts sign in with email OTP only and are
-not prompted for an authenticator code. Candidates and students are unaffected.
-Enroll current staff before enabling the flag.
+`REQUIRE_EMAIL_OTP=0` keeps password-only fallback active. Set it to `1` after
+email delivery is verified; admin/staff logins then require an email code.
+Candidates/students always use normal password login. There is no authenticator
+app/TOTP step. The old `REQUIRE_STAFF_2FA` environment variable is ignored.
 
 ## Staff offboarding (admin only)
 
 1. Django Admin → Users → open the user → **deactivate** (`is_active` off).
 2. Remove them from their staff subgroup (`Recruiter`, `Trainer`, or `Enquiry Manager`).
-3. Delete their TOTP device (Admin → TOTP devices) so they cannot re-authenticate.
-4. Check **Audit log entries** for their recent actions.
+3. Check **Audit log entries** for their recent actions.
 
 Staff cannot list, count, or discover other staff accounts. Keep user management
 and subgroup changes admin-only.

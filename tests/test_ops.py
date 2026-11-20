@@ -1,8 +1,6 @@
 from django.contrib.auth.models import Group
 from django.test import TestCase, override_settings
 from django.urls import reverse
-from django_otp.oath import totp
-from django_otp.plugins.otp_totp.models import TOTPDevice
 
 from apps.accounts.apps import assign_permissions
 from apps.accounts.models import AuditLog, User
@@ -49,54 +47,6 @@ class AuditLogTests(TestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, ["c@example.com"])
         self.assertIn("shortlisted", mail.outbox[0].subject.lower())
-
-
-class TwoFactorTests(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.staff = User.objects.create_user(
-            email="s@example.com",
-            password="test-pass-12345",
-            is_staff=True,
-            role=User.Role.STAFF,
-        )
-
-    @staticmethod
-    def _token(device):
-        return totp(device.bin_key, device.step, device.t0, device.digits)
-
-    @override_settings(REQUIRE_STAFF_2FA=True)
-    def test_staff_pages_redirect_until_verified(self):
-        self.client.force_login(self.staff)
-        response = self.client.get(reverse("dashboard"))
-        self.assertEqual(response.status_code, 302)
-        self.assertIn(reverse("security"), response.url)
-
-    @override_settings(REQUIRE_STAFF_2FA=True)
-    def test_enrol_then_access_is_allowed(self):
-        self.client.force_login(self.staff)
-        self.client.get(reverse("security"))  # creates the pending device
-        device = TOTPDevice.objects.get(user=self.staff)
-        response = self.client.post(
-            reverse("security"), {"action": "enable", "token": self._token(device)}, follow=True
-        )
-        self.assertContains(response, "Two-factor authentication is active")
-        device.refresh_from_db()
-        self.assertTrue(device.confirmed)
-        self.assertEqual(self.client.get(reverse("dashboard")).status_code, 200)
-
-    def test_wrong_code_is_rejected(self):
-        self.client.force_login(self.staff)
-        self.client.get(reverse("security"))
-        device = TOTPDevice.objects.get(user=self.staff)
-        self.client.post(reverse("security"), {"action": "enable", "token": "000000"})
-        device.refresh_from_db()
-        self.assertFalse(device.confirmed)
-
-    def test_non_staff_can_open_security(self):
-        user = User.objects.create_user(email="n@example.com", password="test-pass-12345")
-        self.client.force_login(user)
-        self.assertEqual(self.client.get(reverse("security")).status_code, 200)
 
 
 class BackupCommandTests(TestCase):
