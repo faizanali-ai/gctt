@@ -1,152 +1,146 @@
 {% extends "portals/base_portal.html" %}
-{% block title %}Student Registrations — GCTT Staff{% endblock %}
-{% block portal_title %}Practice Management: Enrolments &amp; Certifications{% endblock %}
-{% block content %}
-<section class="mx-auto max-w-7xl py-4 sm:py-6">
-  <div class="flex flex-wrap items-end justify-between gap-4">
-    <div>
-      <p class="eyebrow text-2xs">Technical Education</p>
-      <h1 class="mt-1 font-display text-2xl font-bold text-ink sm:text-3xl">Cohort Enrolments &amp; Certifications</h1>
-      <p class="mt-1 text-xs text-ink-muted">Track cohort progress, approve completion milestones, and issue tamper-evident credentials.</p>
+{% load static %}
+{% block title %}Registrations — GCTT Staff{% endblock %}
+{% block portal_title %}Registrations{% endblock %}
+
+{% block portal_content %}
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <div>
+    <p class="eyebrow eyebrow-accent">Academy</p>
+    <h1 class="mt-2 text-h1">Registrations.</h1>
+    <p class="mt-2 text-sm text-muted">Track cohort progress and issue or revoke certificates.</p>
+  </div>
+</div>
+
+<div class="mt-6 flex flex-wrap gap-2">
+  <a href="{% url 'staff_registrations' %}{% if q %}?q={{ q }}{% endif %}{% if programme %}&amp;programme={{ programme }}{% endif %}" class="btn btn-sm {% if not status %}btn-solid{% else %}btn-secondary{% endif %}">All</a>
+  {% for value, label in all_statuses %}
+    <a href="{% url 'staff_registrations' %}?status={{ value }}{% if q %}&amp;q={{ q }}{% endif %}{% if programme %}&amp;programme={{ programme }}{% endif %}" class="btn btn-sm {% if status == value %}btn-solid{% else %}btn-secondary{% endif %}">{{ label }}</a>
+  {% endfor %}
+</div>
+
+<div class="card mt-4 p-4">
+  <form method="get" class="form flex flex-col gap-3 sm:flex-row sm:items-end">
+    <div class="field flex-1">
+      <label for="registration-q" class="sr-only">Search registrations</label>
+      <input id="registration-q" type="search" name="q" value="{{ q }}" placeholder="Student name, email or programme">
     </div>
-  </div>
+    <div class="field sm:w-52">
+      <label for="registration-programme" class="sr-only">Programme</label>
+      <select id="registration-programme" name="programme">
+        <option value="">All programmes</option>
+        {% for item in programmes %}<option value="{{ item.pk }}" {% if programme == item.pk|stringformat:"s" %}selected{% endif %}>{{ item.title }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="field sm:w-44">
+      <label for="registration-status" class="sr-only">Status</label>
+      <select id="registration-status" name="status">
+        <option value="">All statuses</option>
+        {% for value, label in all_statuses %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="flex gap-2">
+      <button type="submit" class="btn btn-primary">Filter</button>
+      {% if q or programme or status %}<a href="{% url 'staff_registrations' %}" class="btn btn-secondary">Clear</a>{% endif %}
+    </div>
+  </form>
+</div>
 
-  <!-- Quick Status Pill Ribbon -->
-  <div class="mt-6 flex flex-wrap items-center gap-2">
-    <a href="{% url 'staff_registrations' %}{% if q %}?q={{ q }}{% endif %}{% if programme %}&programme={{ programme }}{% endif %}" class="btn text-xs py-1.5 px-3 {% if not status %}btn-brand{% else %}btn-secondary{% endif %}">
-      All Registrations
-    </a>
-    {% for value, label in all_statuses %}
-      <a href="{% url 'staff_registrations' %}?status={{ value }}{% if q %}&q={{ q }}{% endif %}{% if programme %}&programme={{ programme }}{% endif %}" class="btn text-xs py-1.5 px-3 {% if status == value %}btn-brand{% else %}btn-secondary{% endif %}">
-        {{ label }}
-      </a>
-    {% endfor %}
-  </div>
-
-  <!-- Filter Ribbon -->
-  <div class="mt-3 rounded-lg border border-line bg-card p-4 shadow-xs">
-    <form method="get" class="flex flex-col gap-3 sm:flex-row">
-      <input
-        type="search"
-        name="q"
-        value="{{ q }}"
-        placeholder="Search student name, email, or programme..."
-        class="flex-1"
-      >
-      <div class="sm:w-52">
-        <select name="programme" aria-label="Programme filter">
-          <option value="">All curricula</option>
-          {% for item in programmes %}
-            <option value="{{ item.pk }}" {% if programme == item.pk|stringformat:"s" %}selected{% endif %}>{{ item.title }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="sm:w-44">
-        <select name="status" aria-label="Status filter">
-          <option value="">All statuses</option>
-          {% for value, label in all_statuses %}
-            <option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <button type="submit" class="btn btn-secondary text-xs sm:w-28">
-        Filter
-      </button>
-      {% if q or programme or status %}
-        <a href="{% url 'staff_registrations' %}" class="btn btn-secondary text-xs sm:w-24">Clear</a>
-      {% endif %}
-    </form>
-  </div>
-
-  <!-- Registrations Table -->
-  <div class="mt-6 overflow-hidden rounded-lg border border-line bg-card shadow-xs">
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
-        <thead class="border-b border-brand-2/50 bg-brand text-slate-100">
+{% if page_obj %}
+  <div class="mt-4 overflow-hidden rounded-card border border-line bg-surface">
+    <table class="data-table">
+      <caption class="sr-only">Cohort registrations</caption>
+      <thead>
+        <tr>
+          <th scope="col">Learner</th>
+          <th scope="col">Programme</th>
+          <th scope="col">Enrolled</th>
+          <th scope="col">Status</th>
+          <th scope="col" class="text-right">Certificate</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for registration in page_obj %}
           <tr>
-            <th class="px-5 py-3.5 font-semibold uppercase tracking-wider">Learner &amp; Contact</th>
-            <th class="px-4 py-3.5 font-semibold uppercase tracking-wider">Programme</th>
-            <th class="hidden px-4 py-3.5 font-semibold uppercase tracking-wider sm:table-cell">Enrolled</th>
-            <th class="px-4 py-3.5 font-semibold uppercase tracking-wider">Cohort Status</th>
-            <th class="px-5 py-3.5 font-semibold uppercase tracking-wider text-right">Certificate Milestone</th>
+            <td data-label="Learner">
+              <p class="font-semibold">{{ registration.student.display_name }}</p>
+              <p class="text-2xs text-muted">{{ registration.student.email }}{% if registration.student.phone %} · {{ registration.student.phone }}{% endif %}</p>
+            </td>
+            <td data-label="Programme">
+              <p class="font-medium">{{ registration.programme.title }}</p>
+              <p class="text-2xs text-muted">{{ registration.programme.get_delivery_mode_display }}</p>
+            </td>
+            <td data-label="Enrolled" class="text-sm text-muted">{{ registration.created_at|date:"M j, Y" }}</td>
+            <td data-label="Status">
+              <span class="chip {% if registration.status == 'completed' or registration.status == 'accepted' %}chip-success{% elif registration.status == 'rejected' %}chip-danger{% else %}chip-warning{% endif %}">{{ registration.get_status_display }}</span>
+            </td>
+            <td data-label="Certificate" class="text-right">
+              <button type="button" class="btn btn-secondary btn-sm" data-drawer-template="registration-{{ registration.uuid }}" data-drawer-title="{{ registration.student.display_name }}">Manage</button>
+            </td>
           </tr>
-        </thead>
-        <tbody class="divide-y divide-line-subtle">
-          {% for registration in page_obj %}
-            <tr class="transition-colors hover:bg-surface/50">
-              <td class="px-5 py-4">
-                <span class="font-display text-sm font-bold text-ink">{{ registration.student.display_name }}</span>
-                <span class="block text-2xs text-ink-muted">
-                  {{ registration.student.email }}
-                  {% if registration.student.phone %} · {{ registration.student.phone }}{% endif %}
-                </span>
-                {% if registration.message %}
-                  <p class="mt-1.5 max-w-sm rounded bg-surface/80 p-2 text-2xs leading-relaxed text-ink-muted border border-line-subtle">
-                    “{{ registration.message|truncatewords:24 }}”
-                  </p>
-                {% endif %}
-              </td>
-              <td class="px-4 py-4">
-                <span class="font-semibold text-brand">{{ registration.programme.title }}</span>
-                <span class="block text-2xs text-ink-subtle">{{ registration.programme.get_delivery_mode_display }}</span>
-              </td>
-              <td class="hidden px-4 py-4 sm:table-cell text-ink-muted">
-                {{ registration.created_at|date:"M j, Y" }}
-              </td>
-              <td class="px-4 py-4">
-                <form method="post" action="{% url 'staff_registration_status' registration.uuid %}" class="flex items-center gap-2">
-                  {% csrf_token %}
-                  <select name="status" aria-label="Registration status" class="w-36 py-1 text-xs">
-                    {% for value, label in statuses %}
-                      <option value="{{ value }}" {% if registration.status == value %}selected{% endif %}>{{ label }}</option>
-                    {% endfor %}
-                  </select>
-                  <button type="submit" class="btn btn-secondary text-2xs py-1 px-2.5">
-                    Save
-                  </button>
-                </form>
-              </td>
-              <td class="px-5 py-4 text-right">
-                {% if registration.certificate_issued %}
-                  <div class="inline-flex flex-col items-end gap-1">
-                    <div class="flex items-center gap-2">
-                      <span class="font-mono text-2xs font-bold text-ink">{{ registration.certificate_ref }}</span>
-                      <a href="{% url 'download_certificate' registration.certificate_ref %}" class="btn btn-secondary text-2xs py-1 px-2.5">
-                        PDF ↗
-                      </a>
-                    </div>
-                    <form method="post" action="{% url 'staff_registration_certificate' registration.uuid %}">
-                      {% csrf_token %}
-                      <input type="hidden" name="action" value="revoke">
-                      <button type="submit" class="text-2xs font-semibold text-rose-600 hover:underline">
-                        Revoke Certificate
-                      </button>
-                    </form>
-                  </div>
-                {% elif registration.status == "completed" %}
-                  <form method="post" action="{% url 'staff_registration_certificate' registration.uuid %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary text-2xs py-1 px-3">
-                      Award &amp; Issue Certificate
-                    </button>
-                  </form>
-                {% else %}
-                  <span class="text-2xs text-ink-subtle italic">Mark "Completed" to issue</span>
-                {% endif %}
-              </td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td colspan="5" class="px-5 py-8 text-center text-ink-muted">
-                No cohort registrations match the selected criteria.
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
+
+  {% for registration in page_obj %}
+    <template id="registration-{{ registration.uuid }}">
+      <div class="space-y-5">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="chip {% if registration.status == 'completed' or registration.status == 'accepted' %}chip-success{% elif registration.status == 'rejected' %}chip-danger{% else %}chip-warning{% endif %}">{{ registration.get_status_display }}</span>
+          {% if registration.certificate_issued %}<span class="chip chip-success">{{ registration.certificate_ref }}</span>{% endif %}
+        </div>
+        <dl class="space-y-2 text-sm">
+          <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Email</dt><dd><a href="mailto:{{ registration.student.email }}" class="link">{{ registration.student.email }}</a></dd></div>
+          {% if registration.student.phone %}<div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Phone</dt><dd>{{ registration.student.phone }}</dd></div>{% endif %}
+          <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Programme</dt><dd><a href="{% url 'programme_detail' registration.programme.slug %}" class="link">{{ registration.programme.title }}</a></dd></div>
+          <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Enrolled</dt><dd>{{ registration.created_at|date:"F j, Y" }}</dd></div>
+        </dl>
+        {% if registration.message %}
+          <div>
+            <p class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Learner note</p>
+            <p class="mt-2 whitespace-pre-line text-sm leading-relaxed">{{ registration.message }}</p>
+          </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'staff_registration_status' registration.uuid %}" class="form border-t border-line pt-5">
+          {% csrf_token %}
+          <div class="field">
+            <label for="registration-status-{{ registration.uuid }}">Update status</label>
+            <select id="registration-status-{{ registration.uuid }}" name="status">
+              {% for value, label in statuses %}<option value="{{ value }}" {% if registration.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary w-full">Save status</button>
+        </form>
+
+        {% if registration.certificate_issued %}
+          <div class="space-y-3 border-t border-line pt-5">
+            <a href="{% url 'download_certificate' registration.certificate_ref %}" class="btn btn-secondary w-full">Download certificate</a>
+            <form method="post" action="{% url 'staff_registration_certificate' registration.uuid %}" data-confirm="Revoke the certificate for {{ registration.student.display_name|escapejs }}? The public reference will stop verifying." data-confirm-action="Revoke">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="revoke">
+              <button type="submit" class="btn btn-ghost w-full text-danger">Revoke certificate</button>
+            </form>
+          </div>
+        {% elif registration.status == "completed" %}
+          <form method="post" action="{% url 'staff_registration_certificate' registration.uuid %}" class="border-t border-line pt-5">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary w-full">Issue certificate</button>
+          </form>
+        {% else %}
+          <p class="border-t border-line pt-5 text-sm text-muted">Set the status to completed before issuing a certificate.</p>
+        {% endif %}
+      </div>
+    </template>
+  {% endfor %}
 
   {% include "partials/_pagination.html" %}
-</section>
+{% else %}
+  <div class="card mt-4 p-10 text-center">
+    <h2 class="text-h3">No registrations match the filters.</h2>
+    <p class="mt-2 text-sm text-muted">Try a broader search or clear the filters.</p>
+    <a href="{% url 'staff_registrations' %}" class="btn btn-secondary mt-5">Clear filters</a>
+  </div>
+{% endif %}
 {% endblock %}

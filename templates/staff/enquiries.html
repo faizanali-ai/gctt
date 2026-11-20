@@ -1,134 +1,126 @@
 {% extends "portals/base_portal.html" %}
-{% block title %}Client &amp; Candidate Enquiries — GCTT Staff{% endblock %}
-{% block portal_title %}Practice Management: Enquiries{% endblock %}
-{% block content %}
-<section class="mx-auto max-w-7xl py-4 sm:py-6">
-  <div class="flex flex-wrap items-end justify-between gap-4">
-    <div>
-      <p class="eyebrow text-2xs">Intake Pipeline</p>
-      <h1 class="mt-1 font-display text-2xl font-bold text-ink sm:text-3xl">Inbound Enquiries &amp; Requests</h1>
-      <p class="mt-1 text-xs text-ink-muted">Inbound commercial, enterprise staffing, and training requests submitted through public channels.</p>
+{% load static %}
+{% block title %}Enquiries — GCTT Staff{% endblock %}
+{% block portal_title %}Enquiries{% endblock %}
+
+{% block portal_content %}
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <div>
+    <p class="eyebrow eyebrow-accent">Intake</p>
+    <h1 class="mt-2 text-h1">Enquiries.</h1>
+    <p class="mt-2 text-sm text-muted">Commercial, staffing and training requests submitted through public channels.</p>
+  </div>
+</div>
+
+<div class="mt-6 flex flex-wrap gap-2">
+  <a href="{% url 'staff_enquiries' %}{% if q %}?q={{ q }}{% endif %}{% if category %}&amp;category={{ category }}{% endif %}" class="btn btn-sm {% if not status %}btn-solid{% else %}btn-secondary{% endif %}">All</a>
+  {% for value, label in statuses %}
+    <a href="{% url 'staff_enquiries' %}?status={{ value }}{% if q %}&amp;q={{ q }}{% endif %}{% if category %}&amp;category={{ category }}{% endif %}" class="btn btn-sm {% if status == value %}btn-solid{% else %}btn-secondary{% endif %}">{{ label }}</a>
+  {% endfor %}
+</div>
+
+<div class="card mt-4 p-4">
+  <form method="get" class="form flex flex-col gap-3 sm:flex-row sm:items-end">
+    <div class="field flex-1">
+      <label for="enquiry-q" class="sr-only">Search enquiries</label>
+      <input id="enquiry-q" type="search" name="q" value="{{ q }}" placeholder="Name, email or message">
     </div>
-  </div>
+    <div class="field sm:w-52">
+      <label for="enquiry-category" class="sr-only">Category</label>
+      <select id="enquiry-category" name="category">
+        <option value="">All categories</option>
+        {% for value, label in categories %}<option value="{{ value }}" {% if category == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="field sm:w-44">
+      <label for="enquiry-status" class="sr-only">Status</label>
+      <select id="enquiry-status" name="status">
+        <option value="">All statuses</option>
+        {% for value, label in statuses %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="flex gap-2">
+      <button type="submit" class="btn btn-primary">Filter</button>
+      {% if q or category or status %}<a href="{% url 'staff_enquiries' %}" class="btn btn-secondary">Clear</a>{% endif %}
+    </div>
+  </form>
+</div>
 
-  <!-- Quick Status Pill Ribbon -->
-  <div class="mt-6 flex flex-wrap items-center gap-2">
-    <a href="{% url 'staff_enquiries' %}{% if q %}?q={{ q }}{% endif %}{% if category %}&category={{ category }}{% endif %}" class="btn text-xs py-1.5 px-3 {% if not status %}btn-brand{% else %}btn-secondary{% endif %}">
-      All Enquiries
-    </a>
-    {% for value, label in statuses %}
-      <a href="{% url 'staff_enquiries' %}?status={{ value }}{% if q %}&q={{ q }}{% endif %}{% if category %}&category={{ category }}{% endif %}" class="btn text-xs py-1.5 px-3 {% if status == value %}btn-brand{% else %}btn-secondary{% endif %}">
-        {{ label }}
-      </a>
-    {% endfor %}
-  </div>
-
-  <!-- Filter Ribbon -->
-  <div class="mt-3 rounded-lg border border-line bg-card p-4 shadow-xs">
-    <form method="get" class="flex flex-col gap-3 sm:flex-row">
-      <input
-        type="search"
-        name="q"
-        value="{{ q }}"
-        placeholder="Search sender name, email, or message keywords..."
-        class="flex-1"
-      >
-      <div class="sm:w-56">
-        <select name="category" aria-label="Category filter">
-          <option value="">All practice categories</option>
-          {% for value, label in categories %}
-            <option value="{{ value }}" {% if category == value %}selected{% endif %}>{{ label }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="sm:w-40">
-        <select name="status" aria-label="Status filter">
-          <option value="">All statuses</option>
-          {% for value, label in statuses %}
-            <option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <button type="submit" class="btn btn-secondary text-xs sm:w-28">
-        Filter
-      </button>
-      {% if q or category or status %}
-        <a href="{% url 'staff_enquiries' %}" class="btn btn-secondary text-xs sm:w-24">Clear</a>
-      {% endif %}
-    </form>
-  </div>
-
-  <!-- Enquiries Table -->
-  <div class="mt-6 overflow-hidden rounded-lg border border-line bg-card shadow-xs">
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
-        <thead class="border-b border-brand-2/50 bg-brand text-slate-100">
+{% if page_obj %}
+  <div class="mt-4 overflow-hidden rounded-card border border-line bg-surface">
+    <table class="data-table">
+      <caption class="sr-only">Inbound enquiries</caption>
+      <thead>
+        <tr>
+          <th scope="col">Originator</th>
+          <th scope="col">Category</th>
+          <th scope="col">Message</th>
+          <th scope="col">Received</th>
+          <th scope="col">Status</th>
+          <th scope="col" class="text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for enquiry in page_obj %}
           <tr>
-            <th class="px-5 py-3.5 font-semibold uppercase tracking-wider">Originator</th>
-            <th class="px-4 py-3.5 font-semibold uppercase tracking-wider">Focus &amp; Details</th>
-            <th class="px-4 py-3.5 font-semibold uppercase tracking-wider">Message Scope</th>
-            <th class="hidden px-4 py-3.5 font-semibold uppercase tracking-wider sm:table-cell">Received</th>
-            <th class="px-5 py-3.5 font-semibold uppercase tracking-wider text-right">Triage Action</th>
+            <td data-label="Originator">
+              <p class="font-semibold">{{ enquiry.name }}</p>
+              <p class="text-2xs text-muted">{{ enquiry.email }}{% if enquiry.phone %} · {{ enquiry.phone }}{% endif %}</p>
+              {% if enquiry.company %}<p class="text-2xs text-subtle">{{ enquiry.company }}</p>{% endif %}
+            </td>
+            <td data-label="Category"><span class="chip">{{ enquiry.get_category_display }}</span></td>
+            <td data-label="Message"><p class="line-clamp-2 max-w-sm text-sm text-muted">{{ enquiry.message }}</p></td>
+            <td data-label="Received" class="text-sm text-muted">{{ enquiry.created_at|date:"M j, Y" }}</td>
+            <td data-label="Status">
+              <span class="chip {% if enquiry.status == 'new' %}chip-warning{% elif enquiry.status == 'in_progress' %}chip-accent{% else %}chip-success{% endif %}">{{ enquiry.get_status_display }}</span>
+            </td>
+            <td data-label="Action" class="text-right">
+              <button type="button" class="btn btn-secondary btn-sm" data-drawer-template="enquiry-{{ enquiry.pk }}" data-drawer-title="{{ enquiry.name }}">View</button>
+            </td>
           </tr>
-        </thead>
-        <tbody class="divide-y divide-line-subtle">
-          {% for enquiry in page_obj %}
-            <tr class="transition-colors hover:bg-surface/50">
-              <td class="px-5 py-4">
-                <span class="font-display text-sm font-bold text-ink">{{ enquiry.name }}</span>
-                <span class="block text-2xs text-ink-muted">
-                  {{ enquiry.email }}
-                  {% if enquiry.phone %} · {{ enquiry.phone }}{% endif %}
-                </span>
-                {% if enquiry.company %}
-                  <span class="block text-3xs font-medium text-ink-subtle">Company: {{ enquiry.company }}</span>
-                {% endif %}
-              </td>
-              <td class="px-4 py-4 space-y-1">
-                <span class="inline-flex items-center rounded border border-line bg-surface px-2 py-0.5 text-2xs font-semibold text-ink">
-                  {{ enquiry.get_category_display }}
-                </span>
-                {% if enquiry.area %}
-                  <span class="block text-3xs text-ink-muted">Area: {{ enquiry.area }}</span>
-                {% endif %}
-                {% if enquiry.how_heard %}
-                  <span class="block text-3xs text-ink-subtle">Source: {{ enquiry.how_heard }}</span>
-                {% endif %}
-              </td>
-              <td class="px-4 py-4">
-                <p class="max-w-md text-2xs leading-relaxed text-ink-muted">
-                  {{ enquiry.message }}
-                </p>
-              </td>
-              <td class="hidden px-4 py-4 sm:table-cell text-ink-muted">
-                {{ enquiry.created_at|date:"M j, Y" }}
-              </td>
-              <td class="px-5 py-4 text-right">
-                <form method="post" action="{% url 'staff_enquiry_status' enquiry.pk %}" class="inline-flex items-center gap-2">
-                  {% csrf_token %}
-                  <select name="status" aria-label="Enquiry status" class="w-36 py-1 text-xs">
-                    {% for value, label in statuses %}
-                      <option value="{{ value }}" {% if enquiry.status == value %}selected{% endif %}>{{ label }}</option>
-                    {% endfor %}
-                  </select>
-                  <button type="submit" class="btn btn-primary text-2xs py-1 px-2.5">
-                    Save
-                  </button>
-                </form>
-              </td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td colspan="5" class="px-5 py-8 text-center text-ink-muted">
-                No inbound enquiries match the selected filter parameters.
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
+
+  {% for enquiry in page_obj %}
+    <template id="enquiry-{{ enquiry.pk }}">
+      <div class="space-y-5">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="chip">{{ enquiry.get_category_display }}</span>
+          <span class="chip {% if enquiry.status == 'new' %}chip-warning{% elif enquiry.status == 'in_progress' %}chip-accent{% else %}chip-success{% endif %}">{{ enquiry.get_status_display }}</span>
+        </div>
+        <dl class="space-y-2 text-sm">
+          <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Email</dt><dd><a href="mailto:{{ enquiry.email }}" class="link">{{ enquiry.email }}</a></dd></div>
+          {% if enquiry.phone %}<div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Phone</dt><dd>{{ enquiry.phone }}</dd></div>{% endif %}
+          {% if enquiry.company %}<div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Company</dt><dd>{{ enquiry.company }}</dd></div>{% endif %}
+          {% if enquiry.area %}<div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Area</dt><dd>{{ enquiry.area }}</dd></div>{% endif %}
+          <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Received</dt><dd>{{ enquiry.created_at|date:"F j, Y" }}</dd></div>
+        </dl>
+        <div>
+          <p class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Message</p>
+          <p class="mt-2 whitespace-pre-line text-sm leading-relaxed">{{ enquiry.message }}</p>
+        </div>
+        <form method="post" action="{% url 'staff_enquiry_status' enquiry.pk %}" class="form border-t border-line pt-5">
+          {% csrf_token %}
+          <div class="field">
+            <label for="enquiry-status-{{ enquiry.pk }}">Update status</label>
+            <select id="enquiry-status-{{ enquiry.pk }}" name="status">
+              {% for value, label in statuses %}<option value="{{ value }}" {% if enquiry.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary w-full">Save status</button>
+        </form>
+      </div>
+    </template>
+  {% endfor %}
 
   {% include "partials/_pagination.html" %}
-</section>
+{% else %}
+  <div class="card mt-4 p-10 text-center">
+    <h2 class="text-h3">No enquiries match the filters.</h2>
+    <p class="mt-2 text-sm text-muted">Try a broader search or clear the filters.</p>
+    <a href="{% url 'staff_enquiries' %}" class="btn btn-secondary mt-5">Clear filters</a>
+  </div>
+{% endif %}
 {% endblock %}

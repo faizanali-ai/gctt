@@ -24,6 +24,8 @@ class ProgrammeAdmin(admin.ModelAdmin):
     list_editable = ("registration_open", "published", "order")
     prepopulated_fields = {"slug": ("title",)}
     inlines = [RegistrationInline]
+    # Legacy field: the public design no longer displays programme photography.
+    exclude = ("image_url",)
 
 
 @admin.register(Registration)

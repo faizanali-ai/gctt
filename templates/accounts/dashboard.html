@@ -1,297 +1,178 @@
 {% extends "portals/base_portal.html" %}
-{% block title %}Dashboard — GCTT Portal{% endblock %}
-{% block portal_title %}Candidate &amp; Learner Overview{% endblock %}
-{% block content %}
-<section class="mx-auto max-w-5xl py-4 sm:py-8 font-sans">
-  <!-- Greeting Header -->
-  <div class="stitch-card rounded-2xl border border-[#dde9ff] bg-white p-6 shadow-sm sm:p-8">
-    <div class="flex flex-wrap items-center justify-between gap-4">
-      <div>
-        <span class="inline-flex items-center gap-1.5 rounded-full bg-[#006398]/10 px-3 py-1 font-mono text-2xs font-bold uppercase tracking-wider text-[#006398] border border-[#006398]/20">
-          Authenticated Access
-        </span>
-        <h1 class="mt-2 font-display text-2xl font-bold text-[#000e27] sm:text-3xl">Welcome, {{ user.display_name }}</h1>
-        <p class="mt-1 text-xs text-[#44474e] font-mono">
-          {{ user.email }}
-          {% if user.phone %} · {{ user.phone }}{% endif %}
-        </p>
-      </div>
-      <div class="flex flex-wrap items-center gap-2 font-mono">
-        <a href="{% url 'security' %}" class="btn-stitch-secondary text-xs py-2 px-3">Account security</a>
-        <a href="{% url 'profile' %}" class="btn-stitch-secondary text-xs py-2 px-3">Account Settings</a>
-      </div>
-    </div>
+{% load static %}
+{% block title %}Overview — GCTT Portal{% endblock %}
+{% block portal_title %}Overview{% endblock %}
 
-    {% if not user.email_verified %}
-      <div class="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-xs text-amber-900 font-mono">
-        <div>
-          <span class="font-bold">Email address unverified.</span>
-          <span class="ml-1 text-amber-800">Please verify to maintain account recovery and receive direct recruiter updates.</span>
-        </div>
-        <form method="post" action="{% url 'resend_verification' %}">
-          {% csrf_token %}
-          <button type="submit" class="rounded-lg border border-amber-400 bg-white px-3 py-1.5 text-2xs font-bold text-amber-900 shadow-xs hover:bg-amber-100 transition">
-            Resend Verification Link
-          </button>
-        </form>
-      </div>
-    {% endif %}
-
+{% block portal_content %}
+<div class="flex flex-wrap items-start justify-between gap-4">
+  <div>
+    <p class="eyebrow eyebrow-accent">Signed in</p>
+    <h1 class="mt-2 text-h1">Welcome, {{ user.display_name }}.</h1>
+    <p class="mt-1 text-sm text-muted">{{ user.email }}{% if user.phone %} · {{ user.phone }}{% endif %}</p>
   </div>
+  <div class="flex flex-wrap gap-2">
+    <a href="{% url 'profile' %}" class="btn btn-secondary btn-sm">Profile</a>
+    <a href="{% url 'security' %}" class="btn btn-secondary btn-sm">Security</a>
+  </div>
+</div>
 
-  {% if user.is_candidate %}
-  <!-- Applications Section -->
-  <div class="mt-12 font-sans">
-    <div class="flex items-center justify-between border-b border-[#dde9ff] pb-3">
+{% if not user.email_verified %}
+  <div class="alert alert-warning mt-6" role="status">
+    <div class="flex flex-1 flex-wrap items-center justify-between gap-3">
       <div>
-        <h2 class="font-display text-xl font-bold text-[#000e27]">Active Career Mandates</h2>
-        <p class="text-xs text-[#44474e]">Track the review milestones and stages of your submitted applications.</p>
+        <p class="font-semibold">Email address unverified.</p>
+        <p class="mt-1">Verify it to keep account recovery working and receive recruiter updates.</p>
       </div>
-      <a href="{% url 'careers' %}" class="text-xs font-semibold text-[#006398] hover:underline font-mono">
-        Browse Open Roles →
-      </a>
+      <form method="post" action="{% url 'resend_verification' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary btn-sm">Resend link</button>
+      </form>
+    </div>
+  </div>
+{% endif %}
+
+{% if user.is_candidate %}
+  <section class="mt-10">
+    <div class="flex flex-wrap items-end justify-between gap-3 border-b border-line pb-3">
+      <div>
+        <h2 class="text-h2">Applications</h2>
+        <p class="mt-1 text-sm text-muted">The review stage for each role you have applied to.</p>
+      </div>
+      <a href="{% url 'careers' %}" class="text-sm font-semibold text-accent hover:text-accent-hover">Browse open roles</a>
     </div>
 
     {% if applications %}
-      <div class="mt-6 space-y-4">
+      <div class="mt-4 space-y-4">
         {% for application in applications %}
-          <div class="stitch-card rounded-xl border border-[#dde9ff] bg-white p-6 shadow-sm transition-all hover:border-[#006398]/30">
+          <article class="card p-6">
             <div class="flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <a href="{% url 'job_detail' application.job.slug %}" class="font-display text-lg font-bold text-[#000e27] hover:text-[#006398] transition-colors">
-                  {{ application.job.title }}
-                </a>
-                <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#44474e] font-mono">
-                  <span class="font-medium text-[#000e27]">{{ application.job.location }}</span>
-                  <span>·</span>
-                  <span>{{ application.job.get_employment_type_display }}</span>
-                  <span>·</span>
-                  <span>Submitted {{ application.created_at|date:"F j, Y" }}</span>
-                </div>
+              <div class="min-w-0">
+                <a href="{% url 'job_detail' application.job.slug %}" class="text-h3 hover:text-accent">{{ application.job.title }}</a>
+                <p class="mt-1 font-mono text-2xs uppercase tracking-[0.06em] text-muted">
+                  {{ application.job.location }} · {{ application.job.get_employment_type_display }} · submitted {{ application.created_at|date:"M j, Y" }}
+                </p>
               </div>
-
-              <div class="flex items-center gap-2 font-mono">
+              <div class="flex flex-wrap items-center gap-2">
                 {% if application.resume %}
-                <a href="{{ application.resume.url }}" target="_blank" rel="noopener" class="btn-stitch-secondary text-2xs py-1.5 px-3">
-                  <svg class="h-3.5 w-3.5 text-[#006398]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Resume
-                </a>
+                  <a href="{{ application.resume.url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">Résumé</a>
                 {% endif %}
-
-                <form method="post" action="{% url 'withdraw_application' application.uuid %}" onsubmit="return confirm('Withdraw your application for {{ application.job.title|escapejs }}? Your resume will be removed from review.');">
+                <form method="post" action="{% url 'withdraw_application' application.uuid %}" data-confirm="Withdraw your application for {{ application.job.title|escapejs }}? Your résumé will be removed from review." data-confirm-action="Withdraw">
                   {% csrf_token %}
-                  <button type="submit" class="btn-stitch-secondary text-2xs py-1.5 px-3 text-[#525660] hover:text-rose-600 hover:border-rose-300">
-                    Withdraw
-                  </button>
+                  <button type="submit" class="btn btn-ghost btn-sm text-danger hover:bg-accent-soft">Withdraw</button>
                 </form>
               </div>
             </div>
 
-            <!-- Visual Pipeline Stage Tracker -->
-            <div class="mt-6 border-t border-[#dde9ff] pt-5 font-mono">
-              {% if application.status == 'rejected' %}
-                <div class="flex items-center gap-3 rounded-xl border border-rose-300 bg-rose-50 p-3 text-xs text-rose-800">
-                  <svg class="h-4 w-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  <span>This position has been filled or your application is no longer under consideration. We invite you to apply to other mandates.</span>
-                </div>
-              {% else %}
-                <div class="relative">
-                  <!-- Stepper Labels & Indicators -->
-                  <div class="grid grid-cols-4 gap-2 text-center text-2xs">
-                    <!-- Step 1: Submitted -->
-                    <div class="flex flex-col items-center">
-                      <div class="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-600 text-white shadow-xs">
-                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                      <span class="mt-2 font-bold text-[#000e27]">Submitted</span>
-                      <span class="text-3xs text-[#525660] hidden sm:inline">Credentials Received</span>
-                    </div>
-
-                    <!-- Step 2: Under Review -->
-                    <div class="flex flex-col items-center">
-                      <div class="flex h-7 w-7 items-center justify-center rounded-full
-                        {% if application.status == 'under_review' or application.status == 'shortlisted' or application.status == 'selected' %}
-                          bg-emerald-600 text-white shadow-xs
-                        {% else %}
-                          border border-[#dde9ff] bg-[#f8f9ff] text-[#525660]
-                        {% endif %}">
-                        {% if application.status == 'under_review' or application.status == 'shortlisted' or application.status == 'selected' %}
-                          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                          </svg>
-                        {% else %}
-                          <span class="text-3xs font-bold">2</span>
-                        {% endif %}
-                      </div>
-                      <span class="mt-2 font-bold {% if application.status == 'under_review' %}text-[#006398]{% elif application.status == 'shortlisted' or application.status == 'selected' %}text-[#000e27]{% else %}text-[#525660]{% endif %}">
-                        Under Review
-                      </span>
-                      <span class="text-3xs text-[#525660] hidden sm:inline">Recruiter Screening</span>
-                    </div>
-
-                    <!-- Step 3: Shortlisted -->
-                    <div class="flex flex-col items-center">
-                      <div class="flex h-7 w-7 items-center justify-center rounded-full
-                        {% if application.status == 'shortlisted' or application.status == 'selected' %}
-                          bg-emerald-600 text-white shadow-xs
-                        {% else %}
-                          border border-[#dde9ff] bg-[#f8f9ff] text-[#525660]
-                        {% endif %}">
-                        {% if application.status == 'shortlisted' or application.status == 'selected' %}
-                          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                          </svg>
-                        {% else %}
-                          <span class="text-3xs font-bold">3</span>
-                        {% endif %}
-                      </div>
-                      <span class="mt-2 font-bold {% if application.status == 'shortlisted' %}text-[#006398]{% elif application.status == 'selected' %}text-[#000e27]{% else %}text-[#525660]{% endif %}">
-                        Shortlisted
-                      </span>
-                      <span class="text-3xs text-[#525660] hidden sm:inline">Technical Round</span>
-                    </div>
-
-                    <!-- Step 4: Selected -->
-                    <div class="flex flex-col items-center">
-                      <div class="flex h-7 w-7 items-center justify-center rounded-full
-                        {% if application.status == 'selected' %}
-                          bg-emerald-600 text-white shadow-xs
-                        {% else %}
-                          border border-[#dde9ff] bg-[#f8f9ff] text-[#525660]
-                        {% endif %}">
-                        {% if application.status == 'selected' %}
-                          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                          </svg>
-                        {% else %}
-                          <span class="text-3xs font-bold">4</span>
-                        {% endif %}
-                      </div>
-                      <span class="mt-2 font-bold {% if application.status == 'selected' %}text-emerald-700{% else %}text-[#525660]{% endif %}">
-                        Selected
-                      </span>
-                      <span class="text-3xs text-[#525660] hidden sm:inline">Client Offer</span>
-                    </div>
-                  </div>
-                </div>
-              {% endif %}
-            </div>
-          </div>
+            {% if application.status == "rejected" %}
+              <div class="alert alert-danger mt-5" role="status">
+                <p>This application is no longer under consideration. You are welcome to apply to other roles.</p>
+              </div>
+            {% else %}
+              <ol class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <li class="flex items-center gap-2 text-sm">
+                  <span class="flex h-6 w-6 items-center justify-center rounded-full bg-success text-canvas">
+                    <svg class="h-3.5 w-3.5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>
+                  </span>
+                  Submitted
+                </li>
+                <li class="flex items-center gap-2 text-sm">
+                  <span class="flex h-6 w-6 items-center justify-center rounded-full {% if application.status == 'under_review' or application.status == 'shortlisted' or application.status == 'selected' %}bg-success text-canvas{% else %}border border-line text-muted{% endif %}">
+                    {% if application.status == 'under_review' or application.status == 'shortlisted' or application.status == 'selected' %}
+                      <svg class="h-3.5 w-3.5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>
+                    {% else %}<span class="font-mono text-3xs">2</span>{% endif %}
+                  </span>
+                  <span class="{% if application.status == 'under_review' %}font-semibold text-accent{% else %}text-muted{% endif %}">Under Review</span>
+                </li>
+                <li class="flex items-center gap-2 text-sm">
+                  <span class="flex h-6 w-6 items-center justify-center rounded-full {% if application.status == 'shortlisted' or application.status == 'selected' %}bg-success text-canvas{% else %}border border-line text-muted{% endif %}">
+                    {% if application.status == 'shortlisted' or application.status == 'selected' %}
+                      <svg class="h-3.5 w-3.5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>
+                    {% else %}<span class="font-mono text-3xs">3</span>{% endif %}
+                  </span>
+                  <span class="{% if application.status == 'shortlisted' %}font-semibold text-accent{% else %}text-muted{% endif %}">Shortlisted</span>
+                </li>
+                <li class="flex items-center gap-2 text-sm">
+                  <span class="flex h-6 w-6 items-center justify-center rounded-full {% if application.status == 'selected' %}bg-success text-canvas{% else %}border border-line text-muted{% endif %}">
+                    {% if application.status == 'selected' %}
+                      <svg class="h-3.5 w-3.5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>
+                    {% else %}<span class="font-mono text-3xs">4</span>{% endif %}
+                  </span>
+                  <span class="{% if application.status == 'selected' %}font-semibold text-success{% else %}text-muted{% endif %}">Selected</span>
+                </li>
+              </ol>
+            {% endif %}
+          </article>
         {% endfor %}
       </div>
     {% else %}
-      <div class="stitch-card mt-6 rounded-2xl border border-dashed border-[#dde9ff] bg-white p-10 text-center font-sans">
-        <svg class="mx-auto h-10 w-10 text-[#006398]/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-        <p class="mt-3 font-display text-base font-bold text-[#000e27]">No active applications</p>
-        <p class="mt-1 text-xs text-[#44474e]">Explore our current client mandates or submit your resume directly to technical practice leads.</p>
-        <a href="{% url 'careers' %}" class="btn-stitch-primary mt-5 text-xs font-mono">Browse Open Roles</a>
+      <div class="card mt-4 p-10 text-center">
+        <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+          <svg class="h-6 w-6"><use href="{% static 'images/icons.svg' %}#briefcase"></use></svg>
+        </span>
+        <h3 class="mt-4 text-h3">No active applications.</h3>
+        <p class="mx-auto mt-2 max-w-md text-sm text-muted">Browse open roles, or send your résumé to the recruiting team.</p>
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
+          <a href="{% url 'careers' %}" class="btn btn-primary">Browse roles</a>
+          <a href="mailto:{{ COMPANY.jobs_email }}" class="btn btn-secondary">Send résumé</a>
+        </div>
       </div>
     {% endif %}
-  </div>
+  </section>
+{% endif %}
 
-  {% endif %}
-
-  {% if user.is_student %}
-  <!-- Training Curricula Section -->
-  <div class="mt-14 font-sans">
-    <div class="flex items-center justify-between border-b border-[#dde9ff] pb-3">
+{% if user.is_student %}
+  <section class="mt-10">
+    <div class="flex flex-wrap items-end justify-between gap-3 border-b border-line pb-3">
       <div>
-        <h2 class="font-display text-xl font-bold text-[#000e27]">Training Curricula &amp; Credentials</h2>
-        <p class="text-xs text-[#44474e]">Manage your cohort enrollments and access official completion certificates.</p>
+        <h2 class="text-h2">Programmes</h2>
+        <p class="mt-1 text-sm text-muted">Your registrations and issued certificates.</p>
       </div>
-      <a href="{% url 'training' %}" class="text-xs font-semibold text-[#006398] hover:underline font-mono">
-        Browse Curricula →
-      </a>
+      <a href="{% url 'training' %}" class="text-sm font-semibold text-accent hover:text-accent-hover">Browse programmes</a>
     </div>
 
     {% if registrations %}
-      <div class="mt-6 space-y-6">
+      <div class="mt-4 space-y-4">
         {% for registration in registrations %}
           {% if registration.certificate_issued %}
-            <div class="stitch-card rounded-2xl border border-[#006398]/30 bg-[#f8f9ff] p-6 sm:p-8 shadow-sm">
+            <article class="card border-success/40 p-6">
               <div class="flex flex-wrap items-start justify-between gap-4">
-                <div class="space-y-1">
-                  <div class="flex items-center gap-2 font-mono">
-                    <span class="inline-flex items-center rounded-full bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 text-2xs font-bold text-emerald-800">
-                      ✓ Authenticated Credential
-                    </span>
-                    <span class="text-xs text-[#44474e]">{{ registration.certificate_ref }}</span>
-                  </div>
-                  <h3 class="font-display text-2xl font-bold text-[#000e27]">
-                    {{ registration.programme.title }}
-                  </h3>
-                  <p class="text-xs text-[#44474e]">
-                    Awarded to <span class="font-semibold text-[#000e27]">{{ user.display_name }}</span> on {{ registration.certificate_issued_at|date:"F j, Y" }}
-                  </p>
+                <div>
+                  <span class="chip chip-success"><span class="status-dot" aria-hidden="true"></span> Certificate issued</span>
+                  <h3 class="mt-3 text-h3">{{ registration.programme.title }}</h3>
+                  <p class="mt-1 text-sm text-muted">Issued {{ registration.certificate_issued_at|date:"F j, Y" }} · <span class="font-mono">{{ registration.certificate_ref }}</span></p>
                 </div>
-
-                <div class="flex flex-wrap items-center gap-2 font-mono">
-                  <a href="{% url 'download_certificate' registration.certificate_ref %}" class="btn-stitch-primary text-xs">
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    Download PDF
-                  </a>
-
-                  <button
-                    type="button"
-                    onclick="navigator.clipboard.writeText('{{ request.scheme }}://{{ request.get_host }}{% url 'verify_certificate' registration.certificate_ref %}'); alert('Verification link copied to clipboard!');"
-                    class="btn-stitch-secondary text-xs"
-                  >
-                    Copy Link
-                  </button>
-
-                  <a href="{% url 'verify_certificate' registration.certificate_ref %}" class="btn-stitch-secondary text-xs">
-                    View Plaque
-                  </a>
+                <div class="flex flex-wrap gap-2">
+                  <a href="{% url 'download_certificate' registration.certificate_ref %}" class="btn btn-primary btn-sm">Download</a>
+                  <button type="button" class="btn btn-secondary btn-sm" data-copy="{{ request.scheme }}://{{ request.get_host }}{% url 'verify_certificate' registration.certificate_ref %}">Copy link</button>
+                  <a href="{% url 'verify_certificate' registration.certificate_ref %}" class="btn btn-secondary btn-sm">View record</a>
                 </div>
               </div>
-            </div>
+            </article>
           {% else %}
-            <div class="stitch-card rounded-xl border border-[#dde9ff] bg-white p-6 shadow-sm">
+            <article class="card p-6">
               <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <a href="{% url 'programme_detail' registration.programme.slug %}" class="font-display text-lg font-bold text-[#000e27] hover:text-[#006398] transition-colors">
-                    {{ registration.programme.title }}
-                  </a>
-                  <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#44474e] font-mono">
-                    <span>{{ registration.programme.get_delivery_mode_display }}</span>
-                    <span>·</span>
-                    <span>Enrolled {{ registration.created_at|date:"F j, Y" }}</span>
-                  </div>
+                  <a href="{% url 'programme_detail' registration.programme.slug %}" class="text-h3 hover:text-accent">{{ registration.programme.title }}</a>
+                  <p class="mt-1 text-sm text-muted">{{ registration.programme.get_delivery_mode_display }} · enrolled {{ registration.created_at|date:"F j, Y" }}</p>
                 </div>
-
-                <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold font-mono
-                  {% if registration.status == 'completed' %}bg-emerald-100 text-emerald-800 border border-emerald-300
-                  {% elif registration.status == 'accepted' %}bg-emerald-50 text-emerald-700 border border-emerald-200
-                  {% elif registration.status == 'rejected' %}bg-rose-100 text-rose-800 border border-rose-300
-                  {% else %}bg-amber-100 text-amber-800 border border-amber-300{% endif %}">
+                <span class="chip {% if registration.status == 'completed' or registration.status == 'accepted' %}chip-success{% elif registration.status == 'rejected' %}chip-danger{% else %}chip-warning{% endif %}">
                   {{ registration.get_status_display }}
                 </span>
               </div>
-            </div>
+            </article>
           {% endif %}
         {% endfor %}
       </div>
     {% else %}
-      <div class="stitch-card mt-6 rounded-2xl border border-dashed border-[#dde9ff] bg-white p-10 text-center font-sans">
-        <svg class="mx-auto h-10 w-10 text-[#006398]/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-        <p class="mt-3 font-display text-base font-bold text-[#000e27]">No course enrollments</p>
-        <p class="mt-1 text-xs text-[#44474e]">Upskill in Agile, Scrum, SAP ERP, or Cloud delivery through our structured professional cohorts.</p>
-        <a href="{% url 'training' %}" class="btn-stitch-primary mt-5 text-xs font-mono">Explore Training Curricula</a>
+      <div class="card mt-4 p-10 text-center">
+        <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+          <svg class="h-6 w-6"><use href="{% static 'images/icons.svg' %}#graduation"></use></svg>
+        </span>
+        <h3 class="mt-4 text-h3">No programme registrations.</h3>
+        <p class="mx-auto mt-2 max-w-md text-sm text-muted">Browse the Academy for SAP and Agile programmes.</p>
+        <a href="{% url 'training' %}" class="btn btn-primary mt-6">Explore programmes</a>
       </div>
     {% endif %}
-  </div>
-  {% endif %}
-</section>
+  </section>
+{% endif %}
 {% endblock %}

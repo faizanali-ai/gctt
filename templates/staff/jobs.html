@@ -1,134 +1,116 @@
 {% extends "portals/base_portal.html" %}
-{% block title %}Client Mandates &amp; Jobs — GCTT Staff{% endblock %}
-{% block portal_title %}Practice Management: Jobs{% endblock %}
-{% block content %}
-<section class="mx-auto max-w-7xl py-4 sm:py-6">
-  <div class="flex flex-wrap items-end justify-between gap-4">
-    <div>
-      <p class="eyebrow text-2xs">Talent Acquisition</p>
-      <h1 class="mt-1 font-display text-2xl font-bold text-ink sm:text-3xl">Client Mandates &amp; Open Roles</h1>
-      <p class="mt-1 text-xs text-ink-muted">Manage corporate staffing listings, review candidate response counts, and toggle publication status.</p>
+{% load static %}
+{% block title %}Mandates — GCTT Staff{% endblock %}
+{% block portal_title %}Mandates{% endblock %}
+
+{% block portal_content %}
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <div>
+    <p class="eyebrow eyebrow-accent">Talent acquisition</p>
+    <h1 class="mt-2 text-h1">Mandates.</h1>
+    <p class="mt-2 text-sm text-muted">Publish roles, check applicant volume and control visibility.</p>
+  </div>
+  {% if user.is_admin %}<a href="{% url 'admin:jobs_job_add' %}" class="btn btn-primary">Post a mandate</a>{% endif %}
+</div>
+
+<div class="card mt-6 p-4">
+  <form method="get" class="form flex flex-col gap-3 sm:flex-row sm:items-end">
+    <div class="field flex-1">
+      <label for="job-q" class="sr-only">Search mandates</label>
+      <input id="job-q" type="search" name="q" value="{{ q }}" placeholder="Title, keyword or location">
     </div>
-    {% if user.is_admin %}
-    <a href="{% url 'admin:jobs_job_add' %}" class="btn btn-primary text-xs">
-      + Post New Job Mandate
-    </a>
-    {% endif %}
-  </div>
+    <div class="field sm:w-44">
+      <label for="job-published" class="sr-only">Visibility</label>
+      <select id="job-published" name="published">
+        <option value="">All statuses</option>
+        <option value="true" {% if published == "true" %}selected{% endif %}>Published</option>
+        <option value="false" {% if published == "false" %}selected{% endif %}>Drafts</option>
+      </select>
+    </div>
+    <div class="flex gap-2">
+      <button type="submit" class="btn btn-primary">Filter</button>
+      {% if q or published %}<a href="{% url 'staff_jobs' %}" class="btn btn-secondary">Clear</a>{% endif %}
+    </div>
+  </form>
+</div>
 
-  <!-- Filter Ribbon -->
-  <div class="mt-6 rounded-lg border border-line bg-card p-4 shadow-xs">
-    <form method="get" class="flex flex-col gap-3 sm:flex-row">
-      <input
-        type="search"
-        name="q"
-        value="{{ q }}"
-        placeholder="Filter by title, keywords or location..."
-        class="flex-1"
-      >
-      <div class="sm:w-44">
-        <select name="published" aria-label="Published filter">
-          <option value="">All statuses</option>
-          <option value="true" {% if published == "true" %}selected{% endif %}>Published Only</option>
-          <option value="false" {% if published == "false" %}selected{% endif %}>Drafts Only</option>
-        </select>
-      </div>
-      <button type="submit" class="btn btn-secondary text-xs sm:w-28">
-        Filter
-      </button>
-      {% if q or published %}
-        <a href="{% url 'staff_jobs' %}" class="btn btn-secondary text-xs sm:w-24">Clear</a>
-      {% endif %}
-    </form>
-  </div>
-
-  <!-- Jobs Table -->
-  <div class="mt-6 overflow-hidden rounded-lg border border-line bg-card shadow-xs">
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
-        <thead class="border-b border-brand-2/50 bg-brand text-slate-100">
+{% if page_obj %}
+  <div class="mt-4 overflow-hidden rounded-card border border-line bg-surface">
+    <table class="data-table">
+      <caption class="sr-only">Client mandates</caption>
+      <thead>
+        <tr>
+          <th scope="col">Role</th>
+          <th scope="col">Location</th>
+          <th scope="col">Engagement</th>
+          <th scope="col">Applicants</th>
+          <th scope="col" class="text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for job in page_obj %}
           <tr>
-            <th class="px-5 py-3.5 font-semibold uppercase tracking-wider">Role &amp; Mandate</th>
-            <th class="px-4 py-3.5 font-semibold uppercase tracking-wider">Location</th>
-            <th class="px-4 py-3.5 font-semibold uppercase tracking-wider">Engagement</th>
-            <th class="px-4 py-3.5 font-semibold uppercase tracking-wider text-center">Applicants</th>
-            <th class="px-5 py-3.5 font-semibold uppercase tracking-wider text-right">Visibility Action</th>
+            <td data-label="Role">
+              <a href="{% url 'job_detail' job.slug %}" class="font-semibold hover:text-accent">{{ job.title }}</a>
+              <p class="mt-1 flex flex-wrap items-center gap-2">
+                {% if job.published %}<span class="chip chip-success">Live</span>{% else %}<span class="chip chip-warning">Draft</span>{% endif %}
+                <span class="text-2xs text-muted">Posted {{ job.created_at|date:"M j, Y" }}</span>
+              </p>
+            </td>
+            <td data-label="Location" class="text-sm text-muted">{{ job.location }}</td>
+            <td data-label="Engagement" class="text-sm">{{ job.get_employment_type_display }}</td>
+            <td data-label="Applicants">
+              <a href="{% url 'staff_applications' %}?job={{ job.pk }}" class="text-sm font-semibold text-accent">{% if user.is_admin %}{{ job.applications.count }}{% else %}View{% endif %}</a>
+            </td>
+            <td data-label="Action" class="text-right">
+              <button type="button" class="btn btn-secondary btn-sm" data-drawer-template="job-{{ job.pk }}" data-drawer-title="{{ job.title }}">Manage</button>
+            </td>
           </tr>
-        </thead>
-        <tbody class="divide-y divide-line-subtle">
-          {% for job in page_obj %}
-            <tr class="transition-colors hover:bg-surface/50">
-              <td class="px-5 py-4">
-                {% if job.published %}
-                  <a href="{% url 'job_detail' job.slug %}" class="font-display text-sm font-bold text-ink hover:text-accent">
-                    {{ job.title }}
-                  </a>
-                  <span class="ml-2 inline-flex items-center rounded bg-emerald-50 px-2 py-0.5 text-2xs font-semibold text-emerald-800 border border-emerald-200">
-                    Live
-                  </span>
-                {% else %}
-                  <a href="{% url 'job_detail' job.slug %}" class="font-display text-sm font-bold text-ink hover:text-accent" title="Draft preview">
-                    {{ job.title }}
-                  </a>
-                  <span class="ml-2 inline-flex items-center rounded bg-amber-50 px-2 py-0.5 text-2xs font-semibold text-amber-800 border border-amber-200">
-                    Draft
-                  </span>
-                {% endif %}
-                <span class="block text-2xs text-ink-subtle">Posted {{ job.created_at|date:"M j, Y" }}</span>
-              </td>
-              <td class="px-4 py-4 text-ink-muted">
-                {{ job.location }}
-              </td>
-              <td class="px-4 py-4 font-medium text-ink">
-                {{ job.get_employment_type_display }}
-              </td>
-              <td class="px-4 py-4 text-center">
-                <a href="{% url 'staff_applications' %}?job={{ job.pk }}" class="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-surface px-2 text-xs font-bold text-brand border border-line hover:border-accent">
-                  {% if user.is_admin %}{{ job.applications.count }}{% else %}View{% endif %}
-                </a>
-              </td>
-              <td class="px-5 py-4 text-right">
-                <div class="flex items-center justify-end gap-1.5">
-                  {% if job.published %}
-                    <form method="post" action="{% url 'staff_job_linkedin_post' job.pk %}" class="inline-block" onsubmit="return confirm('Publish {{ job.title|escapejs }} to GCTT LinkedIn Organization Page?');">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-secondary text-2xs py-1.5 px-2.5 text-[#0A66C2] hover:bg-sky-50 hover:border-sky-300" title="Publish to GCTT LinkedIn Organization">
-                        <svg class="h-3 w-3 inline mr-1 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                        LinkedIn Post
-                      </button>
-                    </form>
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.scheme }}://{{ request.get_host }}{% url 'job_detail' job.slug %}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary text-2xs py-1.5 px-2 text-ink-muted hover:text-[#0A66C2]" title="1-Click LinkedIn Share">
-                      Share
-                    </a>
-                  {% endif %}
-                  <form method="post" action="{% url 'staff_job_publish' job.pk %}" class="inline-block">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-secondary text-2xs py-1.5 px-3">
-                      {% if job.published %}Unpublish{% else %}Publish Live{% endif %}
-                    </button>
-                  </form>
-                </div>
-              </td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td colspan="5" class="px-5 py-8 text-center text-ink-muted">
-                No job mandates match the specified query filters.
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
+
+  {% for job in page_obj %}
+    <template id="job-{{ job.pk }}">
+      <div class="space-y-5">
+        <div class="flex flex-wrap items-center gap-2">
+          {% if job.published %}<span class="chip chip-success">Live</span>{% else %}<span class="chip chip-warning">Draft</span>{% endif %}
+          <span class="chip">{{ job.get_employment_type_display }}</span>
+          <span class="chip">{{ job.location }}</span>
+        </div>
+        <p class="text-sm leading-relaxed text-muted">{{ job.description|truncatewords:60 }}</p>
+        <a href="{% url 'job_detail' job.slug %}" class="btn btn-secondary w-full">Open public page</a>
+
+        {% if job.published %}
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.scheme }}://{{ request.get_host }}{% url 'job_detail' job.slug %}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary w-full">Share on LinkedIn</a>
+          <form method="post" action="{% url 'staff_job_linkedin_post' job.pk %}" data-confirm="Publish “{{ job.title|escapejs }}” to the GCTT LinkedIn organisation page?" data-confirm-action="Publish">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary w-full">Publish to LinkedIn</button>
+          </form>
+        {% endif %}
+
+        <form method="post" action="{% url 'staff_job_publish' job.pk %}" class="border-t border-line pt-5">
+          {% csrf_token %}
+          <button type="submit" class="btn {% if job.published %}btn-secondary{% else %}btn-primary{% endif %} w-full">
+            {% if job.published %}Unpublish{% else %}Publish live{% endif %}
+          </button>
+        </form>
+      </div>
+    </template>
+  {% endfor %}
 
   {% include "partials/_pagination.html" %}
 
-  <div class="mt-6 flex items-center justify-between border-t border-line-subtle pt-4 text-xs text-ink-subtle">
-    <span>Detailed field attributes, salary ranges and client codes are editable via Django Admin.</span>
-    <a href="{% url 'admin:jobs_job_changelist' %}" class="font-semibold text-brand hover:text-accent">
-      Open Jobs Table in Django Admin ↗
-    </a>
+  <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-sm text-muted">
+    <p>Salary ranges and client codes are edited in Django admin.</p>
+    <a href="{% url 'admin:jobs_job_changelist' %}" class="font-semibold text-accent">Open jobs in admin</a>
   </div>
-</section>
+{% else %}
+  <div class="card mt-4 p-10 text-center">
+    <h2 class="text-h3">No mandates match the filters.</h2>
+    <p class="mt-2 text-sm text-muted">Clear the search or create a new mandate.</p>
+    <a href="{% url 'staff_jobs' %}" class="btn btn-secondary mt-5">Clear filters</a>
+  </div>
+{% endif %}
 {% endblock %}

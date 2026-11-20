@@ -1,45 +1,42 @@
 {% extends "portals/base_portal.html" %}
-{% block title %}Account Security — GCTT Portal{% endblock %}
-{% block portal_title %}Account Security{% endblock %}
-{% block content %}
-<section class="mx-auto max-w-xl py-6 sm:py-10">
-  <div class="border-b border-line pb-4">
-    <p class="eyebrow text-2xs">Security</p>
-    <h1 class="mt-1 font-display text-2xl font-bold text-ink sm:text-3xl">Account Security</h1>
-    <p class="mt-1.5 text-xs text-ink-muted">Your account is protected by your password and email ownership.</p>
-  </div>
+{% block title %}Security — GCTT Portal{% endblock %}
+{% block portal_title %}Security{% endblock %}
 
-  <div class="mt-8 rounded-lg border border-line bg-card p-6 shadow-xs">
-    <dl class="space-y-4 text-xs">
-      <div>
-        <dt class="font-semibold uppercase tracking-wider text-ink-subtle">Email</dt>
-        <dd class="mt-1 font-medium text-ink">{{ user.email }}</dd>
-      </div>
-      <div>
-        <dt class="font-semibold uppercase tracking-wider text-ink-subtle">Email status</dt>
-        <dd class="mt-1 font-medium text-ink">
-          {% if user.email_verified %}Verified{% else %}Not verified{% endif %}
-        </dd>
-      </div>
-      {% if user.is_staff %}
-        <div>
-          <dt class="font-semibold uppercase tracking-wider text-ink-subtle">Email OTP login</dt>
-          <dd class="mt-1 font-medium text-ink">
-            {% if email_otp_required %}Required{% else %}Not currently required{% endif %}
-          </dd>
-        </div>
-      {% endif %}
-    </dl>
+{% block portal_content %}
+<div class="max-w-2xl">
+  <p class="eyebrow eyebrow-accent">Security</p>
+  <h1 class="mt-2 text-h1">Account Security.</h1>
+  <p class="mt-2 text-sm text-muted">Your account is protected by your password and control of your email address.</p>
 
-    <div class="mt-8 border-t border-line-subtle pt-6">
-      <a href="{% url 'password_change' %}" class="btn btn-primary text-xs">Change password</a>
+  <dl class="card mt-6 divide-y divide-line">
+    <div class="flex items-center justify-between gap-4 p-5">
+      <dt class="text-sm font-medium">Email</dt>
+      <dd class="text-sm text-muted">{{ user.email }}</dd>
     </div>
-  </div>
+    <div class="flex items-center justify-between gap-4 p-5">
+      <dt class="text-sm font-medium">Email status</dt>
+      <dd>
+        {% if user.email_verified %}
+          <span class="chip chip-success"><span class="status-dot" aria-hidden="true"></span> Verified</span>
+        {% else %}
+          <span class="chip chip-warning"><span class="status-dot" aria-hidden="true"></span> Not verified</span>
+        {% endif %}
+      </dd>
+    </div>
+    {% if user.is_staff %}
+      <div class="flex items-center justify-between gap-4 p-5">
+        <dt class="text-sm font-medium">Email OTP login</dt>
+        <dd class="text-sm text-muted">{% if email_otp_required %}Required{% else %}Not currently required{% endif %}</dd>
+      </div>
+    {% endif %}
+    <div class="flex items-center justify-between gap-4 p-5">
+      <dt class="text-sm font-medium">Password</dt>
+      <dd><a href="{% url 'password_change' %}" class="btn btn-secondary btn-sm">Change password</a></dd>
+    </div>
+  </dl>
 
   <div class="mt-6">
-    <a href="{% url 'dashboard' %}" class="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline">
-      ← Return to Dashboard
-    </a>
+    <a href="{% url 'dashboard' %}" class="text-sm text-muted hover:text-ink">Back to overview</a>
   </div>
-</section>
+</div>
 {% endblock %}

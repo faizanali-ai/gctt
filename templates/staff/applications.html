@@ -1,144 +1,130 @@
 {% extends "portals/base_portal.html" %}
-{% block title %}Candidate Applications — GCTT Staff{% endblock %}
-{% block portal_title %}Practice Management: Applications{% endblock %}
-{% block content %}
-<section class="mx-auto max-w-7xl py-4 sm:py-6">
-  <div class="flex flex-wrap items-end justify-between gap-4">
-    <div>
-      <p class="eyebrow text-2xs">Talent Pipeline</p>
-      <h1 class="mt-1 font-display text-2xl font-bold text-ink sm:text-3xl">Candidate Submissions</h1>
-      <p class="mt-1 text-xs text-ink-muted">Review incoming resumes, manage vetting milestones, and update candidate stages.</p>
+{% load static %}
+{% block title %}Applications — GCTT Staff{% endblock %}
+{% block portal_title %}Applications{% endblock %}
+
+{% block portal_content %}
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <div>
+    <p class="eyebrow eyebrow-accent">Talent pipeline</p>
+    <h1 class="mt-2 text-h1">Applications.</h1>
+    <p class="mt-2 text-sm text-muted">Review submissions and update the stage for each candidate.</p>
+  </div>
+</div>
+
+<div class="mt-6 flex flex-wrap gap-2">
+  <a href="{% url 'staff_applications' %}{% if q %}?q={{ q }}{% endif %}{% if job %}&amp;job={{ job }}{% endif %}" class="btn btn-sm {% if not status %}btn-solid{% else %}btn-secondary{% endif %}">All</a>
+  {% for value, label in statuses %}
+    <a href="{% url 'staff_applications' %}?status={{ value }}{% if q %}&amp;q={{ q }}{% endif %}{% if job %}&amp;job={{ job }}{% endif %}" class="btn btn-sm {% if status == value %}btn-solid{% else %}btn-secondary{% endif %}">{{ label }}</a>
+  {% endfor %}
+</div>
+
+<div class="card mt-4 p-4">
+  <form method="get" class="form flex flex-col gap-3 sm:flex-row sm:items-end">
+    <div class="field flex-1">
+      <label for="application-q" class="sr-only">Search applications</label>
+      <input id="application-q" type="search" name="q" value="{{ q }}" placeholder="Candidate name or email">
     </div>
-  </div>
+    <div class="field sm:w-48">
+      <label for="application-job" class="sr-only">Mandate</label>
+      <select id="application-job" name="job">
+        <option value="">All mandates</option>
+        {% for item in jobs %}<option value="{{ item.pk }}" {% if job == item.pk|stringformat:"s" %}selected{% endif %}>{{ item.title }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="field sm:w-44">
+      <label for="application-status" class="sr-only">Status</label>
+      <select id="application-status" name="status">
+        <option value="">All stages</option>
+        {% for value, label in statuses %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="flex gap-2">
+      <button type="submit" class="btn btn-primary">Filter</button>
+      {% if q or job or status %}<a href="{% url 'staff_applications' %}" class="btn btn-secondary">Clear</a>{% endif %}
+    </div>
+  </form>
+</div>
 
-  <!-- Quick Status Pill Ribbon -->
-  <div class="mt-6 flex flex-wrap items-center gap-2">
-    <a href="{% url 'staff_applications' %}{% if q %}?q={{ q }}{% endif %}{% if job %}&job={{ job }}{% endif %}" class="btn text-xs py-1.5 px-3 {% if not status %}btn-brand{% else %}btn-secondary{% endif %}">
-      All Pipeline
-    </a>
-    {% for value, label in statuses %}
-      <a href="{% url 'staff_applications' %}?status={{ value }}{% if q %}&q={{ q }}{% endif %}{% if job %}&job={{ job }}{% endif %}" class="btn text-xs py-1.5 px-3 {% if status == value %}btn-brand{% else %}btn-secondary{% endif %}">
-        {{ label }}
-      </a>
-    {% endfor %}
-  </div>
-
-  <!-- Filter Ribbon -->
-  <div class="mt-3 rounded-lg border border-line bg-card p-4 shadow-xs">
-    <form method="get" class="flex flex-col gap-3 sm:flex-row">
-      <input
-        type="search"
-        name="q"
-        value="{{ q }}"
-        placeholder="Search candidate name, email, or keywords..."
-        class="flex-1"
-      >
-      <div class="sm:w-48">
-        <select name="job" aria-label="Job filter">
-          <option value="">All active mandates</option>
-          {% for item in jobs %}
-            <option value="{{ item.pk }}" {% if job == item.pk|stringformat:"s" %}selected{% endif %}>{{ item.title }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="sm:w-44">
-        <select name="status" aria-label="Status filter">
-          <option value="">All pipeline stages</option>
-          {% for value, label in statuses %}
-            <option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <button type="submit" class="btn btn-secondary text-xs sm:w-28">
-        Filter
-      </button>
-      {% if q or job or status %}
-        <a href="{% url 'staff_applications' %}" class="btn btn-secondary text-xs sm:w-24">Clear</a>
-      {% endif %}
-    </form>
-  </div>
-
-  <!-- Applications Table -->
-  <div class="mt-6 overflow-hidden rounded-lg border border-line bg-card shadow-xs">
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
-        <thead class="border-b border-brand-2/50 bg-brand text-slate-100">
+{% if page_obj %}
+  <div class="mt-4 overflow-hidden rounded-card border border-line bg-surface">
+    <table class="data-table">
+      <caption class="sr-only">Candidate applications</caption>
+      <thead>
+        <tr>
+          <th scope="col">Candidate</th>
+          <th scope="col">Mandate</th>
+          <th scope="col">Received</th>
+          <th scope="col">Résumé</th>
+          <th scope="col">Stage</th>
+          <th scope="col" class="text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for application in page_obj %}
           <tr>
-            <th class="px-5 py-3.5 font-semibold uppercase tracking-wider">Candidate &amp; Note</th>
-            <th class="px-4 py-3.5 font-semibold uppercase tracking-wider">Target Mandate</th>
-            <th class="hidden px-4 py-3.5 font-semibold uppercase tracking-wider sm:table-cell">Received</th>
-            <th class="px-4 py-3.5 font-semibold uppercase tracking-wider">Credentials</th>
-            <th class="px-5 py-3.5 font-semibold uppercase tracking-wider text-right">Pipeline Stage</th>
+            <td data-label="Candidate">
+              <p class="font-semibold">{{ application.applicant.display_name }}</p>
+              <p class="text-2xs text-muted">{{ application.applicant.email }}{% if application.applicant.phone %} · {{ application.applicant.phone }}{% endif %}</p>
+            </td>
+            <td data-label="Mandate">
+              <a href="{% url 'job_detail' application.job.slug %}" class="font-medium hover:text-accent">{{ application.job.title }}</a>
+              <p class="text-2xs text-muted">{{ application.job.location }}</p>
+            </td>
+            <td data-label="Received" class="text-sm text-muted">{{ application.created_at|date:"M j, Y" }}</td>
+            <td data-label="Résumé"><a href="{{ application.resume.url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">Open</a></td>
+            <td data-label="Stage">
+              <span class="chip {% if application.status == 'selected' or application.status == 'shortlisted' %}chip-success{% elif application.status == 'rejected' %}chip-danger{% else %}chip-warning{% endif %}">{{ application.get_status_display }}</span>
+            </td>
+            <td data-label="Action" class="text-right">
+              <button type="button" class="btn btn-secondary btn-sm" data-drawer-template="application-{{ application.uuid }}" data-drawer-title="{{ application.applicant.display_name }}">View</button>
+            </td>
           </tr>
-        </thead>
-        <tbody class="divide-y divide-line-subtle">
-          {% for application in page_obj %}
-            <tr class="transition-colors hover:bg-surface/50">
-              <td class="px-5 py-4">
-                <span class="font-display text-sm font-bold text-ink">{{ application.applicant.display_name }}</span>
-                <span class="block text-2xs text-ink-muted">
-                  {{ application.applicant.email }}
-                  {% if application.applicant.phone %} · {{ application.applicant.phone }}{% endif %}
-                </span>
-                {% if application.message %}
-                  <p class="mt-1.5 max-w-sm rounded bg-surface/80 p-2 text-2xs leading-relaxed text-ink-muted border border-line-subtle">
-                    “{{ application.message|truncatewords:24 }}”
-                  </p>
-                {% endif %}
-              </td>
-              <td class="px-4 py-4">
-                <a href="{% url 'job_detail' application.job.slug %}" class="font-semibold text-brand hover:text-accent">
-                  {{ application.job.title }}
-                </a>
-                <span class="block text-2xs text-ink-subtle">{{ application.job.location }}</span>
-              </td>
-              <td class="hidden px-4 py-4 sm:table-cell text-ink-muted">
-                {{ application.created_at|date:"M j, Y" }}
-              </td>
-              <td class="px-4 py-4">
-                <a href="{{ application.resume.url }}" target="_blank" rel="noopener" class="btn btn-secondary text-2xs py-1.5 px-3">
-                  <svg class="h-3 w-3 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Resume
-                </a>
-              </td>
-              <td class="px-5 py-4 text-right">
-                <div class="flex flex-col items-end gap-2">
-                  <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-2xs font-bold
-                    {% if application.status == 'selected' %}bg-emerald-100 text-emerald-900 border border-emerald-300
-                    {% elif application.status == 'shortlisted' %}bg-emerald-50 text-emerald-800 border border-emerald-200
-                    {% elif application.status == 'under_review' %}bg-amber-50 text-amber-800 border border-amber-200
-                    {% elif application.status == 'rejected' %}bg-rose-50 text-rose-800 border border-rose-200
-                    {% else %}bg-brand/10 text-brand border border-brand/20{% endif %}">
-                    {{ application.get_status_display }}
-                  </span>
-                  <form method="post" action="{% url 'staff_application_status' application.uuid %}" class="inline-flex items-center gap-1.5">
-                    {% csrf_token %}
-                    <select name="status" aria-label="Application status" class="w-32 py-1 text-xs">
-                      {% for value, label in statuses %}
-                        <option value="{{ value }}" {% if application.status == value %}selected{% endif %}>{{ label }}</option>
-                      {% endfor %}
-                    </select>
-                    <button type="submit" class="btn btn-primary text-2xs py-1 px-2.5">
-                      Save
-                    </button>
-                  </form>
-                </div>
-              </td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td colspan="5" class="px-5 py-8 text-center text-ink-muted">
-                No candidate submissions match the selected criteria.
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
+
+  {% for application in page_obj %}
+    <template id="application-{{ application.uuid }}">
+      <div class="space-y-5">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="chip {% if application.status == 'selected' or application.status == 'shortlisted' %}chip-success{% elif application.status == 'rejected' %}chip-danger{% else %}chip-warning{% endif %}">{{ application.get_status_display }}</span>
+          <span class="chip">{{ application.job.get_employment_type_display }}</span>
+        </div>
+        <dl class="space-y-2 text-sm">
+          <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Email</dt><dd><a href="mailto:{{ application.applicant.email }}" class="link">{{ application.applicant.email }}</a></dd></div>
+          {% if application.applicant.phone %}<div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Phone</dt><dd>{{ application.applicant.phone }}</dd></div>{% endif %}
+          <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Mandate</dt><dd><a href="{% url 'job_detail' application.job.slug %}" class="link">{{ application.job.title }}</a></dd></div>
+          <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Received</dt><dd>{{ application.created_at|date:"F j, Y" }}</dd></div>
+        </dl>
+        {% if application.message %}
+          <div>
+            <p class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Candidate note</p>
+            <p class="mt-2 whitespace-pre-line text-sm leading-relaxed">{{ application.message }}</p>
+          </div>
+        {% endif %}
+        <a href="{{ application.resume.url }}" target="_blank" rel="noopener" class="btn btn-secondary w-full">Open résumé</a>
+        <form method="post" action="{% url 'staff_application_status' application.uuid %}" class="form border-t border-line pt-5">
+          {% csrf_token %}
+          <div class="field">
+            <label for="application-status-{{ application.uuid }}">Update stage</label>
+            <select id="application-status-{{ application.uuid }}" name="status">
+              {% for value, label in statuses %}<option value="{{ value }}" {% if application.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary w-full">Save stage</button>
+        </form>
+      </div>
+    </template>
+  {% endfor %}
 
   {% include "partials/_pagination.html" %}
-</section>
+{% else %}
+  <div class="card mt-4 p-10 text-center">
+    <h2 class="text-h3">No applications match the filters.</h2>
+    <p class="mt-2 text-sm text-muted">Try a broader search or clear the filters.</p>
+    <a href="{% url 'staff_applications' %}" class="btn btn-secondary mt-5">Clear filters</a>
+  </div>
+{% endif %}
 {% endblock %}

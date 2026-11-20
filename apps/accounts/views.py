@@ -36,8 +36,6 @@ from .email_otp import issue_code, verify_code
 from .forms import ProfileForm, SignupForm, StyledAuthenticationForm
 from .models import STAFF_SUBGROUPS, User, sync_access
 
-INPUT = "w-full rounded-sm border border-line bg-white px-4 py-2.5"
-
 
 @ratelimit(key="ip", rate="10/h", method="POST", block=True)
 def signup(request):
@@ -641,6 +639,9 @@ def manage_user_create(request):
             "mode": "create",
             "assignable": assignable,
             "groups": subgroups,
+            "selected_role": request.POST.get("role", ""),
+            "selected_group": request.POST.get("group", ""),
+            "values": request.POST,
         },
     )
 
@@ -694,7 +695,6 @@ def manage_user_edit(request, pk):
                     )
             target.first_name = request.POST.get("first_name", "").strip()
             target.last_name = request.POST.get("last_name", "").strip()
-            target.phone = request.POST.get("phone", "").strip()
             target.role = role
             target.is_active = is_active
             target.is_staff = True
@@ -716,6 +716,9 @@ def manage_user_edit(request, pk):
             "target": target,
             "assignable": assignable,
             "groups": subgroups,
+            "selected_role": request.POST.get("role", target.role),
+            "selected_group": request.POST.get("group", current_subgroup or ""),
+            "values": request.POST,
         },
     )
 

@@ -1,0 +1,64 @@
+{% load static %}
+<nav class="space-y-0.5 px-3 py-4" aria-label="Portal navigation">
+  <a href="{% url 'dashboard' %}" class="portal-link" {% if request.path == '/dashboard/' %}aria-current="page"{% endif %}>
+    <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#building"></use></svg>
+    Overview
+  </a>
+
+  {% if perms.enquiries.view_enquiry %}
+    <a href="{% url 'staff_enquiries' %}" class="portal-link" {% if '/staff/enquiries/' in request.path %}aria-current="page"{% endif %}>
+      <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#mail"></use></svg>
+      Enquiries
+    </a>
+  {% endif %}
+  {% if perms.jobs.view_job %}
+    <a href="{% url 'staff_jobs' %}" class="portal-link" {% if '/staff/jobs/' in request.path %}aria-current="page"{% endif %}>
+      <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#briefcase"></use></svg>
+      Mandates
+    </a>
+  {% endif %}
+  {% if perms.jobs.view_application %}
+    <a href="{% url 'staff_applications' %}" class="portal-link" {% if '/staff/applications/' in request.path %}aria-current="page"{% endif %}>
+      <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#users"></use></svg>
+      Applications
+    </a>
+  {% endif %}
+  {% if perms.training.view_programme %}
+    <a href="{% url 'staff_programmes' %}" class="portal-link" {% if '/staff/programmes/' in request.path %}aria-current="page"{% endif %}>
+      <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#graduation"></use></svg>
+      Programmes
+    </a>
+  {% endif %}
+  {% if perms.training.view_registration %}
+    <a href="{% url 'staff_registrations' %}" class="portal-link" {% if '/staff/registrations/' in request.path %}aria-current="page"{% endif %}>
+      <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#calendar"></use></svg>
+      Registrations
+    </a>
+  {% endif %}
+
+  <p class="portal-group">Account</p>
+  <a href="{% url 'profile' %}" class="portal-link" {% if request.path == '/profile/' %}aria-current="page"{% endif %}>
+    <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#user"></use></svg>
+    Profile
+  </a>
+  <a href="{% url 'security' %}" class="portal-link" {% if '/accounts/security/' in request.path %}aria-current="page"{% endif %}>
+    <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#shield"></use></svg>
+    Security
+  </a>
+
+  {% if user.can_manage_users or user.is_admin %}
+    <p class="portal-group">Administration</p>
+    {% if user.can_manage_users %}
+      <a href="{% url 'manage_users' %}" class="portal-link" {% if '/manage/users/' in request.path %}aria-current="page"{% endif %}>
+        <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#users"></use></svg>
+        Users &amp; roles
+      </a>
+    {% endif %}
+    {% if user.is_admin %}
+      <a href="{% url 'admin:index' %}" class="portal-link">
+        <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#external"></use></svg>
+        Django admin
+      </a>
+    {% endif %}
+  {% endif %}
+</nav>

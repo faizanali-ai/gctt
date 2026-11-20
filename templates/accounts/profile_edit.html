@@ -1,74 +1,48 @@
 {% extends "portals/base_portal.html" %}
-{% block title %}Account Profile — GCTT Portal{% endblock %}
-{% block portal_title %}Candidate &amp; Staff Profile{% endblock %}
-{% block content %}
-<section class="mx-auto max-w-lg py-6 sm:py-10">
-  <div class="border-b border-line pb-4">
-    <p class="eyebrow text-2xs">Account Settings</p>
-    <h1 class="mt-1 font-display text-2xl font-bold text-ink sm:text-3xl">Profile Details</h1>
-    <p class="mt-1.5 text-xs text-ink-muted">Registered contact email: <span class="font-semibold text-ink">{{ user.email }}</span></p>
-  </div>
+{% block title %}Profile — GCTT Portal{% endblock %}
+{% block portal_title %}Profile{% endblock %}
 
-  <div class="mt-8 rounded-lg border border-line bg-card p-6 shadow-xs sm:p-8">
-    <form method="post" class="space-y-4">
-      {% csrf_token %}
-      {% for field in form %}
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-ink">
-            {{ field.label }}
-          </label>
-          <div class="mt-1.5">
-            {{ field }}
-          </div>
-          {% if field.errors %}
-            <p class="mt-1 text-xs font-semibold text-rose-600">{{ field.errors.0 }}</p>
-          {% endif %}
-        </div>
-      {% endfor %}
+{% block portal_content %}
+<div class="max-w-2xl">
+  <p class="eyebrow eyebrow-accent">Account settings</p>
+  <h1 class="mt-2 text-h1">Profile details.</h1>
+  <p class="mt-2 text-sm text-muted">Contact email: <span class="font-medium text-ink">{{ user.email }}</span></p>
 
-      <div class="pt-2">
-        <button type="submit" class="btn btn-primary w-full justify-center">
-          Save Profile Changes
-        </button>
-      </div>
-    </form>
-  </div>
+  <form method="post" class="form card mt-6 p-6 sm:p-8">
+    {% csrf_token %}
+    {% for field in form %}
+      {% include "partials/_field.html" %}
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Save changes</button>
+  </form>
 
-  <div class="mt-6 flex flex-wrap items-center justify-between gap-4 text-xs">
-    <a href="{% url 'password_change' %}" class="font-semibold text-brand hover:text-accent">
-      Change Account Password →
-    </a>
-    <a href="{% url 'dashboard' %}" class="text-ink-muted hover:text-ink">
-      Return to Dashboard
-    </a>
+  <div class="mt-6 flex flex-wrap items-center justify-between gap-3 text-sm">
+    <a href="{% url 'password_change' %}" class="font-semibold text-accent">Change password</a>
+    <a href="{% url 'dashboard' %}" class="text-muted hover:text-ink">Back to overview</a>
   </div>
 
   {% if not user.is_admin %}
-    <div class="mt-12 border-t border-rose-200 pt-8">
-      <p class="eyebrow text-2xs text-rose-700">Danger zone</p>
-      <h2 class="mt-2 font-display text-xl font-bold text-ink">Delete account</h2>
-      <p class="mt-2 max-w-lg text-xs leading-relaxed text-ink-muted">
-        Permanently delete your account, applications, registrations and uploaded documents.
-        This cannot be undone.
-      </p>
-      <form method="post" action="{% url 'account_delete' %}" class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+    <section class="mt-12 border-t border-line pt-8">
+      <p class="font-mono text-2xs uppercase tracking-[0.1em] text-danger">Danger zone</p>
+      <h2 class="mt-2 text-h3">Delete account</h2>
+      <p class="mt-2 max-w-lg text-sm text-muted">This permanently removes your account, applications, registrations and uploaded documents. It cannot be undone.</p>
+
+      <form method="post" action="{% url 'account_delete' %}" class="form mt-4 max-w-md">
         {% csrf_token %}
         {% if user.has_usable_password %}
-        <label class="block sm:w-72">
-          <span class="mb-1 block text-xs font-semibold">Confirm with your password</span>
-          <input type="password" name="password" required autocomplete="current-password" class="w-full rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-4 py-2.5 text-[#0d1c2f] focus:border-[#006398] focus:bg-white focus:outline-none transition-all font-sans">
-        </label>
+          <div class="field">
+            <label for="delete-password">Confirm with your password</label>
+            <input id="delete-password" type="password" name="password" required autocomplete="current-password">
+          </div>
         {% else %}
-        <label class="block sm:w-72">
-          <span class="mb-1 block text-xs font-semibold">Type your email ({{ user.email }}) to confirm</span>
-          <input type="email" name="confirm_email" required placeholder="{{ user.email }}" class="w-full rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-4 py-2.5 text-[#0d1c2f] focus:border-[#006398] focus:bg-white focus:outline-none transition-all font-sans">
-        </label>
+          <div class="field">
+            <label for="delete-email">Type your email to confirm</label>
+            <input id="delete-email" type="email" name="confirm_email" required placeholder="{{ user.email }}" autocomplete="email">
+          </div>
         {% endif %}
-        <button type="submit" class="btn bg-rose-700 text-white hover:bg-rose-800">
-          Permanently delete account
-        </button>
+        <button type="submit" class="btn btn-primary bg-danger text-canvas hover:bg-danger/90">Delete account</button>
       </form>
-    </div>
+    </section>
   {% endif %}
-</section>
+</div>
 {% endblock %}

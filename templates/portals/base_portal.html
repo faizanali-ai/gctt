@@ -1,161 +1,78 @@
-{% load static %}<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}GCTT Portal{% endblock %}</title>
-  <meta name="robots" content="noindex">
-  <link rel="icon" type="image/svg+xml" href="{% static 'images/logo-icon.svg' %}">
-  <link rel="alternate icon" href="{% static 'images/logo-small.webp' %}">
+{% extends "base.html" %}
+{% load static %}
 
-  <!-- Typography (Space Grotesk + JetBrains Mono) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% block head %}<meta name="robots" content="noindex">{% endblock %}
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
 
-  <link rel="stylesheet" href="{% static 'css/output.css' %}">
-  <!-- Immediate Theme Detector -->
-  <script>
-    (function () {
-      var savedTheme = localStorage.getItem("gctt-theme");
-      if (savedTheme === "dark") {
-        document.documentElement.classList.add("dark");
-        document.documentElement.classList.remove("light");
-      } else {
-        document.documentElement.classList.add("light");
-        document.documentElement.classList.remove("dark");
-      }
-    })();
-  </script>
-</head>
-<body class="min-h-screen bg-surface font-sans text-ink antialiased">
-  <div class="flex min-h-screen">
-    <!-- Executive Portal Sidebar -->
-    <aside class="hidden w-64 shrink-0 flex-col border-r border-brand-2/50 bg-brand text-slate-100 lg:flex">
-      <a href="{% url 'dashboard' %}" class="flex h-16 items-center gap-3 border-b border-white/10 px-5">
-        <img src="{% static 'images/logo-icon.svg' %}" alt="GCTT" class="h-8 w-auto">
-        <span class="font-display text-sm font-bold tracking-wide text-white">{% if user.is_staff %}{{ user.get_role_display }}{% else %}Portal{% endif %}</span>
-      </a>
-      <nav class="flex-1 space-y-1 px-3 py-5 text-sm text-slate-300" aria-label="Portal">
-        <a href="{% url 'dashboard' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white {% if request.path == '/dashboard/' %}bg-white/10 font-semibold text-accent{% endif %}">Dashboard</a>
-        {% if perms.enquiries.view_enquiry %}
-          <a href="{% url 'staff_enquiries' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white {% if '/staff/enquiries/' in request.path %}bg-white/10 font-semibold text-accent{% endif %}">Enquiries</a>
-        {% endif %}
-        {% if perms.jobs.view_job %}
-          <a href="{% url 'staff_jobs' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white {% if '/staff/jobs/' in request.path %}bg-white/10 font-semibold text-accent{% endif %}">Jobs</a>
-        {% endif %}
-        {% if perms.jobs.view_application %}
-          <a href="{% url 'staff_applications' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white {% if '/staff/applications/' in request.path %}bg-white/10 font-semibold text-accent{% endif %}">Applications</a>
-        {% endif %}
-        {% if perms.training.view_programme %}
-          <a href="{% url 'staff_programmes' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white {% if '/staff/programmes/' in request.path %}bg-white/10 font-semibold text-accent{% endif %}">Programmes</a>
-        {% endif %}
-        {% if perms.training.view_registration %}
-          <a href="{% url 'staff_registrations' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white {% if '/staff/registrations/' in request.path %}bg-white/10 font-semibold text-accent{% endif %}">Registrations</a>
-        {% endif %}
-        {% if user.can_manage_users %}
-          <p class="mt-6 px-3 text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Administration</p>
-          <a href="{% url 'manage_users' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white {% if '/manage/users/' in request.path %}bg-white/10 font-semibold text-accent{% endif %}">Users &amp; roles</a>
-        {% endif %}
-        {% if user.is_admin %}
-          <a href="{% url 'admin:index' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white">Database admin</a>
-        {% endif %}
-        <p class="mt-6 px-3 text-2xs font-semibold uppercase tracking-[0.14em] text-accent">Security</p>
-        <a href="{% url 'security' %}" class="block rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white {% if '/accounts/security/' in request.path %}bg-white/10 font-semibold text-accent{% endif %}">Account security</a>
-      </nav>
-      <div class="border-t border-white/10 p-4 text-xs">
-        <p class="truncate text-slate-200 font-medium">{{ user.email }}</p>
-        <p class="mt-0.5 text-slate-400">{% if user.is_staff %}{{ user.get_role_display }}{% endif %}</p>
-        <form method="post" action="{% url 'logout' %}" class="mt-3">
+{% block content %}
+<div class="flex min-h-screen">
+  <aside class="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-line bg-surface lg:flex">
+    <a href="{% url 'dashboard' %}" class="flex h-16 items-center gap-2.5 border-b border-line px-5" aria-label="GCTT portal">
+      <span class="relative flex h-9 w-9 items-center justify-center rounded-[10px] bg-ink text-canvas" aria-hidden="true">
+        <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <path d="M6 8h12M12 8v9M9 13h6"/>
+        </svg>
+        <span class="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent"></span>
+      </span>
+      <span class="flex flex-col leading-none">
+        <span class="font-display text-base font-bold tracking-[0.08em]">GCTT</span>
+        <span class="mt-1 font-mono text-3xs uppercase tracking-[0.1em] text-muted">Portal</span>
+      </span>
+    </a>
+
+    <div class="flex-1 overflow-y-auto">
+      {% include "portals/_nav.html" %}
+    </div>
+
+    <div class="border-t border-line p-4">
+      <p class="truncate text-sm font-medium">{{ user.display_name|default:user.email }}</p>
+      <p class="mt-0.5 truncate text-2xs text-muted">{{ user.get_role_display }}</p>
+      <form method="post" action="{% url 'logout' %}" class="mt-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary btn-sm w-full">Log out</button>
+      </form>
+    </div>
+  </aside>
+
+  <div class="min-w-0 flex-1">
+    <header class="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b border-line bg-surface/95 px-5 backdrop-blur lg:px-8">
+      <div class="flex min-w-0 items-center gap-3">
+        <button type="button" class="btn btn-ghost btn-sm lg:hidden" data-dialog-open="portal-nav" aria-label="Open portal navigation" aria-controls="portal-nav">
+          <svg class="h-5 w-5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#menu"></use></svg>
+        </button>
+        <div class="min-w-0">
+          <p class="truncate font-mono text-2xs uppercase tracking-[0.1em] text-muted">{{ user.get_role_display|default:"Portal" }}</p>
+          <p class="truncate text-sm font-semibold">{% block portal_title %}Portal{% endblock %}</p>
+        </div>
+      </div>
+      <div class="flex shrink-0 items-center gap-2 sm:gap-3">
+        <a href="{% url 'home' %}" class="hidden text-sm text-muted hover:text-ink sm:block">Public site</a>
+        <a href="{% url 'profile' %}" class="text-sm text-muted hover:text-ink">Profile</a>
+        <form method="post" action="{% url 'logout' %}">
           {% csrf_token %}
-          <button type="submit" class="font-semibold text-accent hover:text-white transition-colors">Log out</button>
+          <button type="submit" class="btn btn-secondary btn-sm">Log out</button>
         </form>
       </div>
-    </aside>
+    </header>
 
-    <div class="flex min-h-screen flex-1 flex-col">
-      <header class="flex h-16 items-center justify-between border-b border-line bg-card px-4 lg:px-8">
-        <div class="flex items-center gap-3">
-          <details class="lg:hidden">
-            <summary class="cursor-pointer list-none rounded-md border border-line bg-card px-3 py-2 text-sm font-medium">Menu</summary>
-            <nav class="absolute left-0 right-0 top-16 z-30 space-y-1 border-b border-line bg-card px-4 py-4 text-sm shadow-md">
-              <a href="{% url 'dashboard' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Dashboard</a>
-              {% if perms.enquiries.view_enquiry %}<a href="{% url 'staff_enquiries' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Enquiries</a>{% endif %}
-              {% if perms.jobs.view_job %}<a href="{% url 'staff_jobs' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Jobs</a>{% endif %}
-              {% if perms.jobs.view_application %}<a href="{% url 'staff_applications' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Applications</a>{% endif %}
-              {% if perms.training.view_programme %}<a href="{% url 'staff_programmes' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Programmes</a>{% endif %}
-              {% if perms.training.view_registration %}<a href="{% url 'staff_registrations' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Registrations</a>{% endif %}
-              {% if user.can_manage_users %}<a href="{% url 'manage_users' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Users &amp; roles</a>{% endif %}
-              <a href="{% url 'security' %}" class="block rounded-md px-3 py-2 hover:bg-surface">Account security</a>
-              <form method="post" action="{% url 'logout' %}" class="px-3 pt-2">{% csrf_token %}<button type="submit" class="font-semibold text-accent hover:underline">Log out</button></form>
-            </nav>
-          </details>
-          <p class="font-display text-sm font-bold tracking-tight">{% block portal_title %}Portal{% endblock %}</p>
-        </div>
-        <div class="flex items-center gap-4 text-sm">
-          <!-- Theme Mode Toggle -->
-          <button
-            type="button"
-            class="theme-toggle-btn flex h-8 w-8 items-center justify-center rounded-md border border-line bg-card text-ink transition-colors hover:border-accent hover:text-accent focus:outline-hidden"
-            aria-label="Toggle Theme Mode"
-            title="Toggle Dark / Light Mode"
-          >
-            <svg class="theme-sun-icon h-4 w-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-            <svg class="theme-moon-icon h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-            </svg>
-          </button>
-          <a href="{% url 'home' %}" class="text-ink-muted transition-colors hover:text-ink">View Public Site</a>
-          <span class="text-line">|</span>
-          <a href="{% url 'profile' %}" class="text-ink-muted transition-colors hover:text-ink">Profile</a>
-        </div>
-      </header>
-      <main class="flex-1 px-4 py-8 lg:px-8">
-        {% if messages %}
-          <div class="mb-6 space-y-2">
-            {% for message in messages %}
-              <p class="rounded-md border px-4 py-3 text-sm {% if message.tags == 'success' %}border-brand/25 bg-card text-brand{% else %}border-accent/30 bg-accent/5 text-accent{% endif %}">{{ message }}</p>
-            {% endfor %}
-          </div>
-        {% endif %}
-        {% block content %}{% endblock %}
-      </main>
+    <div class="px-5 py-8 lg:px-8">
+      <div class="mx-auto w-full max-w-6xl">
+        {% block portal_content %}{% endblock %}
+      </div>
     </div>
   </div>
+</div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      function updateThemeUI() {
-        var isDark = document.documentElement.classList.contains("dark");
-        document.querySelectorAll(".theme-sun-icon").forEach(function (el) {
-          el.classList.toggle("hidden", !isDark);
-        });
-        document.querySelectorAll(".theme-moon-icon").forEach(function (el) {
-          el.classList.toggle("hidden", isDark);
-        });
-      }
-
-      function toggleTheme() {
-        var isDark = document.documentElement.classList.contains("dark");
-        if (isDark) {
-          document.documentElement.classList.remove("dark");
-          document.documentElement.classList.add("light");
-          localStorage.setItem("gctt-theme", "light");
-        } else {
-          document.documentElement.classList.add("dark");
-          document.documentElement.classList.remove("light");
-          localStorage.setItem("gctt-theme", "dark");
-        }
-        updateThemeUI();
-      }
-
-      document.querySelectorAll(".theme-toggle-btn").forEach(function (btn) {
-        btn.addEventListener("click", toggleTheme);
-      });
-      updateThemeUI();
-    });
-  </script>
-</body>
-</html>
+<dialog id="portal-nav" class="drawer" aria-label="Portal navigation">
+  <div class="drawer-head">
+    <span class="font-display text-base font-bold tracking-[0.08em]">GCTT Portal</span>
+    <button type="button" class="btn btn-ghost btn-sm" data-dialog-close aria-label="Close navigation">
+      <svg class="h-5 w-5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#close"></use></svg>
+    </button>
+  </div>
+  <div class="drawer-body">
+    {% include "portals/_nav.html" %}
+  </div>
+</dialog>
+{% endblock %}

@@ -100,6 +100,17 @@ def api_career_advisor(request):
     return JsonResponse({"success": True, "data": result})
 
 
+def _registration_error(form):
+    for field_name, errors in form.errors.items():
+        detail = errors[0]
+        if field_name != "__all__":
+            field = form.fields.get(field_name)
+            label = (field.label if field else None) or field_name.replace("_", " ").capitalize()
+            detail = f"{label}: {detail}"
+        return f"Please check: {detail}"
+    return "Please check the registration details."
+
+
 @require_POST
 @ratelimit(key="ip", rate="30/h", method="POST", block=True)
 def programme_register(request, slug):
@@ -126,6 +137,7 @@ def programme_register(request, slug):
             except IntegrityError:
                 messages.error(request, "You are already registered for this programme.")
             return redirect("programme_detail", slug=programme.slug)
+        messages.error(request, _registration_error(form))
     else:
         # Inbound frictionless enrollment from LinkedIn/social
         form = InboundEnrollmentForm(request.POST)
@@ -188,6 +200,7 @@ def programme_register(request, slug):
             send_password_setup(student)
             messages.info(request, generic_message)
             return redirect("programme_detail", slug=programme.slug)
+        messages.error(request, _registration_error(form))
 
     return redirect("programme_detail", slug=programme.slug)
 
