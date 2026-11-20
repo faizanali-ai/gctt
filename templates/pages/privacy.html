@@ -1,40 +1,44 @@
 {% extends "base.html" %}
 {% block title %}Privacy Policy — GCTT{% endblock %}
+{% block description %}How GCTT collects, uses and protects candidate, student and client data.{% endblock %}
+
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Corporate Governance" title="Privacy Policy" subtitle="Our commitment to transparency, data protection, and candidate confidentiality." %}
+{% include "partials/_hero.html" with eyebrow="Company · Governance" title="Privacy Policy" subtitle="How we handle candidate, student and client data." %}
 
-<section class="mx-auto max-w-4xl px-6 sm:px-12 py-16 lg:py-24">
-  <div class="stitch-card p-8 sm:p-12">
-    <p class="font-mono text-xs uppercase tracking-widest text-[#006398] font-bold">Effective Date: November 15, 2026</p>
+<section class="section">
+  <div class="container-site">
+    <div class="prose-site">
+      <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Effective date: November 15, 2026</p>
 
-    <p class="mt-6 leading-relaxed text-[#44474e] font-sans">Global Center for Technology &amp; Training (<strong>“GCTT”</strong>, “we”, “us”, or “our”), located at 2612 Laramie St, Irving, TX 75062, respects your privacy and is committed to protecting the personal data of our candidates, training students, and employer clients.</p>
+      <p>Global Center for Technology &amp; Training (<strong>“GCTT”</strong>, “we”, “us”, or “our”), located at 2612 Laramie St, Irving, TX 75062, respects your privacy and is committed to protecting the personal data of our candidates, training students, and employer clients.</p>
 
-    <h2 class="mt-10 font-display text-xl font-bold text-[#000e27]">1. Information we collect</h2>
-    <ul class="mt-3 list-disc space-y-2 pl-5 leading-relaxed text-[#44474e] font-sans text-sm sm:text-base">
-      <li><strong>Candidate data:</strong> full name, email address, phone number, and the resume or CV files you upload through our careers pages.</li>
-      <li><strong>Student data:</strong> contact details, course registrations, training progress, and certificate records.</li>
-      <li><strong>Employer and client data:</strong> contact name, corporate email, phone number, and the hiring requirements you submit.</li>
-      <li><strong>Technical data:</strong> IP address and browser headers collected for rate limiting, security, and fraud prevention.</li>
-    </ul>
+      <h2>1. Information we collect</h2>
+      <ul>
+        <li><strong>Candidate data:</strong> full name, email address, phone number, and the resume or CV files you upload through our careers pages.</li>
+        <li><strong>Student data:</strong> contact details, course registrations, training progress, and certificate records.</li>
+        <li><strong>Employer and client data:</strong> contact name, corporate email, phone number, and the hiring requirements you submit.</li>
+        <li><strong>Technical data:</strong> IP address and browser headers collected for rate limiting, security, and fraud prevention.</li>
+      </ul>
 
-    <h2 class="mt-10 font-display text-xl font-bold text-[#000e27]">2. How we use your information</h2>
-    <p class="mt-3 leading-relaxed text-[#44474e] font-sans text-sm sm:text-base">We use your information to:</p>
-    <ul class="mt-3 list-disc space-y-2 pl-5 leading-relaxed text-[#44474e] font-sans text-sm sm:text-base">
-      <li>Assess candidate qualifications and match professionals with employer requirements.</li>
-      <li>Administer training programmes and issue verifiable completion certificates.</li>
-      <li>Respond to employer and general enquiries.</li>
-      <li>Maintain the security and integrity of the platform.</li>
-    </ul>
-    <p class="mt-4 leading-relaxed font-bold text-[#000e27]">We do not sell, rent, or trade your personal data to third parties or data brokers.</p>
+      <h2>2. How we use your information</h2>
+      <p>We use your information to:</p>
+      <ul>
+        <li>Assess candidate qualifications and match professionals with employer requirements.</li>
+        <li>Administer training programmes and issue verifiable completion certificates.</li>
+        <li>Respond to employer and general enquiries.</li>
+        <li>Maintain the security and integrity of the platform.</li>
+      </ul>
+      <p><strong>We do not sell, rent, or trade your personal data to third parties or data brokers.</strong></p>
 
-    <h2 class="mt-10 font-display text-xl font-bold text-[#000e27]">3. Data retention and security</h2>
-    <p class="mt-3 leading-relaxed text-[#44474e] font-sans text-sm sm:text-base">Data is transmitted over encrypted connections (TLS) and stored in access-controlled systems. Resume files are available only to GCTT staff; where cloud object storage is enabled, downloads are provided through time-limited signed links. Candidates may withdraw an application from their dashboard or request deletion of their data by contacting <a href="mailto:{{ COMPANY.email }}" class="text-[#006398] hover:underline font-bold">{{ COMPANY.email }}</a>.</p>
+      <h2>3. Data retention and security</h2>
+      <p>Data is transmitted over encrypted connections (TLS) and stored in access-controlled systems. Resume files are available only to GCTT staff; where cloud object storage is enabled, downloads are provided through time-limited signed links. Candidates may withdraw an application from their dashboard or request deletion of their data by contacting <a href="mailto:{{ COMPANY.email }}">{{ COMPANY.email }}</a>.</p>
 
-    <h2 class="mt-10 font-display text-xl font-bold text-[#000e27]">4. Your rights (Texas Data Privacy and Security Act)</h2>
-    <p class="mt-3 leading-relaxed text-[#44474e] font-sans text-sm sm:text-base">Where the Act applies to us, you have the right to access, correct, or request deletion of the personal information we hold about you. To exercise these rights, email <a href="mailto:{{ COMPANY.email }}" class="text-[#006398] hover:underline font-bold">{{ COMPANY.email }}</a>.</p>
+      <h2>4. Your rights (Texas Data Privacy and Security Act)</h2>
+      <p>Where the Act applies to us, you have the right to access, correct, or request deletion of the personal information we hold about you. To exercise these rights, email <a href="mailto:{{ COMPANY.email }}">{{ COMPANY.email }}</a>.</p>
 
-    <h2 class="mt-10 font-display text-xl font-bold text-[#000e27]">5. Contact</h2>
-    <p class="mt-3 leading-relaxed text-[#44474e] font-sans text-sm sm:text-base">Questions about this policy can be sent to <a href="mailto:{{ COMPANY.email }}" class="text-[#006398] hover:underline font-bold">{{ COMPANY.email }}</a> or by mail to 2612 Laramie St, Irving, TX 75062.</p>
+      <h2>5. Contact</h2>
+      <p>Questions about this policy can be sent to <a href="mailto:{{ COMPANY.email }}">{{ COMPANY.email }}</a> or by mail to 2612 Laramie St, Irving, TX 75062.</p>
+    </div>
   </div>
 </section>
 {% endblock %}

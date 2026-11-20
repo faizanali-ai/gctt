@@ -1,72 +1,68 @@
 {% extends "base.html" %}
-{% block title %}Executive Returnship Accelerator — GCTT{% endblock %}
+{% load static %}
+{% block title %}Career Restart — GCTT Academy{% endblock %}
+{% block description %}A structured route back into technical work after a career break, with retooling, interview preparation and employer introductions.{% endblock %}
+
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Executive Returnship Initiative" title="Bridging seasoned expertise back into enterprise technology leadership." subtitle="Taking a planned career sabbatical, caregiving leave, or relocation pause should never diminish years of hard-won engineering and architectural depth. Our executive accelerator pairs structured re-tooling with direct enterprise re-entry." %}
+{% include "partials/_hero.html" with eyebrow="Academy · Career Restart" title="Return to technical work." subtitle="A structured route back into technology roles after a planned break, caregiving leave, relocation or military transition." %}
+{% include "partials/_academy_nav.html" %}
 
-<section class="mx-auto max-w-7xl px-6 sm:px-12 py-16 lg:py-24 font-sans">
-  <div class="grid gap-16 lg:grid-cols-[1.1fr_1.2fr] lg:items-start">
-    <div class="space-y-6 text-base leading-relaxed text-[#44474e] sm:text-lg reveal">
-      <div class="inline-flex items-center gap-2 rounded-full border border-[#dde9ff] bg-[#eff4ff] px-4 py-1 font-mono text-2xs uppercase tracking-widest text-[#006398] font-bold">
-        <span class="h-2 w-2 rounded-full bg-[#006398] animate-pulse"></span>
-        <span>Zero Fees to Candidates · Texas Workforce Ethics</span>
-      </div>
-      <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[#000e27]">
-        We honor your career maturity and institutional depth—not the <span class="text-[#006398]">calendar gap</span> on your resume.
-      </h2>
-      <p class="text-sm sm:text-base font-sans text-[#44474e]">Whether you stepped away for family care, health restoration, military transition, or personal sabbaticals, your foundational systems engineering, project leadership, or business analysis expertise remains irreplaceable. GCTT partners with progressive enterprise employers who actively recognize that perspective, emotional intelligence, and seasoned judgment drive superior project outcomes.</p>
-      
-      <div class="space-y-4 border-t border-[#dde9ff] pt-6 text-sm text-[#0d1c2f] font-sans">
-        <div class="stitch-card p-5">
+<section class="section">
+  <div class="container-site grid gap-12 lg:grid-cols-[1.1fr_1.1fr] lg:items-start">
+    <div class="max-w-2xl">
+      <p class="text-body-lg text-muted">
+        A career gap is not a skills gap. The programme refreshes the tools and context that changed while you were away, then puts you in front of employers who are hiring for the experience you already have.
+      </p>
+
+      <div class="mt-10 space-y-4">
+        <div class="card p-6">
           <div class="flex items-start gap-4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#0f2444] text-white font-bold">
-              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-            </div>
+            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+              <svg class="h-5 w-5"><use href="{% static 'images/icons.svg' %}#graduation"></use></svg>
+            </span>
             <div>
-              <p class="font-display text-base font-bold text-[#000e27]">Modern Toolchain &amp; Cloud Retooling</p>
-              <p class="mt-1 text-xs text-[#44474e] leading-relaxed font-sans">Access intensive refresher sandboxes in SAP S/4HANA functional workflows, modern CI/CD orchestration, and Scaled Agile ceremonies to immediately restore operational confidence.</p>
+              <h2 class="text-h3">Retooling</h2>
+              <p class="mt-1 text-sm leading-relaxed text-muted">Hands-on work in SAP S/4HANA workflows, cloud delivery and Agile ceremonies, scoped to the role you are targeting.</p>
             </div>
           </div>
         </div>
 
-        <div class="stitch-card p-5">
+        <div class="card p-6">
           <div class="flex items-start gap-4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#006398] text-white font-bold">
-              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            </div>
+            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+              <svg class="h-5 w-5"><use href="{% static 'images/icons.svg' %}#users"></use></svg>
+            </span>
             <div>
-              <p class="font-display text-base font-bold text-[#000e27]">Direct Corporate Sponsor Introductions</p>
-              <p class="mt-1 text-xs text-[#44474e] leading-relaxed font-sans">Bypass automated ATS filtering algorithms with warm executive introductions directly to engineering directors committed to structured returnship placements.</p>
+              <h2 class="text-h3">Employer introductions</h2>
+              <p class="mt-1 text-sm leading-relaxed text-muted">Introductions to client teams working with GCTT, with your experience presented accurately rather than filtered by a keyword screen.</p>
             </div>
           </div>
         </div>
 
-        <div class="stitch-card p-5">
+        <div class="card p-6">
           <div class="flex items-start gap-4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-700 text-white font-bold">
-              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-            </div>
+            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+              <svg class="h-5 w-5"><use href="{% static 'images/icons.svg' %}#user"></use></svg>
+            </span>
             <div>
-              <p class="font-display text-base font-bold text-[#000e27]">Mentorship &amp; Executive Coaching</p>
-              <p class="mt-1 text-xs text-[#44474e] leading-relaxed font-sans">1-on-1 portfolio review, interview rehearsal, and compensation alignment conducted by seasoned industry mentors.</p>
+              <h2 class="text-h3">Interview preparation</h2>
+              <p class="mt-1 text-sm leading-relaxed text-muted">Portfolio review, technical interview rehearsal and compensation calibration with a practitioner.</p>
             </div>
           </div>
         </div>
       </div>
+
+      <p class="mt-8 text-sm text-muted">There is no fee for candidates. GCTT is paid by the employer when a placement is made.</p>
     </div>
 
-    <!-- Intake Form Card -->
-    <div class="stitch-card p-8 shadow-xs sm:p-10 reveal delay-1">
-      <div class="border-b border-[#dde9ff] pb-4">
-        <span class="inline-flex items-center gap-1.5 rounded-full bg-[#eff4ff] px-3 py-1 font-mono text-2xs uppercase tracking-widest text-[#006398] border border-[#dde9ff] font-bold">
-          Confidential Relaunch Intake
-        </span>
-        <h3 class="mt-3 font-display text-2xl font-bold text-[#000e27]">Apply for Returnship Cohort</h3>
-        <p class="mt-1.5 text-xs text-[#44474e] font-sans">Share your professional background and target domain. Our returnship advisory team will schedule a confidential exploratory consultation.</p>
+    <aside class="lg:sticky lg:top-24">
+      <div class="card p-6 sm:p-8">
+        <p class="eyebrow eyebrow-accent">Confidential intake</p>
+        <h2 class="mt-2 text-h2">Apply for the programme</h2>
+        <p class="mt-2 text-sm text-muted">Share your background and the role you want to return to. A programme advisor will arrange a conversation.</p>
+        <div class="mt-6">{% include "enquiries/_form.html" %}</div>
       </div>
-      <div class="mt-6">
-        {% include "enquiries/_form.html" with enquiry_category="restart" %}
-      </div>
-    </div>
+    </aside>
   </div>
 </section>
 {% endblock %}

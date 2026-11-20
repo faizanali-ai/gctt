@@ -1,107 +1,87 @@
 {% extends "base.html" %}
-{% block title %}Executive &amp; Technical Careers — GCTT{% endblock %}
+{% load static %}
+{% block title %}Open Mandates — GCTT Careers{% endblock %}
+{% block description %}Current technology roles managed by GCTT. Contract, contract-to-hire and direct placement.{% endblock %}
+
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Direct Placements & Search" title="Executive &amp; Technical Careers" subtitle="Active enterprise engagements and direct mandates managed exclusively by GCTT talent partners across North America." %}
+{% include "partials/_hero.html" with eyebrow="Careers" title="Open mandates." subtitle="Roles managed directly by GCTT. Every application is reviewed by a person, and candidates are never charged a fee." %}
 
-<section class="mx-auto max-w-7xl px-6 sm:px-12 py-12 md:py-20 font-sans">
-  <!-- Search & Filter Card -->
-  <div class="stitch-card p-5 sm:p-7 reveal">
-    <form method="get" class="flex flex-col gap-3 sm:flex-row font-sans">
-      <div class="relative flex-1">
-        <input
-          type="search"
-          name="q"
-          value="{{ q }}"
-          placeholder="Search by role title, technical skill, or location..."
-          aria-label="Search jobs"
-          class="w-full text-xs rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-4 py-3 text-[#0d1c2f] placeholder-[#75777f] focus:border-[#006398] focus:outline-hidden"
-        >
-      </div>
-      <div class="sm:w-56">
-        <select name="type" aria-label="Employment type" class="w-full font-mono text-xs rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-3 py-3 text-[#0d1c2f] focus:border-[#006398] focus:outline-hidden">
-          <option value="">All placement types</option>
-          {% for value, label in types %}
-            <option value="{{ value }}" {% if type == value %}selected{% endif %}>{{ label }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <button type="submit" class="btn-stitch-primary sm:w-36 justify-center text-xs font-mono uppercase tracking-wider">
-        Search Roles
-      </button>
-      {% if q or type %}
-        <a href="{% url 'careers' %}" class="btn-stitch-secondary text-xs sm:w-28 justify-center font-mono">
-          Clear
+<section class="section">
+  <div class="container-site">
+    <div class="card p-5">
+      <form method="get" class="form flex flex-col gap-3 sm:flex-row sm:items-end">
+        <div class="field flex-1">
+          <label for="job-search">Search</label>
+          <input id="job-search" type="search" name="q" value="{{ q }}" placeholder="Role, skill or location">
+        </div>
+        <div class="field sm:w-56">
+          <label for="job-type">Placement type</label>
+          <select id="job-type" name="type">
+            <option value="">All types</option>
+            {% for value, label in types %}
+              <option value="{{ value }}" {% if type == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="flex gap-2">
+          <button type="submit" class="btn btn-primary">
+            <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#search"></use></svg>
+            Search
+          </button>
+          {% if q or type %}
+            <a href="{% url 'careers' %}" class="btn btn-secondary">Clear</a>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+
+    <div class="mt-8 grid gap-3">
+      {% for job in page_obj %}
+        <a href="{% url 'job_detail' job.slug %}" class="card card-interactive group p-6">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="chip chip-accent">{{ job.get_employment_type_display }}</span>
+              <span class="inline-flex items-center gap-1.5 text-sm text-muted">
+                <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#map-pin"></use></svg>
+                {{ job.location }}
+              </span>
+            </div>
+            <span class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Posted {{ job.created_at|date:"M j, Y" }}</span>
+          </div>
+
+          <h2 class="mt-4 text-h2 transition-colors group-hover:text-accent">{{ job.title }}</h2>
+          <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-muted">{{ job.description }}</p>
+
+          <div class="mt-5 flex items-center justify-between border-t border-line pt-4">
+            <span class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Reviewed by GCTT</span>
+            <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
+              View role
+              <svg class="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
+            </span>
+          </div>
         </a>
-      {% endif %}
-    </form>
-  </div>
-
-  <!-- Job Openings List -->
-  <div class="mt-8 grid gap-4">
-    {% for job in page_obj %}
-      <a href="{% url 'job_detail' job.slug %}" class="group relative block stitch-card p-6 sm:p-8 reveal transition-all duration-300">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <div class="flex flex-wrap items-center gap-2 font-mono">
-            <span class="inline-flex items-center gap-1.5 rounded-full bg-[#eff4ff] border border-[#dde9ff] px-3 py-0.5 text-2xs font-bold uppercase tracking-wider text-[#006398]">
-              <span class="h-1.5 w-1.5 rounded-full bg-[#006398]"></span>
-              {{ job.get_employment_type_display }}
-            </span>
-            <span class="inline-flex items-center gap-1 text-xs text-[#44474e]">
-              <svg class="h-3.5 w-3.5 text-[#006398]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              {{ job.location }}
-            </span>
-          </div>
-          <span class="text-xs text-[#75777f] font-mono">
-            POSTED {{ job.created_at|date:"M j, Y"|upper }}
+      {% empty %}
+        <div class="card p-10 text-center">
+          <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+            <svg class="h-6 w-6"><use href="{% static 'images/icons.svg' %}#search"></use></svg>
           </span>
+          {% if q or type %}
+            <h2 class="mt-4 text-h2">No roles match that search.</h2>
+            <p class="mx-auto mt-2 max-w-md text-sm text-muted">Try a broader term, or clear the filters to see every open mandate.</p>
+            <a href="{% url 'careers' %}" class="btn btn-secondary mt-6">Clear filters</a>
+          {% else %}
+            <h2 class="mt-4 text-h2">No roles are open right now.</h2>
+            <p class="mx-auto mt-2 max-w-md text-sm text-muted">Send your résumé and we will contact you when a role matches your experience.</p>
+            <div class="mt-6 flex flex-wrap justify-center gap-3">
+              <a href="mailto:{{ COMPANY.jobs_email }}" class="btn btn-primary">Send your résumé</a>
+              <a href="{% url 'contact' %}" class="btn btn-secondary">Contact the team</a>
+            </div>
+          {% endif %}
         </div>
+      {% endfor %}
+    </div>
 
-        <h2 class="mt-4 font-display text-xl font-bold text-[#000e27] transition-colors group-hover:text-[#006398] sm:text-2xl">
-          {{ job.title }}
-        </h2>
-
-        <p class="mt-2.5 line-clamp-2 text-sm leading-relaxed text-[#44474e] font-sans">
-          {{ job.description }}
-        </p>
-
-        <div class="mt-6 flex items-center justify-between border-t border-[#dde9ff] pt-4 text-xs font-mono">
-          <span class="text-[#75777f]">DIRECT TEXAS W2 / SOW</span>
-          <span class="inline-flex items-center gap-1.5 font-bold text-[#006398] transition-transform group-hover:translate-x-1">
-            View Role &amp; Apply &rarr;
-          </span>
-        </div>
-      </a>
-    {% empty %}
-      <div class="stitch-card p-12 text-center reveal font-sans">
-        {% if q or type %}
-          <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eff4ff] text-[#006398]">
-            <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
-          <h2 class="mt-4 font-display text-2xl font-bold text-[#000e27]">No mandates match that query</h2>
-          <p class="mx-auto mt-2 max-w-md text-sm text-[#44474e]">Adjust your keywords or view all active listings across our practice groups.</p>
-          <a href="{% url 'careers' %}" class="btn-stitch-secondary mt-6 font-mono text-xs inline-flex">Reset Search Filters</a>
-        {% else %}
-          <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eff4ff] text-[#006398]">
-            <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-            </svg>
-          </div>
-          <h2 class="mt-4 font-display text-2xl font-bold text-[#000e27]">Mandates currently in confidential search</h2>
-          <p class="mx-auto mt-2 max-w-md text-sm text-[#44474e]">Client mandates are published directly to vetted candidates in our network. Register your profile to be considered for confidential placements.</p>
-          <div class="mt-6 flex flex-wrap justify-center gap-3">
-            <a href="{% url 'career_restart' %}" class="btn-stitch-primary text-xs">Submit Candidate Profile</a>
-            <a href="{% url 'contact' %}" class="btn-stitch-secondary text-xs">Direct Recruiter Inquiry</a>
-          </div>
-        {% endif %}
-      </div>
-    {% endfor %}
+    {% include "partials/_pagination.html" %}
   </div>
-
-  {% include "partials/_pagination.html" %}
 </section>
 {% endblock %}

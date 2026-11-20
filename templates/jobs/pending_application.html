@@ -1,26 +1,26 @@
 {% extends "base.html" %}
 {% block title %}Confirm Application — {{ pending.job.title }} — GCTT{% endblock %}
+
 {% block content %}
-<section class="mx-auto max-w-2xl px-6 py-12 md:py-20 font-sans">
-  <div class="stitch-card p-6 sm:p-8">
-    <p class="eyebrow text-2xs">Application Continuation</p>
-    <h1 class="mt-2 font-display text-2xl font-bold text-[#000e27]">Confirm Your Application</h1>
-    <p class="mt-2 text-xs text-[#44474e]">
-      Signed in as <strong>{{ pending.email }}</strong>. Review the saved submission for
-      <strong>{{ pending.job.title }}</strong> and confirm it below.
+<section class="section">
+  <div class="container-site max-w-2xl">
+    <p class="eyebrow eyebrow-accent">Application continuation</p>
+    <h1 class="mt-3 text-h1">Confirm your application.</h1>
+    <p class="mt-3 text-sm text-muted">
+      Signed in as <strong class="text-ink">{{ pending.email }}</strong>. Review the saved submission for
+      <strong class="text-ink">{{ pending.job.title }}</strong> and confirm below.
     </p>
-    <p class="mt-2 text-2xs text-[#44474e] font-mono">
-      Resume on file: {{ pending.resume.name }}
-    </p>
-    <form method="post" class="mt-6 space-y-4">
+    <p class="mt-2 font-mono text-2xs uppercase tracking-[0.08em] text-muted">Résumé on file: {{ pending.resume.name }}</p>
+
+    <form method="post" class="form card mt-6 p-6 sm:p-8">
       {% csrf_token %}
-      <label class="block text-xs font-semibold uppercase tracking-wider text-ink" for="id_message">
-        Message
-      </label>
-      <textarea id="id_message" name="message" rows="6" class="w-full rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-4 py-2.5 text-sm text-[#0d1c2f] focus:border-[#006398] focus:bg-white focus:outline-hidden">{{ pending.message }}</textarea>
-      <div class="flex items-center gap-3">
-        <button type="submit" class="btn-stitch-primary text-xs">Confirm Application</button>
-        <a href="{% url 'job_detail' pending.job.slug %}" class="btn-stitch-secondary text-xs">Cancel</a>
+      <div class="field">
+        <label for="id_message">Message</label>
+        <textarea id="id_message" name="message" rows="6">{{ pending.message }}</textarea>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <button type="submit" class="btn btn-primary">Confirm application</button>
+        <a href="{% url 'job_detail' pending.job.slug %}" class="btn btn-secondary">Cancel</a>
       </div>
     </form>
   </div>

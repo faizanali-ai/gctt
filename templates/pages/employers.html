@@ -1,126 +1,108 @@
 {% extends "base.html" %}
-{% block title %}Request Vetted IT Talent — GCTT for Employers{% endblock %}
+{% load static %}
+{% block title %}Request Talent — GCTT for Employers{% endblock %}
+{% block description %}Request technology talent from GCTT. Staffing, contract-to-hire, direct search and project teams.{% endblock %}
+
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Enterprise Requisitions" title="Request Vetted Technical Talent" subtitle="Deploy specialized IT consultants, software engineers, and SAP architects pre-screened through architectural diagnostics for your technical roadmap." %}
+{% include "partials/_hero.html" with eyebrow="For employers" title="Request technology talent." subtitle="Tell us the role, the constraints and the start date. We will confirm whether we can fill it and how we would approach the search." %}
+{% include "partials/_solutions_nav.html" %}
 
-<section class="mx-auto max-w-7xl px-6 sm:px-12 py-16 lg:py-24 font-sans">
-  <div class="grid gap-16 lg:grid-cols-[1.1fr_1.2fr] lg:items-start">
-    <div class="space-y-6 text-base leading-relaxed text-[#44474e] sm:text-lg reveal">
-      <p class="font-display text-2xl sm:text-3xl font-bold text-[#000e27] leading-tight">
-        A consultative staffing partner delivering certainty, not a resume clearinghouse.
+<section class="section">
+  <div class="container-site grid gap-12 lg:grid-cols-[1.1fr_1.1fr] lg:items-start">
+    <div class="max-w-2xl">
+      <p class="text-body-lg text-muted">
+        GCTT works on contract, contract-to-hire, direct placement and defined project teams. Every requisition is handled by a practice lead, not a call centre.
       </p>
-      <p class="font-sans text-sm sm:text-base text-[#44474e]">
-        When you partner with GCTT, your hiring requisition is directed exclusively by seasoned technical recruiters and practice leads who understand enterprise architecture, compliance requirements, and delivery urgency.
-      </p>
-      
-      <!-- Key Requisition Highlights -->
-      <div class="mt-8 space-y-4 rounded-2xl border border-[#dde9ff] bg-white p-6 sm:p-8 shadow-xs">
-        <div class="flex items-center justify-between border-b border-[#dde9ff] pb-3">
-          <p class="font-mono text-xs uppercase tracking-widest text-[#006398] font-bold">Enterprise Service Commitments</p>
-          <span class="rounded-full bg-[#eff4ff] border border-[#dde9ff] px-2 py-0.5 font-mono text-3xs font-bold text-[#006398]">&lt; 48H SLA</span>
+
+      <div class="mt-8 space-y-4">
+        <div class="card p-6">
+          <div class="flex items-start gap-4">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+              <svg class="h-5 w-5"><use href="{% static 'images/icons.svg' %}#clock"></use></svg>
+            </span>
+            <div>
+              <h2 class="text-h3">Shortlist target</h2>
+              <p class="mt-1 text-sm leading-relaxed text-muted">For standard technical roles, we target a shortlist within 48 business hours of calibration. Niche mandates take longer, and we say so upfront.</p>
+            </div>
+          </div>
         </div>
-        <div class="space-y-4 pt-2 text-sm text-[#0d1c2f] font-sans">
-          <div class="flex items-start gap-3.5">
-            <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#0f2444] text-white font-bold mt-0.5">
-              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            </div>
+
+        <div class="card p-6">
+          <div class="flex items-start gap-4">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+              <svg class="h-5 w-5"><use href="{% static 'images/icons.svg' %}#shield"></use></svg>
+            </span>
             <div>
-              <p class="font-display font-bold text-[#000e27]">Strict 48-Hour Shortlist SLA</p>
-              <p class="text-xs text-[#44474e] mt-0.5">Pre-screened, interview-ready candidate dossiers delivered within 48 hours of requisition calibration.</p>
+              <h2 class="text-h3">Compliance before start</h2>
+              <p class="mt-1 text-sm leading-relaxed text-muted">E-Verify and Form I-9 verification, plus any background and credential checks agreed for the role. Documentation is available before the first day.</p>
             </div>
           </div>
-          <div class="flex items-start gap-3.5">
-            <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#006398] text-white font-bold mt-0.5">
-              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-            </div>
+        </div>
+
+        <div class="card p-6">
+          <div class="flex items-start gap-4">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+              <svg class="h-5 w-5"><use href="{% static 'images/icons.svg' %}#map-pin"></use></svg>
+            </span>
             <div>
-              <p class="font-display font-bold text-[#000e27]">100% Right-to-Work Compliance Guarantee</p>
-              <p class="text-xs text-[#44474e] mt-0.5">Complete Form I-9, E-Verify, and credential audit files delivered before the candidate's first sprint day.</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3.5">
-            <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-700 text-white font-bold mt-0.5">
-              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-            <div>
-              <p class="font-display font-bold text-[#000e27]">Texas Center &amp; Nationwide Deployment</p>
-              <p class="text-xs text-[#44474e] mt-0.5">Onsite placement across the Dallas-Fort Worth metroplex or remote/hybrid engineers synchronized to your time zone.</p>
+              <h2 class="text-h3">Texas base, national reach</h2>
+              <p class="mt-1 text-sm leading-relaxed text-muted">Onsite across the Dallas–Fort Worth metroplex, or remote and hybrid practitioners aligned to your time zone.</p>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Requisition Submission Box -->
-    <div class="stitch-card p-8 sm:p-10 reveal delay-1">
-      <div class="inline-flex items-center gap-2 rounded-full border border-[#dde9ff] bg-[#eff4ff] px-3 py-1 font-mono text-3xs font-bold text-[#006398] uppercase tracking-wider mb-4">
-        Direct Intake
+    <aside class="lg:sticky lg:top-24">
+      <div class="card p-6 sm:p-8">
+        <p class="eyebrow eyebrow-accent">Requisition</p>
+        <h2 class="mt-2 text-h2">Submit the details</h2>
+        <p class="mt-2 text-sm text-muted">Include the role, the stack, the engagement model and the target start date.</p>
+        <div class="mt-6">{% include "enquiries/_form.html" %}</div>
       </div>
-      <h3 class="font-display text-2xl font-bold text-[#000e27]">Submit Requisition Details</h3>
-      <p class="mt-2 text-xs text-[#44474e] leading-relaxed font-sans">
-        Specify technical competencies, project timeline, and engagement model below.
-      </p>
-      <div class="mt-6 border-t border-[#dde9ff] pt-6">
-        {% include "enquiries/_form.html" %}
-      </div>
-    </div>
+    </aside>
   </div>
+</section>
 
-  <!-- Enterprise Staffing FAQ Accordion -->
-  <div class="mt-20 border-t border-[#dde9ff] pt-16 reveal font-sans">
-    <div class="max-w-3xl">
-      <span class="font-mono text-xs uppercase tracking-widest text-[#006398] font-bold">CLIENT ADVISORY</span>
-      <h2 class="mt-2 font-display text-2xl sm:text-3xl font-bold text-[#000e27]">Frequently Asked Enterprise Questions</h2>
-      <p class="mt-2 text-sm text-[#44474e]">Practical details on engagement structures, turnaround SLAs, and quality guarantees.</p>
+<section class="section border-t border-line bg-raised">
+  <div class="container-site">
+    <div class="max-w-2xl">
+      <p class="eyebrow eyebrow-accent">Client advisory</p>
+      <h2 class="mt-3 text-display-2">Frequently Asked Enterprise Questions</h2>
+      <p class="mt-3 text-body-lg text-muted">Engagement structures, turnaround and the checks behind a placement.</p>
     </div>
 
-    <div class="mt-8 space-y-4">
-      <details class="group rounded-2xl border border-[#dde9ff] bg-white p-5 transition-all open:border-[#006398] shadow-xs">
-        <summary class="flex cursor-pointer items-center justify-between py-1 text-base font-semibold text-[#000e27] list-none font-display">
-          <span>What engagement models does GCTT support?</span>
-          <svg class="h-5 w-5 text-[#006398] transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
+    <div class="mt-8 space-y-3">
+      <details class="group card p-5">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
+          What engagement models does GCTT support?
+          <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
         </summary>
-        <p class="text-sm text-[#44474e] leading-relaxed pt-3 font-sans">
-          We provide flexible models tailored to your project budgets: Direct W2 Contract Staffing, Contract-to-Hire (typically 3–6 months trial periods), and Direct-Hire Executive Search. All engagement terms, billing rates, and conversion schedules are transparently agreed upfront.
-        </p>
+        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">W2 contract staffing, contract-to-hire with an agreed evaluation period, direct-hire search, and defined project teams. Rates, conversion terms and billing schedules are agreed before work starts.</p>
       </details>
 
-      <details class="group rounded-2xl border border-[#dde9ff] bg-white p-5 transition-all open:border-[#006398] shadow-xs">
-        <summary class="flex cursor-pointer items-center justify-between py-1 text-base font-semibold text-[#000e27] list-none font-display">
-          <span>How does GCTT vet technical qualifications?</span>
-          <svg class="h-5 w-5 text-[#006398] transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
+      <details class="group card p-5">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
+          How does GCTT assess technical qualifications?
+          <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
         </summary>
-        <p class="text-sm text-[#44474e] leading-relaxed pt-3 font-sans">
-          Every candidate completes a two-stage screening process: initial recruiter intake covering communication, work authorization, and project history, followed by an in-depth technical evaluation assessing hands-on architectural competence in the required tech stack (e.g., S/4HANA, Java/Spring, Cloud AWS/Azure).
-        </p>
+        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">An intake covering communication, work authorisation and project history, followed by a technical conversation with a practitioner in the relevant stack. The scorecard is agreed with you before screening.</p>
       </details>
 
-      <details class="group rounded-2xl border border-[#dde9ff] bg-white p-5 transition-all open:border-[#006398] shadow-xs">
-        <summary class="flex cursor-pointer items-center justify-between py-1 text-base font-semibold text-[#000e27] list-none font-display">
-          <span>What is the standard turnaround time for candidate shortlists?</span>
-          <svg class="h-5 w-5 text-[#006398] transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
+      <details class="group card p-5">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
+          What turnaround should we expect?
+          <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
         </summary>
-        <p class="text-sm text-[#44474e] leading-relaxed pt-3 font-sans">
-          For standard technical roles (Full Stack, DevOps, Scrum Masters), vetted candidate profiles are submitted within 48 to 72 business hours. For niche enterprise mandates (such as SAP MM/FICO architects), initial candidate pools are delivered within 3 to 5 business days.
-        </p>
+        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">Standard technical roles target a shortlist within 48–72 business hours. Niche SAP mandates typically take 3–5 business days for an initial pool. The target is confirmed at calibration.</p>
       </details>
 
-      <details class="group rounded-2xl border border-[#dde9ff] bg-white p-5 transition-all open:border-[#006398] shadow-xs">
-        <summary class="flex cursor-pointer items-center justify-between py-1 text-base font-semibold text-[#000e27] list-none font-display">
-          <span>What satisfaction and replacement guarantees are provided?</span>
-          <svg class="h-5 w-5 text-[#006398] transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
+      <details class="group card p-5">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
+          What replacement terms are available?
+          <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
         </summary>
-        <p class="text-sm text-[#44474e] leading-relaxed pt-3 font-sans">
-          Direct-hire placements carry a full 90-day replacement warranty. For contract and contract-to-hire engagements, clients benefit from an initial 40-hour trial period: if a deployed engineer does not meet your team's velocity and standards, we immediately replace them at zero billing cost for the trial hours.
-        </p>
+        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">Direct-hire placements carry a 90-day replacement warranty. Contract engagements include a trial period; if the practitioner is not the right fit, GCTT replaces them and does not bill the trial hours. Exact terms are set in the engagement letter.</p>
       </details>
     </div>
   </div>

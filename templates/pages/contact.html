@@ -1,52 +1,53 @@
 {% extends "base.html" %}
-{% block title %}Corporate Contact &amp; Headquarters — GCTT{% endblock %}
-{% block content %}
-{% include "partials/_hero.html" with eyebrow="Executive Contact" title="Connect directly with our corporate leadership." subtitle="Direct communications for enterprise clients, strategic staffing partnerships, academic cohorts, and senior candidate inquiries." %}
+{% load static %}
+{% block title %}Contact — GCTT{% endblock %}
+{% block description %}Contact GCTT in Irving, Texas for staffing, recruitment, training and certificate enquiries.{% endblock %}
 
-<section class="mx-auto max-w-7xl px-6 sm:px-12 py-16 lg:py-24 font-sans">
-  <div class="grid gap-16 lg:grid-cols-[1.1fr_1.2fr] lg:items-start">
-    <div class="space-y-8 reveal">
-      <div class="stitch-card p-8">
-        <span class="inline-flex items-center gap-1.5 rounded-full bg-[#eff4ff] px-3 py-1 font-mono text-2xs uppercase tracking-widest text-[#006398] border border-[#dde9ff] font-bold">
-          Corporate Headquarters
-        </span>
-        <p class="mt-3 font-display text-2xl font-bold text-[#000e27]">{{ COMPANY.name }} — {{ COMPANY.legal_name }}</p>
-        <p class="mt-1.5 text-sm text-[#44474e] font-mono">{{ COMPANY.address }}</p>
-        <p class="mt-2 text-xs font-mono uppercase tracking-wider text-[#006398] font-bold">Executive Command Center &bull; Dallas-Fort Worth Technology Corridor</p>
+{% block content %}
+{% include "partials/_hero.html" with eyebrow="Contact" title="Talk to the team." subtitle="For hiring, training, certification or general enquiries. A practice director reviews every message." %}
+
+<section class="section">
+  <div class="container-site grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+    <div class="space-y-8">
+      <div class="card p-6">
+        <p class="eyebrow eyebrow-accent">Headquarters</p>
+        <p class="mt-3 font-display text-h3">{{ COMPANY.name }}</p>
+        <p class="mt-1 text-sm text-muted">{{ COMPANY.legal_name }}</p>
+        <address class="mt-4 flex gap-3 text-sm not-italic">
+          <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#map-pin"></use></svg>
+          <div>
+            <p>{{ COMPANY.address }}</p>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=2612+Laramie+St+Irving+TX+75062" target="_blank" rel="noopener noreferrer" class="link mt-1 inline-flex items-center gap-1.5">
+              Open in maps
+              <svg class="h-3.5 w-3.5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#external"></use></svg>
+            </a>
+          </div>
+        </address>
       </div>
 
-      <div class="space-y-6 border-t border-[#dde9ff] pt-6">
-        <div class="stitch-card p-6">
-          <p class="font-mono text-2xs uppercase tracking-widest text-[#006398] font-bold">Client Accounts &amp; Enterprise Requisitions</p>
-          <a href="mailto:{{ COMPANY.email }}" class="mt-2 block font-display text-xl font-bold text-[#000e27] hover:text-[#006398] transition-colors">{{ COMPANY.email }}</a>
-          <p class="mt-1 text-xs text-[#44474e] font-sans">For master services agreements (MSA), statement of work (SOW) staffing, and corporate cohorts.</p>
+      <div class="card divide-y divide-line">
+        <div class="p-6">
+          <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Client accounts</p>
+          <a href="mailto:{{ COMPANY.email }}" class="mt-2 block font-display text-lg font-semibold hover:text-accent">{{ COMPANY.email }}</a>
+          <p class="mt-1 text-sm text-muted">Staffing, search, advisory and corporate cohorts.</p>
         </div>
-
-        <div class="stitch-card p-6">
-          <p class="font-mono text-2xs uppercase tracking-widest text-emerald-700 font-bold">Candidate, Careers &amp; Returnships</p>
-          <a href="mailto:{{ COMPANY.jobs_email }}" class="mt-2 block font-display text-xl font-bold text-[#000e27] hover:text-[#006398] transition-colors">{{ COMPANY.jobs_email }}</a>
-          <p class="mt-1 text-xs text-[#44474e] font-sans">For confidential resume submissions, portfolio reviews, and returnship applications.</p>
+        <div class="p-6">
+          <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Candidates and students</p>
+          <a href="mailto:{{ COMPANY.jobs_email }}" class="mt-2 block font-display text-lg font-semibold hover:text-accent">{{ COMPANY.jobs_email }}</a>
+          <p class="mt-1 text-sm text-muted">Applications, resumes and programme enquiries.</p>
         </div>
-
-        <div class="stitch-card p-5 text-xs text-[#44474e] font-mono space-y-1">
-          <p class="font-bold text-[#000e27] uppercase tracking-wider">Operating Hours &amp; Response Guarantee</p>
-          <p>Monday &ndash; Friday: 8:00 AM &ndash; 6:00 PM CST</p>
-          <p class="text-[#006398] font-bold">Direct Practice Director review and response within 1 business day.</p>
+        <div class="p-6">
+          <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Hours</p>
+          <p class="mt-2 text-sm">Monday–Friday, 8:00–18:00 CST</p>
+          <p class="mt-1 text-sm text-muted">We aim to respond within one business day.</p>
         </div>
       </div>
     </div>
 
-    <div class="stitch-card p-8 sm:p-10 reveal delay-1">
-      <div class="border-b border-[#dde9ff] pb-4">
-        <span class="inline-flex items-center gap-1.5 rounded-full bg-[#eff4ff] px-3 py-1 font-mono text-2xs uppercase tracking-widest text-[#006398] border border-[#dde9ff] font-bold">
-          Executive Dispatch
-        </span>
-        <h3 class="mt-2 font-display text-2xl font-bold text-[#000e27]">Initiate Corporate Contact</h3>
-        <p class="mt-1.5 text-xs text-[#44474e] font-sans">Provide your organization or background details below. A practice director will reach out promptly.</p>
-      </div>
-      <div class="mt-6">
-        {% include "enquiries/_form.html" %}
-      </div>
+    <div class="card p-6 sm:p-8">
+      <h2 class="text-h2">Send an enquiry</h2>
+      <p class="mt-2 text-sm text-muted">Include the role, programme or question. We will route it to the right person.</p>
+      <div class="mt-6">{% include "enquiries/_form.html" %}</div>
     </div>
   </div>
 </section>

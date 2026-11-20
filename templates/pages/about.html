@@ -1,78 +1,130 @@
 {% extends "base.html" %}
-{% block title %}About GCTT — Bridging Talent and Opportunity{% endblock %}
-{% block description %}GCTT provides IT staffing, recruitment, talent acquisition and training for employers, job seekers and students.{% endblock %}
+{% load static %}
+{% block title %}About GCTT — Irving, Texas{% endblock %}
+{% block description %}GCTT is a technology staffing and training company headquartered in Irving, Texas.{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="About GCTT" title="About GCTT — Bridging Talent and Opportunity" subtitle="GCTT provides IT staffing, recruitment, talent acquisition and training for employers, job seekers and students." %}
+{% include "partials/_hero.html" with eyebrow="Company" title="A Texas technology workforce company." subtitle="GCTT staffs technology teams and trains the people who join them. We are headquartered in Irving, Texas and work with employers, candidates and students." %}
 
-<section class="py-16 md:py-20 bg-white font-sans border-b border-slate-200">
-  <div class="container-site grid gap-12 md:grid-cols-2 md:items-start">
-    <div class="space-y-4 text-base md:text-lg text-slate-600 leading-relaxed">
-      <p>GCTT works with three groups: employers and companies looking for talent, job seekers and candidates looking for their next role, and students looking to build their skills.</p>
-      <p>We offer training both online and in person, and certificates are awarded on successful completion.</p>
-      <div class="pt-4 border-t border-slate-200 text-sm text-slate-500">
-        <p><strong>Corporate Headquarters:</strong> {{ COMPANY.address }}</p>
-        <p class="mt-1"><strong>Contact:</strong> <a href="mailto:{{ COMPANY.email }}" class="text-[#006398] hover:underline">{{ COMPANY.email }}</a></p>
+<section class="section border-b border-line">
+  <div class="container-site grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+    <div class="max-w-2xl space-y-4 text-body-lg text-muted">
+      <p>GCTT works with three groups: employers looking for technology talent, candidates looking for their next role, and students building technical skills.</p>
+      <p>Training runs online and in person. Certificates are issued on successful completion and can be verified through a public reference.</p>
+      <p>Our staffing work covers contract, contract-to-hire and direct placement. Every engagement starts with a defined role and an agreed process.</p>
+      <div class="pt-4">
+        <a href="{% url 'contact' %}" class="btn btn-primary">Contact the team</a>
       </div>
     </div>
-    
-    <div class="space-y-3">
-      {% for service in SERVICES %}
-        <a href="{{ service.url }}" class="block rounded-xl border border-slate-200 bg-white p-5 shadow-xs transition hover:border-[#006398] hover:shadow-sm">
-          <span class="font-display font-bold text-[#000e27] text-base">{{ service.title }}</span>
-          <span class="mt-1 block text-sm text-slate-600 leading-relaxed">{{ service.text }}</span>
-        </a>
-      {% endfor %}
+
+    <dl class="card divide-y divide-line">
+      <div class="p-5">
+        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Headquarters</dt>
+        <dd class="mt-1 font-display font-semibold">{{ COMPANY.address }}</dd>
+      </div>
+      <div class="p-5">
+        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Company email</dt>
+        <dd class="mt-1"><a href="mailto:{{ COMPANY.email }}" class="link">{{ COMPANY.email }}</a></dd>
+      </div>
+      <div class="p-5">
+        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Careers</dt>
+        <dd class="mt-1"><a href="mailto:{{ COMPANY.jobs_email }}" class="link">{{ COMPANY.jobs_email }}</a></dd>
+      </div>
+      <div class="p-5">
+        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Compliance</dt>
+        <dd class="mt-1 text-sm text-muted">E-Verify employer · ID 198420-TX</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<section class="section border-b border-line bg-raised">
+  <div class="container-site">
+    <div class="max-w-2xl">
+      <p class="eyebrow eyebrow-accent">What we do</p>
+      <h2 class="mt-3 text-display-2">Two divisions, clearly separated.</h2>
+      <p class="mt-4 text-body-lg text-muted">Talent Solutions covers hiring. The Academy covers training. They share a standard of delivery but have separate engagements.</p>
+    </div>
+
+    <div class="mt-10 grid gap-4 md:grid-cols-2">
+      <div class="card p-7">
+        <span class="eyebrow eyebrow-accent">01</span>
+        <h3 class="mt-3 text-h2">Talent Solutions</h3>
+        <ul class="mt-4 space-y-2 text-sm text-muted">
+          {% for service in SERVICES %}
+            {% if service.url != '/training/' %}
+              <li class="flex gap-2.5">
+                <svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>
+                <a href="{{ service.url }}" class="hover:text-ink">{{ service.title }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+          <li class="flex gap-2.5">
+            <svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>
+            <a href="{% url 'sap_scrum' %}" class="hover:text-ink">SAP &amp; Scrum practice</a>
+          </li>
+        </ul>
+        <a href="{% url 'services' %}" class="btn btn-secondary btn-sm mt-6">View Talent Solutions</a>
+      </div>
+
+      <div class="card p-7">
+        <span class="eyebrow eyebrow-accent">02</span>
+        <h3 class="mt-3 text-h2">Academy</h3>
+        <ul class="mt-4 space-y-2 text-sm text-muted">
+          <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg><a href="{% url 'training' %}" class="hover:text-ink">Programme catalogue</a></li>
+          <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg><a href="{% url 'career_restart' %}" class="hover:text-ink">Career Restart</a></li>
+          <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg><a href="{% url 'verify_certificate_form' %}" class="hover:text-ink">Certificate verification</a></li>
+        </ul>
+        <a href="{% url 'training' %}" class="btn btn-secondary btn-sm mt-6">View the Academy</a>
+      </div>
     </div>
   </div>
 </section>
 
-{% if team or network %}
-<section class="py-16 md:py-20 bg-slate-50 font-sans">
+{% if team %}
+<section class="section border-b border-line">
   <div class="container-site">
-    {% if team %}
-      <p class="text-xs font-bold uppercase tracking-widest text-[#006398]">Our Team</p>
-      <h2 class="mt-2 font-display text-3xl font-bold text-[#000e27]">Team</h2>
-      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {% for profile in team %}
-          <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-xs">
-            <h3 class="font-display font-bold text-lg text-[#000e27]">{{ profile.name }}</h3>
-            <p class="text-xs font-semibold text-[#006398] mt-0.5">{{ profile.designation }}</p>
-            {% if profile.bio %}
-              <p class="mt-3 text-sm text-slate-600 leading-relaxed">{{ profile.bio }}</p>
-            {% endif %}
-            {% if profile.linkedin_url %}
-              <a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-[#006398] hover:underline">
-                LinkedIn Profile →
-              </a>
-            {% endif %}
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
+    <p class="eyebrow eyebrow-accent">People</p>
+    <h2 class="mt-3 text-display-2">Team</h2>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {% for profile in team %}
+        <article class="card p-6">
+          <h3 class="text-h3">{{ profile.name }}</h3>
+          <p class="mt-0.5 font-mono text-2xs uppercase tracking-[0.1em] text-accent">{{ profile.designation }}</p>
+          {% if profile.bio %}<p class="mt-3 text-sm leading-relaxed text-muted">{{ profile.bio }}</p>{% endif %}
+          {% if profile.linkedin_url %}
+            <a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
+              LinkedIn
+              <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#external"></use></svg>
+            </a>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
-    {% if network %}
-      <div class="{% if team %}mt-16 pt-16 border-t border-slate-200{% endif %}">
-        <p class="text-xs font-bold uppercase tracking-widest text-[#006398]">Advisors &amp; Partners</p>
-        <h2 class="mt-2 font-display text-3xl font-bold text-[#000e27]">Network</h2>
-        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {% for profile in network %}
-            <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-xs">
-              <h3 class="font-display font-bold text-lg text-[#000e27]">{{ profile.name }}</h3>
-              <p class="text-xs font-semibold text-[#006398] mt-0.5">{{ profile.designation }}</p>
-              {% if profile.bio %}
-                <p class="mt-3 text-sm text-slate-600 leading-relaxed">{{ profile.bio }}</p>
-              {% endif %}
-              {% if profile.linkedin_url %}
-                <a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-[#006398] hover:underline">
-                  LinkedIn Profile →
-                </a>
-              {% endif %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    {% endif %}
+{% if network %}
+<section class="section bg-raised">
+  <div class="container-site">
+    <p class="eyebrow eyebrow-accent">Network</p>
+    <h2 class="mt-3 text-display-2">Advisors and partners</h2>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {% for profile in network %}
+        <article class="card p-6">
+          <h3 class="text-h3">{{ profile.name }}</h3>
+          <p class="mt-0.5 font-mono text-2xs uppercase tracking-[0.1em] text-accent">{{ profile.designation }}</p>
+          {% if profile.bio %}<p class="mt-3 text-sm leading-relaxed text-muted">{{ profile.bio }}</p>{% endif %}
+          {% if profile.linkedin_url %}
+            <a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
+              LinkedIn
+              <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#external"></use></svg>
+            </a>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
   </div>
 </section>
 {% endif %}

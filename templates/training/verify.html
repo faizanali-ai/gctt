@@ -1,149 +1,95 @@
 {% extends "base.html" %}
-{% block title %}Verify Training Certificate — GCTT{% endblock %}
+{% load static %}
+{% block title %}Verify a Certificate — GCTT{% endblock %}
+{% block description %}Verify a GCTT training certificate by its reference.{% endblock %}
+
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Credential Assurance" title="Certificate Verification" subtitle="Verify the authenticity of professional development certificates and corporate training credentials issued by GCTT." %}
+{% include "partials/_hero.html" with eyebrow="Academy · Credentials" title="Certificate verification." subtitle="Enter the reference printed on a GCTT certificate to confirm that it was issued and is still valid." %}
+{% include "partials/_academy_nav.html" %}
 
-<section class="mx-auto max-w-2xl px-6 py-12 md:py-20 font-sans">
-  <div class="stitch-card p-6 sm:p-8 reveal">
-    <span class="inline-flex items-center gap-1.5 rounded-full bg-[#eff4ff] px-3 py-1 font-mono text-2xs font-bold uppercase tracking-wider text-[#006398] border border-[#dde9ff]">
-      Credential Lookup
-    </span>
-    <h2 class="mt-3 font-display text-2xl font-bold text-[#000e27]">Enter Certificate Reference</h2>
-    <p class="mt-2 text-xs leading-relaxed text-[#44474e] font-sans">
-      Every certificate issued by GCTT carries a unique alphanumeric identifier (e.g. <span class="font-mono font-bold text-[#006398]">GCTT-1A2B3C4D</span>) printed at the bottom edge of the official document.
-    </p>
+<section class="section">
+  <div class="container-site max-w-3xl">
+    <div class="card p-6 sm:p-8">
+      <h2 class="text-h2">Enter a certificate reference</h2>
+      <p class="mt-2 text-sm text-muted">The reference is printed at the bottom of the certificate, for example <span class="font-mono font-semibold text-ink">GCTT-1A2B3C4D</span>.</p>
 
-    <form method="get" action="{% url 'verify_certificate_form' %}" class="mt-6 flex flex-col gap-3 sm:flex-row">
-      <input
-        type="text"
-        name="ref"
-        value="{{ ref }}"
-        placeholder="e.g. GCTT-1A2B3C4D"
-        aria-label="Certificate ID"
-        required
-        class="font-mono text-sm uppercase flex-1 rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-4 py-3 text-[#000e27] placeholder-[#75777f] focus:border-[#006398] focus:outline-hidden"
-      >
-      <button type="submit" class="btn-stitch-primary sm:w-44 font-mono text-xs font-bold uppercase tracking-wider">
-        Verify Record
-      </button>
-    </form>
-  </div>
+      <form method="get" action="{% url 'verify_certificate_form' %}" class="mt-6 flex flex-col gap-3 sm:flex-row">
+        <div class="field flex-1">
+          <label for="certificate-ref" class="sr-only">Certificate reference</label>
+          <input id="certificate-ref" type="text" name="ref" value="{{ ref }}" placeholder="GCTT-1A2B3C4D" required autocomplete="off" class="font-mono uppercase">
+        </div>
+        <button type="submit" class="btn btn-primary sm:w-40">Verify</button>
+      </form>
+    </div>
 
-  {% if registration %}
-    <div class="stitch-card credential-card credential-gold-trim mt-8 overflow-hidden rounded-2xl border-2 border-[#dde9ff] p-0 shadow-lg reveal">
-      <!-- Plaque Header / Official Banner -->
-      <div class="border-b border-[#dde9ff] bg-[#000e27] px-6 py-5 text-white">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <div class="flex items-center gap-2.5">
-            <span class="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-400 text-black shadow-xs">
-              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-              </svg>
+    {% if registration %}
+      <div class="card mt-6 overflow-hidden" role="status">
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-night px-6 py-4 text-night-ink">
+          <div class="flex items-center gap-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-full bg-night-ink text-night">
+              <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>
             </span>
             <div>
-              <p class="font-mono text-2xs font-bold uppercase tracking-wider text-[#5bb8fe]">Official Credential Plaque</p>
-              <p class="text-xs font-semibold text-slate-200">Valid certificate · Authenticated Record</p>
+              <p class="font-mono text-2xs uppercase tracking-[0.1em] text-night-accent">Verified record</p>
+              <p class="text-sm font-semibold">Valid certificate</p>
             </div>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="rounded-lg bg-white/10 px-3 py-1 font-mono text-xs font-semibold text-white tracking-wider border border-white/20">
-              {{ registration.certificate_ref }}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Plaque Body -->
-      <div class="p-6 sm:p-10 text-center sm:text-left bg-white">
-        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-          <div>
-            <p class="font-mono text-2xs font-bold uppercase tracking-wider text-[#006398]">Conferred Upon</p>
-            <h3 class="mt-2 font-display text-3xl font-bold text-[#000e27] sm:text-4xl">
-              Verified Certificate Holder
-            </h3>
-            <p class="mt-3 text-xs leading-relaxed text-[#44474e]">
-              Having fulfilled all academic requirements, practical milestone assessments, and curriculum standards for:
-            </p>
-            <p class="mt-2 font-display text-xl sm:text-2xl font-bold text-[#006398]">
-              {{ registration.programme.title }}
-            </p>
-          </div>
-
-          <!-- Official GCTT Seal Emblem -->
-          <div class="mx-auto sm:mx-0 flex flex-col items-center justify-center rounded-full border-2 border-[#006398]/30 bg-[#eff4ff] p-4 w-24 h-24 text-center shrink-0 shadow-xs">
-            <svg class="h-7 w-7 text-[#006398]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-            </svg>
-            <span class="text-[9px] font-mono font-bold uppercase tracking-wider text-[#006398] mt-1">GCTT Seal</span>
-          </div>
+          <span class="rounded-field border border-night-ink/20 px-3 py-1 font-mono text-xs">{{ registration.certificate_ref }}</span>
         </div>
 
-        <!-- Metadata Grid -->
-        <dl class="mt-8 grid gap-4 border-t border-[#dde9ff] pt-6 text-xs sm:grid-cols-2 lg:grid-cols-4">
-          <div class="rounded-xl border border-[#dde9ff] bg-[#f8f9ff] p-3.5">
-            <dt class="text-[#75777f] uppercase tracking-wider text-2xs font-semibold font-mono">Issue Date</dt>
-            <dd class="mt-1 font-semibold text-[#000e27] font-mono">{{ registration.certificate_issued_at|date:"F j, Y" }}</dd>
-          </div>
-          <div class="rounded-xl border border-[#dde9ff] bg-[#f8f9ff] p-3.5">
-            <dt class="text-[#75777f] uppercase tracking-wider text-2xs font-semibold font-mono">Issuing Authority</dt>
-            <dd class="mt-1 font-semibold text-[#000e27] font-mono">{{ COMPANY.name }}</dd>
-          </div>
-          <div class="rounded-xl border border-[#dde9ff] bg-[#f8f9ff] p-3.5">
-            <dt class="text-[#75777f] uppercase tracking-wider text-2xs font-semibold font-mono">Status</dt>
-            <dd class="mt-1 flex items-center gap-1.5 font-bold text-emerald-700 font-mono">
-              <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Verified &amp; Active
-            </dd>
-          </div>
-          <div class="rounded-xl border border-[#dde9ff] bg-[#f8f9ff] p-3.5">
-            <dt class="text-[#75777f] uppercase tracking-wider text-2xs font-semibold font-mono">Reference</dt>
-            <dd class="mt-1 font-mono font-bold text-[#006398]">{{ registration.certificate_ref }}</dd>
-          </div>
-        </dl>
+        <div class="p-6 sm:p-8">
+          <p class="font-mono text-2xs uppercase tracking-[0.1em] text-muted">Programme</p>
+          <p class="mt-1 font-display text-h2">{{ registration.programme.title }}</p>
 
-        <!-- Actions Strip (Copy link, LinkedIn share, Print) -->
-        <div class="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-[#dde9ff] pt-6">
-          <button
-            type="button"
-            onclick="navigator.clipboard.writeText(window.location.href).then(()=>{ this.innerText='Link Copied!'; setTimeout(()=>{ this.innerText='Copy Verification URL'; }, 2000); })"
-            class="btn-stitch-secondary text-xs font-mono"
-          >
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-            </svg>
-            <span>Copy Verification URL</span>
-          </button>
+          <dl class="mt-6 grid gap-4 sm:grid-cols-2">
+            <div>
+              <dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Issued</dt>
+              <dd class="mt-1 text-sm font-semibold">{{ registration.certificate_issued_at|date:"F j, Y" }}</dd>
+            </div>
+            <div>
+              <dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Issuing authority</dt>
+              <dd class="mt-1 text-sm font-semibold">{{ COMPANY.name }}</dd>
+            </div>
+            <div>
+              <dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Status</dt>
+              <dd class="mt-1 flex items-center gap-2 text-sm font-semibold text-success">
+                <span class="status-dot" aria-hidden="true"></span> Verified and active
+              </dd>
+            </div>
+            <div>
+              <dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Reference</dt>
+              <dd class="mt-1 font-mono text-sm font-semibold">{{ registration.certificate_ref }}</dd>
+            </div>
+          </dl>
 
-          <div class="flex items-center gap-2 font-mono">
-            <a
-              href="https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name={{ registration.programme.title|urlencode }}&organizationName={{ COMPANY.name|urlencode }}&issueYear={{ registration.certificate_issued_at|date:'Y' }}&issueMonth={{ registration.certificate_issued_at|date:'n' }}&certId={{ registration.certificate_ref }}&certUrl={{ request.build_absolute_uri|urlencode }}"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn-stitch-secondary text-xs"
-            >
-              <svg class="h-4 w-4 text-[#0A66C2]" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-              </svg>
-              <span>Add to LinkedIn</span>
+          <div class="mt-8 flex flex-wrap gap-2 border-t border-line pt-6">
+            <button type="button" class="btn btn-secondary btn-sm" data-copy="{{ request.build_absolute_uri }}">
+              <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#copy"></use></svg>
+              Copy verification link
+            </button>
+            <a href="https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&amp;name={{ registration.programme.title|urlencode }}&amp;organizationName={{ COMPANY.name|urlencode }}&amp;issueYear={{ registration.certificate_issued_at|date:'Y' }}&amp;issueMonth={{ registration.certificate_issued_at|date:'n' }}&amp;certId={{ registration.certificate_ref }}&amp;certUrl={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+              <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#linkedin"></use></svg>
+              Add to LinkedIn
             </a>
-            <button
-              type="button"
-              onclick="window.print()"
-              class="btn-stitch-secondary text-xs"
-            >
-              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-              </svg>
-              <span>Print Plaque</span>
+            <button type="button" class="btn btn-secondary btn-sm" data-print>
+              <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#download"></use></svg>
+              Print
             </button>
           </div>
         </div>
       </div>
-    </div>
-  {% elif ref %}
-    <div class="mt-8 rounded-2xl border border-rose-200 bg-rose-50 p-6 text-center text-rose-700 font-mono text-xs">
-      Not found: No verified certificate found matching reference "{{ ref }}". Please re-check the alphanumeric sequence or contact jobs@gctekton.com.
-    </div>
-  {% endif %}
+    {% elif ref %}
+      <div class="alert alert-danger mt-6" role="alert">
+        <div>
+          <p class="font-semibold">Not found</p>
+          <p class="mt-1">No verified certificate matches the reference “{{ ref }}”. Check the sequence, or contact <a href="mailto:{{ COMPANY.jobs_email }}" class="underline">{{ COMPANY.jobs_email }}</a>.</p>
+        </div>
+      </div>
+    {% else %}
+      <div class="mt-6 rounded-card border border-line bg-raised p-5 text-sm text-muted">
+        Verification shows the programme, issue date and validity. It does not disclose the holder's identity.
+      </div>
+    {% endif %}
+  </div>
 </section>
 {% endblock %}

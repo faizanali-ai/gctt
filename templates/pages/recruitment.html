@@ -1,76 +1,78 @@
 {% extends "base.html" %}
-{% block title %}Direct Hire &amp; Executive Recruitment — GCTT{% endblock %}
-{% block content %}
-{% include "partials/_hero.html" with eyebrow="Recruitment Practice" title="Direct Hire &amp; Contingent Search" subtitle="End-to-end executive search and technical recruitment designed to identify, evaluate, and secure high-impact technology leaders and specialist engineers." %}
+{% load static %}
+{% block title %}Recruitment — GCTT{% endblock %}
+{% block description %}Retained and contingent search for senior technical practitioners, leads and delivery managers.{% endblock %}
 
-<section class="mx-auto max-w-7xl px-6 sm:px-12 py-16 lg:py-24 font-sans">
-  <div class="grid gap-16 lg:grid-cols-[1.1fr_1.2fr] lg:items-start">
-    <div class="space-y-6 text-base leading-relaxed text-[#44474e] sm:text-lg reveal">
-      <div class="inline-flex items-center gap-2 rounded-full border border-[#dde9ff] bg-[#eff4ff] px-4 py-1 font-mono text-2xs uppercase tracking-widest text-[#006398] font-bold">
-        <span class="h-2 w-2 rounded-full bg-[#006398] animate-pulse"></span>
-        <span>Zero Middleman Markup · 90-Day Guarantee</span>
-      </div>
-      <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[#000e27]">
-        Targeted technical recruitment for <span class="text-[#006398]">mission-critical enterprise roles</span>.
-      </h2>
-      <p class="text-sm sm:text-base font-sans text-[#44474e]">Finding exceptional permanent engineering leadership requires proactive, discreet search—not passive job board parsing. GCTT leverages deep professional networks across Texas and nationwide tech epicenters to represent your employer brand with distinction.</p>
-      
-      <!-- Structured 5-Stage Search Methodology -->
-      <div class="mt-8 space-y-4 rounded-2xl border border-[#dde9ff] bg-white p-6 sm:p-8 shadow-xs">
-        <span class="font-mono text-2xs uppercase tracking-widest text-[#006398] font-bold block mb-2">
-          OUR 5-STAGE TECHNICAL SEARCH LIFECYCLE
-        </span>
-        <div class="space-y-4 pt-2 text-sm text-[#0d1c2f] font-sans">
-          <div class="flex items-start gap-4">
-            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#0f2444] text-xs font-bold text-white font-mono">01</span>
-            <div>
-              <p class="font-display font-bold text-[#000e27]">Role Calibration &amp; Competency Scorecard</p>
-              <p class="mt-0.5 text-xs text-[#44474e] leading-relaxed">Defining mandatory architectural competencies, non-negotiable tech stack proficiencies, and organizational dynamics.</p>
-            </div>
+{% block content %}
+{% include "partials/_hero.html" with eyebrow="Talent Solutions · Practice 02" title="Search for senior technical roles." subtitle="Retained and contingent recruitment for the roles that are hard to fill and expensive to get wrong." %}
+{% include "partials/_solutions_nav.html" %}
+
+<section class="section">
+  <div class="container-site grid gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
+    <div class="max-w-2xl">
+      <p class="text-body-lg text-muted">
+        GCTT runs a defined search rather than a job-board filter. We agree the scorecard, map the market, assess against the role, and stay involved through the offer.
+      </p>
+
+      <h2 class="mt-12 text-h2">The search process</h2>
+      <ol class="mt-6 space-y-5">
+        <li class="flex gap-4">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-field bg-ink font-mono text-xs font-semibold text-canvas">01</span>
+          <div>
+            <p class="font-semibold">Calibration</p>
+            <p class="mt-1 text-sm leading-relaxed text-muted">Role outcomes, non-negotiables, compensation range and the interview process are agreed in writing.</p>
           </div>
-          <div class="flex items-start gap-4">
-            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#0f2444] text-xs font-bold text-white font-mono">02</span>
-            <div>
-              <p class="font-display font-bold text-[#000e27]">Targeted Market Mapping &amp; Passive Outreach</p>
-              <p class="mt-0.5 text-xs text-[#44474e] leading-relaxed">Discreet engagement with top-quartile practitioners currently delivering at tier-1 enterprise and SaaS firms.</p>
-            </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-field bg-ink font-mono text-xs font-semibold text-canvas">02</span>
+          <div>
+            <p class="font-semibold">Market mapping</p>
+            <p class="mt-1 text-sm leading-relaxed text-muted">Targeted, discreet outreach to practitioners who have already done the work.</p>
           </div>
-          <div class="flex items-start gap-4">
-            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#0f2444] text-xs font-bold text-white font-mono">03</span>
-            <div>
-              <p class="font-display font-bold text-[#000e27]">In-Depth Technical Diagnostic</p>
-              <p class="mt-0.5 text-xs text-[#44474e] leading-relaxed">Rigorous technical interview by practicing enterprise leads covering production architectures and code hygiene.</p>
-            </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-field bg-ink font-mono text-xs font-semibold text-canvas">03</span>
+          <div>
+            <p class="font-semibold">Technical assessment</p>
+            <p class="mt-1 text-sm leading-relaxed text-muted">A structured conversation on architecture, trade-offs and delivery history, documented for your review.</p>
           </div>
-          <div class="flex items-start gap-4">
-            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#0f2444] text-xs font-bold text-white font-mono">04</span>
-            <div>
-              <p class="font-display font-bold text-[#000e27]">Executive Dossier Presentation</p>
-              <p class="mt-0.5 text-xs text-[#44474e] leading-relaxed">Delivering comprehensive candidate profiles complete with architectural evaluations, compensation expectations, and verified availability.</p>
-            </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-field bg-ink font-mono text-xs font-semibold text-canvas">04</span>
+          <div>
+            <p class="font-semibold">Shortlist and offer</p>
+            <p class="mt-1 text-sm leading-relaxed text-muted">A short, comparable shortlist with availability and compensation expectations. Replacement terms are agreed in the engagement letter.</p>
           </div>
-          <div class="flex items-start gap-4">
-            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#0f2444] text-xs font-bold text-white font-mono">05</span>
-            <div>
-              <p class="font-display font-bold text-[#000e27]">Offer Negotiation &amp; Retention Assurance</p>
-              <p class="mt-0.5 text-xs text-[#44474e] leading-relaxed">Closing candidate offers with market-calibrated packages, backed by our 90-day executive replacement guarantee.</p>
-            </div>
-          </div>
+        </li>
+      </ol>
+
+      <div class="mt-12 grid gap-4 sm:grid-cols-3">
+        <div class="card p-5">
+          <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Scope</p>
+          <p class="mt-2 font-display font-semibold">Senior and specialist</p>
+          <p class="mt-1 text-sm text-muted">Leads, architects, principal engineers and delivery managers.</p>
+        </div>
+        <div class="card p-5">
+          <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Model</p>
+          <p class="mt-2 font-display font-semibold">Retained or contingent</p>
+          <p class="mt-1 text-sm text-muted">The model follows the difficulty of the role, not a default.</p>
+        </div>
+        <div class="card p-5">
+          <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Coverage</p>
+          <p class="mt-2 font-display font-semibold">Texas and national</p>
+          <p class="mt-1 text-sm text-muted">Based in Irving, working across US time zones.</p>
         </div>
       </div>
     </div>
 
-    <!-- Right Column Intake Form Card -->
-    <div class="stitch-card p-8 sm:p-10 reveal delay-1">
-      <div class="inline-flex items-center gap-2 rounded-full border border-[#dde9ff] bg-[#eff4ff] px-3 py-1 font-mono text-3xs font-bold text-[#006398] uppercase tracking-wider mb-4">
-        Direct Search Intake
+    <aside class="lg:sticky lg:top-24">
+      <div class="card p-6 sm:p-8">
+        <p class="eyebrow eyebrow-accent">Search intake</p>
+        <h2 class="mt-2 text-h2">Start a search</h2>
+        <p class="mt-2 text-sm text-muted">Share the role and the constraints. We will confirm whether a search is the right model.</p>
+        <div class="mt-6">{% include "enquiries/_form.html" %}</div>
       </div>
-      <h3 class="font-display text-2xl font-bold text-[#000e27]">Initiate Technical Search</h3>
-      <p class="mt-2 text-xs text-[#44474e]">Share your target engineering role or executive headcount. A practice lead will coordinate an architectural calibration session.</p>
-      <div class="mt-6">
-        {% include "enquiries/_form.html" with enquiry_category="recruitment" %}
-      </div>
-    </div>
+    </aside>
   </div>
 </section>
 {% endblock %}

@@ -1,242 +1,249 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}GCTT — IT Staffing, Recruitment &amp; Training{% endblock %}
-{% block description %}GCTT connects talent with opportunity through IT staffing, recruitment, talent acquisition and training. Bridging Talent. Connecting Opportunities.{% endblock %}
+{% block title %}GCTT — Technology Talent &amp; Training{% endblock %}
+{% block description %}GCTT provides technology staffing, recruitment and SAP/Agile training from Irving, Texas. Two divisions, one standard of delivery.{% endblock %}
 
 {% block content %}
-<!-- 1. HERO SECTION (Clean Navy with Office Image Overlay) -->
-<section class="relative overflow-hidden bg-[#000e27] text-white font-sans">
-  <img src="{% static 'images/hero-office.jpg' %}" alt="" width="1600" height="1008" fetchpriority="high" class="absolute inset-0 h-full w-full object-cover opacity-35" style="object-position: right 15%;">
-  <div class="absolute inset-0 bg-gradient-to-r from-[#000e27] via-[#000e27]/85 to-[#000e27]/40"></div>
-  <div class="container-site relative py-20 md:py-32">
-    <p class="text-xs font-bold uppercase tracking-widest text-[#5bb8fe]">Bridging Talent. Connecting Opportunities.</p>
-    <h1 class="mt-4 max-w-2xl font-display text-4xl font-bold leading-[1.1] md:text-6xl text-white">
-      Had a break in your career? Your next opportunity starts here.
-    </h1>
-    <p class="mt-5 max-w-xl text-lg text-[#c5c6cf] md:text-xl leading-relaxed">
-      GCTT connects talent with opportunity through IT staffing, recruitment, talent acquisition and training.
-    </p>
-    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-      <a href="{% url 'careers' %}" class="btn-stitch-primary bg-[#006398] hover:bg-[#004e78] text-white text-sm py-3 px-6 shadow-sm font-semibold">
-        <span>Explore Opportunities</span>
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-      </a>
-      <a href="{% url 'employers' %}" class="btn-stitch-secondary bg-transparent text-white border border-white/30 hover:bg-white/10 text-sm py-3 px-6 font-semibold">
-        <span>Request Talent</span>
-      </a>
+<section class="relative isolate overflow-hidden bg-night text-night-ink">
+  <div class="pointer-events-none absolute inset-0 hidden lg:block" aria-hidden="true">
+    {% include "partials/_hero-art.html" %}
+  </div>
+
+  <div class="container-site relative grid gap-14 py-20 md:py-28 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+    <div class="max-w-2xl">
+      <div class="hero-enter" style="--enter-index: 0">
+        <p class="eyebrow text-night-accent">Irving, Texas · E-Verify employer</p>
+        <h1 class="mt-5 text-display-1">Technology talent and training for enterprise teams.</h1>
+        <p class="mt-6 max-w-xl text-body-lg text-night-muted">
+          GCTT places technology practitioners with client teams and trains the people who want to join them. Two divisions, one standard of delivery.
+        </p>
+      </div>
+      <div class="hero-enter mt-9 flex flex-col gap-3 sm:flex-row" style="--enter-index: 1">
+        <a href="{% url 'employers' %}" class="btn btn-primary btn-lg">
+          Request talent
+          <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
+        </a>
+        <a href="{% url 'careers' %}" class="btn btn-lg border border-night-ink/25 text-night-ink hover:bg-night-ink/10">
+          Explore open roles
+        </a>
+      </div>
     </div>
+
+    <dl class="hero-enter grid grid-cols-2 gap-px overflow-hidden rounded-card border border-night-ink/15 bg-night-ink/15" style="--enter-index: 2">
+      <div class="bg-night p-5">
+        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-night-muted">Headquarters</dt>
+        <dd class="mt-1.5 font-display text-lg font-semibold">Irving, Texas</dd>
+      </div>
+      <div class="bg-night p-5">
+        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-night-muted">Compliance</dt>
+        <dd class="mt-1.5 font-display text-lg font-semibold">E-Verify</dd>
+      </div>
+      <div class="bg-night p-5">
+        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-night-muted">Talent</dt>
+        <dd class="mt-1.5 font-display text-lg font-semibold">W2 · contract · direct</dd>
+      </div>
+      <div class="bg-night p-5">
+        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-night-muted">Academy</dt>
+        <dd class="mt-1.5 font-display text-lg font-semibold">SAP · Agile</dd>
+      </div>
+    </dl>
   </div>
 </section>
 
-<!-- 2. ABOUT GCTT SECTION -->
-<section class="bg-white py-16 md:py-20 border-b border-slate-200 font-sans">
-  <div class="container-site grid gap-10 md:grid-cols-2 md:items-center">
-    <div>
-      <p class="text-xs font-bold uppercase tracking-widest text-[#006398]">About GCTT</p>
-      <h2 class="mt-3 font-display text-3xl font-bold md:text-4xl text-[#000e27]">Your Bridge Between Talent and Opportunity.</h2>
-    </div>
-    <div class="text-base text-slate-600 space-y-4">
-      <p>GCTT works with three groups: employers and companies looking for talent, job seekers and candidates looking for their next role, and students looking to build their skills.</p>
-      <p>We offer training both online and in person, and certificates are awarded on successful completion.</p>
-      <a href="{% url 'about' %}" class="inline-flex items-center gap-1 font-semibold text-[#006398] hover:underline">
-        Learn more about GCTT <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- 3. CORE SERVICES (4 Cards) -->
-<section class="bg-slate-50 py-16 md:py-20 border-b border-slate-200 font-sans">
+<section class="section border-b border-line">
   <div class="container-site">
-    <p class="text-xs font-bold uppercase tracking-widest text-[#006398]">Services</p>
-    <h2 class="mt-2 font-display text-3xl font-bold md:text-4xl text-[#000e27]">Services &amp; Engagement</h2>
-    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      <!-- Service 1: IT Staffing -->
-      <a href="{% url 'it_staffing' %}" class="group rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#006398] flex flex-col justify-between">
-        <div>
-          <div class="w-10 h-10 rounded-lg bg-[#eff4ff] text-[#006398] flex items-center justify-center font-bold text-sm mb-4">
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-          </div>
-          <h3 class="font-display text-lg font-bold text-[#000e27]">IT Staffing</h3>
-          <p class="mt-2 text-sm text-slate-600">Connecting companies with skilled IT professionals for their technology teams.</p>
-        </div>
-        <span class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#006398]">Learn more <svg class="h-4 w-4 transition group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></span>
+    <div class="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+      <div>
+        <p class="eyebrow eyebrow-accent">01 — Talent Solutions</p>
+        <h2 class="mt-3 text-display-2">Hire practitioners, not résumés.</h2>
+      </div>
+      <p class="text-body-lg text-muted lg:pb-2">
+        Three engagement models for teams that need specific capability quickly. Every shortlist is screened against the role, not a keyword list.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-4 md:grid-cols-3">
+      <a href="{% url 'it_staffing' %}" class="card card-interactive reveal flex flex-col p-6" style="--reveal-index: 0">
+        <span class="flex h-10 w-10 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+          <svg class="h-5 w-5"><use href="{% static 'images/icons.svg' %}#briefcase"></use></svg>
+        </span>
+        <h3 class="mt-5 text-h3">IT Staffing</h3>
+        <p class="mt-2 flex-1 text-sm leading-relaxed text-muted">Contract, contract-to-hire and direct placement for engineering, cloud and infrastructure teams.</p>
+        <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">Read more
+          <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
+        </span>
       </a>
 
-      <!-- Service 2: Recruitment -->
-      <a href="{% url 'recruitment' %}" class="group rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#006398] flex flex-col justify-between">
-        <div>
-          <div class="w-10 h-10 rounded-lg bg-[#eff4ff] text-[#006398] flex items-center justify-center font-bold text-sm mb-4">
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-          </div>
-          <h3 class="font-display text-lg font-bold text-[#000e27]">Recruitment</h3>
-          <p class="mt-2 text-sm text-slate-600">Share your hiring requirements and we help you find the right people.</p>
-        </div>
-        <span class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#006398]">Learn more <svg class="h-4 w-4 transition group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></span>
+      <a href="{% url 'recruitment' %}" class="card card-interactive reveal flex flex-col p-6" style="--reveal-index: 1">
+        <span class="flex h-10 w-10 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+          <svg class="h-5 w-5"><use href="{% static 'images/icons.svg' %}#users"></use></svg>
+        </span>
+        <h3 class="mt-5 text-h3">Recruitment</h3>
+        <p class="mt-2 flex-1 text-sm leading-relaxed text-muted">Retained and contingent search for senior technical practitioners, assessed against the role.</p>
+        <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">Read more
+          <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
+        </span>
       </a>
 
-      <!-- Service 3: Talent Acquisition -->
-      <a href="{% url 'talent_acquisition' %}" class="group rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#006398] flex flex-col justify-between">
-        <div>
-          <div class="w-10 h-10 rounded-lg bg-[#eff4ff] text-[#006398] flex items-center justify-center font-bold text-sm mb-4">
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-          </div>
-          <h3 class="font-display text-lg font-bold text-[#000e27]">Talent Acquisition</h3>
-          <p class="mt-2 text-sm text-slate-600">Support for companies building their teams around the talent they need.</p>
-        </div>
-        <span class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#006398]">Learn more <svg class="h-4 w-4 transition group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></span>
+      <a href="{% url 'talent_acquisition' %}" class="card card-interactive reveal flex flex-col p-6" style="--reveal-index: 2">
+        <span class="flex h-10 w-10 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+          <svg class="h-5 w-5"><use href="{% static 'images/icons.svg' %}#building"></use></svg>
+        </span>
+        <h3 class="mt-5 text-h3">Talent Acquisition</h3>
+        <p class="mt-2 flex-1 text-sm leading-relaxed text-muted">Workforce advisory and embedded recruiting support for teams building delivery capability.</p>
+        <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">Read more
+          <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
+        </span>
       </a>
+    </div>
 
-      <!-- Service 4: Training & Development -->
-      <a href="{% url 'training' %}" class="group rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#006398] flex flex-col justify-between">
-        <div>
-          <div class="w-10 h-10 rounded-lg bg-[#eff4ff] text-[#006398] flex items-center justify-center font-bold text-sm mb-4">
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
-          </div>
-          <h3 class="font-display text-lg font-bold text-[#000e27]">Training &amp; Development</h3>
-          <p class="mt-2 text-sm text-slate-600">Online and in-person training, with certificates on successful completion.</p>
-        </div>
-        <span class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#006398]">Learn more <svg class="h-4 w-4 transition group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></span>
+    <div class="mt-6 flex flex-col gap-5 rounded-card border border-line bg-raised p-6 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Specialised practice</p>
+        <p class="mt-1 font-display text-lg font-semibold">SAP S/4HANA and Agile delivery</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="chip">SAP</span>
+        <span class="chip">Scrum &amp; Agile</span>
+        <span class="chip">PSM &amp; PSPO</span>
+        <a href="{% url 'sap_scrum' %}" class="btn btn-secondary btn-sm">Explore practice</a>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <a href="{% url 'services' %}" class="btn btn-solid">Explore Talent Solutions
+        <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
       </a>
     </div>
   </div>
 </section>
 
-<!-- 4. SAP & SCRUM SECTION -->
-<section class="bg-white py-16 md:py-20 border-b border-slate-200 font-sans">
+<section class="section border-b border-line bg-raised">
   <div class="container-site grid gap-12 lg:grid-cols-2 lg:items-center">
     <div>
-      <p class="text-xs font-bold uppercase tracking-widest text-[#006398]">SAP &amp; Scrum</p>
-      <h2 class="mt-3 font-display text-3xl font-bold text-[#000e27]">Specialized Enterprise Practices</h2>
-      <p class="mt-4 text-base text-slate-600 leading-relaxed">
-        Enquiries across SAP modules and Scrum and Agile roles. Hands-on learning and enterprise certifications.
+      <p class="eyebrow eyebrow-accent">02 — Academy</p>
+      <h2 class="mt-3 text-display-2">Train for the work that is actually open.</h2>
+      <p class="mt-5 max-w-lg text-body-lg text-muted">
+        Instructor-led and online programmes in SAP functional domains and Scrum/Agile delivery. Certificates are issued on completion and can be verified publicly.
       </p>
-      <a href="{% url 'sap_scrum' %}" class="mt-6 inline-flex items-center gap-1.5 font-semibold text-[#006398] hover:underline">
-        Explore SAP &amp; Scrum <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-      </a>
-    </div>
-    <div>
-      <ul class="flex flex-wrap gap-2.5">
-        <li class="rounded-full border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm font-semibold text-[#000e27]">SAP</li>
-        <li class="rounded-full border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm font-semibold text-[#000e27]">Scrum &amp; Agile</li>
-        <li class="rounded-full border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm font-semibold text-[#000e27]">PSM &amp; PSPO</li>
-        <li class="rounded-full border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm font-semibold text-[#000e27]">S/4HANA Practice</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- 5. AUDIENCE PATHWAYS (Navy Gradient Cards) -->
-<section class="bg-[#000e27] text-white py-16 md:py-20 font-sans">
-  <div class="container-site grid gap-6 md:grid-cols-3">
-    <!-- Card 1: Career Restart -->
-    <div class="rounded-xl border border-white/10 bg-white/5 p-7 flex flex-col justify-between">
-      <div>
-        <h3 class="font-display text-xl font-bold text-white">Career Restart</h3>
-        <p class="mt-3 text-sm text-[#c5c6cf] leading-relaxed">
-          Had a break in your career? GCTT helps experienced professionals rebuild their technical skills and re-enter the IT workforce.
-        </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="{% url 'training' %}" class="btn btn-solid">Explore the Academy
+          <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
+        </a>
+        <a href="{% url 'verify_certificate_form' %}" class="btn btn-secondary">Verify a certificate</a>
       </div>
-      <a href="{% url 'career_restart' %}" class="mt-6 inline-flex items-center gap-1 font-semibold text-[#5bb8fe] hover:underline">
-        Learn more <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-      </a>
     </div>
 
-    <!-- Card 2: For Employers -->
-    <div class="rounded-xl border border-white/10 bg-white/5 p-7 flex flex-col justify-between">
-      <div>
-        <h3 class="font-display text-xl font-bold text-white">For Employers</h3>
-        <p class="mt-3 text-sm text-[#c5c6cf] leading-relaxed">
-          Looking for qualified IT talent? Tell us about your open roles and we will match you with skilled candidates ready to deliver.
-        </p>
-      </div>
-      <a href="{% url 'employers' %}" class="mt-6 inline-flex items-center gap-1 font-semibold text-[#5bb8fe] hover:underline">
-        Request talent <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+    <div class="divide-y divide-line border-y border-line">
+      <a href="{% url 'sap_scrum' %}" class="group flex items-start justify-between gap-6 py-5">
+        <div>
+          <p class="font-display text-lg font-semibold">SAP S/4HANA</p>
+          <p class="mt-1 text-sm text-muted">Functional domains, enterprise configuration and delivery roles.</p>
+        </div>
+        <svg class="mt-1 h-5 w-5 shrink-0 text-accent transition-transform group-hover:translate-x-1" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
       </a>
-    </div>
-
-    <!-- Card 3: For Job Seekers -->
-    <div class="rounded-xl border border-white/10 bg-white/5 p-7 flex flex-col justify-between">
-      <div>
-        <h3 class="font-display text-xl font-bold text-white">For Job Seekers</h3>
-        <p class="mt-3 text-sm text-[#c5c6cf] leading-relaxed">
-          Browse open job opportunities and apply directly. Direct placement support with zero candidate fees.
-        </p>
-      </div>
-      <a href="{% url 'careers' %}" class="mt-6 inline-flex items-center gap-1 font-semibold text-[#5bb8fe] hover:underline">
-        Explore opportunities <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      <a href="{% url 'training' %}" class="group flex items-start justify-between gap-6 py-5">
+        <div>
+          <p class="font-display text-lg font-semibold">Scrum &amp; Agile</p>
+          <p class="mt-1 text-sm text-muted">Delivery frameworks for teams moving to iterative product work.</p>
+        </div>
+        <svg class="mt-1 h-5 w-5 shrink-0 text-accent transition-transform group-hover:translate-x-1" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
+      </a>
+      <a href="{% url 'career_restart' %}" class="group flex items-start justify-between gap-6 py-5">
+        <div>
+          <p class="font-display text-lg font-semibold">Career Restart</p>
+          <p class="mt-1 text-sm text-muted">A structured route back into technical work after a career break.</p>
+        </div>
+        <svg class="mt-1 h-5 w-5 shrink-0 text-accent transition-transform group-hover:translate-x-1" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
       </a>
     </div>
   </div>
 </section>
 
-<!-- 6. CONTACT & ENQUIRY SECTION -->
-<section class="bg-slate-50 py-16 md:py-20 font-sans">
-  <div class="container-site grid gap-12 lg:grid-cols-[1fr_1.4fr]">
-    <div>
-      <p class="text-xs font-bold uppercase tracking-widest text-[#006398]">Contact</p>
-      <h2 class="mt-2 font-display text-3xl font-bold text-[#000e27]">Get in touch</h2>
-      <ul class="mt-6 space-y-4 text-slate-700">
-        <li class="flex items-center gap-3">
-          <svg class="h-5 w-5 text-[#006398] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-          <span><strong class="text-[#000e27]">Careers:</strong> <a href="mailto:{{ COMPANY.jobs_email }}" class="hover:underline text-[#006398]">{{ COMPANY.jobs_email }}</a></span>
+<section class="bg-night py-16 text-night-ink">
+  <div class="container-site">
+    <div class="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+      <div>
+        <p class="eyebrow text-night-accent">How we work</p>
+        <h2 class="mt-3 text-h2">Operating standards.</h2>
+      </div>
+      <ul class="grid gap-6 sm:grid-cols-3">
+        <li>
+          <svg class="h-5 w-5 text-night-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#shield"></use></svg>
+          <p class="mt-3 font-display font-semibold">E-Verify compliance</p>
+          <p class="mt-1 text-sm text-night-muted">Statutory employment verification for every placement.</p>
         </li>
-        <li class="flex items-center gap-3">
-          <svg class="h-5 w-5 text-[#006398] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-          <span><strong class="text-[#000e27]">Company:</strong> <a href="mailto:{{ COMPANY.email }}" class="hover:underline text-[#006398]">{{ COMPANY.email }}</a></span>
+        <li>
+          <svg class="h-5 w-5 text-night-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#file"></use></svg>
+          <p class="mt-3 font-display font-semibold">Controlled access</p>
+          <p class="mt-1 text-sm text-night-muted">Resumes are visible only to the staff reviewing the role.</p>
         </li>
-        <li class="flex items-center gap-3">
-          <svg class="h-5 w-5 text-[#006398] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          <span>{{ COMPANY.address }}</span>
+        <li>
+          <svg class="h-5 w-5 text-night-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>
+          <p class="mt-3 font-display font-semibold">Verifiable certificates</p>
+          <p class="mt-1 text-sm text-night-muted">Every completion certificate carries a public reference.</p>
         </li>
       </ul>
     </div>
-    
-    <div class="rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
-      <h3 class="font-display text-xl font-bold text-[#000e27] mb-2">Send an Enquiry</h3>
-      <p class="text-sm text-slate-500 mb-6">Fill out your details and our team will get back to you directly.</p>
-      
-      <form method="post" action="{% url 'submit_enquiry' %}" class="space-y-4">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{% url 'home' %}">
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-semibold text-[#000e27] mb-1">Full name *</label>
-            <input type="text" name="name" required class="w-full text-sm rounded-lg border border-slate-200 px-3.5 py-2.5 bg-slate-50 text-slate-800 focus:outline-none focus:border-[#006398] focus:bg-white" placeholder="Your name">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-[#000e27] mb-1">Email *</label>
-            <input type="email" name="email" required class="w-full text-sm rounded-lg border border-slate-200 px-3.5 py-2.5 bg-slate-50 text-slate-800 focus:outline-none focus:border-[#006398] focus:bg-white" placeholder="you@example.com">
-          </div>
-        </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-[#000e27] mb-1">Phone number (optional)</label>
-          <input type="tel" name="phone" class="w-full text-sm rounded-lg border border-slate-200 px-3.5 py-2.5 bg-slate-50 text-slate-800 focus:outline-none focus:border-[#006398] focus:bg-white" placeholder="+1 (555) 000-0000">
-        </div>
+    <div class="mt-12 overflow-hidden border-y border-night-ink/15 py-4">
+      <div class="marquee gap-10 font-mono text-2xs uppercase tracking-[0.16em] text-night-muted" aria-hidden="true">
+        <span>E-Verify</span><span>Irving, TX</span><span>SAP S/4HANA</span><span>Scrum &amp; Agile</span><span>W2 &amp; Contract</span><span>Direct Placement</span><span>Career Restart</span><span>Certificate Verification</span>
+        <span>E-Verify</span><span>Irving, TX</span><span>SAP S/4HANA</span><span>Scrum &amp; Agile</span><span>W2 &amp; Contract</span><span>Direct Placement</span><span>Career Restart</span><span>Certificate Verification</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <div>
-          <label class="block text-xs font-semibold text-[#000e27] mb-1">I'm interested in *</label>
-          <select name="category" required class="w-full text-sm rounded-lg border border-slate-200 px-3.5 py-2.5 bg-slate-50 text-slate-800 focus:outline-none focus:border-[#006398] focus:bg-white">
-            <option value="it_staffing">IT Staffing</option>
-            <option value="recruitment">Recruitment</option>
-            <option value="talent_acquisition">Talent Acquisition</option>
-            <option value="training">Training &amp; Development</option>
-            <option value="career_restart">Job opportunities / Career Restart</option>
-            <option value="general">Other Enquiry</option>
-          </select>
-        </div>
+<section class="section border-b border-line">
+  <div class="container-site grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+    <div>
+      <p class="eyebrow eyebrow-accent">03 — Careers</p>
+      <h2 class="mt-3 text-display-2">Open mandates, direct conversations.</h2>
+      <p class="mt-5 max-w-lg text-body-lg text-muted">
+        Browse current roles or send your résumé. Candidates are never charged a fee, and every application is reviewed by a person.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="{% url 'careers' %}" class="btn btn-primary">View open roles</a>
+        <a href="mailto:{{ COMPANY.jobs_email }}" class="btn btn-secondary">{{ COMPANY.jobs_email }}</a>
+      </div>
+    </div>
+    <div class="card p-6 sm:p-7">
+      <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">What to expect</p>
+      <ul class="mt-4 space-y-3 text-sm text-muted">
+        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>Roles screened against your actual experience.</li>
+        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>Direct client teams, not layered subcontracts.</li>
+        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>A Texas-based team you can reach by email.</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-        <div>
-          <label class="block text-xs font-semibold text-[#000e27] mb-1">Message *</label>
-          <textarea name="message" rows="4" required class="w-full text-sm rounded-lg border border-slate-200 px-3.5 py-2.5 bg-slate-50 text-slate-800 focus:outline-none focus:border-[#006398] focus:bg-white" placeholder="How can we help?"></textarea>
+<section class="section bg-raised">
+  <div class="container-site grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+    <div>
+      <p class="eyebrow eyebrow-accent">Contact</p>
+      <h2 class="mt-3 text-display-2">Start a conversation.</h2>
+      <p class="mt-4 max-w-md text-body-lg text-muted">Tell us what you need. A practice director reviews every enquiry.</p>
+      <dl class="mt-8 space-y-4 text-sm">
+        <div class="flex gap-3">
+          <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#map-pin"></use></svg>
+          <div><dt class="font-semibold">Headquarters</dt><dd class="text-muted">{{ COMPANY.address }}</dd></div>
         </div>
-
-        <button type="submit" class="w-full btn-stitch-primary bg-[#000e27] hover:bg-[#0f2444] text-white text-sm py-3 mt-2 font-semibold shadow-sm">
-          Send Enquiry
-        </button>
-      </form>
+        <div class="flex gap-3">
+          <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#mail"></use></svg>
+          <div><dt class="font-semibold">Email</dt><dd><a href="mailto:{{ COMPANY.email }}" class="link">{{ COMPANY.email }}</a></dd></div>
+        </div>
+        <div class="flex gap-3">
+          <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#clock"></use></svg>
+          <div><dt class="font-semibold">Hours</dt><dd class="text-muted">Monday–Friday, 8:00–18:00 CST</dd></div>
+        </div>
+      </dl>
+    </div>
+    <div class="card p-6 sm:p-8">
+      <h3 class="text-h3">Send an enquiry</h3>
+      <p class="mt-1 text-sm text-muted">We aim to respond within one business day.</p>
+      <div class="mt-6">{% include "enquiries/_form.html" %}</div>
     </div>
   </div>
 </section>

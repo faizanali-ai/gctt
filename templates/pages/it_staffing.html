@@ -1,68 +1,77 @@
 {% extends "base.html" %}
-{% block title %}IT Staffing Solutions — GCTT{% endblock %}
+{% load static %}
+{% block title %}IT Staffing — GCTT{% endblock %}
+{% block description %}Contract, contract-to-hire and direct placement for engineering, cloud, data and infrastructure teams.{% endblock %}
+
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Staffing Practice" title="Enterprise IT Staffing" subtitle="Scalable, technically vetted talent pipelines engineered for high-growth enterprise initiatives, mission-critical systems, and complex digital transformations." %}
+{% include "partials/_hero.html" with eyebrow="Talent Solutions · Practice 01" title="IT staffing for delivery teams." subtitle="GCTT places engineers, cloud specialists and infrastructure practitioners into client teams across Texas and the United States." %}
+{% include "partials/_solutions_nav.html" %}
 
-<section class="mx-auto max-w-7xl px-6 sm:px-12 py-16 lg:py-24 font-sans">
-  <div class="grid gap-16 lg:grid-cols-[1.1fr_1.2fr] lg:items-start">
-    <div class="space-y-6 text-base leading-relaxed text-[#44474e] sm:text-lg reveal">
-      <p class="font-display text-2xl sm:text-3xl font-bold text-[#000e27] leading-tight">
-        Precision technical staffing without operational friction or mis-hire risk.
+<section class="section">
+  <div class="container-site grid gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
+    <div class="max-w-2xl">
+      <p class="text-body-lg text-muted">
+        Engagements are contract, contract-to-hire or direct placement. We calibrate the role with you first, then screen against that definition rather than a keyword list.
       </p>
-      <p class="font-sans text-sm sm:text-base text-[#44474e]">
-        Whether you need to augment an in-flight cloud implementation squad or deploy specialized enterprise architects, GCTT identifies, vets, and deploys seasoned IT practitioners across Texas and nationwide.
-      </p>
-      
-      <!-- Multi-Tier Screening Protocol -->
-      <div class="mt-8 space-y-4 rounded-2xl border border-[#dde9ff] bg-white p-6 sm:p-8 shadow-xs">
-        <div class="flex items-center justify-between border-b border-[#dde9ff] pb-3">
-          <p class="font-mono text-xs uppercase tracking-widest text-[#006398] font-bold">The GCTT 4-Stage Vetting Protocol</p>
-          <span class="rounded-full bg-[#eff4ff] border border-[#dde9ff] px-2.5 py-0.5 font-mono text-3xs font-bold text-[#006398]">TOP 3% FIT</span>
-        </div>
-        <div class="space-y-5 pt-2 text-sm text-[#0d1c2f] font-sans">
-          <div class="flex items-start gap-4">
-            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#0f2444] text-xs font-bold text-white font-mono">1</span>
-            <div>
-              <p class="font-display font-bold text-[#000e27]">Architectural &amp; Diagnostic Interview</p>
-              <p class="text-xs text-[#44474e] mt-0.5">Conducted exclusively by practicing technical directors evaluating system design, trade-offs, and failure mode recovery.</p>
-            </div>
+
+      <h2 class="mt-12 text-h2">How we screen</h2>
+      <ol class="mt-6 space-y-5">
+        <li class="flex gap-4">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-field bg-ink font-mono text-xs font-semibold text-canvas">01</span>
+          <div>
+            <p class="font-semibold">Role calibration</p>
+            <p class="mt-1 text-sm leading-relaxed text-muted">We agree the outcomes, the stack and the constraints before sourcing begins.</p>
           </div>
-          <div class="flex items-start gap-4">
-            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#0f2444] text-xs font-bold text-white font-mono">2</span>
-            <div>
-              <p class="font-display font-bold text-[#000e27]">Hands-on Sandbox Evaluation</p>
-              <p class="text-xs text-[#44474e] mt-0.5">Scenario-based testing in live enterprise environments (Kubernetes clusters, cloud CI/CD pipelines, containerized orchestration).</p>
-            </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-field bg-ink font-mono text-xs font-semibold text-canvas">02</span>
+          <div>
+            <p class="font-semibold">Technical screen</p>
+            <p class="mt-1 text-sm leading-relaxed text-muted">A practitioner conversation covering system design, delivery history and the specific tools in scope.</p>
           </div>
-          <div class="flex items-start gap-4">
-            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#0f2444] text-xs font-bold text-white font-mono">3</span>
-            <div>
-              <p class="font-display font-bold text-[#000e27]">Rigorous Right-to-Work &amp; Background Vetting</p>
-              <p class="text-xs text-[#44474e] mt-0.5">Complete E-Verify authorization, Form I-9 validation, criminal history, and past employment credential audit.</p>
-            </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-field bg-ink font-mono text-xs font-semibold text-canvas">03</span>
+          <div>
+            <p class="font-semibold">Compliance</p>
+            <p class="mt-1 text-sm leading-relaxed text-muted">E-Verify and Form I-9 verification, plus any background or credential checks agreed for the role.</p>
           </div>
-          <div class="flex items-start gap-4">
-            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#0f2444] text-xs font-bold text-white font-mono">4</span>
-            <div>
-              <p class="font-display font-bold text-[#000e27]">Sprint Velocity &amp; Cultural Alignment</p>
-              <p class="text-xs text-[#44474e] mt-0.5">Evaluation of cross-functional communication, stakeholder management, and Agile scrum ceremony engagement.</p>
-            </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-field bg-ink font-mono text-xs font-semibold text-canvas">04</span>
+          <div>
+            <p class="font-semibold">Placement and follow-up</p>
+            <p class="mt-1 text-sm leading-relaxed text-muted">The same contact stays with the engagement after the start date.</p>
           </div>
-        </div>
+        </li>
+      </ol>
+
+      <h2 class="mt-12 text-h2">Role families</h2>
+      <ul class="mt-5 flex flex-wrap gap-2">
+        <li class="chip">Cloud &amp; DevOps</li>
+        <li class="chip">Software engineering</li>
+        <li class="chip">Data &amp; analytics</li>
+        <li class="chip">Infrastructure &amp; security</li>
+        <li class="chip">SAP &amp; ERP</li>
+        <li class="chip">QA &amp; automation</li>
+        <li class="chip">Delivery &amp; programme</li>
+      </ul>
+
+      <div class="mt-12 rounded-card border border-line bg-raised p-6">
+        <p class="font-display text-lg font-semibold">Need a role that is not listed?</p>
+        <p class="mt-1 text-sm text-muted">Send the specification. We will tell you honestly whether we can fill it.</p>
+        <a href="{% url 'contact' %}" class="btn btn-secondary btn-sm mt-4">Contact the team</a>
       </div>
     </div>
 
-    <!-- Right Side Request Card -->
-    <div class="stitch-card p-8 sm:p-10 reveal delay-1">
-      <div class="inline-flex items-center gap-2 rounded-full border border-[#dde9ff] bg-[#eff4ff] px-3 py-1 font-mono text-3xs font-bold text-[#006398] uppercase tracking-wider mb-4">
-        Direct Engagement
+    <aside class="lg:sticky lg:top-24">
+      <div class="card p-6 sm:p-8">
+        <p class="eyebrow eyebrow-accent">Direct engagement</p>
+        <h2 class="mt-2 text-h2">Request staffing</h2>
+        <p class="mt-2 text-sm text-muted">Send the role or the capability you need. A practice director reviews every request.</p>
+        <div class="mt-6">{% include "enquiries/_form.html" %}</div>
       </div>
-      <h3 class="font-display text-2xl font-bold text-[#000e27]">Request Staffing Consultation</h3>
-      <p class="mt-2 text-xs text-[#44474e]">Submit your technical requirements or talent specifications. A practice director will reach out within 24 hours.</p>
-      <div class="mt-6">
-        {% include "enquiries/_form.html" with enquiry_category="staffing" %}
-      </div>
-    </div>
+    </aside>
   </div>
 </section>
 {% endblock %}

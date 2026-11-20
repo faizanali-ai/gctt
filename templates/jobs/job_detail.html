@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}{{ job.title }} — Executive Mandate — GCTT{% endblock %}
+{% block title %}{{ job.title }} — GCTT Careers{% endblock %}
+{% block description %}{{ job.description|truncatewords:24 }}{% endblock %}
+
 {% block content %}
 <script type="application/ld+json">
 {
@@ -27,369 +29,161 @@
 }
 </script>
 
-<!-- Mandate Executive Hero -->
-<section class="relative overflow-hidden border-b border-[#dde9ff] py-12 md:py-16 text-white font-sans bg-[#000e27]">
-  <div class="relative mx-auto max-w-7xl px-6 z-10">
-    <div class="flex flex-wrap items-center gap-2 text-xs font-mono text-[#5bb8fe]">
-      <a href="{% url 'careers' %}" class="transition-colors hover:underline">← ALL OPEN MANDATES</a>
-      <span class="text-white/30">/</span>
-      <span class="text-white/60">DIRECT CLIENT PLACEMENT</span>
-    </div>
-
-    <div class="mt-4 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+<section class="bg-night py-14 text-night-ink sm:py-16">
+  <div class="container-site">
+    <a href="{% url 'careers' %}" class="inline-flex items-center gap-1.5 font-mono text-2xs uppercase tracking-[0.1em] text-night-muted hover:text-night-ink">
+      <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-left"></use></svg>
+      All open mandates
+    </a>
+    <div class="mt-5 flex flex-col justify-between gap-6 md:flex-row md:items-end">
       <div>
-        <div class="flex items-center gap-2.5 font-mono">
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-2xs font-bold uppercase tracking-wider text-[#5bb8fe] border border-white/20">
-            <span class="h-2 w-2 rounded-full bg-[#5bb8fe] animate-pulse"></span>
-            Direct Client Mandate
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="chip border-night-ink/20 text-night-ink">{{ job.get_employment_type_display }}</span>
+          <span class="inline-flex items-center gap-1.5 text-sm text-night-muted">
+            <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#map-pin"></use></svg>
+            {{ job.location }}
           </span>
-          <span class="text-xs text-slate-300">Verified Corporate Requirement</span>
         </div>
-        <h1 class="mt-3 font-display text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl">
-          {{ job.title }}
-        </h1>
-        <p class="mt-2.5 text-xs sm:text-sm text-slate-300 font-sans">
-          Location: <span class="font-semibold text-white">{{ job.location }}</span> · Employment: <span class="font-semibold text-white">{{ job.get_employment_type_display }}</span> · Posted: <span class="font-semibold text-white">{{ job.created_at|date:"F j, Y" }}</span>
-        </p>
+        <h1 class="mt-4 max-w-3xl text-h1 sm:text-display-2">{{ job.title }}</h1>
+        <p class="mt-3 font-mono text-2xs uppercase tracking-[0.08em] text-night-muted">Posted {{ job.created_at|date:"F j, Y" }} · Reviewed by GCTT</p>
       </div>
-
-      <!-- Quick Action / Jump to Apply -->
-      <div>
-        <a href="#apply-wizard" class="btn-stitch-primary text-xs">
-          Apply for this Mandate ↓
-        </a>
-      </div>
+      <a href="#apply-wizard" class="btn btn-primary btn-lg">Apply for this role
+        <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
+      </a>
     </div>
   </div>
 </section>
 
 {% if not job.published %}
-  <div class="border-b border-amber-300 bg-amber-50 px-6 py-2.5 text-center text-xs font-semibold text-amber-900 font-display">
+  <div class="border-b border-warning/30 bg-accent-soft px-5 py-2.5 text-center font-mono text-2xs uppercase tracking-[0.1em] text-warning">
     Draft preview — this mandate is internal and unlisted from public search.
   </div>
 {% endif %}
 
-<section class="mx-auto max-w-7xl px-6 py-12 md:py-20 font-sans">
-  <div class="grid items-start gap-12 lg:grid-cols-[1.45fr_1fr]">
-    <!-- Left Column: Mandate Specification & Institutional Trust -->
-    <div class="space-y-8">
-      <!-- Role Overview & Scope Card -->
-      <div class="stitch-card p-6 sm:p-8">
-        <div class="border-b border-[#dde9ff] pb-4 font-mono">
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-[#eff4ff] px-3 py-0.5 text-2xs font-bold uppercase tracking-wider text-[#006398] border border-[#dde9ff]">
-            Mandate Specification
-          </span>
-          <h2 class="mt-2 font-display text-xl font-bold text-[#000e27] sm:text-2xl">Role Overview &amp; Responsibilities</h2>
-        </div>
-        <div class="mt-6 whitespace-pre-line text-sm leading-relaxed text-[#44474e] font-sans">
-          {{ job.description }}
-        </div>
-      </div>
+<section class="section">
+  <div class="container-site grid items-start gap-12 lg:grid-cols-[1.45fr_1fr]">
+    <div class="min-w-0">
+      <h2 class="text-h2">Role overview</h2>
+      <div class="prose-site mt-4 whitespace-pre-line">{{ job.description }}</div>
 
-      <!-- Requirements & Technical Qualifications -->
       {% if job.requirements %}
-        <div class="stitch-card p-6 sm:p-8">
-          <div class="border-b border-[#dde9ff] pb-4 font-mono">
-            <span class="inline-flex items-center gap-1.5 rounded-full bg-[#eff4ff] px-3 py-0.5 text-2xs font-bold uppercase tracking-wider text-[#006398] border border-[#dde9ff]">
-              Evaluation Criteria
-            </span>
-            <h2 class="mt-2 font-display text-xl font-bold text-[#000e27] sm:text-2xl">Required Qualifications &amp; Skills</h2>
-          </div>
-          <div class="mt-6 whitespace-pre-line text-sm leading-relaxed text-[#44474e] font-sans">
-            {{ job.requirements }}
-          </div>
-        </div>
+        <h2 class="mt-10 text-h2">Requirements</h2>
+        <div class="prose-site mt-4 whitespace-pre-line">{{ job.requirements }}</div>
       {% endif %}
 
-      <!-- Institutional Trust & Candidate Protection Seal -->
-      <div class="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-6 sm:p-8">
-        <div class="flex items-center gap-3">
-          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-xs">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-          </div>
-          <div>
-            <h3 class="font-display text-base font-bold text-[#000e27] sm:text-lg">GCTT Candidate Protection &amp; Verification Guarantee</h3>
-            <p class="text-xs text-[#44474e] font-mono">Legitimate US Enterprise Hiring Standards</p>
-          </div>
-        </div>
-
-        <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 font-sans">
-          <div class="rounded-xl border border-emerald-200 bg-white p-4">
-            <span class="flex items-center gap-1.5 text-xs font-bold text-[#000e27] font-mono">
-              <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Verified Texas Anchor
-            </span>
-            <p class="mt-1 text-2xs leading-relaxed text-[#44474e]">Headquartered at 2612 Laramie St, Irving TX. Direct physical commercial presence.</p>
-          </div>
-          <div class="rounded-xl border border-emerald-200 bg-white p-4">
-            <span class="flex items-center gap-1.5 text-xs font-bold text-[#000e27] font-mono">
-              <span class="h-2 w-2 rounded-full bg-emerald-500"></span> E-Verify Participating
-            </span>
-            <p class="mt-1 text-2xs leading-relaxed text-[#44474e]">Rigorous right-to-work compliance, official W2 employment, and zero candidate fees.</p>
-          </div>
-          <div class="rounded-xl border border-emerald-200 bg-white p-4">
-            <span class="flex items-center gap-1.5 text-xs font-bold text-[#000e27] font-mono">
-              <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Confidential Representation
-            </span>
-            <p class="mt-1 text-2xs leading-relaxed text-[#44474e]">Resumes are never submitted to clients without candidate consent.</p>
-          </div>
-          <div class="rounded-xl border border-emerald-200 bg-white p-4">
-            <span class="flex items-center gap-1.5 text-xs font-bold text-[#000e27] font-mono">
-              <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Direct Recruiter SLA
-            </span>
-            <p class="mt-1 text-2xs leading-relaxed text-[#44474e]">Dedicated practice leads review all submissions within 24 business hours.</p>
-          </div>
-        </div>
+      <div class="mt-10 rounded-card border border-line bg-raised p-6">
+        <h2 class="text-h3">Candidate protection</h2>
+        <ul class="mt-4 grid gap-4 sm:grid-cols-2">
+          <li class="flex gap-3">
+            <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#map-pin"></use></svg>
+            <div><p class="text-sm font-semibold">Texas headquarters</p><p class="mt-0.5 text-sm text-muted">2612 Laramie St, Irving, TX 75062.</p></div>
+          </li>
+          <li class="flex gap-3">
+            <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#shield"></use></svg>
+            <div><p class="text-sm font-semibold">E-Verify employer</p><p class="mt-0.5 text-sm text-muted">W2 employment and right-to-work verification.</p></div>
+          </li>
+          <li class="flex gap-3">
+            <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#file"></use></svg>
+            <div><p class="text-sm font-semibold">Confidential representation</p><p class="mt-0.5 text-sm text-muted">Your résumé is not sent to a client without your consent.</p></div>
+          </li>
+          <li class="flex gap-3">
+            <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#clock"></use></svg>
+            <div><p class="text-sm font-semibold">Human review</p><p class="mt-0.5 text-sm text-muted">Applications are reviewed by the recruiting team, not auto-rejected.</p></div>
+          </li>
+        </ul>
+        <p class="mt-4 text-sm text-muted">No candidate fees. Questions: <a href="mailto:{{ COMPANY.jobs_email }}" class="link">{{ COMPANY.jobs_email }}</a>.</p>
       </div>
     </div>
 
-    <!-- Right Column: Interactive 3-Step Application Wizard -->
-    <div id="apply-wizard" class="lg:sticky lg:top-28">
-      <div class="stitch-card p-6 sm:p-8">
+    <aside id="apply-wizard" class="lg:sticky lg:top-24">
+      <div class="card p-6 sm:p-8">
         {% if applied %}
-          <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-6 text-sm font-sans">
-            <div class="flex items-center gap-2 font-bold text-emerald-800 font-display">
-              <svg class="h-5 w-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              You have already applied for this role.
+          <div class="alert alert-success" role="status">
+            <div>
+              <p class="font-semibold">You have already applied for this role.</p>
+              <p class="mt-1 text-muted">Your application is with the recruiting team. Track its status in your dashboard.</p>
             </div>
-            <p class="mt-2 text-xs leading-relaxed text-[#44474e]">
-              Your profile and credentials have been received by GCTT's technical recruitment team. You can monitor review milestones or update your resume from your candidate dashboard.
-            </p>
-            <a href="{% url 'dashboard' %}" class="btn-stitch-primary mt-5 w-full justify-center text-xs font-mono">
-              Open Candidate Dashboard →
-            </a>
           </div>
+          <a href="{% url 'dashboard' %}" class="btn btn-primary mt-4 w-full">Open candidate dashboard</a>
         {% else %}
-          <!-- Wizard Header & Progress Bar -->
-          <div class="border-b border-[#dde9ff] pb-4 font-mono">
-            <div class="flex items-center justify-between">
-              <span class="text-2xs font-bold uppercase tracking-[0.14em] text-[#006398]">Candidate Application</span>
-              <span id="step-indicator" class="text-2xs font-bold text-[#75777f]">Step 1 of 3</span>
-            </div>
-            <h3 class="mt-1 font-display text-xl font-bold text-[#000e27]">Submit Application</h3>
-
-            <!-- 3-Segment Progress Indicator -->
-            <div class="mt-4 grid grid-cols-3 gap-2">
-              <div id="progress-bar-1" class="h-1.5 rounded-full bg-[#006398] transition-colors"></div>
-              <div id="progress-bar-2" class="h-1.5 rounded-full bg-[#dde9ff] transition-colors"></div>
-              <div id="progress-bar-3" class="h-1.5 rounded-full bg-[#dde9ff] transition-colors"></div>
-            </div>
-          </div>
-
-          <!-- The Form with 3 Steps -->
-          <form id="application-wizard-form" method="post" action="{% url 'job_apply' job.slug %}" enctype="multipart/form-data" class="mt-6 font-sans">
+          <form method="post" action="{% url 'job_apply' job.slug %}" enctype="multipart/form-data" class="form" data-stepper>
             {% csrf_token %}
+            <div class="flex items-center justify-between">
+              <p class="eyebrow eyebrow-accent">Application</p>
+              <p class="font-mono text-2xs uppercase tracking-[0.08em] text-muted" data-step-counter></p>
+            </div>
+            <div class="mt-3 grid grid-cols-3 gap-2" aria-hidden="true">
+              <span data-progress class="h-1.5 rounded-full" style="background-color: var(--accent)"></span>
+              <span data-progress class="h-1.5 rounded-full" style="background-color: var(--line)"></span>
+              <span data-progress class="h-1.5 rounded-full" style="background-color: var(--line)"></span>
+            </div>
 
-            <!-- STEP 1: Contact Details -->
-            <div id="wizard-step-1" class="wizard-step space-y-4">
-              <div class="border-b border-[#dde9ff] pb-2">
-                <h4 class="text-xs font-bold uppercase tracking-wider text-[#000e27] font-mono">Step 1: Contact Information</h4>
-                <p class="text-2xs text-[#75777f]">Where our technical recruiting team should follow up.</p>
-              </div>
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger mt-4" role="alert">{{ form.non_field_errors.0 }}</div>
+            {% endif %}
 
+            <div data-step class="mt-5 space-y-4">
+              <h2 class="text-h3">1. Contact</h2>
               {% if user.is_authenticated %}
-                <div class="rounded-xl border border-[#dde9ff] bg-[#eff4ff] p-3.5 text-xs text-[#44474e]">
-                  <span class="text-2xs uppercase tracking-wider text-[#75777f] font-mono">Logged in as</span>
-                  <p class="font-bold text-[#000e27]">{{ user.display_name }} ({{ user.email }})</p>
-                  <p class="text-2xs text-[#006398] font-bold mt-0.5 font-mono">Verified Candidate Account</p>
+                <div class="rounded-field border border-line bg-raised p-4 text-sm">
+                  <p class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Signed in as</p>
+                  <p class="mt-1 font-semibold">{{ user.display_name }}</p>
+                  <p class="text-muted">{{ user.email }}</p>
                 </div>
               {% else %}
-                <div class="grid grid-cols-2 gap-3">
-                  <div>
-                    <label class="block text-2xs font-bold uppercase tracking-wider text-[#000e27] font-mono">First Name *</label>
-                    <div class="mt-1">{{ form.first_name }}</div>
-                  </div>
-                  <div>
-                    <label class="block text-2xs font-bold uppercase tracking-wider text-[#000e27] font-mono">Last Name *</label>
-                    <div class="mt-1">{{ form.last_name }}</div>
-                  </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                  {% include "partials/_field.html" with field=form.first_name %}
+                  {% include "partials/_field.html" with field=form.last_name %}
                 </div>
-
-                <div>
-                  <label class="block text-2xs font-bold uppercase tracking-wider text-[#000e27] font-mono">Email Address *</label>
-                  <div class="mt-1">{{ form.email }}</div>
-                  <p class="mt-1 text-2xs text-[#75777f] font-mono">We send your review status and placement updates here.</p>
-                </div>
-
-                <div>
-                  <label class="block text-2xs font-bold uppercase tracking-wider text-[#000e27] font-mono">Phone Number</label>
-                  <div class="mt-1">{{ form.phone }}</div>
-                </div>
+                {% include "partials/_field.html" with field=form.email %}
+                {% include "partials/_field.html" with field=form.phone %}
               {% endif %}
+              <button type="button" class="btn btn-primary w-full" data-step-next>Continue</button>
+            </div>
 
-              <div class="pt-3 font-mono">
-                <button type="button" id="btn-to-step-2" class="btn-stitch-primary w-full justify-center text-xs">
-                  Next: Resume &amp; Competencies →
-                </button>
+            <div data-step class="mt-5 space-y-4">
+              <h2 class="text-h3">2. Résumé</h2>
+              {% include "partials/_field.html" with field=form.resume %}
+              {% include "partials/_field.html" with field=form.work_authorization %}
+              {% include "partials/_field.html" with field=form.message %}
+              <div class="flex gap-2">
+                <button type="button" class="btn btn-secondary" data-step-prev>Back</button>
+                <button type="button" class="btn btn-primary flex-1" data-step-next>Review</button>
               </div>
             </div>
 
-            <!-- STEP 2: Resume & Key Competencies -->
-            <div id="wizard-step-2" class="wizard-step hidden space-y-4">
-              <div class="border-b border-[#dde9ff] pb-2">
-                <h4 class="text-xs font-bold uppercase tracking-wider text-[#000e27] font-mono">Step 2: Resume &amp; Work Eligibility</h4>
-                <p class="text-2xs text-[#75777f]">Upload your curriculum vitae and specify authorization.</p>
-              </div>
-
-              <div>
-                <label class="block text-2xs font-bold uppercase tracking-wider text-[#000e27] font-mono">
-                  Upload Resume / CV * <span class="font-normal lowercase text-[#75777f]">(PDF, DOC, DOCX — max 5 MB)</span>
-                </label>
-                <div class="mt-1.5">
-                  {{ form.resume }}
+            <div data-step class="mt-5 space-y-4">
+              <h2 class="text-h3">3. Review</h2>
+              <dl class="divide-y divide-line rounded-field border border-line text-sm">
+                <div class="p-3">
+                  <dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Role</dt>
+                  <dd class="mt-1 font-semibold">{{ job.title }}</dd>
                 </div>
-                {% if form.resume.errors %}
-                  <p class="mt-1 text-2xs font-bold text-rose-600">{{ form.resume.errors.0 }}</p>
-                {% endif %}
-              </div>
-
-              <div>
-                <label class="block text-2xs font-bold uppercase tracking-wider text-[#000e27] font-mono">U.S. Work Authorization</label>
-                <div class="mt-1">
-                  {{ form.work_authorization }}
+                <div class="p-3">
+                  <dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Name</dt>
+                  <dd class="mt-1">
+                    {% if user.is_authenticated %}{{ user.display_name }}{% else %}<span data-review="first_name"></span> <span data-review="last_name"></span>{% endif %}
+                  </dd>
                 </div>
-              </div>
-
-              <div>
-                <label class="block text-2xs font-bold uppercase tracking-wider text-[#000e27] font-mono">
-                  Executive Summary / Key Specializations <span class="font-normal lowercase text-[#75777f]">(Optional)</span>
-                </label>
-                <div class="mt-1">
-                  {{ form.message }}
+                <div class="p-3">
+                  <dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Email</dt>
+                  <dd class="mt-1">{% if user.is_authenticated %}{{ user.email }}{% else %}<span data-review="email"></span>{% endif %}</dd>
                 </div>
-              </div>
-
-              <div class="flex items-center gap-2 pt-3 font-mono">
-                <button type="button" id="btn-back-to-step-1" class="btn-stitch-secondary text-xs">
-                  ← Back
-                </button>
-                <button type="button" id="btn-to-step-3" class="btn-stitch-primary flex-1 justify-center text-xs">
-                  Next: Review &amp; Submit →
-                </button>
-              </div>
-            </div>
-
-            <!-- STEP 3: Review & Submit -->
-            <div id="wizard-step-3" class="wizard-step hidden space-y-4">
-              <div class="border-b border-[#dde9ff] pb-2">
-                <h4 class="text-xs font-bold uppercase tracking-wider text-[#000e27] font-mono">Step 3: Verification &amp; Submission</h4>
-                <p class="text-2xs text-[#75777f]">Confirm your submission details before direct routing.</p>
-              </div>
-
-              <div class="rounded-xl border border-[#dde9ff] bg-[#eff4ff] p-4 space-y-2.5 text-xs font-sans">
-                <div>
-                  <span class="block text-2xs uppercase tracking-wider text-[#75777f] font-mono">Target Role</span>
-                  <span class="font-display font-bold text-[#000e27]">{{ job.title }}</span>
+                <div class="p-3">
+                  <dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Résumé</dt>
+                  <dd class="mt-1" data-review="resume">—</dd>
                 </div>
-                <div class="border-t border-[#dde9ff] pt-2">
-                  <span class="block text-2xs uppercase tracking-wider text-[#75777f] font-mono">Candidate Name</span>
-                  <span id="review-name" class="font-bold text-[#000e27]">
-                    {% if user.is_authenticated %}{{ user.display_name }}{% else %}—{% endif %}
-                  </span>
-                </div>
-                <div class="border-t border-[#dde9ff] pt-2">
-                  <span class="block text-2xs uppercase tracking-wider text-[#75777f] font-mono">Contact Email</span>
-                  <span id="review-email" class="font-bold text-[#000e27]">
-                    {% if user.is_authenticated %}{{ user.email }}{% else %}—{% endif %}
-                  </span>
-                </div>
-                <div class="border-t border-[#dde9ff] pt-2">
-                  <span class="block text-2xs uppercase tracking-wider text-[#75777f] font-mono">Resume Attached</span>
-                  <span id="review-file" class="font-bold text-[#006398]">File selected</span>
-                </div>
-              </div>
-
-              <div class="rounded-xl border border-[#dde9ff] p-3 text-2xs text-[#75777f] leading-relaxed font-sans">
-                By submitting, you authorize GCTT's technical recruiting practice to represent your credentials for this enterprise mandate. All submissions are governed under strict confidentiality.
-              </div>
-
-              <div class="flex items-center gap-2 pt-3 font-mono">
-                <button type="button" id="btn-back-to-step-2" class="btn-stitch-secondary text-xs">
-                  ← Back
-                </button>
-                <button type="submit" class="btn-stitch-primary flex-1 justify-center text-xs">
-                  Submit Direct Application
-                </button>
+              </dl>
+              <p class="text-2xs text-muted">By submitting, you confirm the information is accurate and consent to GCTT representing your application for this role.</p>
+              <div class="flex gap-2">
+                <button type="button" class="btn btn-secondary" data-step-prev>Back</button>
+                <button type="submit" class="btn btn-primary flex-1">Submit application</button>
               </div>
             </div>
           </form>
-
-          <script>
-            (function() {
-              const step1 = document.getElementById('wizard-step-1');
-              const step2 = document.getElementById('wizard-step-2');
-              const step3 = document.getElementById('wizard-step-3');
-              const p1 = document.getElementById('progress-bar-1');
-              const p2 = document.getElementById('progress-bar-2');
-              const p3 = document.getElementById('progress-bar-3');
-              const indicator = document.getElementById('step-indicator');
-
-              const isAuth = {% if user.is_authenticated %}true{% else %}false{% endif %};
-
-              function goToStep(num) {
-                step1.classList.add('hidden');
-                step2.classList.add('hidden');
-                step3.classList.add('hidden');
-
-                p1.className = 'h-1.5 rounded-full transition-colors ' + (num >= 1 ? 'bg-[#006398]' : 'bg-[#dde9ff]');
-                p2.className = 'h-1.5 rounded-full transition-colors ' + (num >= 2 ? 'bg-[#006398]' : 'bg-[#dde9ff]');
-                p3.className = 'h-1.5 rounded-full transition-colors ' + (num >= 3 ? 'bg-[#006398]' : 'bg-[#dde9ff]');
-                indicator.textContent = 'Step ' + num + ' of 3';
-
-                if (num === 1) step1.classList.remove('hidden');
-                if (num === 2) step2.classList.remove('hidden');
-                if (num === 3) {
-                  step3.classList.remove('hidden');
-                  if (!isAuth) {
-                    const fn = document.querySelector('input[name="first_name"]')?.value || '';
-                    const ln = document.querySelector('input[name="last_name"]')?.value || '';
-                    const em = document.querySelector('input[name="email"]')?.value || '';
-                    document.getElementById('review-name').textContent = (fn + ' ' + ln).trim() || '—';
-                    document.getElementById('review-email').textContent = em || '—';
-                  }
-                  const resumeInput = document.querySelector('input[name="resume"]');
-                  if (resumeInput && resumeInput.files && resumeInput.files[0]) {
-                    document.getElementById('review-file').textContent = resumeInput.files[0].name;
-                  }
-                }
-              }
-
-              document.getElementById('btn-to-step-2')?.addEventListener('click', function() {
-                if (!isAuth) {
-                  const fn = document.querySelector('input[name="first_name"]')?.value.trim();
-                  const em = document.querySelector('input[name="email"]')?.value.trim();
-                  if (!fn || !em) {
-                    alert('Please provide your name and email address to proceed.');
-                    return;
-                  }
-                }
-                goToStep(2);
-              });
-
-              document.getElementById('btn-back-to-step-1')?.addEventListener('click', function() {
-                goToStep(1);
-              });
-
-              document.getElementById('btn-to-step-3')?.addEventListener('click', function() {
-                const resumeInput = document.querySelector('input[name="resume"]');
-                if (!resumeInput || !resumeInput.files || !resumeInput.files.length) {
-                  alert('Please select your resume file (.pdf, .doc, or .docx) to continue.');
-                  return;
-                }
-                goToStep(3);
-              });
-
-              document.getElementById('btn-back-to-step-2')?.addEventListener('click', function() {
-                goToStep(2);
-              });
-            })();
-          </script>
         {% endif %}
       </div>
-    </div>
+    </aside>
   </div>
 </section>
 {% endblock %}
