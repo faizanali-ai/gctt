@@ -1,27 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" fill="none">
-  <defs>
-    <linearGradient id="gctt-icon-em1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#10B981" />
-      <stop offset="100%" stop-color="#059669" />
-    </linearGradient>
-    <linearGradient id="gctt-icon-em2" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#047857" />
-      <stop offset="100%" stop-color="#10B981" />
-    </linearGradient>
-    <linearGradient id="gctt-icon-navy" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1E3E62" />
-      <stop offset="100%" stop-color="#0B192C" />
-    </linearGradient>
-  </defs>
-
-  <g transform="translate(0, 0)">
-    <path d="M26 2 L50 16 L50 36 L26 50 L2 36 L2 16 Z" fill="url(#gctt-icon-navy)" stroke="#059669" stroke-width="1.5" stroke-linejoin="round"/>
-    <path d="M26 2 L50 16 L26 30 L2 16 Z" fill="url(#gctt-icon-em1)"/>
-    <path d="M2 16 L26 30 L26 50 L2 36 Z" fill="url(#gctt-icon-em2)"/>
-    <path d="M26 30 L50 16 L50 36 L26 50 Z" fill="#0B192C"/>
-    
-    <path d="M26 14 L38 21 L26 28 L14 21 Z" fill="#FFFFFF"/>
-    <path d="M26 28 L38 21 L38 35 L26 42 Z" fill="#10B981"/>
-    <path d="M26 28 L14 21 L14 35 L26 42 Z" fill="#059669"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+  <rect x="2" y="2" width="48" height="48" rx="11" fill="#14161A"/>
+  <path d="M14 18h24M26 18v21M19 27h14" fill="none" stroke="#FAF9F7" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="39" cy="39" r="3.5" fill="#E9A85C"/>
 </svg>

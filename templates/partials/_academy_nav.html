@@ -1,0 +1,9 @@
+<div class="sticky top-16 z-30 bg-canvas/95 backdrop-blur">
+  <div class="container-site">
+    <nav class="subnav" aria-label="Academy sections">
+      <a href="{% url 'training' %}" class="subnav-link" {% if request.path == '/training/' %}aria-current="page"{% elif '/training/' in request.path and '/training/verify/' not in request.path and '/training/certificate/' not in request.path %}aria-current="page"{% endif %}>Programmes</a>
+      <a href="{% url 'career_restart' %}" class="subnav-link" {% if '/career-restart/' in request.path %}aria-current="page"{% endif %}>Career Restart</a>
+      <a href="{% url 'verify_certificate_form' %}" class="subnav-link" {% if '/training/verify/' in request.path or '/training/certificate/' in request.path %}aria-current="page"{% endif %}>Verify a certificate</a>
+    </nav>
+  </div>
+</div>

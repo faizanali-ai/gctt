@@ -1,79 +1,71 @@
-<!-- Global Footer (Clean Navy) -->
-<footer class="border-t border-[#001f5e] bg-[#000e27] text-white font-sans">
-  <!-- Main Navigation Columns -->
-  <div class="mx-auto max-w-7xl px-6 py-14 sm:px-12">
-    <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5">
-      <!-- Brand & Compliance Column -->
-      <div class="lg:col-span-2 space-y-4">
-        <div class="flex items-center gap-3">
-          <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-white text-[#000e27] font-black text-lg">
-            G
-          </div>
-          <div>
-            <span class="font-display text-xl font-bold tracking-tight text-white">GCTT</span>
-            <span class="block font-mono text-[9px] uppercase tracking-wider text-[#5bb8fe]">Global Center for Tech &amp; Training</span>
-          </div>
-        </div>
-        <p class="text-xs text-[#dde9ff]/70 leading-relaxed max-w-sm">
-          Headquartered in Irving, Texas, GCTT provides direct IT staffing, recruitment, and professional certification training with 100% statutory E-Verify compliance.
+<footer class="ink-band">
+  <div class="container-site py-14">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <a href="{% url 'home' %}" class="flex items-center gap-2.5" aria-label="GCTT home">
+          <span class="relative flex h-9 w-9 items-center justify-center rounded-[10px] bg-canvas text-ink" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <path d="M6 8h12M12 8v9M9 13h6"/>
+            </svg>
+            <span class="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent"></span>
+          </span>
+          <span class="flex flex-col leading-none">
+            <span class="font-display text-xl font-bold tracking-[0.08em]">GCTT</span>
+            <span class="mt-1 font-mono text-3xs uppercase tracking-[0.12em] text-canvas/60">Global Center for Technology &amp; Training</span>
+          </span>
+        </a>
+        <p class="mt-5 max-w-sm text-sm leading-relaxed text-canvas/70">
+          {{ COMPANY.tagline }} Headquartered in Irving, Texas, with statutory E-Verify compliance.
         </p>
-        <div class="space-y-1.5 pt-2 text-2xs font-mono text-[#dde9ff]/60">
-          <div>HQ: 2612 Laramie St, Irving TX 75062</div>
-          <div>E-Verify Certified Employer (ID: 198420-TX)</div>
-          <div>Corporate Support: <a href="mailto:{{ COMPANY.email }}" class="text-[#5bb8fe] hover:underline">{{ COMPANY.email }}</a></div>
-        </div>
+        <address class="mt-5 space-y-1 font-mono text-2xs uppercase not-italic tracking-[0.08em] text-canvas/60">
+          <p>{{ COMPANY.address }}</p>
+          <p>E-Verify ID: 198420-TX</p>
+          <p><a href="mailto:{{ COMPANY.email }}" class="underline underline-offset-4 hover:text-canvas">{{ COMPANY.email }}</a></p>
+        </address>
       </div>
 
-      <!-- Practice Areas -->
-      <div>
-        <h4 class="font-mono text-2xs font-bold uppercase tracking-wider text-[#5bb8fe]">Service Practices</h4>
-        <ul class="mt-4 space-y-2.5 text-xs text-[#dde9ff]/80">
-          <li><a href="{% url 'it_staffing' %}" class="hover:text-white transition-colors">IT Staffing</a></li>
-          <li><a href="{% url 'recruitment' %}" class="hover:text-white transition-colors">Recruitment</a></li>
-          <li><a href="{% url 'talent_acquisition' %}" class="hover:text-white transition-colors">Talent Acquisition</a></li>
-          <li><a href="{% url 'services' %}" class="hover:text-white transition-colors">Enterprise Overview</a></li>
-          <li><a href="{% url 'employers' %}" class="hover:text-white transition-colors">Employer Intake</a></li>
+      <nav class="lg:col-span-2" aria-label="Talent Solutions">
+        <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-canvas/60">Talent Solutions</h2>
+        <ul class="mt-4 space-y-2.5 text-sm text-canvas/75">
+          <li><a href="{% url 'it_staffing' %}" class="transition-colors hover:text-canvas">IT Staffing</a></li>
+          <li><a href="{% url 'recruitment' %}" class="transition-colors hover:text-canvas">Recruitment</a></li>
+          <li><a href="{% url 'talent_acquisition' %}" class="transition-colors hover:text-canvas">Talent Acquisition</a></li>
+          <li><a href="{% url 'sap_scrum' %}" class="transition-colors hover:text-canvas">SAP &amp; Scrum</a></li>
+          <li><a href="{% url 'employers' %}" class="transition-colors hover:text-canvas">Request talent</a></li>
         </ul>
-      </div>
+      </nav>
 
-      <!-- Academy & Training -->
-      <div>
-        <h4 class="font-mono text-2xs font-bold uppercase tracking-wider text-[#5bb8fe]">Academy &amp; Training</h4>
-        <ul class="mt-4 space-y-2.5 text-xs text-[#dde9ff]/80">
-          <li><a href="{% url 'training' %}" class="hover:text-white transition-colors">Course Catalog</a></li>
-          <li><a href="{% url 'sap_scrum' %}" class="hover:text-white transition-colors">SAP S/4HANA Practice</a></li>
-          <li><a href="{% url 'sap_scrum' %}" class="hover:text-white transition-colors">Agile &amp; Scrum Academy</a></li>
-          <li><a href="{% url 'career_restart' %}" class="hover:text-white transition-colors">Career Restart</a></li>
-          <li><a href="{% url 'verify_certificate_form' %}" class="hover:text-white transition-colors">Credential Verification</a></li>
+      <nav class="lg:col-span-2" aria-label="Academy">
+        <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-canvas/60">Academy</h2>
+        <ul class="mt-4 space-y-2.5 text-sm text-canvas/75">
+          <li><a href="{% url 'training' %}" class="transition-colors hover:text-canvas">Programmes</a></li>
+          <li><a href="{% url 'career_restart' %}" class="transition-colors hover:text-canvas">Career Restart</a></li>
+          <li><a href="{% url 'verify_certificate_form' %}" class="transition-colors hover:text-canvas">Verify certificate</a></li>
         </ul>
-      </div>
+      </nav>
 
-      <!-- Compliance & Portal -->
-      <div>
-        <h4 class="font-mono text-2xs font-bold uppercase tracking-wider text-[#5bb8fe]">Corporate &amp; Access</h4>
-        <ul class="mt-4 space-y-2.5 text-xs text-[#dde9ff]/80">
-          <li><a href="{% url 'about' %}" class="hover:text-white transition-colors">About GCTT</a></li>
-          <li><a href="{% url 'careers' %}" class="hover:text-white transition-colors">Open Job Mandates</a></li>
-          <li><a href="{% url 'contact' %}" class="hover:text-white transition-colors">Contact Texas HQ</a></li>
-          <li><a href="{% url 'login' %}" class="hover:text-white transition-colors">Candidate &amp; Staff Login</a></li>
-          <li><a href="{% url 'privacy' %}" class="hover:text-white transition-colors">Privacy Policy</a></li>
-          <li><a href="{% url 'terms' %}" class="hover:text-white transition-colors">Terms of Service</a></li>
+      <nav class="lg:col-span-3" aria-label="Company">
+        <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-canvas/60">Company</h2>
+        <ul class="mt-4 space-y-2.5 text-sm text-canvas/75">
+          <li><a href="{% url 'about' %}" class="transition-colors hover:text-canvas">About GCTT</a></li>
+          <li><a href="{% url 'careers' %}" class="transition-colors hover:text-canvas">Open mandates</a></li>
+          <li><a href="{% url 'contact' %}" class="transition-colors hover:text-canvas">Contact</a></li>
+          <li><a href="{% url 'privacy' %}" class="transition-colors hover:text-canvas">Privacy</a></li>
+          <li><a href="{% url 'terms' %}" class="transition-colors hover:text-canvas">Terms</a></li>
+          <li><a href="{% url 'login' %}" class="transition-colors hover:text-canvas">Portal sign in</a></li>
         </ul>
-      </div>
+      </nav>
     </div>
 
-    <!-- Statutory Copyright Strip -->
-    <div class="mt-14 border-t border-[#0f2444] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-3xs font-mono text-[#dde9ff]/50">
-      <div>
-        © {% now "Y" %} Global Center for Technology &amp; Training (GCTT) / GCTekton. All rights reserved.
-      </div>
-      <div class="flex items-center gap-4">
-        <span>$0 Candidate Fee Guarantee</span>
-        <span>·</span>
-        <span>Equal Opportunity Employer</span>
-        <span>·</span>
-        <span>Texas SOS Registered</span>
-      </div>
+    <div class="mt-12 flex flex-col gap-4 border-t border-canvas/15 pt-6 font-mono text-3xs uppercase tracking-[0.08em] text-canvas/50 sm:flex-row sm:items-center sm:justify-between">
+      <p>© {% now "Y" %} {{ COMPANY.legal_name }}. All rights reserved.</p>
+      <p class="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <span>$0 candidate fee</span>
+        <span aria-hidden="true">·</span>
+        <span>Equal opportunity employer</span>
+        <span aria-hidden="true">·</span>
+        <span>Texas SOS registered</span>
+      </p>
     </div>
   </div>
 </footer>

@@ -12,36 +12,25 @@ SIGNATURES = {
 }
 
 
-JOB_INPUT_CLASS = "w-full rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-4 py-2.5 text-sm text-[#0d1c2f] placeholder-[#525660] focus:border-[#006398] focus:bg-white focus:outline-hidden"
-
-
 class ApplicationForm(forms.ModelForm):
     first_name = forms.CharField(
         max_length=150,
         required=False,
-        widget=forms.TextInput(
-            attrs={"placeholder": "Jane", "class": JOB_INPUT_CLASS}
-        ),
+        widget=forms.TextInput(attrs={"placeholder": "Jane"}),
     )
     last_name = forms.CharField(
         max_length=150,
         required=False,
-        widget=forms.TextInput(
-            attrs={"placeholder": "Doe", "class": JOB_INPUT_CLASS}
-        ),
+        widget=forms.TextInput(attrs={"placeholder": "Doe"}),
     )
     email = forms.EmailField(
         required=False,
-        widget=forms.EmailInput(
-            attrs={"placeholder": "jane.doe@example.com", "class": JOB_INPUT_CLASS}
-        ),
+        widget=forms.EmailInput(attrs={"placeholder": "jane.doe@example.com"}),
     )
     phone = forms.CharField(
         max_length=50,
         required=False,
-        widget=forms.TextInput(
-            attrs={"placeholder": "+1 (555) 000-0000", "class": JOB_INPUT_CLASS}
-        ),
+        widget=forms.TextInput(attrs={"placeholder": "+1 (555) 000-0000"}),
     )
     work_authorization = forms.ChoiceField(
         choices=[
@@ -51,9 +40,6 @@ class ApplicationForm(forms.ModelForm):
             ("other", "Other / Requires Sponsorship"),
         ],
         required=False,
-        widget=forms.Select(
-            attrs={"class": JOB_INPUT_CLASS}
-        ),
     )
 
     class Meta:
@@ -63,8 +49,7 @@ class ApplicationForm(forms.ModelForm):
             "message": forms.Textarea(
                 attrs={
                     "rows": 4,
-                    "placeholder": "Briefly describe your enterprise tech experience, key specializations, and earliest start date...",
-                    "class": JOB_INPUT_CLASS,
+                    "placeholder": "Briefly describe your experience, key specializations, and earliest start date.",
                 }
             )
         }

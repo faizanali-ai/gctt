@@ -2,8 +2,6 @@ from django import forms
 
 from .models import Enquiry
 
-INPUT = "w-full rounded-xl border border-[#dde9ff] bg-[#f8f9ff] px-4 py-2.5 text-xs text-[#0d1c2f] placeholder-[#525660] focus:border-[#006398] focus:bg-white focus:outline-hidden"
-
 
 class EnquiryForm(forms.ModelForm):
     # honeypot: humans never see or fill this
@@ -23,8 +21,6 @@ class EnquiryForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs.setdefault("class", INPUT)
         self.fields["name"].widget.attrs.setdefault("autocomplete", "name")
         self.fields["email"].widget.attrs.setdefault("autocomplete", "email")
         self.fields["phone"].widget.attrs.setdefault("autocomplete", "tel")

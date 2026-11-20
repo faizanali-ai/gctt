@@ -1,22 +1,25 @@
 {# shortcut: staff sees next/prev but no page count; nav presence still implies more than one page. #}
+{% load static %}
 {% if page_obj.paginator.num_pages > 1 %}
-  <nav class="mt-8 flex items-center justify-between border-t border-line-subtle pt-4 text-xs font-semibold" aria-label="Pagination">
+  <nav class="mt-8 flex items-center justify-between border-t border-line pt-4" aria-label="Pagination">
     <div>
       {% if page_obj.has_previous %}
-        <a href="{% querystring page=page_obj.previous_page_number %}" class="btn btn-secondary text-2xs py-1.5 px-3">
-          ← Previous
+        <a href="{% querystring page=page_obj.previous_page_number %}" class="btn btn-secondary btn-sm">
+          <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-left"></use></svg>
+          Previous
         </a>
       {% endif %}
     </div>
     {% if user.is_admin %}
-      <span class="text-ink-subtle">
-        Page <span class="font-bold text-ink">{{ page_obj.number }}</span> of {{ page_obj.paginator.num_pages }}
-      </span>
+      <p class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">
+        Page <span class="font-medium text-ink">{{ page_obj.number }}</span> of {{ page_obj.paginator.num_pages }}
+      </p>
     {% endif %}
     <div>
       {% if page_obj.has_next %}
-        <a href="{% querystring page=page_obj.next_page_number %}" class="btn btn-secondary text-2xs py-1.5 px-3">
-          Next →
+        <a href="{% querystring page=page_obj.next_page_number %}" class="btn btn-secondary btn-sm">
+          Next
+          <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
         </a>
       {% endif %}
     </div>

@@ -1,22 +1,25 @@
-<!-- Inner Page Hero Component (Original Clean Navy Banner) -->
-<section class="bg-[#000e27] text-white font-sans py-16 md:py-20 border-b border-[#0f2444]">
-  <div class="container-site">
+{% load static %}
+<section class="relative overflow-hidden border-b border-line bg-canvas">
+  <div class="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 text-ink lg:block" aria-hidden="true">
+    {% include "partials/_geometry.html" %}
+  </div>
+  <div class="container-site relative py-14 sm:py-16 md:py-20">
     {% if eyebrow %}
-      <p class="text-xs font-bold uppercase tracking-widest text-[#5bb8fe]">{{ eyebrow }}</p>
+      <p class="eyebrow eyebrow-accent">{{ eyebrow }}</p>
     {% endif %}
-
-    <h1 class="mt-3 max-w-3xl font-display text-3xl font-bold leading-tight sm:text-4xl md:text-5xl text-white">
-      {{ title }}
-    </h1>
-
+    <h1 class="mt-3 max-w-3xl font-display text-h1 font-semibold sm:text-display-2">{{ title }}</h1>
     {% if subtitle %}
-      <p class="mt-4 max-w-2xl text-base sm:text-lg text-[#c5c6cf] leading-relaxed">
-        {{ subtitle }}
-      </p>
+      <p class="mt-4 max-w-2xl text-body-lg text-muted">{{ subtitle }}</p>
     {% elif intro %}
-      <p class="mt-4 max-w-2xl text-base sm:text-lg text-[#c5c6cf] leading-relaxed">
-        {{ intro }}
-      </p>
+      <p class="mt-4 max-w-2xl text-body-lg text-muted">{{ intro }}</p>
+    {% endif %}
+    {% if cta_label and cta_url %}
+      <div class="mt-7">
+        <a href="{{ cta_url }}" class="btn btn-primary">
+          {{ cta_label }}
+          <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
+        </a>
+      </div>
     {% endif %}
   </div>
 </section>

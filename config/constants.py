@@ -1,7 +1,7 @@
 COMPANY = {
     "name": "GCTT",
     "legal_name": "Global Center for Technology & Training",
-    "tagline": "Bridging Elite Talent. Delivering Enterprise Certainty.",
+    "tagline": "Technology talent and training for enterprise teams.",
     "email": "accounts@gctekton.com",
     "jobs_email": "jobs@gctekton.com",
     "jobsEmail": "jobs@gctekton.com",
@@ -14,31 +14,63 @@ SERVICES = [
     {
         "url": "/it-staffing/",
         "title": "IT Staffing",
-        "text": "Mission-critical engineering, architecture, and cloud infrastructure talent deployed on flexible W2 contract and direct frameworks.",
+        "text": "Contract, contract-to-hire and direct placement for engineering, cloud and infrastructure teams.",
     },
     {
         "url": "/recruitment/",
         "title": "Recruitment",
-        "text": "Retained and contingent technical search delivering senior practitioners pre-screened through architectural assessments.",
+        "text": "Retained and contingent search for senior technical practitioners, screened against the role.",
     },
     {
         "url": "/talent-acquisition/",
         "title": "Talent Acquisition",
-        "text": "Strategic workforce advisory helping enterprise engineering organizations build high-performance technical delivery squads.",
+        "text": "Workforce advisory and embedded recruiting support for teams building delivery capability.",
     },
     {
         "url": "/training/",
         "title": "Training & Development",
-        "text": "Accredited enterprise upskilling and professional cohorts in SAP S/4HANA functional domains and Scaled Agile delivery.",
+        "text": "Instructor-led and online programmes in SAP functional domains and Agile delivery.",
     },
 ]
 
-NAV_ITEMS = [
-    {"label": "About", "url": "/about/"},
-    {"label": "Services", "url": "/services/"},
-    {"label": "SAP & Scrum", "url": "/sap-scrum/"},
-    {"label": "Training", "url": "/training/"},
-    {"label": "Careers", "url": "/careers/"},
-    {"label": "Career Restart", "url": "/career-restart/"},
-    {"label": "Contact", "url": "/contact/"},
+DIVISIONS = [
+    {
+        "label": "Talent Solutions",
+        "url": "/services/",
+        "prefixes": (
+            "/services/",
+            "/it-staffing/",
+            "/recruitment/",
+            "/talent-acquisition/",
+            "/sap-scrum/",
+            "/employers/",
+        ),
+        "description": "Staffing, search and SAP delivery talent.",
+    },
+    {
+        "label": "Academy",
+        "url": "/training/",
+        "prefixes": ("/training/", "/career-restart/"),
+        "description": "Programmes, certification and career transition.",
+    },
+    {
+        "label": "Careers",
+        "url": "/careers/",
+        "prefixes": ("/careers/",),
+        "description": "Open mandates across our client teams.",
+    },
+    {
+        "label": "Company",
+        "url": "/about/",
+        "prefixes": ("/about/", "/privacy/", "/terms/"),
+        "description": "Who we are and how we operate.",
+    },
+    {
+        "label": "Contact",
+        "url": "/contact/",
+        "prefixes": ("/contact/",),
+        "description": "Talk to our Irving, Texas team.",
+    },
 ]
+
+NAV_ITEMS = [{"label": item["label"], "url": item["url"]} for item in DIVISIONS]

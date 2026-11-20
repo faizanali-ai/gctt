@@ -1,0 +1,12 @@
+<div class="sticky top-16 z-30 bg-canvas/95 backdrop-blur">
+  <div class="container-site">
+    <nav class="subnav" aria-label="Talent Solutions sections">
+      <a href="{% url 'services' %}" class="subnav-link" {% if request.path == '/services/' %}aria-current="page"{% endif %}>Overview</a>
+      <a href="{% url 'it_staffing' %}" class="subnav-link" {% if '/it-staffing/' in request.path %}aria-current="page"{% endif %}>IT Staffing</a>
+      <a href="{% url 'recruitment' %}" class="subnav-link" {% if '/recruitment/' in request.path %}aria-current="page"{% endif %}>Recruitment</a>
+      <a href="{% url 'talent_acquisition' %}" class="subnav-link" {% if '/talent-acquisition/' in request.path %}aria-current="page"{% endif %}>Talent Acquisition</a>
+      <a href="{% url 'sap_scrum' %}" class="subnav-link" {% if '/sap-scrum/' in request.path %}aria-current="page"{% endif %}>SAP &amp; Scrum</a>
+      <a href="{% url 'employers' %}" class="subnav-link" {% if '/employers/' in request.path %}aria-current="page"{% endif %}>Employers</a>
+    </nav>
+  </div>
+</div>

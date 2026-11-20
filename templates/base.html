@@ -1,12 +1,13 @@
 {% load static %}<!DOCTYPE html>
-<html lang="en" class="scroll-smooth light">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{{ COMPANY.name }} — Enterprise Tech Staffing &amp; SAP Academy{% endblock %}</title>
-  <meta name="description" content="{% block description %}{{ COMPANY.tagline }} IT staffing, recruitment, talent acquisition and training.{% endblock %}">
+  <meta name="color-scheme" content="light dark">
+  <title>{% block title %}{{ COMPANY.name }} — Technology Talent &amp; Training{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ COMPANY.tagline }} IT staffing, recruitment, talent acquisition and training from Irving, Texas.{% endblock %}">
   <meta property="og:title" content="{% block og_title %}{{ COMPANY.name }} — {{ COMPANY.legal_name }}{% endblock %}">
-  <meta property="og:description" content="{% block og_description %}{{ COMPANY.tagline }} IT staffing, recruitment, talent acquisition and training.{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{{ COMPANY.tagline }}{% endblock %}">
   <meta property="og:type" content="website">
   <meta property="og:image" content="{{ COMPANY.url }}{% static 'images/og-gctt-v2.jpg' %}">
   <meta property="og:image:width" content="1200">
@@ -17,25 +18,11 @@
   <link rel="icon" type="image/svg+xml" href="{% static 'images/logo-icon.svg' %}">
   <link rel="alternate icon" href="{% static 'images/logo-small.webp' %}">
 
-  <!-- Typography: Plus Jakarta Sans & Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" href="{% static 'fonts/inter.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{% static 'fonts/space-grotesk.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'css/output.css' %}?v=20261120a">
+  {% block head %}{% endblock %}
 
-  <link rel="stylesheet" href="{% static 'css/output.css' %}?v=20261117-05">
-  <!-- Immediate Theme Detector (defaults to light mode unless dark explicitly saved) -->
-  <script>
-    (function () {
-      var savedTheme = localStorage.getItem("gctt-theme");
-      if (savedTheme === "dark") {
-        document.documentElement.classList.add("dark");
-        document.documentElement.classList.remove("light");
-      } else {
-        document.documentElement.classList.add("light");
-        document.documentElement.classList.remove("dark");
-      }
-    })();
-  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -55,122 +42,41 @@
   }
   </script>
 </head>
-<body class="min-h-screen bg-[#f8f9ff] text-[#0d1c2f] font-sans antialiased selection:bg-[#006398]/20 selection:text-[#000e27]">
-  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-[#000e27] focus:border focus:border-[#006398] focus:px-4 focus:py-2 focus:font-bold focus:text-white focus:shadow-lg">Skip to content</a>
+<body class="min-h-screen bg-canvas font-sans text-ink antialiased">
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-field focus:border focus:border-line-strong focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-ink">Skip to content</a>
 
-  <!-- Main Application Wrapper -->
-  <div class="relative min-h-screen flex flex-col bg-white">
-    {% include "partials/_header.html" %}
+  <div class="relative flex min-h-screen flex-col">
+    {% block header %}{% include "partials/_header.html" %}{% endblock %}
     {% include "partials/_messages.html" %}
-    
-    <main id="main" class="relative z-10 flex-1">
+
+    <main id="main" class="flex-1">
       {% block content %}{% endblock %}
     </main>
-    
-    {% include "partials/_footer.html" %}
+
+    {% block footer %}{% include "partials/_footer.html" %}{% endblock %}
   </div>
 
-  <!-- Mobile Drawer & Micro Motion Controllers -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // Theme Mode Controller
-      function updateThemeUI() {
-        var isDark = document.documentElement.classList.contains("dark");
-        document.querySelectorAll(".theme-sun-icon").forEach(function (icon) {
-          if (isDark) icon.classList.remove("hidden"); else icon.classList.add("hidden");
-        });
-        document.querySelectorAll(".theme-moon-icon").forEach(function (icon) {
-          if (isDark) icon.classList.add("hidden"); else icon.classList.remove("hidden");
-        });
-      }
+  <dialog id="confirm-dialog" class="m-auto w-[min(26rem,calc(100vw-2rem))] rounded-card border border-line bg-surface p-6 text-ink shadow-overlay">
+    <h2 class="text-h3">Please confirm</h2>
+    <p id="confirm-message" class="mt-2 text-sm text-muted"></p>
+    <div class="mt-6 flex justify-end gap-2">
+      <button type="button" class="btn btn-secondary" data-dialog-close>Cancel</button>
+      <button type="button" id="confirm-accept" class="btn btn-primary">Confirm</button>
+    </div>
+  </dialog>
 
-      function toggleTheme() {
-        if (document.documentElement.classList.contains("dark")) {
-          document.documentElement.classList.remove("dark");
-          document.documentElement.classList.add("light");
-          localStorage.setItem("gctt-theme", "light");
-        } else {
-          document.documentElement.classList.add("dark");
-          document.documentElement.classList.remove("light");
-          localStorage.setItem("gctt-theme", "dark");
-        }
-        updateThemeUI();
-      }
+  <dialog id="record-drawer" class="drawer">
+    <div class="drawer-head">
+      <h2 class="text-h4">Details</h2>
+      <button type="button" class="btn btn-ghost btn-sm" data-dialog-close aria-label="Close details">
+        <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#close"></use></svg>
+      </button>
+    </div>
+    <div class="drawer-body" id="record-drawer-body"></div>
+  </dialog>
 
-      document.querySelectorAll(".theme-toggle-btn").forEach(function (btn) {
-        btn.addEventListener("click", toggleTheme);
-      });
-      updateThemeUI();
+  <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
 
-      // Accessible Mobile Drawer Controller with Focus Management
-      var drawer = document.getElementById("mobile-drawer");
-      var openBtn = document.getElementById("mobile-drawer-open");
-      var closeBtn = document.getElementById("mobile-drawer-close");
-      var backdrop = document.getElementById("mobile-drawer-backdrop");
-      var lastFocusedElement = null;
-
-      function openDrawer() {
-        if (!drawer) return;
-        lastFocusedElement = document.activeElement;
-        drawer.classList.remove("hidden");
-        document.body.style.overflow = "hidden";
-        if (openBtn) openBtn.setAttribute("aria-expanded", "true");
-        if (closeBtn) closeBtn.focus();
-      }
-
-      function closeDrawer() {
-        if (!drawer) return;
-        drawer.classList.add("hidden");
-        document.body.style.overflow = "";
-        if (openBtn) openBtn.setAttribute("aria-expanded", "false");
-        if (lastFocusedElement) {
-          lastFocusedElement.focus();
-        } else if (openBtn) {
-          openBtn.focus();
-        }
-      }
-
-      if (openBtn) openBtn.addEventListener("click", openDrawer);
-      if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
-      if (backdrop) backdrop.addEventListener("click", closeDrawer);
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && drawer && !drawer.classList.contains("hidden")) {
-          closeDrawer();
-        }
-      });
-
-      // Micro Motion Viewport Intersection Observer
-      var reveals = document.querySelectorAll(".reveal");
-      if (reveals.length > 0) {
-        document.documentElement.classList.add("js-ready");
-        if (!("IntersectionObserver" in window)) {
-          reveals.forEach(function (el) { el.classList.add("in-view"); });
-        } else {
-          var observer = new IntersectionObserver(function (entries) {
-            entries.forEach(function (entry) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("in-view");
-                observer.unobserve(entry.target);
-              }
-            });
-          }, { rootMargin: "0px 0px 80px 0px", threshold: 0.01 });
-          reveals.forEach(function (el) { observer.observe(el); });
-
-          reveals.forEach(function (el) {
-            var rect = el.getBoundingClientRect();
-            if (rect.top < window.innerHeight && rect.bottom > 0) {
-              el.classList.add("in-view");
-            }
-          });
-        }
-
-        setTimeout(function () {
-          document.querySelectorAll(".reveal:not(.in-view)").forEach(function (el) {
-            el.classList.add("in-view");
-          });
-        }, 500);
-      }
-    });
-  </script>
+  <script src="{% static 'js/ui.js' %}?v=20261120a" defer></script>
 </body>
 </html>

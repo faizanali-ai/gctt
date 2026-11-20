@@ -18,6 +18,14 @@ jobs:
         with:
           python-version: "3.12"
       - run: uv sync
+      - name: CSS is current
+        run: |
+          curl -sLo tailwindcss https://github.com/tailwindlabs/tailwindcss/releases/download/v4.3.5/tailwindcss-linux-x64
+          chmod +x tailwindcss
+          ./tailwindcss -i static/css/input.css -o static/css/output.css --minify
+          git diff --exit-code -- static/css/output.css
+      - run: node --check static/js/ui.js
+      - run: uv run python scripts/check_contrast.py
       - run: uv run ruff check .
       - run: uv run python manage.py check
       - run: uv run python manage.py test tests
