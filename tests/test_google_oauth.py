@@ -43,7 +43,7 @@ class GoogleOAuthTests(TestCase):
         self.assertEqual(response.url, reverse("login"))
 
     @override_settings(GOOGLE_CLIENT_ID="mock-client-id", GOOGLE_CLIENT_SECRET="mock-client-secret")
-    def test_google_callback_logs_in_existing_user(self):
+    def test_google_callback_sends_admin_to_email_otp(self):
         session = self.client.session
         session["google_oauth_state"] = "valid-state"
         session["google_oauth_next"] = "/dashboard/"
@@ -66,10 +66,8 @@ class GoogleOAuthTests(TestCase):
         with patch("urllib.request.urlopen", side_effect=[token_mock, userinfo_mock]):
             response = self.client.get(reverse("google_callback") + "?code=mock-code&state=valid-state")
             self.assertEqual(response.status_code, 302)
-            self.assertEqual(response.url, "/dashboard/")
-
-            # Confirm user is logged in
-            self.assertEqual(int(self.client.session["_auth_user_id"]), self.owner.id)
+            self.assertEqual(response.url, reverse("email_otp_request"))
+            self.assertNotIn("_auth_user_id", self.client.session)
 
     @override_settings(GOOGLE_CLIENT_ID="mock-client-id", GOOGLE_CLIENT_SECRET="mock-client-secret")
     def test_google_callback_creates_new_candidate(self):

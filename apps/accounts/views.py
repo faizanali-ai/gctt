@@ -90,6 +90,16 @@ class CustomLoginView(LoginView):
 
     def form_valid(self, form):
         user = form.get_user()
+        if user.is_admin:
+            messages.info(
+                self.request,
+                "Admin accounts sign in with a one-time email code.",
+            )
+            next_url = self.get_success_url()
+            target = reverse("email_otp_request")
+            if next_url:
+                target = f"{target}?{urllib.parse.urlencode({'next': next_url})}"
+            return redirect(target)
         if user.is_staff and (
             settings.REQUIRE_STAFF_2FA
             or user.totpdevice_set.filter(confirmed=True).exists()
@@ -117,9 +127,13 @@ def _safe_next(request, value):
 
 def _complete_email_otp_login(request, user):
     next_url = request.session.pop("email_otp_next", None)
-    if user.is_staff and (
-        settings.REQUIRE_STAFF_2FA
-        or user.totpdevice_set.filter(confirmed=True).exists()
+    if (
+        user.is_staff
+        and not user.is_admin
+        and (
+            settings.REQUIRE_STAFF_2FA
+            or user.totpdevice_set.filter(confirmed=True).exists()
+        )
     ):
         request.session["pre_2fa_user_id"] = user.pk
         if next_url:
@@ -240,6 +254,11 @@ def login_2fa(request):
         request.session.pop("pre_2fa_user_id", None)
         return redirect("login")
 
+    if user.is_admin:
+        request.session.pop("pre_2fa_user_id", None)
+        request.session.pop("pre_2fa_next", None)
+        return redirect("email_otp_request")
+
     if request.method == "POST" and request.POST.get("action") == "cancel":
         request.session.pop("pre_2fa_user_id", None)
         request.session.pop("pre_2fa_next", None)
@@ -293,6 +312,11 @@ def login_2fa_enroll(request):
     if user is None:
         request.session.pop("pre_2fa_user_id", None)
         return redirect("login")
+
+    if user.is_admin:
+        request.session.pop("pre_2fa_user_id", None)
+        request.session.pop("pre_2fa_next", None)
+        return redirect("email_otp_request")
 
     if user.totpdevice_set.filter(confirmed=True).exists():
         return redirect("login_2fa")
@@ -453,6 +477,13 @@ def google_callback(request):
         if not user.email_verified:
             user.email_verified = True
             user.save(update_fields=["email_verified"])
+
+        if user.is_admin:
+            messages.info(
+                request,
+                "Admin accounts sign in with a one-time email code.",
+            )
+            return redirect("email_otp_request")
 
         if user.is_staff and (
             settings.REQUIRE_STAFF_2FA
@@ -927,6 +958,10 @@ def security(request):
             "device": device,
             "qr_svg": qr_svg,
             "secret": secret,
-            "required": settings.REQUIRE_STAFF_2FA and user.is_staff,
+            "required": (
+                settings.REQUIRE_STAFF_2FA
+                and user.is_staff
+                and not user.is_admin
+            ),
         },
     )

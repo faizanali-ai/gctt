@@ -51,7 +51,7 @@ class EnforcedStaffTwoFactorTests(TestCase):
             },
         )
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith(reverse("login")))
+        self.assertTrue(response.url.startswith(reverse("email_otp_request")))
         self.assertIn("next=%2Fadmin%2F", response.url)
         self.assertNotIn("_auth_user_id", self.client.session)
 
@@ -60,11 +60,21 @@ class EnforcedStaffTwoFactorTests(TestCase):
             reverse("admin:login"), {"next": "/admin/"}
         )
         self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(reverse("email_otp_request")))
         self.assertIn("next=%2Fadmin%2F", response.url)
 
         response = self.client.get(reverse("admin:login"))
         self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(reverse("email_otp_request")))
         self.assertIn("next=%2Fadmin%2F", response.url)
+
+    def test_admin_without_totp_is_not_blocked(self):
+        admin = User.objects.create_superuser(
+            email="no.totp.admin@example.com", password="test-pass-12345"
+        )
+        self.client.force_login(admin)
+        self.assertEqual(self.client.get("/admin/").status_code, 200)
+        self.assertEqual(self.client.get(reverse("staff_jobs")).status_code, 200)
 
     def test_unverified_staff_cannot_download_certificate(self):
         self.client.force_login(self.trainer)

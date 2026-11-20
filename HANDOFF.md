@@ -18,7 +18,8 @@ Harden the existing Django GCTT site backend-first. Access is three levels: Admi
 - UUIDs now drive application/registration routes; legacy numeric URLs still work.
 - Staff 2FA enforcement + enrollment flow; read-only `audit_access` with `--strict`.
 - Email OTP login at `/accounts/login/email/`: 6-digit code, 10-minute expiry, attempt limits, resend cooldown, generic responses.
-- OTP routing is 2FA-aware: internal users still complete TOTP/enrollment; candidates/students go to their dashboard.
+- Admins sign in with email OTP only; password/Google/admin-login paths redirect to email OTP and skip TOTP.
+- Staff still complete TOTP/enrollment; candidates/students go directly to their dashboard.
 - OTP request/verify/resend audited without logging codes; expired/consumed rows purged via `purge_email_otp`.
 - Expired pending submissions/temp resumes purged via `purge_pending`.
 
@@ -26,7 +27,8 @@ Harden the existing Django GCTT site backend-first. Access is three levels: Admi
 - 195 tests pass.
 - `ruff check .`, `manage.py check`, `makemigrations --check`, `check --deploy` clean.
 - Local migrations applied through `accounts.0011`, `jobs.0006`, `training.0005`; local `audit_access --strict` clean.
-- Commits include access, enforcement/UI, certificate refs, tokenized continuation, UUID routes, OTP foundation/login/cleanup, and OTP docs.
+- Production deploy `da4b7c5` applied migrations and is live; `/healthz/` and key public pages returned 200.
+- Commits include access, enforcement/UI, certificate refs, tokenized continuation, UUID routes, OTP foundation/login/cleanup/docs, and admin OTP routing.
 
 ## Key Files
 - `apps/accounts/models.py` — roles, `is_admin`, `sync_access` (clears direct perms).
@@ -54,8 +56,9 @@ Harden the existing Django GCTT site backend-first. Access is three levels: Admi
 - `README.md`, `RUNBOOK.md` — access contract, 2FA, audit, pending cleanup.
 
 ## Known Issues & Blockers
-- Production `migrate` and `audit_access --strict` still need to be run by the user.
-- Live SMTP OTP delivery has not been verified in production.
+- Latest admin email-OTP routing commit needs the automatic Render redeploy to complete.
+- Production `audit_access --strict` still needs to be run by the user.
+- Live SMTP OTP delivery and internal staff 2FA enrollment remain to be verified in production.
 - Legacy staff with multiple subgroups reduce to `Recruiter` priority; admin review required.
 - Staff queues contain candidate/student PII by design (permitted subgroup context).
 - Numeric operational URLs remain as temporary compatibility routes.
@@ -63,7 +66,7 @@ Harden the existing Django GCTT site backend-first. Access is three levels: Admi
 - Public redesign not started; it requires page-by-page copy approval, starting with Home.
 
 ## Exact Next Steps
-1. Deploy `migrate`; run `audit_access --strict` and request one real OTP in production.
+1. Confirm the latest Render redeploy is live; run `audit_access --strict` and test admin/staff/candidate OTP login.
 2. Review and approve the Home page copy draft.
 3. Implement the full public redesign page-by-page using current Stitch CSS; Home first.
 4. After monitoring, remove legacy numeric operational routes; final verification and handoff refresh.

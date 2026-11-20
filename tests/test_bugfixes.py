@@ -30,16 +30,16 @@ class CspAndSecurityHeadersTests(TestCase):
         self.assertIn("https://fonts.gstatic.com", csp)
 
     @override_settings(REQUIRE_STAFF_2FA=True)
-    def test_two_factor_middleware_protects_manage_users(self):
+    def test_two_factor_middleware_protects_staff_pages(self):
         assign_permissions()
         staff = User.objects.create_user(
             email="manager@example.com",
             password="test-pass-12345",
-            role=User.Role.ADMIN,
+            role=User.Role.STAFF,
             is_staff=True,
         )
         self.client.force_login(staff)
-        response = self.client.get(reverse("manage_users"))
+        response = self.client.get(reverse("staff_jobs"))
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse("security"), response.url)
 

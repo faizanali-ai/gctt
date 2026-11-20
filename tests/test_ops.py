@@ -58,7 +58,7 @@ class TwoFactorTests(TestCase):
             email="s@example.com",
             password="test-pass-12345",
             is_staff=True,
-            role=User.Role.ADMIN,
+            role=User.Role.STAFF,
         )
 
     @staticmethod

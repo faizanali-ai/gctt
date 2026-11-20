@@ -113,6 +113,45 @@ class EmailOTPLoginTests(TestCase):
         self.assertRedirects(response, reverse("dashboard"))
         self.assertIn("_auth_user_id", self.client.session)
 
+    def test_admin_otp_skips_totp_even_when_device_exists(self):
+        TOTPDevice.objects.create(user=self.admin, name="default", confirmed=True)
+        self.request_code(self.admin.email)
+        response = self.client.post(
+            reverse("email_otp_verify"), {"code": self.code()}
+        )
+        self.assertRedirects(response, reverse("dashboard"))
+        self.assertIn("_auth_user_id", self.client.session)
+
+    def test_admin_password_login_redirects_to_email_otp(self):
+        response = self.client.post(
+            reverse("login"),
+            {
+                "username": self.admin.email,
+                "password": "test-pass-12345",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(reverse("email_otp_request")))
+        self.assertNotIn("_auth_user_id", self.client.session)
+
+    def test_candidate_password_login_is_unchanged(self):
+        response = self.client.post(
+            reverse("login"),
+            {
+                "username": self.candidate.email,
+                "password": "test-pass-12345",
+            },
+        )
+        self.assertRedirects(response, reverse("dashboard"))
+        self.assertIn("_auth_user_id", self.client.session)
+
+    def test_admin_pending_2fa_session_is_sent_to_email_otp(self):
+        session = self.client.session
+        session["pre_2fa_user_id"] = self.admin.pk
+        session.save()
+        response = self.client.get(reverse("login_2fa"))
+        self.assertRedirects(response, reverse("email_otp_request"))
+
     def test_staff_with_totp_is_challenged_not_logged_in(self):
         TOTPDevice.objects.create(user=self.staff, name="default", confirmed=True)
         self.request_code(self.staff.email)

@@ -17,6 +17,7 @@ def needs_staff_2fa(user):
         settings.REQUIRE_STAFF_2FA
         and user.is_authenticated
         and user.is_staff
+        and not getattr(user, "is_admin", False)
         and not is_verified(user)
     )
 

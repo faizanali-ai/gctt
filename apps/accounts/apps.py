@@ -1,5 +1,4 @@
 from django.apps import AppConfig
-from django.conf import settings
 from django.db.models.signals import post_migrate
 
 ROLE_PERMISSIONS = {
@@ -72,10 +71,6 @@ class AccountsConfig(AppConfig):
                 and user.is_staff
                 and user.is_superuser
                 and getattr(user, "role", "") == "admin"
-                and (
-                    not settings.REQUIRE_STAFF_2FA
-                    or getattr(user, "is_verified", lambda: False)()
-                )
             )
 
         admin.site.has_permission = admin_only_permission

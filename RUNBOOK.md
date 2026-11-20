@@ -75,9 +75,10 @@ Never commit `.env`; it is gitignored.
 
 ## Internal 2FA
 
-When `REQUIRE_STAFF_2FA=1`, every internal user (admin and staff) must enroll at
-`/accounts/security/` before using internal pages. Candidates and students are not
-affected. Enroll current staff before enabling the flag.
+When `REQUIRE_STAFF_2FA=1`, staff members must enroll at `/accounts/security/`
+before using internal pages. Admin accounts sign in with email OTP only and are
+not prompted for an authenticator code. Candidates and students are unaffected.
+Enroll current staff before enabling the flag.
 
 ## Staff offboarding (admin only)
 

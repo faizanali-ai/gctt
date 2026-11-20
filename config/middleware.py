@@ -27,9 +27,10 @@ class SecurityHeadersMiddleware:
 class StaffTwoFactorMiddleware:
     """Default-deny for unverified internal users when 2FA is enforced.
 
-    Only active when REQUIRE_STAFF_2FA is on. Candidates and students are
-    unaffected. Unverified staff may only reach logout and enrollment /
-    verification endpoints; everything else redirects to /accounts/security/.
+    Only active when REQUIRE_STAFF_2FA is on. Candidates, students, and
+    admins are unaffected; admins use email OTP only. Unverified staff may
+    only reach logout and enrollment/verification endpoints; everything else
+    redirects to /accounts/security/.
     """
 
     ALLOWED_PREFIXES = (
@@ -54,6 +55,7 @@ class StaffTwoFactorMiddleware:
             settings.REQUIRE_STAFF_2FA
             and user.is_authenticated
             and user.is_staff
+            and not getattr(user, "is_admin", False)
             and not getattr(user, "is_verified", lambda: False)()
             and not request.path.startswith(self.ALLOWED_PREFIXES)
         ):

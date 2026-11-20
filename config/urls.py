@@ -21,23 +21,15 @@ admin.site.site_header = "GCTT Administration"
 admin.site.site_title = "GCTT Admin"
 admin.site.index_title = "Operations"
 
-# With enforced 2FA, /admin/login/ must not mint password-only sessions.
-_admin_login = admin.site.login
-
-
+# Admin accounts sign in with email OTP only; never mint a password session.
 @ratelimit(key="ip", rate="10/m", method="POST", block=True)
 def _admin_login_guard(request, extra_context=None):
-    if settings.REQUIRE_STAFF_2FA:
-        user = request.user
-        if (
-            user.is_authenticated
-            and getattr(user, "is_admin", False)
-            and getattr(user, "is_verified", lambda: False)()
-        ):
-            return redirect("/admin/")
-        target = request.GET.get("next") or request.POST.get("next") or "/admin/"
-        return redirect(f"{reverse('login')}?{urlencode({'next': target})}")
-    return _admin_login(request, extra_context)
+    if request.user.is_authenticated and getattr(request.user, "is_admin", False):
+        return redirect("/admin/")
+    target = request.GET.get("next") or request.POST.get("next") or "/admin/"
+    return redirect(
+        f"{reverse('email_otp_request')}?{urlencode({'next': target})}"
+    )
 
 
 admin.site.login = _admin_login_guard
