@@ -512,6 +512,13 @@
     color: var(--muted);
     white-space: nowrap;
   }
+  @media (min-width: 768px) {
+    .data-table th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+  }
   .data-table td {
     padding: 0.875rem 1rem;
     border-bottom: 1px solid var(--line);

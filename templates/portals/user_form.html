@@ -12,6 +12,7 @@
 
   <form method="post" class="form card mt-6 p-6 sm:p-8">
     {% csrf_token %}
+    {% include "partials/_error_summary.html" with errors=form_errors %}
     {% if mode == "create" %}
       <div class="field">
         <label for="id_email">Work email <span class="text-accent" aria-hidden="true">*</span></label>

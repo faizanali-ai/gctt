@@ -330,5 +330,5 @@ class SeoTests(TestCase):
     def test_home_has_structured_data_and_og_image(self):
         response = self.client.get("/")
         self.assertContains(response, '"@type": "Organization"')
-        self.assertContains(response, "og-gctt-v2.jpg")
+        self.assertContains(response, "og-gctt-v3.jpg")
         self.assertContains(response, 'rel="canonical"')

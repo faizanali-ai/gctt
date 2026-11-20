@@ -65,20 +65,29 @@ def programme_list(request):
     return render(request, "training/programme_list.html", {"page_obj": page_obj})
 
 
+def _programme_detail_context(request, programme, form=None):
+    registered = (
+        request.user.is_authenticated
+        and programme.registrations.filter(student=request.user).exists()
+    )
+    if form is None and programme.registration_open and not registered:
+        if request.user.is_authenticated:
+            form = RegistrationForm() if request.user.is_student else None
+        else:
+            form = InboundEnrollmentForm()
+    return {"programme": programme, "form": form, "registered": registered}
+
+
 def programme_detail(request, slug):
     programme = get_object_or_404(Programme, slug=slug)
     if not programme.published and not (
         request.user.is_staff and request.user.has_perm("training.view_programme")
     ):
         raise Http404
-    registered = (
-        request.user.is_authenticated
-        and programme.registrations.filter(student=request.user).exists()
-    )
     return render(
         request,
         "training/programme_detail.html",
-        {"programme": programme, "form": RegistrationForm(), "registered": registered},
+        _programme_detail_context(request, programme),
     )
 
 
@@ -98,17 +107,6 @@ def api_career_advisor(request):
     result = analyze_career_trajectory(current_role, experience, interests)
     result["guidance"] = result.get("summary", "")
     return JsonResponse({"success": True, "data": result})
-
-
-def _registration_error(form):
-    for field_name, errors in form.errors.items():
-        detail = errors[0]
-        if field_name != "__all__":
-            field = form.fields.get(field_name)
-            label = (field.label if field else None) or field_name.replace("_", " ").capitalize()
-            detail = f"{label}: {detail}"
-        return f"Please check: {detail}"
-    return "Please check the registration details."
 
 
 @require_POST
@@ -137,7 +135,11 @@ def programme_register(request, slug):
             except IntegrityError:
                 messages.error(request, "You are already registered for this programme.")
             return redirect("programme_detail", slug=programme.slug)
-        messages.error(request, _registration_error(form))
+        return render(
+            request,
+            "training/programme_detail.html",
+            _programme_detail_context(request, programme, form),
+        )
     else:
         # Inbound frictionless enrollment from LinkedIn/social
         form = InboundEnrollmentForm(request.POST)
@@ -200,7 +202,11 @@ def programme_register(request, slug):
             send_password_setup(student)
             messages.info(request, generic_message)
             return redirect("programme_detail", slug=programme.slug)
-        messages.error(request, _registration_error(form))
+        return render(
+            request,
+            "training/programme_detail.html",
+            _programme_detail_context(request, programme, form),
+        )
 
     return redirect("programme_detail", slug=programme.slug)
 

@@ -1,0 +1,22 @@
+{% if user.is_authenticated %}
+  <div class="mt-4 rounded-field border border-line bg-raised p-4 text-sm">
+    <p class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Registering as</p>
+    <p class="mt-1 font-semibold">{{ user.display_name }}</p>
+    <p class="text-muted">{{ user.email }}</p>
+  </div>
+{% endif %}
+
+<form method="post" action="{% url 'programme_register' programme.slug %}" class="form mt-5">
+  {% csrf_token %}
+  {% include "partials/_form_errors.html" with form=form %}
+  {% for field in form %}
+    {% include "partials/_field.html" with field=field %}
+  {% endfor %}
+  {% if user.is_authenticated %}
+    <button type="submit" class="btn btn-primary w-full">Confirm registration</button>
+    <p class="text-center text-2xs text-muted">Certificate issued on completion.</p>
+  {% else %}
+    <button type="submit" class="btn btn-primary w-full">Register</button>
+    <p class="text-center text-2xs text-muted">No password needed. Confirmation and syllabus are sent by email.</p>
+  {% endif %}
+</form>

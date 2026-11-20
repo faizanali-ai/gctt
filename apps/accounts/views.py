@@ -582,6 +582,13 @@ def manage_user_create(request):
     _require_user_manager(request)
     assignable = request.user.assignable_roles()
     subgroups = Group.objects.filter(name__in=STAFF_SUBGROUPS)
+    allowed_roles = {value for value, _ in assignable}
+    default_role = User.Role.STAFF.value
+    selected_role = request.POST.get("role", default_role)
+    if selected_role not in allowed_roles:
+        selected_role = default_role
+    selected_group = request.POST.get("group", "")
+    form_errors = []
     if request.method == "POST":
         email = request.POST.get("email", "").strip().lower()
         role = request.POST.get("role", "")
@@ -605,6 +612,7 @@ def manage_user_create(request):
                 error = " ".join(exc.messages)
         if error:
             messages.error(request, error)
+            form_errors = [error]
         else:
             try:
                 user = User.objects.create_user(
@@ -625,6 +633,10 @@ def manage_user_create(request):
                         "mode": "create",
                         "assignable": assignable,
                         "groups": subgroups,
+                        "selected_role": selected_role,
+                        "selected_group": selected_group,
+                        "values": request.POST,
+                        "form_errors": ["A user with that email already exists."],
                     },
                 )
             log_action(request, "user.create", user.email, f"role={user.role}")
@@ -639,9 +651,10 @@ def manage_user_create(request):
             "mode": "create",
             "assignable": assignable,
             "groups": subgroups,
-            "selected_role": request.POST.get("role", ""),
-            "selected_group": request.POST.get("group", ""),
+            "selected_role": selected_role,
+            "selected_group": selected_group,
             "values": request.POST,
+            "form_errors": form_errors,
         },
     )
 
@@ -658,6 +671,7 @@ def manage_user_edit(request, pk):
     current_subgroup = target.groups.filter(name__in=STAFF_SUBGROUPS).values_list(
         "name", flat=True
     ).first()
+    form_errors = []
     if request.method == "POST":
         role = request.POST.get("role", target.role)
         subgroup = request.POST.get("group", current_subgroup or "")
@@ -675,6 +689,7 @@ def manage_user_edit(request, pk):
             error = "You cannot remove the last active admin."
         if error:
             messages.error(request, error)
+            form_errors = [error]
         else:
             new_password = request.POST.get("password", "").strip()
             if new_password:
@@ -691,6 +706,10 @@ def manage_user_edit(request, pk):
                             "target": target,
                             "assignable": assignable,
                             "groups": subgroups,
+                            "selected_role": request.POST.get("role", target.role),
+                            "selected_group": request.POST.get("group", current_subgroup or ""),
+                            "values": request.POST,
+                            "form_errors": exc.messages,
                         },
                     )
             target.first_name = request.POST.get("first_name", "").strip()
@@ -719,6 +738,7 @@ def manage_user_edit(request, pk):
             "selected_role": request.POST.get("role", target.role),
             "selected_group": request.POST.get("group", current_subgroup or ""),
             "values": request.POST,
+            "form_errors": form_errors,
         },
     )
 
