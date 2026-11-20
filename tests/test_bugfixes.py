@@ -1,6 +1,8 @@
 import shutil
 import tempfile
+from pathlib import Path
 
+from django.conf import settings
 from django.contrib.auth.models import Group
 from django.core import mail
 from django.core.files.storage import default_storage
@@ -388,7 +390,7 @@ class UiUxOverhaulTests(TestCase):
         self.assertContains(response, "Selected")
         self.assertNotContains(response, "Active Applications")
 
-    def test_training_verify_renders_gold_trimmed_credential_plaque(self):
+    def test_training_verify_renders_credential_record(self):
         cat = Category.objects.create(name="Executive IT", published=True)
         prog = Programme.objects.create(title="SAP S/4HANA Masterclass", category=cat, published=True)
         reg = Registration.objects.create(programme=prog, student=self.candidate)
@@ -396,16 +398,16 @@ class UiUxOverhaulTests(TestCase):
 
         response = self.client.get(reverse("verify_certificate", args=[reg.certificate_ref]))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "credential-card credential-gold-trim")
-        self.assertContains(response, "Official Credential Plaque")
+        self.assertContains(response, "Verified record")
         self.assertContains(response, "Valid certificate")
         self.assertContains(response, "Add to LinkedIn")
+        self.assertContains(response, reg.certificate_ref)
 
     def test_enterprise_services_page_contains_faq_accordions(self):
         response = self.client.get(reverse("services"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Services &amp; Engagement FAQ")
-        self.assertIn("How are GCTT&#39;s service practices structured", response.content.decode().replace("&#x27;", "&#39;").replace("'", "&#39;"))
+        self.assertContains(response, "Questions we get asked")
+        self.assertContains(response, "How are the practices structured")
 
     def test_employers_page_contains_faq_accordions(self):
         response = self.client.get(reverse("employers"))
@@ -413,13 +415,14 @@ class UiUxOverhaulTests(TestCase):
         self.assertContains(response, "Frequently Asked Enterprise Questions")
         self.assertContains(response, "What engagement models does GCTT support?")
 
-    def test_theme_toggle_button_and_anti_fouc_script_present(self):
+    def test_theme_follows_os_preference_without_toggle(self):
         response = self.client.get(reverse("home"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "theme-toggle-btn")
-        self.assertContains(response, "theme-sun-icon")
-        self.assertContains(response, "theme-moon-icon")
-        self.assertContains(response, "localStorage.getItem")
-        self.assertContains(response, "gctt-theme")
+        self.assertContains(response, "color-scheme")
+        css = Path(settings.BASE_DIR, "static", "css", "output.css").read_text(encoding="utf-8")
+        self.assertIn("prefers-color-scheme", css)
+        self.assertNotContains(response, "theme-toggle-btn")
+        self.assertNotContains(response, "gctt-theme")
+        self.assertNotContains(response, "localStorage.getItem")
 
 

@@ -80,7 +80,7 @@ class StaffPortalTests(TestCase):
         self.client.force_login(self.ceo)
         response = self.client.get(reverse("dashboard"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Operations Command")
+        self.assertContains(response, "Operations:")
         self.assertContains(response, "Applications")
         self.assertContains(response, "Enquiries")
         self.assertContains(response, "Programmes")

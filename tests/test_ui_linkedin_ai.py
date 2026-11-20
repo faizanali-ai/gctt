@@ -25,15 +25,19 @@ class UIUXLinkedInAITests(TestCase):
             published=True,
         )
 
-    def test_svg_logo_and_mega_nav_rendered_on_home(self):
+    def test_brand_and_primary_nav_rendered_on_home(self):
         response = self.client.get(reverse("home"))
         self.assertEqual(response.status_code, 200)
         content = response.content.decode("utf-8")
-        self.assertIn("logo.svg", content)
-        self.assertIn("Solutions &amp; Practices", content)
-        self.assertIn("Academy &amp; Training", content)
-        self.assertIn("Request Talent", content)
-        self.assertIn("Portal Sign In", content)
+        self.assertIn("logo-icon.svg", content)
+        self.assertIn('aria-label="GCTT home"', content)
+        self.assertIn("Talent Solutions", content)
+        self.assertIn("Academy", content)
+        self.assertIn("Careers", content)
+        self.assertIn("Company", content)
+        self.assertIn("Contact", content)
+        self.assertIn("Request talent", content)
+        self.assertIn("Portal sign in", content)
 
     def test_ai_career_advisor_api_returns_structured_roadmap(self):
         response = self.client.post(
