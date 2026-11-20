@@ -3,6 +3,12 @@
 ## Goal & Core Objective
 Keep the Django GCTT site secure and working. Roles are Admin, Staff, Candidate, Student. Login is now password-based; email OTP is optional for admin/staff only. Authenticator-app login is disabled.
 
+## Current UI & Local Access (2026-11-20)
+- The public site, auth screens, candidate/student portal, staff queues and Django admin use the new GCTT UI.
+- Local login is not seeded. Create an admin with `DJANGO_DEBUG=1 uv run python manage.py createsuperuser`; see README “Local login”.
+- `REQUIRE_EMAIL_OTP=0` keeps password-only staff/admin login for local work.
+- `seed_demo` creates sample jobs and programmes only.
+
 ## Completed Work
 - Roles: Admin (owner/CEO merged), Staff (one subgroup), Candidate, Student.
 - Staff subgroups: Recruiter, Trainer, Enquiry Manager. No cross-group access.
@@ -68,5 +74,5 @@ Keep the Django GCTT site secure and working. Roles are Admin, Staff, Candidate,
 1. Domain owner adds Resend DKIM/send/SPF records; verify `gctekton.com` in Resend.
 2. After verification, set `REQUIRE_EMAIL_OTP=1` in Render and test admin/staff OTP login.
 3. Review production users/groups in Django Admin; fix multi/no-subgroup staff.
-4. Approve Home page copy; start public redesign one page at a time.
+4. Approve final public copy; the UI redesign is complete.
 5. Decide cleanup schedule, PII retention, and legacy URL removal.

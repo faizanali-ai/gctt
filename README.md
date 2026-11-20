@@ -23,19 +23,50 @@ DJANGO_DEBUG=1 uv run python manage.py createsuperuser
 DJANGO_DEBUG=1 uv run python manage.py runserver
 ```
 
-CSS is precompiled to `static/css/output.css`. Rebuild after template/style changes:
+CSS is precompiled to `static/css/output.css` and committed. Rebuild after any template or style change:
 
 ```bash
-curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64
-chmod +x tailwindcss-linux-x64 && mv tailwindcss-linux-x64 tailwindcss
+curl -sLo tailwindcss https://github.com/tailwindlabs/tailwindcss/releases/download/v4.3.5/tailwindcss-linux-x64
+chmod +x tailwindcss
 ./tailwindcss -i static/css/input.css -o static/css/output.css --minify
 ```
+
+The pin matches CI, which rebuilds and fails if `output.css` is stale. `tests/test_ui_system.py` also checks that the compiled file contains the utilities the interface relies on, so rebuild before running tests.
+
+## UI
+
+The design system is documented in [`DESIGN.md`](DESIGN.md). In short:
+
+- Ink neutrals, one copper accent, system dark mode (no toggle).
+- Space Grotesk + Inter + JetBrains Mono, self-hosted in `static/fonts/` (SIL OFL).
+- One icon sprite, one vanilla JS file, no front-end framework or CDN.
+- Marketing shell in `templates/base.html`, auth shell in `templates/accounts/base_auth.html`, portal shell in `templates/portals/base_portal.html`.
+- Templates must use tokens and components, not hardcoded colours; the UI test enforces it.
+
+## Local login
+
+There is **no committed local password or user fixture**. Create a local admin interactively:
+
+```bash
+DJANGO_DEBUG=1 uv run python manage.py createsuperuser
+```
+
+Or non-interactively:
+
+```bash
+DJANGO_DEBUG=1 DJANGO_SUPERUSER_PASSWORD='choose-a-local-password' \
+  uv run python manage.py createsuperuser --noinput --email local-admin@gctt.local
+```
+
+Sign in at `/accounts/login/` (portal) or `/admin/login/`. Keep `REQUIRE_EMAIL_OTP=0` for password-only staff/admin login; it defaults to `0`. `seed_demo` creates sample jobs and programmes only, not users. Never reuse local credentials in production.
 
 ## Test
 
 ```bash
 uv run python manage.py test tests
 uv run ruff check .
+uv run python scripts/check_contrast.py
+node --check static/js/ui.js
 ```
 
 ## Deploy — 100% free tier
