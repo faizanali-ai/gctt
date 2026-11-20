@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.mail import send_mail
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 
 
 class Command(BaseCommand):
@@ -36,9 +36,12 @@ class Command(BaseCommand):
                 recipient_list=[recipient],
                 fail_silently=False,
             )
-            if sent:
-                self.stdout.write(self.style.SUCCESS(f"✓ Test email successfully transmitted to {recipient}!"))
-            else:
-                self.stdout.write(self.style.WARNING("! send_mail returned 0 messages sent."))
-        except Exception as exc:  # noqa: BLE001
-            self.stdout.write(self.style.ERROR(f"✗ Failed to transmit test email: {exc}"))
+            if not sent:
+                raise CommandError("SMTP returned 0 messages sent.")
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"✓ Test email successfully transmitted to {recipient}!"
+                )
+            )
+        except Exception as exc:
+            raise CommandError(f"Failed to transmit test email: {exc}") from exc

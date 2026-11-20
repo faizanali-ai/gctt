@@ -27,10 +27,14 @@ def send(to, subject, body):
     sent = 0
     for recipient in recipients:
         try:
-            send_mail(
-                subject, body, settings.DEFAULT_FROM_EMAIL, [recipient], fail_silently=False
-            )
-            sent += 1
+            if send_mail(
+                subject,
+                body,
+                settings.DEFAULT_FROM_EMAIL,
+                [recipient],
+                fail_silently=False,
+            ):
+                sent += 1
         except Exception:
             logger.exception(
                 "Failed to send email to %s (subject: %s)",
@@ -87,13 +91,15 @@ def send_password_setup(user):
 
 def send_login_otp(email, code):
     minutes = max(1, int(getattr(settings, "EMAIL_OTP_TTL_SECONDS", 600)) // 60)
-    send(
-        email,
-        "Your GCTT sign-in code",
-        "Your one-time GCTT sign-in code is:\n\n"
-        f"{code}\n\n"
-        f"It expires in {minutes} minutes. If you did not request it, ignore this email.\n\n"
-        "Global Center for Technology & Training (GCTT)",
+    return bool(
+        send(
+            email,
+            "Your GCTT sign-in code",
+            "Your one-time GCTT sign-in code is:\n\n"
+            f"{code}\n\n"
+            f"It expires in {minutes} minutes. If you did not request it, ignore this email.\n\n"
+            "Global Center for Technology & Training (GCTT)",
+        )
     )
 
 

@@ -1,4 +1,5 @@
 import re
+from unittest.mock import patch
 
 from django.contrib.auth.models import Group
 from django.core import mail
@@ -26,17 +27,20 @@ class EmailOTPLoginTests(TestCase):
             password="test-pass-12345",
             role=User.Role.STAFF,
             is_staff=True,
+            email_verified=True,
         )
         cls.staff.groups.add(Group.objects.get(name="Recruiter"))
         cls.candidate = User.objects.create_user(
             email="candidate@example.com",
             password="test-pass-12345",
             account_type=User.AccountType.CANDIDATE,
+            email_verified=True,
         )
         cls.student = User.objects.create_user(
             email="student@example.com",
             password="test-pass-12345",
             account_type=User.AccountType.STUDENT,
+            email_verified=True,
         )
 
     def setUp(self):
@@ -72,6 +76,28 @@ class EmailOTPLoginTests(TestCase):
         self.assertNotIn(code, response.content.decode())
         self.assertTrue(
             AuditLog.objects.filter(action="auth.email_otp_request").exists()
+        )
+
+    def test_unverified_external_account_gets_no_code(self):
+        User.objects.create_user(
+            email="unverified@example.com",
+            password="test-pass-12345",
+            email_verified=False,
+        )
+        response = self.request_code("unverified@example.com")
+        self.assertRedirects(response, reverse("email_otp_verify"))
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_send_failure_is_audited_without_leaking_code(self):
+        with patch(
+            "apps.accounts.views.send_login_otp", return_value=False
+        ):
+            response = self.request_code(self.candidate.email)
+        self.assertRedirects(response, reverse("email_otp_verify"))
+        self.assertTrue(
+            AuditLog.objects.filter(
+                action="auth.email_otp_send_failed"
+            ).exists()
         )
 
     def test_unknown_email_gets_same_response_without_email(self):
@@ -130,9 +156,10 @@ class EmailOTPLoginTests(TestCase):
                 "password": "test-pass-12345",
             },
         )
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith(reverse("email_otp_request")))
+        self.assertRedirects(response, reverse("email_otp_verify"))
         self.assertNotIn("_auth_user_id", self.client.session)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, [self.admin.email])
 
     def test_candidate_password_login_is_unchanged(self):
         response = self.client.post(
@@ -150,7 +177,9 @@ class EmailOTPLoginTests(TestCase):
         session["pre_2fa_user_id"] = self.admin.pk
         session.save()
         response = self.client.get(reverse("login_2fa"))
-        self.assertRedirects(response, reverse("email_otp_request"))
+        self.assertRedirects(response, reverse("email_otp_verify"))
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertNotIn("pre_2fa_user_id", self.client.session)
 
     def test_staff_with_totp_is_challenged_not_logged_in(self):
         TOTPDevice.objects.create(user=self.staff, name="default", confirmed=True)

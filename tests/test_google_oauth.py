@@ -66,7 +66,7 @@ class GoogleOAuthTests(TestCase):
         with patch("urllib.request.urlopen", side_effect=[token_mock, userinfo_mock]):
             response = self.client.get(reverse("google_callback") + "?code=mock-code&state=valid-state")
             self.assertEqual(response.status_code, 302)
-            self.assertEqual(response.url, reverse("email_otp_request"))
+            self.assertEqual(response.url, reverse("email_otp_verify"))
             self.assertNotIn("_auth_user_id", self.client.session)
 
     @override_settings(GOOGLE_CLIENT_ID="mock-client-id", GOOGLE_CLIENT_SECRET="mock-client-secret")

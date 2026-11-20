@@ -45,6 +45,26 @@ invalid roles, external accounts with internal access, missing admin flags/group
 zero active admins, and pending 2FA enrollment. It never changes data. Fix flagged
 accounts in `/manage/users/` or Django Admin, then rerun with `--strict`.
 
+## Email OTP delivery
+
+OTP email requires a working SMTP provider and a verified sender domain. The
+production settings are `smtp.resend.com`, port `587`, user `resend`, and
+`DEFAULT_FROM_EMAIL=accounts@gctekton.com`. `EMAIL_HOST_PASSWORD` must contain a
+valid Resend API key.
+
+Verify delivery from the Render shell:
+
+```bash
+uv run python manage.py test_email your-address@example.com
+```
+
+It prints whether the password is configured and fails loudly on SMTP errors.
+Check the Audit log for `auth.email_otp_send_failed` if the UI still shows the
+generic “check your inbox” message.
+
+Common causes: missing `EMAIL_HOST_PASSWORD`, unverified Resend domain, wrong
+API key, or sending from an address the Resend account does not own.
+
 ## Email OTP cleanup
 
 Expired or consumed email OTP rows are removed with:
