@@ -45,6 +45,16 @@ invalid roles, external accounts with internal access, missing admin flags/group
 zero active admins, and pending 2FA enrollment. It never changes data. Fix flagged
 accounts in `/manage/users/` or Django Admin, then rerun with `--strict`.
 
+## Email OTP cleanup
+
+Expired or consumed email OTP rows are removed with:
+
+```bash
+uv run python manage.py purge_email_otp
+```
+
+Run this on a schedule or during routine maintenance.
+
 ## Pending guest submissions
 
 Existing-email guests receive a 24-hour single-use link to confirm a saved

@@ -1,6 +1,8 @@
 from datetime import timedelta
+from io import StringIO
 
 from django.core.cache import cache
+from django.core.management import call_command
 from django.test import TestCase, override_settings
 from django.utils import timezone
 
@@ -59,6 +61,18 @@ class EmailOTPTests(TestCase):
         _, code = issue_code("used@example.com")
         self.assertTrue(verify_code("used@example.com", code))
         self.assertEqual(purge_expired(), 2)
+        self.assertEqual(EmailOTP.objects.count(), 0)
+
+    def test_purge_email_otp_command(self):
+        expired, _ = issue_code("expired.command@example.com")
+        expired.expires_at = timezone.now() - timedelta(minutes=1)
+        expired.save(update_fields=["expires_at"])
+        _, code = issue_code("used.command@example.com")
+        self.assertTrue(verify_code("used.command@example.com", code))
+
+        output = StringIO()
+        call_command("purge_email_otp", stdout=output)
+        self.assertIn("Purged 2 email OTP row(s).", output.getvalue())
         self.assertEqual(EmailOTP.objects.count(), 0)
 
     def test_unknown_email_and_empty_input_fail(self):
