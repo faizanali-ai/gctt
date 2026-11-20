@@ -98,5 +98,8 @@ and subgroup changes admin-only.
 
 ## Scheduled maintenance checks
 
-- Monthly: dependency updates (`uv lock --upgrade`, run tests, redeploy).
+- Daily or weekly: `uv run python manage.py purge_email_otp` and
+  `uv run python manage.py purge_pending` to remove expired auth/pending records.
+- Monthly: dependency updates (`uv lock --upgrade`, run tests, redeploy); run
+  `audit_access --strict` and review flagged accounts.
 - Quarterly: restore drill, review staff accounts and role groups, rotate R2 keys.
