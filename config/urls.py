@@ -28,9 +28,15 @@ _admin_login = admin.site.login
 @ratelimit(key="ip", rate="10/m", method="POST", block=True)
 def _admin_login_guard(request, extra_context=None):
     if settings.REQUIRE_STAFF_2FA:
-        return redirect(
-            f"{reverse('login')}?{urlencode({'next': request.get_full_path()})}"
-        )
+        user = request.user
+        if (
+            user.is_authenticated
+            and getattr(user, "is_admin", False)
+            and getattr(user, "is_verified", lambda: False)()
+        ):
+            return redirect("/admin/")
+        target = request.GET.get("next") or request.POST.get("next") or "/admin/"
+        return redirect(f"{reverse('login')}?{urlencode({'next': target})}")
     return _admin_login(request, extra_context)
 
 

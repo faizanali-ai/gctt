@@ -51,8 +51,20 @@ class EnforcedStaffTwoFactorTests(TestCase):
             },
         )
         self.assertEqual(response.status_code, 302)
-        self.assertIn(reverse("login"), response.url)
+        self.assertTrue(response.url.startswith(reverse("login")))
+        self.assertIn("next=%2Fadmin%2F", response.url)
         self.assertNotIn("_auth_user_id", self.client.session)
+
+    def test_admin_login_preserves_the_admin_target(self):
+        response = self.client.get(
+            reverse("admin:login"), {"next": "/admin/"}
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("next=%2Fadmin%2F", response.url)
+
+        response = self.client.get(reverse("admin:login"))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("next=%2Fadmin%2F", response.url)
 
     def test_unverified_staff_cannot_download_certificate(self):
         self.client.force_login(self.trainer)
