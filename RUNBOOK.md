@@ -47,14 +47,15 @@ zero active admins. It never changes data. Fix flagged accounts in
 
 ## Email service
 
-Required provider variables: `EMAIL_BACKEND`, `EMAIL_HOST`, `EMAIL_PORT`,
-`EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `DEFAULT_FROM_EMAIL`, and `SITE_URL`.
+Required provider variables: `EMAIL_BACKEND`, `RESEND_API_KEY`,
+`DEFAULT_FROM_EMAIL`, and `SITE_URL`. SMTP variables remain only for local or
+paid-host fallback.
 `SITE_URL` must be the public origin because welcome, enrollment and unsubscribe
 links are built from it. Promotional commands use command flags rather than new
 environment variables.
 
-`config/emails.py` is the single email service. It sends through Resend SMTP and
-supports HTML plus plain-text alternatives. Plain transactional messages are
+`config/emails.py` is the single email service. It sends through Resend’s HTTPS
+API and supports HTML plus plain-text alternatives. Plain transactional messages are
 sent immediately; the promotional command runs outside the request path.
 
 - Welcome: sent exactly once, after the first successful login.
@@ -66,9 +67,11 @@ sent immediately; the promotional command runs outside the request path.
   Use the printed `--after-id` value on the next run to avoid resending the first batch.
 - Unsubscribe: signed link in every promotional email. It opens a confirmation page
   and never blocks transactional mail.
+- Account security: password changes, email-address changes and account deletion
+  send transactional notifications to the affected address(es).
 - Test mode: tests use Django’s `locmem` backend; local development uses the
-  console backend when `EMAIL_HOST` is empty. Use Resend’s test mode or a
-  controlled mailbox in staging.
+  console backend when no Resend key or SMTP host is configured. Use Resend’s
+  test mode or a controlled mailbox in staging.
 - Retry: transient send failures are retried once by default. Configure
   `EMAIL_SEND_RETRIES` and `EMAIL_RETRY_DELAY_SECONDS`; permanent failures are
   logged and do not block account or registration completion.
@@ -78,10 +81,12 @@ sent immediately; the promotional command runs outside the request path.
 
 ## Email OTP delivery
 
-OTP email requires a working SMTP provider and a verified sender domain. The
-production settings are `smtp.resend.com`, port `587`, user `resend`, and
-`DEFAULT_FROM_EMAIL=accounts@gctekton.com`. `EMAIL_HOST_PASSWORD` must contain a
-valid Resend API key.
+OTP email uses the Resend HTTPS API, which works on Render Free because HTTPS
+port 443 is not blocked. The production settings are
+`EMAIL_BACKEND=config.email_backends.ResendEmailBackend`,
+`RESEND_API_KEY=<key>`, and `DEFAULT_FROM_EMAIL=accounts@gctekton.com`. The
+sender must be on the verified Resend domain. SMTP to port 587 is not usable on
+Render Free.
 
 Check the public DNS records without a Render Shell:
 
@@ -130,7 +135,7 @@ Run this on a schedule or during routine maintenance.
 ## Secrets
 
 Rotate `DJANGO_SECRET_KEY` by generating a new value and redeploying — this signs
-everyone out. Also rotate `EMAIL_HOST_PASSWORD` and the R2 keys on suspicion of leak.
+everyone out. Also rotate `RESEND_API_KEY` and the storage keys on suspicion of leak.
 Never commit `.env`; it is gitignored.
 
 ## Internal email OTP

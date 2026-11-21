@@ -28,15 +28,17 @@ Total cost: $0 within free limits. Repo already has `render.yaml`.
 1. resend.com → sign up → **Domains → Add Domain** → `gctekton.com`.
 2. Add the DNS records Resend shows (SPF/DKIM) at your DNS provider. Wait for **Verified**.
 3. **API Keys → Create** (sending permission). Copy the key.
-4. SMTP settings used by the app:
+4. API settings used by the app:
 
    | Variable | Value |
    |---|---|
-   | `EMAIL_BACKEND` | `django.core.mail.backends.smtp.EmailBackend` (set in render.yaml) |
-   | `EMAIL_HOST` | `smtp.resend.com` |
-   | `EMAIL_PORT` | `587` |
-   | `EMAIL_HOST_USER` | `resend` |
-   | `EMAIL_HOST_PASSWORD` | your API key |
+   | `EMAIL_BACKEND` | `config.email_backends.ResendEmailBackend` (set in render.yaml) |
+   | `RESEND_API_KEY` | the API key from step 3 |
+   | `DEFAULT_FROM_EMAIL` | `accounts@gctekton.com` |
+
+   Render Free blocks outbound SMTP ports 25, 465 and 587. The Resend HTTPS API
+   runs on port 443 and works on the free tier. SMTP remains available only as
+   an explicit local or paid-host fallback.
 
 Until the domain verifies, Resend only delivers to your own signup address.
 
@@ -69,7 +71,7 @@ After setting credentials run `uv run python manage.py check_storage`.
    - `DATABASE_URL` — Neon pooled string from step 1
    - `DJANGO_ALLOWED_HOSTS` — your service hostname, e.g. `gctt.onrender.com`
    - `DJANGO_CSRF_TRUSTED_ORIGINS` — `https://gctt.onrender.com`
-   - `EMAIL_HOST_PASSWORD` — Resend API key
+   - `RESEND_API_KEY` — Resend API key
    - `DEFAULT_FROM_EMAIL` — must be on the verified Resend domain
    - `SITE_URL` — public origin, e.g. `https://gctekton.com`
    - `EMAIL_SEND_RETRIES` — optional, default `1`

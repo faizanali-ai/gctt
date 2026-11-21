@@ -59,7 +59,7 @@ DJANGO_DEBUG=1 DJANGO_SUPERUSER_PASSWORD='choose-a-local-password' \
   uv run python manage.py createsuperuser --noinput --email local-admin@gctt.local
 ```
 
-Sign in at `/accounts/login/` (portal). Staff/admin logins require an email code by default (`REQUIRE_EMAIL_OTP=1`); locally the code is printed to the console when no SMTP host is configured. Set `REQUIRE_EMAIL_OTP=0` only for a deliberate password-only fallback. `seed_demo` creates sample jobs and programmes only, not users. Never reuse local credentials in production.
+Sign in at `/accounts/login/` (portal). Staff/admin logins require an email code by default (`REQUIRE_EMAIL_OTP=1`); locally the code is printed to the console when no Resend key or SMTP host is configured. Set `REQUIRE_EMAIL_OTP=0` only for a deliberate password-only fallback. `seed_demo` creates sample jobs and programmes only, not users. Never reuse local credentials in production.
 
 ## Admin dashboard
 
@@ -100,8 +100,8 @@ Stack: **Render** (web, free) + **Neon** (Postgres, free) + **Resend** (email, f
 2. In Render, **New → Blueprint**, point it at this repo. `render.yaml` provisions the
    free web service; fill the `sync: false` variables when prompted:
    `DATABASE_URL`, `DJANGO_ALLOWED_HOSTS` (e.g. `gctt.onrender.com`),
-   `DJANGO_CSRF_TRUSTED_ORIGINS` (`https://gctt.onrender.com`), the Resend SMTP
-   password, and the R2 keys or the complete Supabase storage set.
+   `DJANGO_CSRF_TRUSTED_ORIGINS` (`https://gctt.onrender.com`), the Resend API key,
+   and the R2 keys or the complete Supabase storage set.
 3. The start command runs `migrate`, `createcachetable`, `collectstatic` and gunicorn
    on every boot — no paid release phase needed.
 4. Verify `/wake/` returns `ok` (liveness) and `/healthz/` returns `ok`, then create the admin account:
@@ -133,11 +133,12 @@ Railway/paid hosts still work unchanged via `Procfile` if you outgrow the free t
 - **Enrollment email** — sent when a training registration is confirmed; it is transactional and cannot be opted out of.
 - **Promotional email** — double opt-in only. Users request offers on signup or in their profile, then must click a confirmation link. Use `uv run python manage.py send_promotional --subject "..." --body-file campaign.txt` to preview; add `--send` to deliver. The command defaults to 50 recipients, one second between messages, and prints a `--after-id` bookmark so the next run continues without resending the first batch.
 - **Unsubscribe** — every promotional email includes a signed unsubscribe link. It opens a confirmation page and works without signing in; it never affects transactional mail.
+- **Account security email** — changing a password or email address, or deleting an account, sends a notification email. These are transactional and cannot be opted out of.
 - **No authenticator app** — TOTP login and enrollment are disabled. Old 2FA URLs redirect to login; existing authenticator tables are kept for rollback only.
-- **Email OTP delivery** — requires a verified Resend domain and working SMTP. Configure `EMAIL_OTP_TTL_SECONDS`, `EMAIL_OTP_MAX_ATTEMPTS`, and `EMAIL_OTP_RESEND_SECONDS`; run `manage.py purge_email_otp` periodically.
+- **Email OTP delivery** — requires a verified Resend domain and `RESEND_API_KEY`. Email is sent through Resend’s HTTPS API, which works on Render Free. Configure `EMAIL_OTP_TTL_SECONDS`, `EMAIL_OTP_MAX_ATTEMPTS`, and `EMAIL_OTP_RESEND_SECONDS`; run `manage.py purge_email_otp` periodically.
 - **Email templates** — new transactional and promotional mail lives in `templates/emails/`, with HTML and plain-text versions. Existing transactional messages in `config/emails.py` are unchanged.
-- **Email provider variables** — configure `EMAIL_BACKEND`, `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `DEFAULT_FROM_EMAIL`, and `SITE_URL` (public origin used in email links). `EMAIL_HOST_PASSWORD` is the Resend API key and must never be committed. `EMAIL_SEND_RETRIES` (default 1) and `EMAIL_RETRY_DELAY_SECONDS` (default 0.5) control short retry behaviour.
-- **Email test mode** — tests use Django’s `locmem` backend; local development prints email to the console when `EMAIL_HOST` is empty. Use Resend’s test mode or a controlled mailbox in staging; do not add a production redirect.
+- **Email provider variables** — configure `EMAIL_BACKEND=config.email_backends.ResendEmailBackend`, `RESEND_API_KEY`, `DEFAULT_FROM_EMAIL`, and `SITE_URL` (public origin used in email links). `RESEND_API_KEY` must never be committed. `EMAIL_SEND_RETRIES` (default 1) and `EMAIL_RETRY_DELAY_SECONDS` (default 0.5) control short retry behaviour. SMTP variables remain only for local or paid-host fallback.
+- **Email test mode** — tests use Django’s `locmem` backend; local development prints email to the console when no Resend key or SMTP host is configured. Use Resend’s test mode or a controlled mailbox in staging; do not add a production redirect.
 - **Audit log** — staff actions (application/registration/enquiry status, job publishing, programme toggles, certificates) are recorded and visible read-only at `/manage/audit/`.
 - **Error monitoring** — set `SENTRY_DSN` to report exceptions.
 - **Backups** — enable point-in-time recovery on Neon, enable object versioning on the R2 or Supabase bucket, and take a periodic `pg_dump "$DATABASE_URL" > backup-$(date +%F).sql`. Treat dumps as sensitive because they contain PII.

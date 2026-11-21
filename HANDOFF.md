@@ -4,7 +4,7 @@ Finish the GCTT Django site: ship the approved full-bleed hero, site-wide light/
 site/user metadata, strict CSP, legacy URL sunset, scheduled maintenance, and staff/admin email OTP.
 ## Current State
 - Production was deployed from `e6ad272`; the next hardening slice is local and uncommitted.
-- 274 tests pass; ruff, Django check, migration check, contrast, JS syntax pass.
+- 280 tests pass; ruff, Django check, migration check, contrast, JS syntax pass.
 - Django admin has been removed; all business data is managed through the portal.
 - Staff/admin login loop fixed; candidate/student designations display correctly.
 - Public `/training/` now renders published programmes (context bug fixed).
@@ -110,5 +110,5 @@ Rebuild CSS with Tailwind v4.3.5 and confirm `output.css` is deterministic.
   message cleared; audit logs kept.
 - Theme: OS default, then explicit localStorage choice.
 - Email OTP: required for all staff and role=admin accounts; candidates/students use password login.
-- Email service: first-login welcome, HTML+text enrollment, double-opt-in promotional flow, confirmation-page unsubscribe, resumable `send_promotional` command.
-- Resend SMTP is verified; `REQUIRE_EMAIL_OTP=1` is the default and is declared in `render.yaml`.
+- Email service: first-login welcome, HTML+text enrollment, double-opt-in promotional flow, confirmation-page unsubscribe, resumable `send_promotional` command, and account security notifications.
+- Resend HTTPS API is configured; `REQUIRE_EMAIL_OTP=1` is the default and is declared in `render.yaml`.
