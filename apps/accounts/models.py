@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager as DjangoUserManager
 from django.db import models
 
+from config.constants import COMPANY
+
 STAFF_SUBGROUPS = ("Recruiter", "Trainer", "Enquiry Manager")
 
 DESIGNATION_CHOICES = (
@@ -42,6 +44,7 @@ class User(AbstractUser):
     username = None
     email = models.EmailField("email address", unique=True)
     phone = models.CharField(max_length=40, blank=True)
+    job_title = models.CharField(max_length=120, blank=True)
     account_type = models.CharField(
         max_length=20, choices=AccountType.choices, default=AccountType.CANDIDATE
     )
@@ -163,6 +166,54 @@ def sync_access(user, subgroup=None):
     # Groups are the single source of truth; never leave direct permissions behind.
     user.user_permissions.clear()
     return user
+
+
+class SiteSettings(models.Model):
+    """Editable company identity, contact details and home-hero copy."""
+
+    company_name = models.CharField(max_length=120, default=COMPANY["name"])
+    legal_name = models.CharField(max_length=160, default=COMPANY["legal_name"])
+    tagline = models.CharField(max_length=200, default=COMPANY["tagline"])
+    email = models.EmailField(default=COMPANY["email"])
+    jobs_email = models.EmailField(default=COMPANY["jobs_email"])
+    address = models.CharField(max_length=255, default=COMPANY["address"])
+    url = models.URLField(default=COMPANY["url"])
+    hero_eyebrow = models.CharField(
+        max_length=120, default="Irving, Texas · E-Verify employer"
+    )
+    hero_title = models.CharField(
+        max_length=200, default="Technology talent and training for enterprise teams."
+    )
+    hero_subtitle = models.TextField(
+        blank=True,
+        default=(
+            "GCTT places technology practitioners with client teams and trains the "
+            "people who want to join them. Two divisions, one standard of delivery."
+        ),
+    )
+    hero_cta_label = models.CharField(max_length=60, default="Request talent")
+    hero_cta_url = models.CharField(max_length=200, default="/employers/")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "site settings"
+        verbose_name_plural = "site settings"
+
+    def __str__(self):
+        return "Site settings"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        kwargs.pop("force_insert", None)
+        # A second unsaved instance must update, or the pk unique index rejects it.
+        if self._state.adding and type(self).objects.filter(pk=1).exists():
+            kwargs["force_update"] = True
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        """Return the singleton, or an unsaved row carrying the defaults."""
+        return cls.objects.filter(pk=1).first() or cls()
 
 
 class EmailOTP(models.Model):

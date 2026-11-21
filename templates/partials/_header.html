@@ -16,7 +16,7 @@
 
 <header class="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur-md">
   <div class="container-site flex h-16 items-center justify-between gap-6">
-    <a href="{% url 'home' %}" class="flex shrink-0 items-center gap-2.5" aria-label="GCTT home">
+    <a href="{% url 'home' %}" class="flex shrink-0 items-center gap-2.5" aria-label="{{ COMPANY.name }} home">
       <span class="relative flex h-9 w-9 items-center justify-center rounded-[10px] bg-ink text-canvas" aria-hidden="true">
         <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
           <path d="M6 8h12M12 8v9M9 13h6"/>
@@ -24,8 +24,8 @@
         <span class="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent"></span>
       </span>
       <span class="flex flex-col leading-none">
-        <span class="font-display text-lg font-bold tracking-[0.08em] text-ink">GCTT</span>
-        <span class="mt-1 hidden font-mono text-3xs uppercase tracking-[0.12em] text-muted sm:block">Global Center for Technology &amp; Training</span>
+        <span class="font-display text-lg font-bold tracking-[0.08em] text-ink">{{ COMPANY.name }}</span>
+        <span class="mt-1 hidden font-mono text-3xs uppercase tracking-[0.12em] text-muted sm:block">{{ COMPANY.legal_name }}</span>
       </span>
     </a>
 
@@ -37,6 +37,7 @@
     </nav>
 
     <div class="flex items-center gap-2">
+      {% include "partials/_theme_toggle.html" %}
       {% if user.is_authenticated %}
         <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-sm hidden sm:inline-flex">Portal</a>
       {% else %}
@@ -54,7 +55,7 @@
 
 <dialog id="mobile-drawer" class="drawer" aria-label="Mobile navigation">
   <div class="drawer-head">
-    <span class="font-display text-base font-bold tracking-[0.08em]">GCTT</span>
+    <span class="font-display text-base font-bold tracking-[0.08em]">{{ COMPANY.name }}</span>
     <button type="button" class="btn btn-ghost btn-sm" data-dialog-close aria-label="Close navigation">
       <svg class="h-5 w-5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#close"></use></svg>
     </button>

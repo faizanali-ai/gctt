@@ -9,6 +9,58 @@
   };
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* --------------------------------------------------------------- theme */
+  var THEME_KEY = "gctt-theme";
+  var themeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+  function effectiveTheme() {
+    var explicit = document.documentElement.getAttribute("data-theme");
+    if (explicit === "light" || explicit === "dark") return explicit;
+    return themeQuery.matches ? "dark" : "light";
+  }
+
+  function paintThemeButtons(theme) {
+    $$("[data-theme-toggle]").forEach(function (button) {
+      button.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+      button.setAttribute(
+        "aria-label",
+        theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
+      );
+      var use = button.querySelector("use");
+      if (!use) return;
+      var href = use.getAttribute("href") || "";
+      use.setAttribute("href", href.replace(/#(sun|moon)$/, theme === "dark" ? "#sun" : "#moon"));
+    });
+  }
+
+  function applyTheme(theme, persist) {
+    document.documentElement.setAttribute("data-theme", theme);
+    if (persist) {
+      try {
+        window.localStorage.setItem(THEME_KEY, theme);
+      } catch (error) {
+        /* Storage disabled: the choice still applies for this page. */
+      }
+    }
+    paintThemeButtons(theme);
+  }
+
+  document.addEventListener("click", function (event) {
+    var toggle = event.target.closest("[data-theme-toggle]");
+    if (!toggle) return;
+    applyTheme(effectiveTheme() === "dark" ? "light" : "dark", true);
+  });
+
+  paintThemeButtons(effectiveTheme());
+  if (themeQuery.addEventListener) {
+    themeQuery.addEventListener("change", function () {
+      if (!document.documentElement.hasAttribute("data-theme")) {
+        paintThemeButtons(effectiveTheme());
+      }
+    });
+  }
+
+
   /* ------------------------------------------------------------ dialogs */
   function lockScroll() {
     document.body.style.overflow = document.querySelector("dialog[open]") ? "hidden" : "";
@@ -348,7 +400,8 @@
         else label.removeAttribute("aria-current");
       });
       bars.forEach(function (bar, position) {
-        bar.style.backgroundColor = position <= index ? "var(--accent)" : "var(--line)";
+        bar.classList.toggle("bg-accent", position <= index);
+        bar.classList.toggle("bg-line", position > index);
       });
       if (counter) counter.textContent = "Step " + (index + 1) + " of " + steps.length;
       if (index === steps.length - 1) {

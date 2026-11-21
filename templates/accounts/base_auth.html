@@ -6,7 +6,7 @@
 {% block header %}
 <header class="border-b border-line bg-surface">
   <div class="container-site flex h-16 items-center justify-between">
-    <a href="{% url 'home' %}" class="flex items-center gap-2.5" aria-label="GCTT home">
+    <a href="{% url 'home' %}" class="flex items-center gap-2.5" aria-label="{{ COMPANY.name }} home">
       <span class="relative flex h-9 w-9 items-center justify-center rounded-[10px] bg-ink text-canvas" aria-hidden="true">
         <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
           <path d="M6 8h12M12 8v9M9 13h6"/>
@@ -14,11 +14,14 @@
         <span class="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent"></span>
       </span>
       <span class="flex flex-col leading-none">
-        <span class="font-display text-lg font-bold tracking-[0.08em] text-ink">GCTT</span>
+        <span class="font-display text-lg font-bold tracking-[0.08em] text-ink">{{ COMPANY.name }}</span>
         <span class="mt-1 font-mono text-3xs uppercase tracking-[0.12em] text-muted">Portal</span>
       </span>
     </a>
-    <a href="{% url 'home' %}" class="text-sm font-medium text-muted transition-colors hover:text-ink">Back to site</a>
+    <div class="flex items-center gap-3">
+      {% include "partials/_theme_toggle.html" %}
+      <a href="{% url 'home' %}" class="text-sm font-medium text-muted transition-colors hover:text-ink">Back to site</a>
+    </div>
   </div>
 </header>
 {% endblock %}

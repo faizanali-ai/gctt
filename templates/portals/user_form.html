@@ -43,6 +43,12 @@
       </div>
     </div>
 
+    <div class="field">
+      <label for="id_job_title">Job title</label>
+      <input id="id_job_title" type="text" name="job_title" maxlength="120" value="{% firstof values.job_title target.job_title '' %}" autocomplete="organization-title" placeholder="e.g. SAP Functional Consultant">
+      <p class="hint">Optional. Shown in the portal and user directory; it does not change access.</p>
+    </div>
+
     <div class="field" id="subgroup-field" data-subgroup-field>
       <label for="id_group">Staff Subgroup</label>
       <select id="id_group" name="group">

@@ -11,7 +11,9 @@ CSS = ROOT / "static" / "css" / "input.css"
 
 TOKEN_RE = re.compile(r"(--[a-z0-9-]+)\s*:\s*([^;]+);")
 LIGHT_RE = re.compile(r":root\s*\{(.*?)\}", re.DOTALL)
-DARK_RE = re.compile(r"@variant\s+dark\s*\{\s*:root\s*\{(.*?)\}", re.DOTALL)
+DARK_RE = re.compile(
+    r':root\[data-theme="dark"\]\s*\{(.*?)\}', re.DOTALL
+)
 
 PAIRS = (
     ("ink", "canvas"),

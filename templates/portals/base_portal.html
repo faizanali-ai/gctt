@@ -8,7 +8,7 @@
 {% block content %}
 <div class="flex min-h-screen">
   <aside class="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-line bg-surface lg:flex">
-    <a href="{% url 'dashboard' %}" class="flex h-16 items-center gap-2.5 border-b border-line px-5" aria-label="GCTT portal">
+    <a href="{% url 'dashboard' %}" class="flex h-16 items-center gap-2.5 border-b border-line px-5" aria-label="{{ COMPANY.name }} portal">
       <span class="relative flex h-9 w-9 items-center justify-center rounded-[10px] bg-ink text-canvas" aria-hidden="true">
         <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
           <path d="M6 8h12M12 8v9M9 13h6"/>
@@ -16,7 +16,7 @@
         <span class="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent"></span>
       </span>
       <span class="flex flex-col leading-none">
-        <span class="font-display text-base font-bold tracking-[0.08em]">GCTT</span>
+        <span class="font-display text-base font-bold tracking-[0.08em]">{{ COMPANY.name }}</span>
         <span class="mt-1 font-mono text-3xs uppercase tracking-[0.1em] text-muted">Portal</span>
       </span>
     </a>
@@ -49,6 +49,7 @@
       <div class="flex shrink-0 items-center gap-2 sm:gap-3">
         <a href="{% url 'home' %}" class="hidden text-sm text-muted hover:text-ink sm:block">Public site</a>
         <a href="{% url 'profile' %}" class="text-sm text-muted hover:text-ink">Profile</a>
+        {% include "partials/_theme_toggle.html" %}
         <form method="post" action="{% url 'logout' %}">
           {% csrf_token %}
           <button type="submit" class="btn btn-secondary btn-sm">Log out</button>
@@ -66,7 +67,7 @@
 
 <dialog id="portal-nav" class="drawer" aria-label="Portal navigation">
   <div class="drawer-head">
-    <span class="font-display text-base font-bold tracking-[0.08em]">GCTT Portal</span>
+    <span class="font-display text-base font-bold tracking-[0.08em]">{{ COMPANY.name }} Portal</span>
     <button type="button" class="btn btn-ghost btn-sm" data-dialog-close aria-label="Close navigation">
       <svg class="h-5 w-5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#close"></use></svg>
     </button>

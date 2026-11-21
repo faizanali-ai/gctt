@@ -17,7 +17,7 @@ Principles:
 
 ## Tokens
 
-Defined in `static/css/input.css`. Raw values live in `:root`; dark values override them inside `@variant dark`; utilities are mapped with `@theme inline`.
+Defined in `static/css/input.css`. Raw values live in `:root`; dark values override them under `:root[data-theme="dark"]`, with a `prefers-color-scheme` fallback while no choice is stored; utilities are mapped with `@theme inline`.
 
 | Token | Light | Dark | Role |
 |---|---|---|---|
@@ -77,7 +77,7 @@ Partials: `_header`, `_footer`, `_messages`, `_pagination`, `_hero`, `_hero-art`
 
 ## Theme
 
-The OS preference is the only theme switch. No toggle, no localStorage, no anti-FOUC script. `color-scheme: light dark` is set in CSS. Night surfaces are intentionally fixed.
+The OS preference sets the default. The header toggle writes `light` or `dark` to `data-theme` on `<html>` and to `localStorage` (`gctt-theme`); `static/js/theme-init.js` applies it before the stylesheet to avoid a flash. Django admin stays light-only. Night surfaces are intentionally fixed.
 
 ## Motion
 

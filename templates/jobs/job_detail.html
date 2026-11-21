@@ -4,7 +4,7 @@
 {% block description %}{{ job.description|truncatewords:24 }}{% endblock %}
 
 {% block content %}
-<script type="application/ld+json">
+<script type="application/ld+json" nonce="{{ request.csp_nonce }}">
 {
   "@context": "https://schema.org/",
   "@type": "JobPosting",
@@ -113,9 +113,9 @@
               <p class="font-mono text-2xs uppercase tracking-[0.08em] text-muted" data-step-counter></p>
             </div>
             <div class="mt-3 grid grid-cols-3 gap-2" aria-hidden="true">
-              <span data-progress class="h-1.5 rounded-full" style="background-color: var(--accent)"></span>
-              <span data-progress class="h-1.5 rounded-full" style="background-color: var(--line)"></span>
-              <span data-progress class="h-1.5 rounded-full" style="background-color: var(--line)"></span>
+              <span data-progress class="h-1.5 rounded-full bg-accent"></span>
+              <span data-progress class="h-1.5 rounded-full bg-line"></span>
+              <span data-progress class="h-1.5 rounded-full bg-line"></span>
             </div>
 
             {% if form.non_field_errors %}

@@ -37,10 +37,11 @@ The pin matches CI, which rebuilds and fails if `output.css` is stale. `tests/te
 
 The design system is documented in [`DESIGN.md`](DESIGN.md). In short:
 
-- Ink neutrals, one copper accent, system dark mode (no toggle).
+- Ink neutrals, one copper accent.
 - Space Grotesk + Inter + JetBrains Mono, self-hosted in `static/fonts/` (SIL OFL).
-- One icon sprite, one vanilla JS file, no front-end framework or CDN.
+- One icon sprite, one vanilla JS file (plus the pre-paint theme script), no front-end framework or CDN.
 - Marketing shell in `templates/base.html`, auth shell in `templates/accounts/base_auth.html`, portal shell in `templates/portals/base_portal.html`.
+- Light/dark toggle in the shared header, auth header and portal header; OS default until the visitor chooses.
 - Templates must use tokens and components, not hardcoded colours; the UI test enforces it.
 
 ## Local login
@@ -69,6 +70,7 @@ Admins use the portal at `/dashboard/`, not Django admin:
 - **Mandates, Programmes, Categories** — create, edit, publish and delete public content.
 - **Applications, Registrations, Enquiries** — review records, change status, issue/revoke certificates and delete.
 - **Audit log** — read-only record of changes.
+- **Site settings** — company name, legal name, contact addresses and home-hero copy. Other page copy stays in templates.
 
 Django admin remains at `/admin/` as a break-glass tool for superusers. Non-admin staff who open `/admin/login/` are sent to the portal instead of being looped back to the login form.
 

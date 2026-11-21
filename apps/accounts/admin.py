@@ -3,7 +3,14 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 
-from .models import STAFF_SUBGROUPS, AuditLog, TeamProfile, User, sync_access
+from .models import (
+    STAFF_SUBGROUPS,
+    AuditLog,
+    SiteSettings,
+    TeamProfile,
+    User,
+    sync_access,
+)
 
 
 def _active_admin_count(lock=False):
@@ -34,6 +41,32 @@ class TeamProfileAdmin(admin.ModelAdmin):
     list_editable = ("published", "order")
 
 
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    list_display = ("company_name", "email", "url", "updated_at")
+    readonly_fields = (
+        "company_name",
+        "legal_name",
+        "tagline",
+        "email",
+        "jobs_email",
+        "address",
+        "url",
+        "hero_eyebrow",
+        "hero_title",
+        "hero_subtitle",
+        "hero_cta_label",
+        "hero_cta_url",
+        "updated_at",
+    )
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
 @admin.register(AuditLog)
 class AuditLogAdmin(admin.ModelAdmin):
     list_display = ("created_at", "actor", "action", "target", "ip")
@@ -61,7 +94,7 @@ class UserAdmin(BaseUserAdmin):
         (None, {"fields": ("email", "password")}),
         (
             "Personal info",
-            {"fields": ("first_name", "last_name", "phone", "role", "account_type", "email_verified")},
+            {"fields": ("first_name", "last_name", "phone", "job_title", "role", "account_type", "email_verified")},
         ),
         (
             "Permissions",

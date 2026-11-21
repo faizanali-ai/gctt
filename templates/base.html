@@ -20,10 +20,11 @@
 
   <link rel="preload" href="{% static 'fonts/inter.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{% static 'fonts/space-grotesk.woff2' %}" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="{% static 'css/output.css' %}?v=20261120b">
+  <script src="{% static 'js/theme-init.js' %}?v=20261121"></script>
+  <link rel="stylesheet" href="{% static 'css/output.css' %}?v=20261121">
   {% block head %}{% endblock %}
 
-  <script type="application/ld+json">
+  <script type="application/ld+json" nonce="{{ request.csp_nonce }}">
   {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -33,7 +34,7 @@
     "email": "{{ COMPANY.email|escapejs }}",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "2612 Laramie St",
+      "streetAddress": "{{ COMPANY.address|escapejs }}",
       "addressLocality": "Irving",
       "addressRegion": "TX",
       "postalCode": "75062",
@@ -77,6 +78,6 @@
 
   <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
 
-  <script src="{% static 'js/ui.js' %}?v=20261120b" defer></script>
+  <script src="{% static 'js/ui.js' %}?v=20261121" defer></script>
 </body>
 </html>

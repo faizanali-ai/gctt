@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
-from .models import TeamProfile, User
+from .models import SiteSettings, TeamProfile, User
 
 
 class StyledAuthenticationForm(AuthenticationForm):
@@ -56,11 +56,46 @@ class TeamProfileForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "phone")
+        fields = ("first_name", "last_name", "phone", "job_title")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["first_name"].widget.attrs.setdefault("autocomplete", "given-name")
         self.fields["last_name"].widget.attrs.setdefault("autocomplete", "family-name")
         self.fields["phone"].widget.attrs.setdefault("autocomplete", "tel")
+        self.fields["job_title"].widget.attrs.setdefault(
+            "autocomplete", "organization-title"
+        )
+        self.fields["job_title"].widget.attrs.setdefault(
+            "placeholder", "e.g. SAP Functional Consultant"
+        )
+
+
+class SiteSettingsForm(forms.ModelForm):
+    class Meta:
+        model = SiteSettings
+        fields = (
+            "company_name",
+            "legal_name",
+            "tagline",
+            "email",
+            "jobs_email",
+            "address",
+            "url",
+            "hero_eyebrow",
+            "hero_title",
+            "hero_subtitle",
+            "hero_cta_label",
+            "hero_cta_url",
+        )
+        widgets = {"hero_subtitle": forms.Textarea(attrs={"rows": 3})}
+        labels = {
+            "company_name": "Company name",
+            "legal_name": "Legal name",
+            "hero_eyebrow": "Hero eyebrow",
+            "hero_title": "Hero headline",
+            "hero_subtitle": "Hero sub-text",
+            "hero_cta_label": "Hero button text",
+            "hero_cta_url": "Hero button link",
+        }
 

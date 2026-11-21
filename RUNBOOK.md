@@ -43,7 +43,7 @@ uv run python manage.py audit_access --strict
 It reports staff with no/multiple subgroups, unexpected or direct permissions,
 invalid roles, external accounts with internal access, missing admin flags/groups,
 zero active admins. It never changes data. Fix flagged accounts in
-`/manage/users/` or Django Admin, then rerun with `--strict`.
+`/manage/users/`, then rerun with `--strict`.
 
 ## Email OTP delivery
 
@@ -108,9 +108,9 @@ app/TOTP step. The old `REQUIRE_STAFF_2FA` environment variable is ignored.
 
 ## Staff offboarding (admin only)
 
-1. Django Admin → Users → open the user → **deactivate** (`is_active` off).
+1. `/manage/users/` → open the user → **deactivate** (`is_active` off).
 2. Remove them from their staff subgroup (`Recruiter`, `Trainer`, or `Enquiry Manager`).
-3. Check **Audit log entries** for their recent actions.
+3. Check **Audit log** for their recent actions.
 
 Staff cannot list, count, or discover other staff accounts. Keep user management
 and subgroup changes admin-only.
@@ -118,14 +118,45 @@ and subgroup changes admin-only.
 ## Incidents
 
 1. Check `/healthz/` (503 means the database is unreachable).
-2. Look at Railway logs and Sentry (if `SENTRY_DSN` is set).
+2. Look at Render logs and Sentry (if `SENTRY_DSN` is set).
 3. If the site is compromised: rotate `DJANGO_SECRET_KEY` and DB credentials, restore
    from the last known-good backup, then review the audit log.
 
 ## Scheduled maintenance checks
 
+- Daily at 03:17 UTC, GitHub Actions runs `.github/workflows/maintenance.yml`:
+  `purge_retention --apply` using the `production` environment secrets, then fails
+  once the legacy sunset date has passed. Use **Run workflow** to trigger it manually.
 - Daily or weekly: `uv run python manage.py purge_email_otp` and
   `uv run python manage.py purge_pending` to remove expired auth/pending records.
 - Monthly: dependency updates (`uv lock --upgrade`, run tests, redeploy); run
   `audit_access --strict` and review flagged accounts.
 - Quarterly: restore drill, review staff accounts and role groups, rotate R2 keys.
+
+## Site settings and theme
+
+Admins edit company identity, contact details and home-hero copy at
+`/manage/settings/`. The context processor falls back to `config/constants.py`
+if no row exists or the database is unreachable. The public/auth/portal header
+toggle stores the choice in `localStorage` under `gctt-theme`; without a choice
+the site follows the operating system. Django admin stays light-only.
+
+## Content security policy
+
+Public, auth and portal pages use per-request nonces with no `unsafe-inline`.
+The two JSON-LD blocks and the admin stylesheet carry the nonce. Django admin
+alone gets a `/admin/`-scoped `style-src 'unsafe-inline'` exception because its
+break-glass screens include inline styles. Verify the admin in a browser after
+any Django upgrade.
+
+## Legacy URLs and retention
+
+The four numeric legacy routes (`withdraw_application_legacy` and the three
+staff status/certificate aliases) return `Deprecation`/`Sunset` headers until
+**2027-02-19**, then `410 Gone`. `uv run python manage.py check_legacy_urls`
+lists them and exits non-zero after that date while they remain registered.
+
+`uv run python manage.py purge_retention` previews the 24-month cleanup:
+applications and uncertified registrations are deleted, certified registrations
+are kept with their message cleared, and audit logs are never touched. Add
+`--apply` to write. Pending submissions are out of scope.

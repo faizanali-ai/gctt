@@ -21,11 +21,11 @@
       <p class="certificate-programme">{{ reg.programme.title }}</p>
 
       <footer class="certificate-footer">
-        <div style="text-align: left;">
+        <div class="certificate-col certificate-col-left">
           <div>Issued: {{ reg.certificate_issued_at|date:"F j, Y" }}</div>
           <div>Director of Technical Education</div>
         </div>
-        <div style="text-align: right;">
+        <div class="certificate-col certificate-col-right">
           <div class="certificate-ref">ID: {{ reg.certificate_ref }}</div>
           <div>Verify: {{ COMPANY.url }}/training/verify/{{ reg.certificate_ref }}/</div>
         </div>

@@ -1,3 +1,4 @@
+import re
 import shutil
 import tempfile
 from pathlib import Path
@@ -28,6 +29,24 @@ class CspAndSecurityHeadersTests(TestCase):
         csp = response.headers.get("Content-Security-Policy", "")
         self.assertIn("https://fonts.googleapis.com", csp)
         self.assertIn("https://fonts.gstatic.com", csp)
+
+    def test_public_pages_use_nonces_instead_of_unsafe_inline(self):
+        response = self.client.get("/")
+        csp = response.headers.get("Content-Security-Policy", "")
+        script_src = csp.split("script-src")[1].split(";")[0]
+        style_src = csp.split("style-src")[1].split(";")[0]
+        self.assertNotIn("unsafe-inline", script_src)
+        self.assertNotIn("unsafe-inline", style_src)
+        nonce = re.search(r"'nonce-([^']+)'", csp).group(1)
+        self.assertIn(f'nonce="{nonce}"', response.content.decode())
+
+    def test_admin_style_exception_is_scoped(self):
+        response = self.client.get("/admin/login/")
+        csp = response.headers.get("Content-Security-Policy", "")
+        script_src = csp.split("script-src")[1].split(";")[0]
+        style_src = csp.split("style-src")[1].split(";")[0]
+        self.assertNotIn("unsafe-inline", script_src)
+        self.assertIn("unsafe-inline", style_src)
 
 class ResumeUploadAndCleanupTests(TestCase):
     def setUp(self):

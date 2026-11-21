@@ -2,7 +2,7 @@
   <div class="container-site py-14">
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-12">
       <div class="lg:col-span-5">
-        <a href="{% url 'home' %}" class="flex items-center gap-2.5" aria-label="GCTT home">
+        <a href="{% url 'home' %}" class="flex items-center gap-2.5" aria-label="{{ COMPANY.name }} home">
           <span class="relative flex h-9 w-9 items-center justify-center rounded-[10px] bg-canvas text-ink" aria-hidden="true">
             <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
               <path d="M6 8h12M12 8v9M9 13h6"/>
@@ -10,8 +10,8 @@
             <span class="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent"></span>
           </span>
           <span class="flex flex-col leading-none">
-            <span class="font-display text-xl font-bold tracking-[0.08em]">GCTT</span>
-            <span class="mt-1 font-mono text-3xs uppercase tracking-[0.12em] text-canvas/60">Global Center for Technology &amp; Training</span>
+            <span class="font-display text-xl font-bold tracking-[0.08em]">{{ COMPANY.name }}</span>
+            <span class="mt-1 font-mono text-3xs uppercase tracking-[0.12em] text-canvas/60">{{ COMPANY.legal_name }}</span>
           </span>
         </a>
         <p class="mt-5 max-w-sm text-sm leading-relaxed text-canvas/70">
@@ -47,7 +47,7 @@
       <nav class="lg:col-span-3" aria-label="Company">
         <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-canvas/60">Company</h2>
         <ul class="mt-4 space-y-2.5 text-sm text-canvas/75">
-          <li><a href="{% url 'about' %}" class="transition-colors hover:text-canvas">About GCTT</a></li>
+          <li><a href="{% url 'about' %}" class="transition-colors hover:text-canvas">About {{ COMPANY.name }}</a></li>
           <li><a href="{% url 'careers' %}" class="transition-colors hover:text-canvas">Open mandates</a></li>
           <li><a href="{% url 'contact' %}" class="transition-colors hover:text-canvas">Contact</a></li>
           <li><a href="{% url 'privacy' %}" class="transition-colors hover:text-canvas">Privacy</a></li>

@@ -51,6 +51,7 @@
             <td data-label="Identity">
               <p class="font-semibold">{{ item.display_name }}</p>
               <p class="text-2xs text-muted">{{ item.email }}</p>
+              {% if item.job_title %}<p class="text-2xs text-muted">{{ item.job_title }}</p>{% endif %}
             </td>
             <td data-label="Designation" class="text-sm">{{ item.designation }}</td>
             <td data-label="Subgroup">

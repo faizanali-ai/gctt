@@ -67,6 +67,10 @@
         <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#file"></use></svg>
         Audit log
       </a>
+      <a href="{% url 'manage_site_settings' %}" class="portal-link" {% if '/manage/settings/' in request.path %}aria-current="page"{% endif %}>
+        <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#building"></use></svg>
+        Site settings
+      </a>
     {% endif %}
   {% endif %}
 </nav>

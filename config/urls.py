@@ -98,6 +98,7 @@ urlpatterns = [
     path("manage/team/new/", accounts_views.manage_team_create, name="manage_team_create"),
     path("manage/team/<int:pk>/", accounts_views.manage_team_edit, name="manage_team_edit"),
     path("manage/team/<int:pk>/delete/", accounts_views.manage_team_delete, name="manage_team_delete"),
+    path("manage/settings/", accounts_views.manage_site_settings, name="manage_site_settings"),
     path("manage/audit/", accounts_views.manage_audit, name="manage_audit"),
     path("staff/enquiries/", enquiries_views.staff_enquiries, name="staff_enquiries"),
     path(

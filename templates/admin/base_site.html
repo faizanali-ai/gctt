@@ -8,7 +8,7 @@
 
 {% block extrastyle %}
   {{ block.super }}
-  <style>
+  <style nonce="{{ request.csp_nonce }}">
     @font-face {
       font-family: "Inter";
       src: url("{% static 'fonts/inter.woff2' %}") format("woff2");

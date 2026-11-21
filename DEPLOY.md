@@ -80,6 +80,18 @@ Values:
 5. Logs: Render → Logs. You should see migrations applying, then:
    `Starting gunicorn`.
 
+### GitHub maintenance secrets
+
+The scheduled workflow uses the GitHub `production` environment. Add these
+repository environment secrets before enabling it:
+
+- `PRODUCTION_DATABASE_URL` — Neon pooled connection string.
+- `PRODUCTION_DJANGO_SECRET_KEY` — production secret key.
+- R2 or Supabase credentials only if a future maintenance step needs media access.
+
+Run **Actions → Production maintenance → Run workflow** once to confirm it can
+reach the database before relying on the schedule.
+
 ### Create the CEO account
 
 Render → your service → **Shell**:

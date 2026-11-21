@@ -52,8 +52,37 @@
   --night-accent: #e9a85c;
 }
 
-@variant dark {
-  :root {
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --canvas: #0b0c0e;
+  --surface: #14161a;
+  --raised: #1c1f24;
+  --ink: #f4f3f0;
+  --muted: #c3c7cd;
+  --subtle: #949aa3;
+  --line: #2a2e34;
+  --line-strong: #3a3f47;
+  --accent: #e9a85c;
+  --accent-hover: #f3c088;
+  --accent-soft: rgb(233 168 92 / 0.12);
+  --on-accent: #14161a;
+  --success: #57c08a;
+  --warning: #f0a45c;
+  --danger: #f0776c;
+  --focus: #e9a85c;
+  --overlay: rgb(0 0 0 / 0.5);
+}
+
+/* OS default until the visitor makes an explicit choice. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+
     --canvas: #0b0c0e;
     --surface: #14161a;
     --raised: #1c1f24;
@@ -73,6 +102,8 @@
     --overlay: rgb(0 0 0 / 0.5);
   }
 }
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme inline {
   --color-canvas: var(--canvas);
@@ -795,6 +826,24 @@
   .hero-enter.is-in {
     opacity: 1;
     transform: none;
+  }
+  .enter-1 {
+    --enter-index: 1;
+  }
+  .enter-2 {
+    --enter-index: 2;
+  }
+  .reveal-1 {
+    --reveal-index: 1;
+  }
+  .reveal-2 {
+    --reveal-index: 2;
+  }
+  .reveal-3 {
+    --reveal-index: 3;
+  }
+  .reveal-4 {
+    --reveal-index: 4;
   }
   .hover-lift {
     transition:

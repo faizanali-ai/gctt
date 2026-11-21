@@ -5,22 +5,20 @@
 
 {% block content %}
 <section class="relative isolate overflow-hidden bg-night text-night-ink">
-  <div class="pointer-events-none absolute inset-0 hidden lg:block" aria-hidden="true">
+  <div class="pointer-events-none absolute inset-0 opacity-60 sm:opacity-100" aria-hidden="true">
     {% include "partials/_hero-art.html" %}
   </div>
 
-  <div class="container-site relative grid gap-14 py-20 md:py-28 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
-    <div class="max-w-2xl">
-      <div class="hero-enter" style="--enter-index: 0">
-        <p class="eyebrow text-night-accent">Irving, Texas · E-Verify employer</p>
-        <h1 class="mt-5 text-display-1">Technology talent and training for enterprise teams.</h1>
-        <p class="mt-6 max-w-xl text-body-lg text-night-muted">
-          GCTT places technology practitioners with client teams and trains the people who want to join them. Two divisions, one standard of delivery.
-        </p>
+  <div class="container-site relative py-20 md:py-28">
+    <div class="max-w-3xl">
+      <div class="hero-enter">
+        <p class="eyebrow text-night-accent">{{ COMPANY.hero_eyebrow }}</p>
+        <h1 class="mt-5 text-display-1">{{ COMPANY.hero_title }}</h1>
+        <p class="mt-6 max-w-2xl text-body-lg text-night-muted">{{ COMPANY.hero_subtitle }}</p>
       </div>
-      <div class="hero-enter mt-9 flex flex-col gap-3 sm:flex-row" style="--enter-index: 1">
-        <a href="{% url 'employers' %}" class="btn btn-primary btn-lg">
-          Request talent
+      <div class="hero-enter enter-1 mt-9 flex flex-col gap-3 sm:flex-row">
+        <a href="{{ COMPANY.hero_cta_url }}" class="btn btn-primary btn-lg">
+          {{ COMPANY.hero_cta_label }}
           <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
         </a>
         <a href="{% url 'careers' %}" class="btn btn-lg border border-night-ink/25 text-night-ink hover:bg-night-ink/10">
@@ -28,22 +26,26 @@
         </a>
       </div>
     </div>
+  </div>
+</section>
 
-    <dl class="hero-enter grid grid-cols-2 gap-px overflow-hidden rounded-card border border-night-ink/15 bg-night-ink/15" style="--enter-index: 2">
-      <div class="bg-night p-5">
-        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-night-muted">Headquarters</dt>
+<section class="border-b border-line bg-raised" aria-label="Company facts">
+  <div class="container-site">
+    <dl class="grid grid-cols-2 gap-px bg-line md:grid-cols-4">
+      <div class="bg-raised p-5">
+        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Headquarters</dt>
         <dd class="mt-1.5 font-display text-lg font-semibold">Irving, Texas</dd>
       </div>
-      <div class="bg-night p-5">
-        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-night-muted">Compliance</dt>
+      <div class="bg-raised p-5">
+        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Compliance</dt>
         <dd class="mt-1.5 font-display text-lg font-semibold">E-Verify</dd>
       </div>
-      <div class="bg-night p-5">
-        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-night-muted">Talent</dt>
+      <div class="bg-raised p-5">
+        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Talent</dt>
         <dd class="mt-1.5 font-display text-lg font-semibold">W2 · contract · direct</dd>
       </div>
-      <div class="bg-night p-5">
-        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-night-muted">Academy</dt>
+      <div class="bg-raised p-5">
+        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Academy</dt>
         <dd class="mt-1.5 font-display text-lg font-semibold">SAP · Agile</dd>
       </div>
     </dl>
@@ -63,7 +65,7 @@
     </div>
 
     <div class="mt-12 grid gap-4 md:grid-cols-3">
-      <a href="{% url 'it_staffing' %}" class="card card-interactive reveal flex flex-col p-6" style="--reveal-index: 0">
+      <a href="{% url 'it_staffing' %}" class="card card-interactive reveal flex flex-col p-6">
         <span class="flex h-10 w-10 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
           <svg class="h-5 w-5"><use href="{% static 'images/icons.svg' %}#briefcase"></use></svg>
         </span>
@@ -74,7 +76,7 @@
         </span>
       </a>
 
-      <a href="{% url 'recruitment' %}" class="card card-interactive reveal flex flex-col p-6" style="--reveal-index: 1">
+      <a href="{% url 'recruitment' %}" class="card card-interactive reveal reveal-1 flex flex-col p-6">
         <span class="flex h-10 w-10 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
           <svg class="h-5 w-5"><use href="{% static 'images/icons.svg' %}#users"></use></svg>
         </span>
@@ -85,7 +87,7 @@
         </span>
       </a>
 
-      <a href="{% url 'talent_acquisition' %}" class="card card-interactive reveal flex flex-col p-6" style="--reveal-index: 2">
+      <a href="{% url 'talent_acquisition' %}" class="card card-interactive reveal reveal-2 flex flex-col p-6">
         <span class="flex h-10 w-10 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
           <svg class="h-5 w-5"><use href="{% static 'images/icons.svg' %}#building"></use></svg>
         </span>

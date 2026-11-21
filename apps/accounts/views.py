@@ -33,11 +33,18 @@ from config.emails import send_login_otp, send_password_setup, send_verification
 from .audit import log_action
 from .decorators import staff_required
 from .email_otp import issue_code, verify_code
-from .forms import ProfileForm, SignupForm, StyledAuthenticationForm, TeamProfileForm
+from .forms import (
+    ProfileForm,
+    SignupForm,
+    SiteSettingsForm,
+    StyledAuthenticationForm,
+    TeamProfileForm,
+)
 from .models import (
     DESIGNATION_CHOICES,
     STAFF_SUBGROUPS,
     AuditLog,
+    SiteSettings,
     TeamProfile,
     User,
 )
@@ -612,6 +619,7 @@ def manage_user_create(request):
         first_name = request.POST.get("first_name", "").strip()
         last_name = request.POST.get("last_name", "").strip()
         phone = request.POST.get("phone", "").strip()
+        job_title = request.POST.get("job_title", "").strip()
         subgroup = request.POST.get("group", "")
         password = request.POST.get("password", "")
         is_active = request.POST.get("is_active", "on") == "on"
@@ -639,6 +647,7 @@ def manage_user_create(request):
                     first_name=first_name,
                     last_name=last_name,
                     phone=phone,
+                    job_title=job_title,
                     is_active=is_active,
                     email_verified=email_verified,
                 )
@@ -743,6 +752,7 @@ def manage_user_edit(request, pk):
             target.first_name = request.POST.get("first_name", "").strip()
             target.last_name = request.POST.get("last_name", "").strip()
             target.phone = request.POST.get("phone", "").strip()
+            target.job_title = request.POST.get("job_title", target.job_title).strip()
             target.is_active = is_active
             target.email_verified = email_verified
             target.apply_designation(selected_designation, subgroup)
@@ -879,6 +889,23 @@ def manage_team_delete(request, pk):
     log_action(request, "team.delete", name)
     messages.success(request, f"{name} removed.")
     return redirect("manage_team")
+
+
+@login_required
+@staff_required
+def manage_site_settings(request):
+    _require_user_manager(request)
+    form = SiteSettingsForm(request.POST or None, instance=SiteSettings.load())
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        log_action(request, "settings.update", "site")
+        messages.success(request, "Site settings saved.")
+        return redirect("manage_site_settings")
+    return render(
+        request,
+        "portals/site_settings.html",
+        {"form": form},
+    )
 
 
 @login_required

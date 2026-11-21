@@ -30,8 +30,8 @@ class TemplateGuardTests(SimpleTestCase):
                     offenders.append(f"{path.name}:{number}")
         self.assertEqual(offenders, [], "Hardcoded colours in templates")
 
-    def test_no_legacy_theme_or_font_code(self):
-        legacy = ("fonts.googleapis", "theme-toggle", "gctt-theme", "localStorage.getItem")
+    def test_no_legacy_font_code(self):
+        legacy = ("fonts.googleapis",)
         for path in template_files():
             text = path.read_text(encoding="utf-8")
             for token in legacy:
@@ -72,7 +72,8 @@ class CompiledCSSGuardTests(SimpleTestCase):
     def test_theme_layer_uses_runtime_tokens(self):
         source = SOURCE_CSS.read_text(encoding="utf-8")
         self.assertIn("@theme inline", source)
-        self.assertIn("@variant dark", source)
+        self.assertIn(':root[data-theme="dark"]', source)
+        self.assertIn("@custom-variant dark", source)
 
     def test_required_utilities_are_compiled(self):
         css = COMPILED_CSS.read_text(encoding="utf-8")

@@ -1,81 +1,106 @@
-# GCTT Session Handoff
-
-## Goal & Core Objective
-Keep the Django GCTT site secure and working. Roles are Admin, Staff, Candidate, Student. Login is now password-based; email OTP is optional for admin/staff only. Authenticator-app login is disabled.
-
-## Current UI & Local Access (2026-11-21)
-- The public site, auth screens, candidate/student portal, staff queues and Django admin use the new GCTT UI.
-- The portal admin dashboard manages users, team profiles, mandates, programmes, categories, applications, registrations, enquiries and the audit log. Django admin remains break-glass only.
-- New accounts are labelled by designation (Admin, Staff, Candidate, Training Student), not by the internal role default.
-- Local login is not seeded. Create an admin with `DJANGO_DEBUG=1 uv run python manage.py createsuperuser`; see README “Local login”.
-- `REQUIRE_EMAIL_OTP=0` keeps password-only staff/admin login for local work.
-- `seed_demo` creates sample jobs and programmes only.
-- Existing internal accounts with stale flags can be repaired with `uv run python manage.py repair_internal_accounts --apply`.
-
+# GCTT Session Handoff — 2026-11-21
+## Goal
+Finish the GCTT Django site: ship the approved full-bleed hero, site-wide light/dark toggle, editable
+site/user metadata, strict CSP, legacy URL sunset, and scheduled maintenance. Resend/OTP stays out of scope.
+## Current State
+- `main` at `3322e6b` before this slice; changes are local and uncommitted.
+- Production still runs `3322e6b` until this slice is pushed.
+- 257 tests pass; ruff, Django check, migration check, contrast, JS syntax pass.
+- Portal dashboard is the primary admin UI; `/admin/` is break-glass only.
+- Staff/admin login loop fixed; candidate/student designations display correctly.
+- Public `/training/` now renders published programmes (context bug fixed).
+- Next-phase shipped: `job_title`, `SiteSettings` + `/manage/settings/`, full-bleed hero,
+  light/dark toggle, CSP nonces, legacy sunset middleware, `purge_retention`, maintenance workflow.
+## Confirmed Decisions
+- Hero: all heroes full-bleed/left-anchored; solid sticky header; centered footer; 20/24/32px gutter;
+  home stats in a full-width strip; content-driven height; keep current headline scale;
+  full-bleed low-opacity art, reduced on mobile.
+- Theme: two-state light/dark; OS default until chosen; persist in `localStorage`;
+  public/auth/portal only; Django admin stays light-only.
+- Users: designation remains Admin/Staff/Candidate/Training Student; add optional free-text `job_title`.
+- Permissions: keep fixed role + subgroup model; do not expose raw group/permission matrix.
+- SiteSettings: company identity/contact + home-hero copy only; other page copy stays in templates.
+- Team photos: keep `photo_url`; uploads deferred.
+- CSP: remove `unsafe-inline` with per-request nonces; documented admin-only style exception if required.
+- Retention: 24 months; delete old applications; delete old uncertified registrations; keep certified
+  registrations but clear messages; keep audit logs.
+- Legacy URLs: sunset `2027-02-19`; `Deprecation`/`Sunset` headers before, `410 Gone` after.
+- GitHub Actions: daily maintenance at `03:17 UTC` + manual dispatch; fail after sunset until removed.
+- Production repair/access audit deferred; Resend excluded.
 ## Completed Work
-- Roles: Admin (owner/CEO merged), Staff (one subgroup), Candidate, Student.
-- Staff subgroups: Recruiter, Trainer, Enquiry Manager. No cross-group access.
-- Admin-only: user list, account totals, subgroup membership, Django Admin.
-- Staff and candidate/student data isolation is enforced.
-- Guest apply/register uses 24h single-use link and private temp resume.
-- Application/Registration URLs use UUIDs; old numeric routes still work.
-- New certificate refs use 16 hex chars; old refs still valid.
-- Email OTP service: 6 digits, 10-minute expiry, attempts, cooldown, hashed code.
-- TOTP/authenticator login, enrollment, middleware, and UI are removed/disabled.
-- Old `/login/2fa/` URLs redirect to normal login.
-- Authenticator tables/package are kept for rollback only.
-- `REQUIRE_EMAIL_OTP=0`: password-only fallback. `REQUIRE_EMAIL_OTP=1`: admin/staff need email OTP.
-- Candidate/student password login and public signup stay normal.
-- Admin login: password when flag is 0; email OTP when flag is 1.
-- OTP failure is logged as `auth.email_otp_send_failed`; code is never logged.
+- Full UI rebuild: ink/copper tokens, self-hosted fonts, sprite icons, vanilla JS, responsive shell,
+  new OG image/favicon, auth/portal/admin styling.
+- Portal admin: all users and designations, create/edit/delete, activation, verification, password reset;
+  team profiles; jobs; categories; programmes; applications (status/bulk/delete); registrations
+  (status/certificate/delete); enquiries (edit/status/delete); read-only audit log.
+- Admin login guard: authenticated non-admins go to `/dashboard/`, no admin-login loop.
+- Designation mapping: role/account_type/flags/groups synchronized transactionally.
+- Registration feedback, form error summaries, metadata/noindex, sticky staff tables, dashboard mobile fix.
+- `repair_internal_accounts` command for legacy broken staff flags.
+- Removed all portal links to Django admin.
 
-## Verification
-- 190 tests pass.
-- Ruff, Django check, migration check, and deploy check pass.
-- Commit `0e52863` pushed; Render redeployed.
-- Live checks: `/healthz/` = `ok`; `/admin/login/` = 200; OTP page redirects to login while flag is 0; OTP link hidden.
-- Working tree clean.
+## Modified Files
+- `config/urls.py` — portal CRUD routes, admin login guard, content routes.
+- `config/context_processors.py`, `config/constants.py` — shared COMPANY/nav context.
+- `apps/accounts/models.py` — designation/designation_value, apply_designation, choices.
+- `apps/accounts/views.py` — user/team/audit management, designations, dashboard labels.
+- `apps/accounts/forms.py` — TeamProfileForm; profile/user form support.
+- `apps/accounts/admin.py`, `apps/accounts/apps.py` — admin user consistency; team/audit permissions.
+- `apps/accounts/management/commands/repair_internal_accounts.py` — new repair command.
+- `apps/jobs/{models,forms,views}.py` — job/application forms, CRUD, bulk status, application count.
+- `apps/training/{models,forms,views,admin}.py` — category/programme/registration CRUD; public list fix.
+- `apps/enquiries/{forms,views}.py` — enquiry edit/delete.
+- `static/css/{input,output,certificate}.css` — tokens/components, sticky tables, responsive rules.
+- `static/fonts/*` — self-hosted Inter/Space Grotesk/JetBrains Mono + OFL files.
+- `static/images/{icons.svg,logo-icon.svg,logo-icon-512.png,og-gctt-v3.jpg,google.svg}` — new assets.
+- Deleted `static/images/{hero-office.jpg,logo.png,logo.svg,logo-small.webp,og-gctt-v2.jpg}`.
+- `static/js/ui.js` — dialogs, nav, toasts, forms, animations.
+- `templates/base.html`, `templates/partials/*` — shell, hero, fields, errors, pagination, nav.
+- `templates/pages/*`, `templates/jobs/*`, `templates/training/*` — rewritten public/auth pages.
+- `templates/accounts/*`, `templates/portals/*`, `templates/staff/*`, `templates/admin/base_site.html` — new portal UI.
+- New staff pages: `team.html`, `team_form.html`, `audit.html`, `categories.html`, `category_form.html`,
+  `job_form.html`, `programme_form.html`, `application_detail.html`, `registration_detail.html`, `enquiry_detail.html`.
+- Deleted `templates/admin/color_theme_toggle.html`, `templates/staff/_nav.html`.
+- `tests/test_admin_dashboard.py`, `test_admin_ui.py`, `test_ui_audit.py`, `test_ui_system.py` — new coverage.
+- Updated `tests/test_bugfixes.py`, `test_p0.py`, `test_staff.py`, `test_ui_linkedin_ai.py`.
+- `README.md`, `HANDOFF.md`, `DESIGN.md`, `DESIGN_SYSTEM_RULES.md`, `render.yaml` — docs/config.
+- `.github/workflows/ci.yml`, `scripts/check_contrast.py` — UI/build guards.
+- `apps/accounts/models.py` — `job_title`, singleton `SiteSettings`.
+- `apps/accounts/migrations/0012_sitesettings_user_job_title.py` — new schema.
+- `apps/accounts/{forms,views,admin}.py` — metadata forms, settings page, admin fields.
+- `config/{context_processors,urls,middleware,settings}.py`, `config/legacy.py` — settings context, CSP nonces, sunset, middleware.
+- `templates/partials/{_hero,_header,_theme_toggle}.html`, `templates/pages/{home,services}.html` — hero/stagger/theme.
+- `templates/{base,accounts/base_auth,portals/base_portal,portals/site_settings,portals/user_form,portals/users,portals/_nav}.html` — theme, settings, metadata UI.
+- `templates/{jobs/job_detail,training/certificate}.html`, `templates/admin/base_site.html` — nonce and inline-style cleanup.
+- `static/js/{theme-init.js,ui.js}`, `static/css/{input,output,certificate}.css`, `static/images/icons.svg` — theme assets and tokens.
+- `apps/accounts/management/commands/{check_legacy_urls,purge_retention}.py` — sunset check and retention.
+- `.github/workflows/maintenance.yml`, new tests for settings, theme, legacy and retention.
 
-## Modified / Deleted Files
-- `HANDOFF.md` — this handoff.
-- `.env.example` — replaced old 2FA flag with `REQUIRE_EMAIL_OTP=0`.
-- `README.md` — email OTP is optional; no authenticator; candidate login normal.
-- `RUNBOOK.md` — removed 2FA ops; added Resend domain/DNS steps and OTP flag.
-- `apps/accounts/views.py` — removed TOTP login; optional email OTP for admin/staff; normal candidate login; simple security page.
-- `apps/accounts/urls.py` — old 2FA routes redirect to login; password-change no 2FA wrapper.
-- `apps/accounts/decorators.py` — `staff_required` only; no 2FA redirects.
-- `apps/accounts/management/commands/audit_access.py` — removed 2FA readiness check.
-- `apps/training/views.py` — removed 2FA check from certificate download.
-- `config/settings.py` — removed OTP/2FA middleware; added `REQUIRE_EMAIL_OTP`.
-- `config/middleware.py` — removed `StaffTwoFactorMiddleware`.
-- `config/urls.py` — admin login uses password when flag 0, email OTP when flag 1.
-- `config/context_processors.py` — exposes `EMAIL_OTP_ENABLED` to hide the link.
-- `templates/accounts/login.html` — OTP link hidden when disabled.
-- `templates/accounts/security.html` — simple account security page; no TOTP.
-- `templates/accounts/dashboard.html` — link renamed to Account security.
-- `templates/accounts/staff_dashboard.html` — removed 2FA status.
-- `templates/portals/base_portal.html` — removed 2FA wording.
-- `templates/accounts/login_2fa.html` — deleted.
-- `templates/accounts/login_2fa_enroll.html` — deleted.
-- `tests/test_2fa_login.py` — replaced TOTP tests with password/OTP fallback tests.
-- `tests/test_2fa_enforcement.py` — replaced with email-OTP enforcement and admin access tests.
-- `tests/test_email_otp_login.py` — staff/admin OTP; candidates/students no OTP.
-- `tests/test_google_oauth.py` — admin Google OTP only when flag is on.
-- `tests/test_ops.py`, `tests/test_bugfixes.py`, `tests/test_security_hardening.py`, `tests/test_audit_access_command.py` — removed TOTP tests/imports.
+## Known Issues / Blockers
+- GitHub `production` secrets (`PRODUCTION_DATABASE_URL`, `PRODUCTION_DJANGO_SECRET_KEY`)
+  are not set yet; the maintenance workflow cannot run until they are.
+- Django admin CSP exception is path-scoped and style-only; re-verify the admin in a
+  browser after Django upgrades.
+- Resend DNS unverified; keep `REQUIRE_EMAIL_OTP=0`. Resend is out of scope.
+- Production `repair_internal_accounts --apply` and `audit_access --strict` not run; deferred.
+- Legacy numeric URLs still work until `2027-02-19`, then return `410 Gone`.
+- Theme and hero changes need a manual pass at all breakpoints in both themes.
 
-## Known Issues & Blockers
-- Resend domain `gctekton.com` shows **Not Started**; no Resend DKIM/send records; SPF only allows Outlook.
-- Email OTP cannot be enabled until the domain owner verifies Resend DNS.
-- Keep `REQUIRE_EMAIL_OTP=0` until then; password fallback is required.
-- Old `REQUIRE_STAFF_2FA` env is ignored; use `REQUIRE_EMAIL_OTP`.
-- Production access audit still needs review; no Render Shell on free tier.
-- Legacy staff with multiple subgroups still need manual review.
-- Legacy numeric operational URLs remain temporarily.
-- Cleanup schedule, PII retention, and public redesign copy approval are pending.
+## Remaining Work
+1. Withdraw the four legacy routes after `2027-02-19` (the maintenance workflow fails until then).
+2. Configure GitHub `production` secrets and dispatch the maintenance workflow once.
+3. Run `repair_internal_accounts --apply` and `audit_access --strict` in production.
+4. Verify Django admin in a browser with the strict CSP; keep the documented exception if needed.
+5. Resend domain verification and OTP enablement remain a separate task.
 
-## Exact Next Steps
-1. Domain owner adds Resend DKIM/send/SPF records; verify `gctekton.com` in Resend.
-2. After verification, set `REQUIRE_EMAIL_OTP=1` in Render and test admin/staff OTP login.
-3. Review production users/groups in Django Admin; fix multi/no-subgroup staff.
-4. Approve final public copy; the UI redesign is complete.
-5. Decide cleanup schedule, PII retention, and legacy URL removal.
+## Verification Commands
+`uv run ruff check .` · `uv run python manage.py check` · `uv run python manage.py makemigrations --check --dry-run`
+`uv run python manage.py test tests` · `uv run python scripts/check_contrast.py` · `node --check static/js/ui.js`
+Rebuild CSS with Tailwind v4.3.5 and confirm `output.css` is deterministic.
+
+## Assumptions
+- Sunset date `2027-02-19`; maintenance daily at `03:17 UTC`, secrets scoped to GitHub `production`.
+- Retention policy: applications >24m deleted; uncertified registrations >24m deleted; certified kept with
+  message cleared; audit logs kept.
+- Theme: OS default, then explicit localStorage choice; Django admin light-only.
+- Resend/OTP remains a separate future task.

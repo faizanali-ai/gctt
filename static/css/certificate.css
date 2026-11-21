@@ -123,6 +123,14 @@ body {
   color: #6b7078;
 }
 
+.certificate-col-left {
+  text-align: left;
+}
+
+.certificate-col-right {
+  text-align: right;
+}
+
 .certificate-ref {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 10px;
