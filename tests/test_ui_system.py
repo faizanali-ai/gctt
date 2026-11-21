@@ -96,8 +96,16 @@ class CompiledCSSGuardTests(SimpleTestCase):
 
     def test_motion_and_visual_components_are_compiled(self):
         css = COMPILED_CSS.read_text(encoding="utf-8")
-        for component in (".hero-enter", ".hero-art", ".geometry"):
+        for component in (
+            ".hero-enter",
+            ".hero-art",
+            ".geometry",
+            ".logo-plate",
+            ".logo-light",
+            ".logo-dark",
+        ):
             self.assertIn(component, css, f"missing {component}")
+        self.assertIn("prefers-color-scheme:dark", css)
 
 
 class AssetBudgetTests(SimpleTestCase):
@@ -189,6 +197,7 @@ class MetadataTests(TestCase):
     def test_auth_header_uses_main_logo(self):
         response = self.client.get(reverse("login"))
         self.assertContains(response, "images/logo-main.png")
+        self.assertContains(response, "images/logo-main-dark.png")
 
     def test_404_is_not_indexed(self):
         response = self.client.get("/this-page-does-not-exist/")
@@ -199,14 +208,18 @@ class MetadataTests(TestCase):
         html = response.content.decode()
         self.assertIn("images/og-gctt-v3.jpg", html)
         self.assertIn("images/logo-horizontal.png", html)
+        self.assertIn("images/logo-horizontal-dark.png", html)
         self.assertIn("images/logo-stacked.png", html)
+        self.assertIn("images/logo-stacked-dark.png", html)
         self.assertIn("images/logo-icon-512.png", html)
         self.assertNotIn("og-gctt-v2", html)
         self.assertNotIn("logo-small.webp", html)
         for name in (
             "og-gctt-v3.jpg",
             "logo-horizontal.png",
+            "logo-horizontal-dark.png",
             "logo-stacked.png",
+            "logo-stacked-dark.png",
             "logo-icon-512.png",
         ):
             self.assertTrue((IMAGES / name).is_file(), f"missing {name}")
