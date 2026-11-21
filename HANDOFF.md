@@ -6,10 +6,11 @@ make CI test the real database, make maintenance safe, and clean up stale code
 without changing the public product.
 
 ## Current state
-- Branch: `prod-hardening`.
-- Logo integration is committed separately on top of `58abe79`.
-- The hardening work is in progress; do not deploy until the validation steps
-  below pass and the owner has taken a Neon PITR snapshot.
+- Branch: `prod-hardening`, pushed to origin. CI run 54 is green.
+- Logo integration is committed separately on top of `58abe79`; the hardening
+  commit is `2dba70f`.
+- No production deploy has been performed. Do not deploy until the owner has
+  taken a Neon PITR snapshot and completed the staging smoke checks.
 - The owner account is `mohdfaizanali038@gmail.com`. Do not delete it. Run
   `uv run python manage.py inspect_seeded_owner` before removing any duplicate
   legacy account.
