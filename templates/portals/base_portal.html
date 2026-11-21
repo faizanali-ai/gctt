@@ -8,17 +8,11 @@
 {% block content %}
 <div class="flex min-h-screen">
   <aside class="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-line bg-surface lg:flex">
-    <a href="{% url 'dashboard' %}" class="flex h-16 items-center gap-2.5 border-b border-line px-5" aria-label="{{ COMPANY.name }} portal">
-      <span class="relative flex h-9 w-9 items-center justify-center rounded-[10px] bg-ink text-canvas" aria-hidden="true">
-        <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-          <path d="M6 8h12M12 8v9M9 13h6"/>
-        </svg>
-        <span class="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent"></span>
+    <a href="{% url 'dashboard' %}" class="flex h-16 items-center gap-3 border-b border-line px-5" aria-label="{{ COMPANY.name }} portal">
+      <span class="inline-flex items-center rounded-md bg-white px-1.5 py-1">
+        <img src="{% static 'images/logo-main.png' %}" alt="{{ COMPANY.name }}" width="520" height="176" class="h-7 w-auto">
       </span>
-      <span class="flex flex-col leading-none">
-        <span class="font-display text-base font-bold tracking-[0.08em]">{{ COMPANY.name }}</span>
-        <span class="mt-1 font-mono text-3xs uppercase tracking-[0.1em] text-muted">Portal</span>
-      </span>
+      <span class="font-mono text-3xs uppercase tracking-[0.1em] text-muted">Portal</span>
     </a>
 
     <div class="flex-1 overflow-y-auto">

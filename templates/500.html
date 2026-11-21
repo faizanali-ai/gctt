@@ -6,20 +6,14 @@
   <meta name="color-scheme" content="light dark">
   <title>Service unavailable — GCTT</title>
   <meta name="robots" content="noindex">
-  <link rel="icon" type="image/svg+xml" href="{% static 'images/logo-icon.svg' %}">
+  <link rel="icon" type="image/png" sizes="512x512" href="{% static 'images/logo-icon-512.png' %}">
   <link rel="preload" href="{% static 'fonts/inter.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{% static 'css/output.css' %}?v=20261121">
 </head>
 <body class="flex min-h-screen flex-col items-center justify-center bg-canvas px-5 py-16 text-ink antialiased">
   <main class="mx-auto w-full max-w-lg text-center">
-    <a href="/" class="inline-flex items-center gap-2.5" aria-label="GCTT home">
-      <span class="relative flex h-9 w-9 items-center justify-center rounded-[10px] bg-ink text-canvas" aria-hidden="true">
-        <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-          <path d="M6 8h12M12 8v9M9 13h6"/>
-        </svg>
-        <span class="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent"></span>
-      </span>
-      <span class="font-display text-lg font-bold tracking-[0.08em]">GCTT</span>
+    <a href="/" class="inline-flex items-center rounded-md bg-white px-2 py-1" aria-label="GCTT home">
+      <img src="{% static 'images/logo-main.png' %}" alt="GCTT" width="520" height="176" class="h-9 w-auto">
     </a>
 
     <p class="mt-10 font-mono text-2xs uppercase tracking-[0.14em] text-accent">Error 500</p>
