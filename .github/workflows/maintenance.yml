@@ -4,30 +4,61 @@ on:
   schedule:
     - cron: "17 3 * * *"
   workflow_dispatch:
+    inputs:
+      confirm_apply:
+        description: Type "apply" to run destructive retention and pending cleanup.
+        required: false
+        default: ""
+
+concurrency:
+  group: production-maintenance
+  cancel-in-progress: false
 
 jobs:
-  retention:
+  maintenance:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     environment: production
     env:
       DJANGO_DEBUG: "0"
       DJANGO_SECRET_KEY: ${{ secrets.PRODUCTION_DJANGO_SECRET_KEY }}
       DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+      SITE_URL: ${{ secrets.PRODUCTION_SITE_URL }}
+      R2_BUCKET: ${{ secrets.R2_BUCKET }}
+      R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_BUCKET: ${{ secrets.SUPABASE_BUCKET }}
+      SUPABASE_REGION: ${{ secrets.SUPABASE_REGION }}
+      SUPABASE_ACCESS_KEY_ID: ${{ secrets.SUPABASE_ACCESS_KEY_ID }}
+      SUPABASE_SECRET_ACCESS_KEY: ${{ secrets.SUPABASE_SECRET_ACCESS_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
         with:
           python-version: "3.12"
-      - run: uv sync
+      - run: uv sync --frozen
       - name: Stop after the legacy sunset date
         run: |
           if [ "$(date -u +%F)" \> "2027-02-19" ] || [ "$(date -u +%F)" = "2027-02-19" ]; then
             echo "Legacy sunset reached. Remove the legacy routes and this guard."
             exit 1
           fi
-      - name: Purge records past the retention window
-        run: uv run python manage.py purge_retention --apply
-      - name: Purge expired OTP and pending rows
+          uv run python manage.py check_legacy_urls
+      - name: Report retention and pending records (dry run)
         run: |
-          uv run python manage.py purge_email_otp
+          uv run python manage.py purge_retention
+          uv run python manage.py purge_pending --dry-run
+      - name: Purge expired OTP rows
+        run: uv run python manage.py purge_email_otp
+      - name: Clear expired sessions
+        run: uv run python manage.py clearsessions
+      - name: Verify production media storage
+        if: github.event.inputs.confirm_apply == 'apply'
+        run: uv run python manage.py check_storage
+      - name: Apply retention and pending cleanup
+        if: github.event.inputs.confirm_apply == 'apply'
+        run: |
+          uv run python manage.py purge_retention --apply
           uv run python manage.py purge_pending

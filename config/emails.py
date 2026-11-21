@@ -1,5 +1,6 @@
 import logging
 import time
+import uuid
 
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
@@ -47,6 +48,7 @@ def send(to, subject, body, html_body=None, headers=None):
     delay = max(0.0, float(getattr(settings, "EMAIL_RETRY_DELAY_SECONDS", 0.5)))
 
     for recipient in recipients:
+        idempotency_key = uuid.uuid4().hex
         for attempt in range(retries + 1):
             try:
                 message = EmailMultiAlternatives(
@@ -56,6 +58,7 @@ def send(to, subject, body, html_body=None, headers=None):
                     [recipient],
                     headers=headers or None,
                 )
+                message.idempotency_key = idempotency_key
                 if html_body:
                     message.attach_alternative(html_body, "text/html")
                 if message.send(fail_silently=False):
@@ -83,8 +86,12 @@ def _site_url():
     return getattr(settings, "SITE_URL", "https://gctekton.com").rstrip("/")
 
 
+def promotional_unsubscribe_token(user):
+    return signing.dumps({"uid": user.pk}, salt="gctt-promotional-unsubscribe")
+
+
 def promotional_unsubscribe_url(user):
-    token = signing.dumps({"uid": user.pk}, salt="gctt-promotional-unsubscribe")
+    token = promotional_unsubscribe_token(user)
     return f"{_site_url()}{reverse('promotional_unsubscribe', args=[token])}"
 
 
@@ -221,7 +228,12 @@ def send_account_deleted(email, display_name):
 
 def send_promotional(user, subject, content):
     try:
-        unsubscribe_url = promotional_unsubscribe_url(user)
+        token = promotional_unsubscribe_token(user)
+        unsubscribe_url = f"{_site_url()}{reverse('promotional_unsubscribe', args=[token])}"
+        one_click_url = (
+            f"{_site_url()}"
+            f"{reverse('promotional_unsubscribe_one_click', args=[token])}"
+        )
         text, html = _render_email(
             "emails/promotional.txt",
             "emails/promotional.html",
@@ -238,7 +250,10 @@ def send_promotional(user, subject, content):
             subject,
             text,
             html_body=html,
-            headers={"List-Unsubscribe": f"<{unsubscribe_url}>"},
+            headers={
+                "List-Unsubscribe": f"<{unsubscribe_url}>, <{one_click_url}>",
+                "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+            },
         )
     )
 

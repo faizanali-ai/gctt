@@ -15,17 +15,10 @@
 </div>
 
 <header class="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur-md">
-  <div class="container-site flex h-16 items-center justify-between gap-6">
-    <a href="{% url 'home' %}" class="flex shrink-0 items-center gap-2.5" aria-label="{{ COMPANY.name }} home">
-      <span class="relative flex h-9 w-9 items-center justify-center rounded-[10px] bg-ink text-canvas" aria-hidden="true">
-        <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-          <path d="M6 8h12M12 8v9M9 13h6"/>
-        </svg>
-        <span class="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent"></span>
-      </span>
-      <span class="flex flex-col leading-none">
-        <span class="font-display text-lg font-bold tracking-[0.08em] text-ink">{{ COMPANY.name }}</span>
-        <span class="mt-1 hidden font-mono text-3xs uppercase tracking-[0.12em] text-muted sm:block">{{ COMPANY.legal_name }}</span>
+  <div class="container-site flex h-16 items-center justify-between gap-3 sm:gap-6">
+    <a href="{% url 'home' %}" class="flex shrink-0 items-center" aria-label="{{ COMPANY.name }} home">
+      <span class="inline-flex items-center rounded-md bg-white px-2 py-1">
+        <img src="{% static 'images/logo-horizontal.png' %}" alt="{{ COMPANY.name }}" width="700" height="106" class="h-6 w-auto sm:h-8">
       </span>
     </a>
 
@@ -55,7 +48,9 @@
 
 <dialog id="mobile-drawer" class="drawer" aria-label="Mobile navigation">
   <div class="drawer-head">
-    <span class="font-display text-base font-bold tracking-[0.08em]">{{ COMPANY.name }}</span>
+    <a href="{% url 'home' %}" class="inline-flex items-center rounded-md bg-white px-2 py-1" aria-label="{{ COMPANY.name }} home">
+      <img src="{% static 'images/logo-horizontal.png' %}" alt="{{ COMPANY.name }}" width="700" height="106" class="h-6 w-auto">
+    </a>
     <button type="button" class="btn btn-ghost btn-sm" data-dialog-close aria-label="Close navigation">
       <svg class="h-5 w-5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#close"></use></svg>
     </button>

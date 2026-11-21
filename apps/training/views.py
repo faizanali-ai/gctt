@@ -1,9 +1,11 @@
 import json
 import logging
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
 from django.db.models import Count, Q
@@ -49,6 +51,9 @@ def _notify_safely(label, callback):
 
 
 def _create_pending_registration(programme, email, message):
+    cooldown_key = f"pending-registration:{programme.pk}:{email.lower()}"
+    if not cache.add(cooldown_key, True, 300):
+        return None
     token, token_hash = make_token()
     pending = PendingRegistration.objects.create(
         programme=programme,
@@ -120,6 +125,8 @@ def api_career_advisor(request):
         data = json.loads(request.body.decode("utf-8")) if request.body else request.POST
     except (json.JSONDecodeError, UnicodeDecodeError):
         data = request.POST
+    if not isinstance(data, dict):
+        return JsonResponse({"error": "JSON object required"}, status=400)
 
     current_role = data.get("current_role") or data.get("role") or ""
     experience = data.get("experience", "")
@@ -142,6 +149,15 @@ def programme_register(request, slug):
         if not request.user.is_student:
             messages.error(request, "Use a student account to register for training.")
             return redirect("programme_detail", slug=programme.slug)
+        if (
+            settings.REQUIRE_VERIFIED_EMAIL_ACTIONS
+            and not request.user.email_verified
+        ):
+            messages.error(
+                request,
+                "Verify your email address before registering for a programme.",
+            )
+            return redirect("dashboard")
         form = RegistrationForm(request.POST)
         if form.is_valid():
             registration = form.save(commit=False)
@@ -188,7 +204,7 @@ def programme_register(request, slug):
                 combined_notes.append(f"[LinkedIn: {linkedin_url}]")
             if user_msg:
                 combined_notes.append(user_msg)
-            message = "\n".join(combined_notes)
+            message = "\n".join(combined_notes)[:4000]
 
             existing_user = User.objects.filter(email__iexact=email).first()
             if existing_user:
@@ -311,6 +327,7 @@ def verify_certificate(request, ref=""):
 
 
 @login_required
+@ratelimit(key="user", rate="5/h", method="GET", block=True)
 def download_certificate(request, ref):
     registrations = Registration.objects.select_related("programme", "student")
     if request.user.is_admin:
@@ -324,9 +341,12 @@ def download_certificate(request, ref):
     registration = get_object_or_404(
         registrations, certificate_ref=ref, certificate_issued=True
     )
-    response = HttpResponse(
-        generate_certificate_pdf(registration), content_type="application/pdf"
-    )
+    cache_key = f"certificate-pdf:{registration.pk}:{registration.certificate_ref}"
+    pdf = cache.get(cache_key)
+    if not pdf:
+        pdf = generate_certificate_pdf(registration)
+        cache.set(cache_key, pdf, 3600)
+    response = HttpResponse(pdf, content_type="application/pdf")
     safe_ref = "".join(character for character in ref if character.isalnum() or character in "-_")
     safe_ref = safe_ref[:100] or "certificate"
     filename = f"{safe_ref}.pdf" if safe_ref.startswith("GCTT-") else f"GCTT-{safe_ref}.pdf"

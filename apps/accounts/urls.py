@@ -32,6 +32,11 @@ urlpatterns = [
         name="promotional_opt_in_confirm",
     ),
     path("email/unsubscribe/<str:token>/", views.promotional_unsubscribe, name="promotional_unsubscribe"),
+    path(
+        "email/unsubscribe-one-click/<str:token>/",
+        views.promotional_unsubscribe_one_click,
+        name="promotional_unsubscribe_one_click",
+    ),
     path("security/", views.security, name="security"),
     path("delete/", views.account_delete, name="account_delete"),
     path(

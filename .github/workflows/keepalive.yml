@@ -11,13 +11,17 @@ jobs:
     name: Keepalive Ping
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Healthz Endpoint
+      - name: Ping Wake Endpoint
         run: |
+          set -euo pipefail
           echo "Pinging https://gctekton.com/wake/ to keep the instance awake..."
-          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}s\n" "https://gctekton.com/wake/")
+          RESPONSE=$(curl --silent --show-error --fail --max-time 20 \
+            --retry 2 --retry-delay 5 \
+            -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}s\n" \
+            "https://gctekton.com/wake/")
           echo "$RESPONSE"
-          if echo "$RESPONSE" | grep -q "HTTP_STATUS:200"; then
-            echo "Service is awake (database not touched)."
-          else
-            echo "Warning: Response status was not 200 OK."
+          if ! echo "$RESPONSE" | grep -q "HTTP_STATUS:200"; then
+            echo "::error::Keepalive failed: /wake/ did not return HTTP 200."
+            exit 1
           fi
+          echo "Service is awake (database not touched)."

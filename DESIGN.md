@@ -1,6 +1,6 @@
 # GCTT Design System
 
-This is the single source of truth for the GCTT interface. `DESIGN_SYSTEM_RULES.md` is superseded.
+This is the single source of truth for the GCTT interface.
 
 ## Direction
 
@@ -111,7 +111,7 @@ static/css/certificate.css    A4 print document
 static/js/ui.js               dialogs, toasts, stepper, advisor, reveals
 static/fonts/                 self-hosted WOFF2 + OFL licences
 static/images/icons.svg       icon sprite
-static/images/logo-icon.svg   favicon/emblem
+static/images/logo-*.png      brand logos and favicon
 templates/base.html           marketing shell
 templates/accounts/base_auth  minimal auth shell
 templates/portals/base_portal portal shell

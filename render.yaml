@@ -9,11 +9,11 @@ services:
     buildCommand: >-
       pip install --cache-dir /opt/render/project/.cache/pip uv &&
       UV_CACHE_DIR=/opt/render/project/.cache/uv uv sync --frozen --no-dev &&
-      uv run python manage.py collectstatic --noinput
+      uv run python manage.py collectstatic --noinput --ignore=input.css
     startCommand: >-
       uv run python manage.py migrate --noinput &&
       uv run python manage.py createcachetable &&
-      uv run gunicorn config.wsgi --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+      uv run gunicorn config.wsgi --bind 0.0.0.0:$PORT --worker-class gthread --workers 2 --threads 2 --timeout 120
     envVars:
       - key: PIP_CACHE_DIR
         value: /opt/render/project/.cache/pip
@@ -30,6 +30,8 @@ services:
       - key: DJANGO_CSRF_TRUSTED_ORIGINS
         sync: false
       - key: DATABASE_URL
+        sync: false
+      - key: SITE_URL
         sync: false
       - key: EMAIL_BACKEND
         value: config.email_backends.ResendEmailBackend

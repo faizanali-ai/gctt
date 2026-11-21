@@ -31,7 +31,8 @@ class Command(BaseCommand):
                 and user.is_superuser is (user.role == User.Role.ADMIN)
             )
             groups_ok = groups == {expected_group}
-            if flags_ok and groups_ok:
+            direct_permissions_ok = not user.user_permissions.exists()
+            if flags_ok and groups_ok and direct_permissions_ok:
                 return
             changes += 1
             self.stdout.write(

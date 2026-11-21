@@ -1,21 +1,13 @@
+{% load static %}
 <footer class="ink-band">
   <div class="container-site py-14">
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-12">
       <div class="lg:col-span-5">
-        <a href="{% url 'home' %}" class="flex items-center gap-2.5" aria-label="{{ COMPANY.name }} home">
-          <span class="relative flex h-9 w-9 items-center justify-center rounded-[10px] bg-canvas text-ink" aria-hidden="true">
-            <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-              <path d="M6 8h12M12 8v9M9 13h6"/>
-            </svg>
-            <span class="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent"></span>
-          </span>
-          <span class="flex flex-col leading-none">
-            <span class="font-display text-xl font-bold tracking-[0.08em]">{{ COMPANY.name }}</span>
-            <span class="mt-1 font-mono text-3xs uppercase tracking-[0.12em] text-canvas/60">{{ COMPANY.legal_name }}</span>
-          </span>
+        <a href="{% url 'home' %}" class="inline-flex items-center rounded-xl bg-white p-3" aria-label="{{ COMPANY.name }} home">
+          <img src="{% static 'images/logo-stacked.png' %}" alt="{{ COMPANY.name }}" width="360" height="321" class="h-28 w-auto sm:h-32" loading="lazy">
         </a>
         <p class="mt-5 max-w-sm text-sm leading-relaxed text-canvas/70">
-          {{ COMPANY.tagline }} Headquartered in Irving, Texas, with statutory E-Verify compliance.
+          Headquartered in Irving, Texas, with statutory E-Verify compliance.
         </p>
         <address class="mt-5 space-y-1 font-mono text-2xs uppercase not-italic tracking-[0.08em] text-canvas/60">
           <p>{{ COMPANY.address }}</p>

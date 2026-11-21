@@ -1,6 +1,6 @@
 # Deploying GCTT (free tier)
 
-Stack: **Render** (web) · **Neon** (Postgres) · **Resend** (email) · **Cloudflare R2** (media).
+Stack: **Render** (web) · **Neon** (Postgres) · **Resend** (email) · **Supabase Storage** (primary) or **Cloudflare R2** (alternative).
 Total cost: $0 within free limits. Repo already has `render.yaml`.
 
 ---
@@ -90,26 +90,38 @@ repository environment secrets before enabling it:
 
 - `PRODUCTION_DATABASE_URL` — Neon pooled connection string.
 - `PRODUCTION_DJANGO_SECRET_KEY` — production secret key.
-- R2 or Supabase credentials only if a future maintenance step needs media access.
+- `PRODUCTION_SITE_URL` — public origin, e.g. `https://gctekton.com`.
+- The complete `SUPABASE_*` set (or `R2_*` set) so retention and pending cleanup
+  can delete résumé objects as well as database rows.
 
-Run **Actions → Production maintenance → Run workflow** once to confirm it can
-reach the database before relying on the schedule.
+The scheduled workflow runs retention/pending cleanup in dry-run mode, purges
+expired OTP/session rows, and reports counts. Destructive cleanup is manual:
+take a Neon PITR snapshot, review the dry-run output, then run
+**Actions → Production maintenance → Run workflow** with `confirm_apply=apply`.
+The apply step verifies production media storage first.
 
-### Create the CEO account
+### Create or recover the admin account
 
-Render → your service → **Shell**:
+Render Free has no interactive Shell. Use a **one-off job** (paid plans) or run
+the command locally against the production database:
 
 ```bash
-DJANGO_DEBUG=0 DJANGO_SUPERUSER_PASSWORD='choose-a-strong-password' \
-python manage.py createsuperuser --noinput --email ceo@gctekton.com
+DATABASE_URL='<neon pooled url>' DJANGO_DEBUG=0 \
+DJANGO_SECRET_KEY='<a long random value>' \
+DJANGO_SUPERUSER_PASSWORD='choose-a-strong-password' \
+uv run python manage.py createsuperuser --noinput --email <owner-email>
 ```
 
-If Shell is unavailable, run the same command locally against the production DB:
+If an owner account already exists, do not create a duplicate. Rotate its
+password through the portal or a controlled reset flow. List legacy seeded
+accounts first:
 
 ```bash
-DATABASE_URL='<neon pooled url>' DJANGO_DEBUG=0 DJANGO_SECRET_KEY='<any>' \
-uv run python manage.py createsuperuser --noinput --email ceo@gctekton.com
+uv run python manage.py inspect_seeded_owner
 ```
+
+Do not delete the current owner. Remove only duplicates you have reviewed and
+approved, and take a Neon PITR snapshot first.
 
 Then log in at `/accounts/login/`, open `/dashboard/` and change the password.
 
@@ -123,7 +135,7 @@ Then log in at `/accounts/login/`, open `/dashboard/` and change the password.
 | `https://<host>/healthz/` | `ok` |
 | Signup on `/accounts/signup/` | welcome message; verification email arrives (Resend → Emails log) |
 | `/contact/` enquiry | confirmation banner; alert email to `accounts@gctekton.com` |
-| Apply to a job with a PDF | application appears in `/staff/applications/`; object visible in R2 |
+| Apply to a job with a PDF | application appears in `/staff/applications/`; object visible in the configured bucket |
 | Trainer issues a certificate | PDF downloads; `/training/verify/<ref>/` shows **Valid certificate** |
 | `/dashboard/` with CEO account | portal loads |
 
@@ -149,4 +161,4 @@ Then log in at `/accounts/login/`, open `/dashboard/` and change the password.
 | `database unavailable` on /healthz/ | wrong/paused Neon URL | confirm the pooled string and that the project isn't over quota |
 | First request takes 30–60 s | Render free sleeps after 15 min | expected; optional free uptime pinger every 10 min |
 | Emails not arriving | domain not verified | finish Resend DNS verification |
-| Resume upload fails | R2 keys/scopes | recreate token with Object Read & Write on the bucket |
+| Resume upload fails | storage keys/scopes | recreate the Supabase/R2 token with object read & write on the bucket |

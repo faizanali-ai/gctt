@@ -186,6 +186,10 @@ class MetadataTests(TestCase):
                 response = self.client.get(reverse(name))
                 self.assertContains(response, 'content="noindex"')
 
+    def test_auth_header_uses_main_logo(self):
+        response = self.client.get(reverse("login"))
+        self.assertContains(response, "images/logo-main.png")
+
     def test_404_is_not_indexed(self):
         response = self.client.get("/this-page-does-not-exist/")
         self.assertContains(response, 'content="noindex"', status_code=404)
@@ -194,10 +198,17 @@ class MetadataTests(TestCase):
         response = self.client.get(reverse("home"))
         html = response.content.decode()
         self.assertIn("images/og-gctt-v3.jpg", html)
+        self.assertIn("images/logo-horizontal.png", html)
+        self.assertIn("images/logo-stacked.png", html)
         self.assertIn("images/logo-icon-512.png", html)
         self.assertNotIn("og-gctt-v2", html)
         self.assertNotIn("logo-small.webp", html)
-        for name in ("og-gctt-v3.jpg", "logo-icon-512.png"):
+        for name in (
+            "og-gctt-v3.jpg",
+            "logo-horizontal.png",
+            "logo-stacked.png",
+            "logo-icon-512.png",
+        ):
             self.assertTrue((IMAGES / name).is_file(), f"missing {name}")
 
 

@@ -543,19 +543,30 @@
   var errorSummary = $("[data-form-errors]");
   if (errorSummary) errorSummary.focus();
 
-  /* ---------------------------------------------------- field error wiring */
-  $$(".field-error").forEach(function (field) {
+  /* ------------------------------------------- field hint/error wiring */
+  $$(".field").forEach(function (field) {
     var control = field.querySelector("input, select, textarea");
-    var list = field.querySelector(".errorlist");
     if (!control) return;
-    control.setAttribute("aria-invalid", "true");
-    if (!list) return;
-    if (!list.id) list.id = (control.id || "field") + "-error";
-    var described = control.getAttribute("aria-describedby");
-    control.setAttribute(
-      "aria-describedby",
-      described ? described + " " + list.id : list.id
-    );
+    var describedIds = (control.getAttribute("aria-describedby") || "")
+      .split(/\s+/)
+      .filter(Boolean);
+    var hint = field.querySelector(".hint");
+    var list = field.querySelector(".errorlist");
+    if (hint) {
+      if (!hint.id) hint.id = (control.id || "field") + "-hint";
+      describedIds.push(hint.id);
+    }
+    if (list) {
+      if (!list.id) list.id = (control.id || "field") + "-error";
+      describedIds.push(list.id);
+      control.setAttribute("aria-invalid", "true");
+    }
+    if (describedIds.length) {
+      control.setAttribute(
+        "aria-describedby",
+        Array.from(new Set(describedIds)).join(" ")
+      );
+    }
   });
 
   /* --------------------------------------------------------------- print */

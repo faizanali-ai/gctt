@@ -54,7 +54,7 @@
               </div>
               <div class="flex flex-wrap items-center gap-2">
                 {% if application.resume %}
-                  <a href="{{ application.resume.url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">Résumé</a>
+                  <a href="{{ application.resume.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">Résumé</a>
                 {% endif %}
                 <form method="post" action="{% url 'withdraw_application' application.uuid %}" data-confirm="Withdraw your application for {{ application.job.title|escapejs }}? Your résumé will be removed from review." data-confirm-action="Withdraw">
                   {% csrf_token %}

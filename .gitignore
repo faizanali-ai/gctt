@@ -17,5 +17,11 @@ backups/
 # Tailwind standalone binary (re-download from tailwindcss releases)
 tailwindcss
 
+# Coverage
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
 # OS
 .DS_Store

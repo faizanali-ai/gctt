@@ -279,6 +279,10 @@ class PromotionalEmailTests(TestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, [self.user.email])
         self.assertIn("List-Unsubscribe", mail.outbox[0].extra_headers)
+        self.assertEqual(
+            mail.outbox[0].extra_headers["List-Unsubscribe-Post"],
+            "List-Unsubscribe=One-Click",
+        )
         self.assertTrue(any(content_type == "text/html" for _, content_type in mail.outbox[0].alternatives))
 
     def test_failure_stops_the_batch_before_advancing(self):

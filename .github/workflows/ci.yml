@@ -7,17 +7,31 @@ env:
   DJANGO_SECRET_KEY: ci-only-secret-9f8e7d6c5b4a39281706f5e4d3c2b1a0f9e8d7c6b5a49382
   DJANGO_ALLOWED_HOSTS: example.com
   DJANGO_CSRF_TRUSTED_ORIGINS: https://example.com
-  DATABASE_URL: sqlite:///ci.db
+  DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: ci
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci -d ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
         with:
           python-version: "3.12"
-      - run: uv sync
+      - run: uv sync --frozen
       - name: CSS is current
         run: |
           curl -sLo tailwindcss https://github.com/tailwindlabs/tailwindcss/releases/download/v4.3.5/tailwindcss-linux-x64
@@ -29,5 +43,11 @@ jobs:
       - run: uv run python scripts/check_contrast.py
       - run: uv run ruff check .
       - run: uv run python manage.py check
-      - run: uv run python manage.py test tests
+      - run: uv run python manage.py makemigrations --check --dry-run
+      - name: Dependency audit
+        run: uv run pip-audit
+      - name: Tests with coverage
+        run: |
+          uv run coverage run manage.py test tests
+          uv run coverage report --omit='tests/*' --fail-under=80
       - run: uv run python manage.py check --deploy

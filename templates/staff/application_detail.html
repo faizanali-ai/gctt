@@ -10,7 +10,7 @@
 
   <dl class="mt-6 grid gap-3 rounded-card border border-line bg-raised p-5 text-sm sm:grid-cols-2">
     <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Applied</dt><dd class="mt-1">{{ application.created_at|date:"M j, Y H:i" }}</dd></div>
-    <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Resume</dt><dd class="mt-1"><a class="link" href="{{ application.resume.url }}" target="_blank" rel="noopener">Open file</a></dd></div>
+    <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Resume</dt><dd class="mt-1"><a class="link" href="{{ application.resume.url }}" target="_blank" rel="noopener noreferrer">Open file</a></dd></div>
     <div class="sm:col-span-2"><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Candidate message</dt><dd class="mt-1 whitespace-pre-line text-muted">{{ application.message|default:"—" }}</dd></div>
   </dl>
 
