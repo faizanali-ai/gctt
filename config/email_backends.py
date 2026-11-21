@@ -83,15 +83,19 @@ class ResendEmailBackend(BaseEmailBackend):
                 for filename, content, _mimetype in message.attachments
             ]
 
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": USER_AGENT,
+        }
+        idempotency_key = getattr(message, "idempotency_key", "")
+        if idempotency_key:
+            headers["Idempotency-Key"] = idempotency_key
         request = urllib.request.Request(
             self.api_url,
             data=json.dumps(payload).encode("utf-8"),
-            headers={
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "User-Agent": USER_AGENT,
-            },
+            headers=headers,
             method="POST",
         )
         try:

@@ -4,11 +4,10 @@ from django import forms
 
 from .models import Application, Job
 
-# First bytes of each allowed format. Extension alone is not trustworthy.
+# Only PDF resumes are accepted. Office files can carry macros and need a
+# malware-scanner before they can be safely delivered to staff.
 SIGNATURES = {
     "pdf": b"%PDF",
-    "doc": b"\xd0\xcf\x11\xe0",
-    "docx": b"PK\x03\x04",
 }
 
 
@@ -58,7 +57,7 @@ class ApplicationForm(forms.ModelForm):
         widget=forms.EmailInput(attrs={"placeholder": "jane.doe@example.com"}),
     )
     phone = forms.CharField(
-        max_length=50,
+        max_length=40,
         required=False,
         widget=forms.TextInput(attrs={"placeholder": "+1 (555) 000-0000"}),
     )
@@ -104,5 +103,5 @@ class ApplicationForm(forms.ModelForm):
         head = resume.read(8)
         resume.seek(0)
         if not expected_sig or not head.startswith(expected_sig):
-            raise forms.ValidationError("Upload a valid PDF or Word document (.pdf, .doc, .docx).")
+            raise forms.ValidationError("Upload a valid PDF resume.")
         return resume

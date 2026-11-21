@@ -20,13 +20,16 @@ from django.contrib.auth.views import (
 from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
+from django.core.validators import validate_email
 from django.db import IntegrityError
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import force_str
 from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_decode
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods, require_POST
 from django_ratelimit.decorators import ratelimit
 
@@ -704,6 +707,26 @@ def manage_users(request):
     )
 
 
+def _validate_admin_user_fields(email, first_name, last_name, phone, job_title):
+    errors = []
+    if email:
+        try:
+            validate_email(email)
+        except ValidationError:
+            errors.append("Enter a valid email address.")
+        if len(email) > User._meta.get_field("email").max_length:
+            errors.append("Email address is too long.")
+    for label, value, max_length in (
+        ("First name", first_name, User._meta.get_field("first_name").max_length),
+        ("Last name", last_name, User._meta.get_field("last_name").max_length),
+        ("Phone", phone, User._meta.get_field("phone").max_length),
+        ("Job title", job_title, User._meta.get_field("job_title").max_length),
+    ):
+        if len(value) > max_length:
+            errors.append(f"{label} must be {max_length} characters or fewer.")
+    return errors
+
+
 def _submitted_designation(request, fallback="staff"):
     value = (
         request.POST.get("designation")
@@ -732,8 +755,13 @@ def manage_user_create(request):
         is_active = request.POST.get("is_active", "on") == "on"
         email_verified = request.POST.get("email_verified", "on") == "on"
         error = None
+        field_errors = _validate_admin_user_fields(
+            email, first_name, last_name, phone, job_title
+        )
         if not email:
             error = "Email is required."
+        elif field_errors:
+            error = " ".join(field_errors)
         elif selected_designation == "staff" and subgroup not in STAFF_SUBGROUPS:
             error = "Select a valid staff subgroup."
         elif User.objects.filter(email__iexact=email).exists():
@@ -805,6 +833,10 @@ def manage_user_edit(request, pk):
     form_errors = []
     if request.method == "POST":
         email = request.POST.get("email", target.email).strip().lower()
+        first_name = request.POST.get("first_name", "").strip()
+        last_name = request.POST.get("last_name", "").strip()
+        phone = request.POST.get("phone", "").strip()
+        job_title = request.POST.get("job_title", target.job_title).strip()
         subgroup = request.POST.get("group", current_subgroup or "")
         is_active = request.POST.get("is_active") == "on"
         email_verified = (
@@ -812,9 +844,15 @@ def manage_user_edit(request, pk):
             if "email_verified" in request.POST
             else target.email_verified
         )
+        email_changed = email != old_email.lower()
+        field_errors = _validate_admin_user_fields(
+            email, first_name, last_name, phone, job_title
+        )
         error = None
         if not email:
             error = "Email is required."
+        elif field_errors:
+            error = " ".join(field_errors)
         elif User.objects.filter(email__iexact=email).exclude(pk=target.pk).exists():
             error = "A user with that email already exists."
         elif selected_designation == "staff" and subgroup not in STAFF_SUBGROUPS:
@@ -857,20 +895,24 @@ def manage_user_edit(request, pk):
                         },
                     )
             target.email = email
-            target.first_name = request.POST.get("first_name", "").strip()
-            target.last_name = request.POST.get("last_name", "").strip()
-            target.phone = request.POST.get("phone", "").strip()
-            target.job_title = request.POST.get("job_title", target.job_title).strip()
+            target.first_name = first_name
+            target.last_name = last_name
+            target.phone = phone
+            target.job_title = job_title
             target.is_active = is_active
-            target.email_verified = email_verified
+            target.email_verified = False if email_changed else email_verified
             target.apply_designation(selected_designation, subgroup)
             if new_password:
                 target.set_password(new_password)
                 target.save(update_fields=["password"])
-            if target.email.lower() != old_email.lower():
+            if email_changed:
                 _notify_safely(
                     "email change",
                     lambda: send_email_changed(target, old_email),
+                )
+                _notify_safely(
+                    "new email verification",
+                    lambda: send_verification(target, request),
                 )
             if new_password:
                 _notify_safely(
@@ -1167,6 +1209,31 @@ def promotional_unsubscribe(request, token):
         "accounts/unsubscribe.html",
         {"invalid": False, "target": user, "unsubscribed": not user.promotional_opt_in},
     )
+
+
+@csrf_exempt
+@require_POST
+@ratelimit(key="ip", rate="30/m", method="POST", block=True)
+def promotional_unsubscribe_one_click(request, token):
+    """RFC 8058 one-click unsubscribe target for mailbox providers."""
+    try:
+        payload = signing.loads(token, salt="gctt-promotional-unsubscribe")
+        user = User.objects.filter(pk=payload.get("uid")).first()
+    except (signing.BadSignature, ValueError, TypeError, AttributeError):
+        user = None
+
+    if user is None:
+        return HttpResponse("invalid unsubscribe token", status=400)
+
+    user.promotional_opt_in = False
+    user.promotional_opt_in_requested_at = None
+    user.save(
+        update_fields=[
+            "promotional_opt_in",
+            "promotional_opt_in_requested_at",
+        ]
+    )
+    return HttpResponse("unsubscribed", status=200)
 
 
 @login_required

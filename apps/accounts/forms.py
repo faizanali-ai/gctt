@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.core.exceptions import ValidationError
 
 from .models import SiteSettings, TeamProfile, User
 
@@ -124,4 +125,10 @@ class SiteSettingsForm(forms.ModelForm):
             "hero_cta_label": "Hero button text",
             "hero_cta_url": "Hero button link",
         }
+
+    def clean_hero_cta_url(self):
+        value = (self.cleaned_data.get("hero_cta_url") or "").strip()
+        if value and not value.startswith(("/", "http://", "https://")):
+            raise ValidationError("Use a relative path or an http(s) URL.")
+        return value
 

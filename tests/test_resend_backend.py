@@ -32,6 +32,7 @@ class ResendBackendTests(SimpleTestCase):
             headers={"List-Unsubscribe": "<https://example.com/unsubscribe/>"},
         )
         message.attach_alternative("<p>Your code is <strong>123456</strong></p>", "text/html")
+        message.idempotency_key = "test-idempotency-key"
 
         with patch("urllib.request.urlopen", return_value=fake_response()) as urlopen:
             self.assertEqual(ResendEmailBackend().send_messages([message]), 1)
@@ -41,6 +42,7 @@ class ResendBackendTests(SimpleTestCase):
         self.assertEqual(request.full_url, "https://api.resend.com/emails")
         self.assertEqual(request.headers["Authorization"], "Bearer re_test_key")
         self.assertIn("GCTT-Mailer/", request.headers["User-agent"])
+        self.assertEqual(request.headers["Idempotency-key"], "test-idempotency-key")
         self.assertEqual(payload["from"], "accounts@example.com")
         self.assertEqual(payload["to"], ["user@example.com"])
         self.assertEqual(payload["subject"], "Sign-in code")

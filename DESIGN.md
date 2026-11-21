@@ -1,6 +1,6 @@
 # GCTT Design System
 
-This is the single source of truth for the GCTT interface. `DESIGN_SYSTEM_RULES.md` is superseded.
+This is the single source of truth for the GCTT interface.
 
 ## Direction
 

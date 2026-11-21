@@ -85,6 +85,7 @@ class InboundEnrollmentForm(forms.Form):
     )
     message = forms.CharField(
         label="Background or goals (optional)",
+        max_length=4000,
         required=False,
         widget=forms.Textarea(attrs={"rows": 2}),
     )

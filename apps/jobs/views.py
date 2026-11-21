@@ -1,8 +1,10 @@
 import logging
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
 from django.db.models import Count, Q
@@ -55,6 +57,9 @@ def _message_with_work_auth(form):
 
 
 def _create_pending_application(job, email, resume, message):
+    cooldown_key = f"pending-application:{job.pk}:{email.lower()}"
+    if not cache.add(cooldown_key, True, 300):
+        return None
     token, token_hash = make_token()
     pending = PendingApplication.objects.create(
         job=job,
@@ -135,6 +140,12 @@ def job_apply(request, slug):
             if not user.is_candidate:
                 messages.error(request, "Use a candidate account to apply for roles.")
                 return redirect("job_detail", slug=job.slug)
+            if settings.REQUIRE_VERIFIED_EMAIL_ACTIONS and not user.email_verified:
+                messages.error(
+                    request,
+                    "Verify your email address before applying for roles.",
+                )
+                return redirect("dashboard")
         else:
             email = form.cleaned_data["email"].strip().lower()
             first_name = form.cleaned_data.get("first_name", "").strip()
@@ -524,8 +535,9 @@ def staff_job_linkedin_post(request, pk):
         messages.success(request, f"Successfully published '{job.title}' to GCTT's LinkedIn Organization Page!")
     else:
         share_url = res.get("share_url") or generate_linkedin_share_url(job, request)
+        reason = res.get("message") or "LinkedIn publishing failed."
         messages.info(
             request,
-            f"LinkedIn API token not configured. You can share manually to LinkedIn using: {share_url}"
+            f"{reason} You can share manually using: {share_url}"
         )
     return redirect("staff_jobs")

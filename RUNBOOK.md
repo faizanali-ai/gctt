@@ -1,7 +1,7 @@
 # GCTT Runbook
 
 Operational steps for the deployed site. Assumes the free-tier stack: Render (web),
-Neon (Postgres), R2 (media), Resend (email).
+Neon (Postgres), Supabase Storage or R2 (media), Resend (email).
 
 ## Deploy
 
@@ -65,8 +65,8 @@ sent immediately; the promotional command runs outside the request path.
   `uv run python manage.py send_promotional --subject "..." --body-file file.txt`;
   add `--send` to deliver. Defaults: 50 recipients, one second between sends.
   Use the printed `--after-id` value on the next run to avoid resending the first batch.
-- Unsubscribe: signed link in every promotional email. It opens a confirmation page
-  and never blocks transactional mail.
+- Unsubscribe: signed confirmation and RFC 8058 one-click links in every
+  promotional email. Both work without signing in and never block transactional mail.
 - Account security: password changes, email-address changes and account deletion
   send transactional notifications to the affected address(es).
 - Test mode: tests use Django’s `locmem` backend; local development uses the
@@ -96,15 +96,16 @@ dig +short TXT send.gctekton.com
 dig +short TXT gctekton.com
 ```
 
-The Resend DKIM record must exist, the `send` subdomain must carry Resend's
-records, and the root SPF must include Resend's SPF include. If those are absent,
-Resend cannot authenticate `accounts@gctekton.com`; messages may be rejected,
-quarantined by DMARC, or never delivered. Add the domain in Resend, publish the
-records it provides, then test delivery with
-`uv run python manage.py test_email <your-mailbox>`. Email OTP is enabled by
-default for every staff/admin login. If Resend is unavailable, an operator can
-set `REQUIRE_EMAIL_OTP=0` in Render for emergency password-only access and
-restart; change it back after delivery is restored.
+The Resend DKIM record must exist and the `send` subdomain must carry Resend's
+return-path records. Do not rewrite the root SPF record unless Resend's DNS
+instructions explicitly require it; changing it can break the existing Outlook
+mail flow. If records are absent, Resend cannot authenticate
+`accounts@gctekton.com`; messages may be rejected, quarantined by DMARC, or
+never delivered. Add the domain in Resend, publish the records it provides, then
+test delivery with `uv run python manage.py test_email <your-mailbox>`. Email OTP
+is enabled by default for every staff/admin login. If Resend is unavailable, an
+operator can set `REQUIRE_EMAIL_OTP=0` in Render for emergency password-only
+access and restart; change it back after delivery is restored.
 
 Check the Render dashboard logs for `Failed to send email` and the Django Audit
 log for `auth.email_otp_send_failed`. Common causes: unverified Resend domain,
@@ -197,10 +198,17 @@ and subgroup changes admin-only.
 
 ## Scheduled maintenance checks
 
-- Daily at 03:17 UTC, GitHub Actions runs `.github/workflows/maintenance.yml`:
-  `purge_retention --apply`, `purge_pending` and `purge_email_otp` using the
-  `production` environment secrets, then fails once the legacy sunset date has
-  passed. Use **Run workflow** to trigger it manually.
+- Daily at 03:17 UTC, GitHub Actions runs `.github/workflows/maintenance.yml` in
+  dry-run/audit mode, purges expired OTP rows, clears expired sessions, and
+  reports retention/pending counts.
+- Destructive retention and pending cleanup are manual: take a Neon PITR
+  snapshot, review the dry-run output, then run **Run workflow** with
+  `confirm_apply=apply`. The workflow verifies production media storage before
+  deleting rows so résumés are removed from Supabase/R2 as well.
+- The workflow needs the production `SUPABASE_*` or `R2_*` secrets; without them
+  object cleanup cannot be verified and the apply step is refused.
+- Résumé uploads are PDF-only. Do not re-enable Word files without adding
+  malware scanning.
 
 ## Access repair policy
 
@@ -215,7 +223,7 @@ backup and an approved window.
   `uv run python manage.py purge_pending` to remove expired auth/pending records.
 - Monthly: dependency updates (`uv lock --upgrade`, run tests, redeploy); run
   `audit_access --strict` and review flagged accounts.
-- Quarterly: restore drill, review staff accounts and role groups, rotate R2 keys.
+- Quarterly: restore drill, review staff accounts and role groups, rotate Supabase/R2 keys.
 
 ## Site settings and theme
 

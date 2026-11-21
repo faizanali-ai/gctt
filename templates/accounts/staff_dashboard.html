@@ -98,7 +98,7 @@
             </div>
             <div class="flex shrink-0 items-center gap-2">
               <span class="chip {% if app.status == 'selected' %}chip-success{% elif app.status == 'rejected' %}chip-danger{% else %}chip-warning{% endif %}">{{ app.get_status_display }}</span>
-              {% if app.resume %}<a href="{{ app.resume.url }}" target="_blank" rel="noopener" class="text-sm text-accent">Résumé</a>{% endif %}
+              {% if app.resume %}<a href="{{ app.resume.url }}" target="_blank" rel="noopener noreferrer" class="text-sm text-accent">Résumé</a>{% endif %}
             </div>
           </li>
         {% empty %}

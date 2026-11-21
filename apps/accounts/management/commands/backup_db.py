@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from django.core.management import call_command
@@ -21,7 +22,13 @@ class Command(BaseCommand):
             else Path("backups") / f"gctt-{timezone.now():%Y%m%d-%H%M%S}.json"
         )
         target.parent.mkdir(parents=True, exist_ok=True)
-        with target.open("w") as handle:
+        fd = os.open(
+            target,
+            os.O_WRONLY | os.O_CREAT | os.O_TRUNC,
+            0o600,
+        )
+        os.chmod(target, 0o600)
+        with os.fdopen(fd, "w") as handle:
             call_command(
                 "dumpdata",
                 exclude=[

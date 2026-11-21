@@ -11,16 +11,31 @@ TESTING = "test" in sys.argv
 # Safe default: debug is OFF unless explicitly enabled for local development.
 DEBUG = os.environ.get("DJANGO_DEBUG", "").lower() in ("1", "true", "yes")
 
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-insecure-key-change-me")
-if not DEBUG and not TESTING and SECRET_KEY.startswith("dev-only"):
-    raise RuntimeError("Set DJANGO_SECRET_KEY before running with DJANGO_DEBUG off")
+
+def validate_secret_key(value, *, debug, testing):
+    """Reject empty, short or developer-default keys outside debug/test."""
+    if debug or testing:
+        return value
+    if not value or value.startswith("dev-only") or len(value) < 50:
+        raise RuntimeError(
+            "DJANGO_SECRET_KEY must be a non-empty random value of at least "
+            "50 characters when DJANGO_DEBUG is off"
+        )
+    return value
+
+
+SECRET_KEY = validate_secret_key(
+    os.environ.get("DJANGO_SECRET_KEY", "dev-only-insecure-key-change-me"),
+    debug=DEBUG,
+    testing=TESTING,
+)
 
 base_allowed_hosts = [
-    "localhost",
-    "127.0.0.1",
     "gctekton.com",
     "www.gctekton.com",
 ]
+if DEBUG or TESTING:
+    base_allowed_hosts.extend(["localhost", "127.0.0.1", "testserver"])
 env_allowed_hosts = [
     host.strip()
     for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
@@ -75,6 +90,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "config.middleware.SecurityHeadersMiddleware",
+    "config.middleware.ActiveUserMiddleware",
     "config.middleware.LegacyUrlSunsetMiddleware",
 ]
 
@@ -105,7 +121,9 @@ if not DEBUG and not TESTING and not DATABASE_URL:
 
 DATABASES = {
     "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}", conn_max_age=600
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        conn_health_checks=True,
     )
 }
 
@@ -152,9 +170,14 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+_staticfiles_backend = (
+    "whitenoise.storage.CompressedStaticFilesStorage"
+    if DEBUG or TESTING
+    else "whitenoise.storage.CompressedManifestStaticFilesStorage"
+)
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
+    "staticfiles": {"BACKEND": _staticfiles_backend},
 }
 
 # Cloudflare R2 (S3-compatible) when configured. Bucket stays private; media
@@ -195,11 +218,14 @@ if TESTING:
     # Tests must never touch remote storage, whatever the environment says.
     STORAGES["default"] = {"BACKEND": "django.core.files.storage.FileSystemStorage"}
 
+_render_process = bool(os.environ.get("RENDER")) or "gunicorn" in Path(
+    sys.argv[0]
+).name
 if (
     not DEBUG
     and not TESTING
     and "FileSystemStorage" in STORAGES["default"]["BACKEND"]
-    and "gunicorn" in Path(sys.argv[0]).name
+    and _render_process
 ):
     raise RuntimeError(
         "Production media storage is not configured. Set R2_* or the complete "
@@ -233,8 +259,33 @@ EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND") or (
     else "django.core.mail.backends.console.EmailBackend"
 )
 
+
+def validate_email_backend(backend, *, debug, testing, render, process_name):
+    """Fail closed when a production web process would log email bodies."""
+    if debug or testing:
+        return backend
+    if backend in (
+        "django.core.mail.backends.console.EmailBackend",
+        "django.core.mail.backends.dummy.EmailBackend",
+    ) and (render or "gunicorn" in process_name):
+        raise RuntimeError(
+            "Production email is not configured. Set EMAIL_BACKEND to Resend "
+            "or a real SMTP backend; do not run the web service with the "
+            "console or dummy email backend."
+        )
+    return backend
+
+
 if TESTING:
     EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+else:
+    validate_email_backend(
+        EMAIL_BACKEND,
+        debug=DEBUG,
+        testing=TESTING,
+        render=bool(os.environ.get("RENDER")),
+        process_name=Path(sys.argv[0]).name,
+    )
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "")
 EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
@@ -270,6 +321,12 @@ LOGGING = {
 # Email OTP is required for every staff/admin login. The default is on; set
 # REQUIRE_EMAIL_OTP=0 only for a deliberate emergency password-only fallback.
 REQUIRE_EMAIL_OTP = (os.environ.get("REQUIRE_EMAIL_OTP", "1") == "1") and not TESTING
+
+# Gate sensitive candidate/student actions on proven email ownership. Off by
+# default so existing unverified accounts are not locked out before an audit.
+REQUIRE_VERIFIED_EMAIL_ACTIONS = (
+    os.environ.get("REQUIRE_VERIFIED_EMAIL_ACTIONS", "0") == "1"
+) and not TESTING
 
 # Google OAuth 2.0 Credentials
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "").strip()

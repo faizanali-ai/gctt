@@ -76,7 +76,7 @@
               <p class="text-2xs text-muted">{{ application.job.location }}</p>
             </td>
             <td data-label="Received" class="text-sm text-muted">{{ application.created_at|date:"M j, Y" }}</td>
-            <td data-label="Résumé"><a href="{{ application.resume.url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">Open</a></td>
+            <td data-label="Résumé"><a href="{{ application.resume.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">Open</a></td>
             <td data-label="Stage">
               <span class="chip {% if application.status == 'selected' or application.status == 'shortlisted' %}chip-success{% elif application.status == 'rejected' %}chip-danger{% else %}chip-warning{% endif %}">{{ application.get_status_display }}</span>
             </td>
@@ -116,7 +116,7 @@
             <p class="mt-2 whitespace-pre-line text-sm leading-relaxed">{{ application.message }}</p>
           </div>
         {% endif %}
-        <a href="{{ application.resume.url }}" target="_blank" rel="noopener" class="btn btn-secondary w-full">Open résumé</a>
+        <a href="{{ application.resume.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary w-full">Open résumé</a>
         <a href="{% url 'staff_application_edit' application.uuid %}" class="btn btn-secondary w-full">Open full record</a>
         <form method="post" action="{% url 'staff_application_status' application.uuid %}" class="form border-t border-line pt-5">
           {% csrf_token %}

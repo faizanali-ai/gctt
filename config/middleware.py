@@ -1,10 +1,33 @@
 import secrets
 
-from django.http import HttpResponseGone
+from django.contrib.auth import logout
+from django.http import HttpResponseGone, JsonResponse
+from django.shortcuts import redirect
 from django.urls import Resolver404, resolve
 from django.utils import timezone
 
 from .legacy import LEGACY_URL_NAMES, SUNSET_DATE, SUNSET_HTTP
+
+
+class ActiveUserMiddleware:
+    """End access for an account deactivated while its session is still open.
+
+    Django authenticates a session from the stored user id and does not re-check
+    ``is_active`` on every request. Admin deactivation must revoke access
+    immediately, including candidate/student PII.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        user = getattr(request, "user", None)
+        if user is not None and user.is_authenticated and not user.is_active:
+            logout(request)
+            if request.path.startswith("/api/") or request.path.startswith("/enquiries/"):
+                return JsonResponse({"error": "account inactive"}, status=403)
+            return redirect("login")
+        return self.get_response(request)
 
 
 class SecurityHeadersMiddleware:

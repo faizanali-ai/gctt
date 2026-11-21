@@ -78,7 +78,7 @@ class Application(models.Model):
     )
     resume = models.FileField(
         upload_to=resume_upload_to,
-        validators=[FileExtensionValidator(["pdf", "doc", "docx"])],
+        validators=[FileExtensionValidator(["pdf"])],
     )
     message = models.TextField(max_length=4000, blank=True)
     status = models.CharField(
@@ -103,7 +103,7 @@ class PendingApplication(models.Model):
     email = models.EmailField(max_length=200)
     resume = models.FileField(
         upload_to=resume_upload_to,
-        validators=[FileExtensionValidator(["pdf", "doc", "docx"])],
+        validators=[FileExtensionValidator(["pdf"])],
     )
     message = models.TextField(max_length=4000, blank=True)
     token_hash = models.CharField(max_length=64, unique=True)
@@ -128,4 +128,21 @@ def delete_resume_file(sender, instance, **kwargs):
                 "Failed to remove resume file %s on application delete",
                 instance.resume.name,
             )
+
+
+@receiver(post_delete, sender=PendingApplication)
+def delete_pending_resume_file(sender, instance, **kwargs):
+    if not instance.resume:
+        return
+    # A confirmed pending row can share its file name with the Application it
+    # created. Never delete a file still referenced by a real application.
+    if Application.objects.filter(resume=instance.resume.name).exists():
+        return
+    try:
+        instance.resume.delete(save=False)
+    except Exception:
+        logger.exception(
+            "Failed to remove pending resume %s on pending delete",
+            instance.resume.name,
+        )
 

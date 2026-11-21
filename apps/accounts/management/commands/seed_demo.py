@@ -1,4 +1,5 @@
-from django.core.management.base import BaseCommand
+from django.conf import settings
+from django.core.management.base import BaseCommand, CommandError
 
 from apps.enquiries.models import Enquiry
 from apps.jobs.models import Job
@@ -79,23 +80,46 @@ class Command(BaseCommand):
         parser.add_argument(
             "--cleanup",
             action="store_true",
-            help="Remove the deployment smoke-test enquiry and QA user instead.",
+            help="Remove the exact deployment smoke-test enquiry and QA users.",
+        )
+        parser.add_argument(
+            "--confirm",
+            action="store_true",
+            help="Required with --cleanup; confirms the exact records may be deleted.",
+        )
+        parser.add_argument(
+            "--allow-production-cleanup",
+            action="store_true",
+            help="Permit --cleanup outside DEBUG. Use only after reviewing the records.",
         )
 
     def handle(self, *args, **options):
         if options["cleanup"]:
+            if not options["confirm"]:
+                raise CommandError("--cleanup requires --confirm")
+            if not settings.DEBUG and not options["allow_production_cleanup"]:
+                raise CommandError(
+                    "--cleanup outside DEBUG requires --allow-production-cleanup"
+                )
             enquiries = Enquiry.objects.filter(name="Deploy Smoke Test").delete()[0]
             from django.contrib.auth import get_user_model
 
-            qa = get_user_model().objects.filter(
-                email__in=["qa.smoke@example.com", "qa.apply@example.com"]
-            ).delete()[0]
-            probes = (
+            qa = (
                 get_user_model()
-                .objects.filter(email__startswith="zq", email__endswith="@example.net")
+                .objects.filter(
+                    email__in=[
+                        "qa.smoke@example.com",
+                        "qa.apply@example.com",
+                        "zq-smoke@example.net",
+                    ]
+                )
                 .delete()[0]
             )
-            self.stdout.write(self.style.SUCCESS(f"Removed {enquiries} enquiry row(s), {qa + probes} QA user(s)."))
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"Removed {enquiries} enquiry row(s), {qa} exact QA user(s)."
+                )
+            )
             return
 
         for name in ("SAP", "Scrum & Agile"):

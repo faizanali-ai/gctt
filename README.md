@@ -93,7 +93,7 @@ node --check static/js/ui.js
 ## Deploy — 100% free tier
 
 Stack: **Render** (web, free) + **Neon** (Postgres, free) + **Resend** (email, free)
-+ **Cloudflare R2** (media, free within limits) + **GitHub Actions** (CI, free minutes).
++ **Supabase Storage** or **Cloudflare R2** (private media) + **GitHub Actions** (CI, free minutes).
 
 1. Create a Neon project (free plan, no expiry) and copy the **pooled** connection
    string (`...-pooler...`) — it becomes `DATABASE_URL`.
@@ -104,8 +104,8 @@ Stack: **Render** (web, free) + **Neon** (Postgres, free) + **Resend** (email, f
    and the R2 keys or the complete Supabase storage set.
 3. The start command runs `migrate`, `createcachetable`, `collectstatic` and gunicorn
    on every boot — no paid release phase needed.
-4. Verify `/wake/` returns `ok` (liveness) and `/healthz/` returns `ok`, then create the admin account:
-   `uv run python manage.py createsuperuser` (Render shell).
+4. Verify `/wake/` returns `ok` (liveness) and `/healthz/` returns `ok`, then create the admin account with a Render one-off job or locally against the production database:
+   `uv run python manage.py createsuperuser --email <owner-email>`.
 5. Optional custom domain: add it in Render, then append it to
    `DJANGO_ALLOWED_HOSTS` and `DJANGO_CSRF_TRUSTED_ORIGINS`; DNS is free on Cloudflare.
 
@@ -132,12 +132,14 @@ Railway/paid hosts still work unchanged via `Procfile` if you outgrow the free t
 - **Welcome email** — sent once after the first successful login. Existing users are backfilled so they do not receive a retroactive welcome.
 - **Enrollment email** — sent when a training registration is confirmed; it is transactional and cannot be opted out of.
 - **Promotional email** — double opt-in only. Users request offers on signup or in their profile, then must click a confirmation link. Use `uv run python manage.py send_promotional --subject "..." --body-file campaign.txt` to preview; add `--send` to deliver. The command defaults to 50 recipients, one second between messages, and prints a `--after-id` bookmark so the next run continues without resending the first batch.
-- **Unsubscribe** — every promotional email includes a signed unsubscribe link. It opens a confirmation page and works without signing in; it never affects transactional mail.
+- **Unsubscribe** — every promotional email includes signed confirmation and RFC 8058 one-click unsubscribe links. They work without signing in and never affect transactional mail.
 - **Account security email** — changing a password or email address, or deleting an account, sends a notification email. These are transactional and cannot be opted out of.
 - **No authenticator app** — TOTP login and enrollment are disabled. Old 2FA URLs redirect to login; existing authenticator tables are kept for rollback only.
 - **Email OTP delivery** — requires a verified Resend domain and `RESEND_API_KEY`. Email is sent through Resend’s HTTPS API, which works on Render Free. Configure `EMAIL_OTP_TTL_SECONDS`, `EMAIL_OTP_MAX_ATTEMPTS`, and `EMAIL_OTP_RESEND_SECONDS`; run `manage.py purge_email_otp` periodically.
 - **Email templates** — new transactional and promotional mail lives in `templates/emails/`, with HTML and plain-text versions. Existing transactional messages in `config/emails.py` are unchanged.
-- **Email provider variables** — configure `EMAIL_BACKEND=config.email_backends.ResendEmailBackend`, `RESEND_API_KEY`, `DEFAULT_FROM_EMAIL`, and `SITE_URL` (public origin used in email links). `RESEND_API_KEY` must never be committed. `EMAIL_SEND_RETRIES` (default 1) and `EMAIL_RETRY_DELAY_SECONDS` (default 0.5) control short retry behaviour. SMTP variables remain only for local or paid-host fallback.
+- **Email provider variables** — configure `EMAIL_BACKEND=config.email_backends.ResendEmailBackend`, `RESEND_API_KEY`, `DEFAULT_FROM_EMAIL`, and `SITE_URL` (public origin used in email links). `RESEND_API_KEY` must never be committed. `EMAIL_SEND_RETRIES` (default 1) and `EMAIL_RETRY_DELAY_SECONDS` (default 0.5) control short retry behaviour, and Resend requests carry an idempotency key. SMTP variables remain only for local or paid-host fallback; production web processes refuse the console/dummy email backend.
+- **Verified-email actions** — set `REQUIRE_VERIFIED_EMAIL_ACTIONS=1` after auditing existing accounts to require email verification for job applications and programme registrations. It is off by default to avoid locking out existing users.
+- **Résumés** — uploads are PDF-only, size-limited, and content-signature checked. Office documents are rejected because they can carry macros and are not malware-scanned.
 - **Email test mode** — tests use Django’s `locmem` backend; local development prints email to the console when no Resend key or SMTP host is configured. Use Resend’s test mode or a controlled mailbox in staging; do not add a production redirect.
 - **Audit log** — staff actions (application/registration/enquiry status, job publishing, programme toggles, certificates) are recorded and visible read-only at `/manage/audit/`.
 - **Error monitoring** — set `SENTRY_DSN` to report exceptions.
