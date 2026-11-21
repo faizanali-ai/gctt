@@ -1,0 +1,9 @@
+Dear {{ user.display_name }},
+
+The email address on your {{ company.name }} account was changed from {{ old_email }} to {{ new_email }}.
+
+If you made this change, no action is required. If you did not, contact {{ company.email }} immediately and reset your password.
+
+{{ company.legal_name }}
+{{ company.address }}
+{{ company.email }}

@@ -1,4 +1,5 @@
 import json
+import logging
 import secrets
 import urllib.error
 import urllib.parse
@@ -11,7 +12,11 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import (
+    LoginView,
+    PasswordChangeView,
+    PasswordResetConfirmView,
+)
 from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
@@ -31,7 +36,10 @@ from apps.jobs.models import Application, Job
 from apps.training.models import Programme, Registration
 from config.emails import (
     PROMOTIONAL_OPT_IN_MAX_AGE,
+    send_account_deleted,
+    send_email_changed,
     send_login_otp,
+    send_password_changed,
     send_password_setup,
     send_promotional_opt_in,
     send_verification,
@@ -40,7 +48,7 @@ from config.emails import (
 
 from .audit import log_action
 from .decorators import staff_required
-from .email_otp import issue_code, verify_code
+from .email_otp import clear_issue_cooldown, issue_code, verify_code
 from .forms import (
     ProfileForm,
     SignupForm,
@@ -56,6 +64,15 @@ from .models import (
     TeamProfile,
     User,
 )
+
+logger = logging.getLogger(__name__)
+
+
+def _notify_safely(label, callback):
+    try:
+        callback()
+    except Exception:
+        logger.exception("Account notification failed: %s", label)
 
 
 @ratelimit(key="ip", rate="10/h", method="POST", block=True)
@@ -124,6 +141,24 @@ class CustomLoginView(LoginView):
         return response
 
 
+class PasswordChangeNotifyView(PasswordChangeView):
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        _notify_safely(
+            "password change", lambda: send_password_changed(self.request.user)
+        )
+        return response
+
+
+class PasswordResetConfirmNotifyView(PasswordResetConfirmView):
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        _notify_safely(
+            "password reset", lambda: send_password_changed(self.user)
+        )
+        return response
+
+
 @ratelimit(key="ip", rate="10/m", method="POST", block=True)
 def login_view(request, *args, **kwargs):
     return CustomLoginView.as_view()(request, *args, **kwargs)
@@ -152,7 +187,14 @@ def _start_email_otp(request, user, next_url=None):
         if send_login_otp(email, issued[1]):
             log_action(request, "auth.email_otp_request", email)
         else:
+            issued[0].delete()
+            clear_issue_cooldown(email)
             log_action(request, "auth.email_otp_send_failed", _mask_email(email))
+            messages.error(
+                request,
+                "We could not send a sign-in code just now. Please try again.",
+            )
+            return redirect("email_otp_verify")
 
     messages.info(
         request,
@@ -272,9 +314,16 @@ def email_otp_resend(request):
             if send_login_otp(email, issued[1]):
                 log_action(request, "auth.email_otp_resend", email)
             else:
+                issued[0].delete()
+                clear_issue_cooldown(email)
                 log_action(
                     request, "auth.email_otp_send_failed", _mask_email(email)
                 )
+                messages.error(
+                    request,
+                    "We could not send a sign-in code just now. Please try again.",
+                )
+                return redirect("email_otp_verify")
 
     messages.info(
         request,
@@ -746,6 +795,7 @@ def manage_user_edit(request, pk):
     target = get_object_or_404(User, pk=pk)
     if not request.user.can_manage_account(target):
         raise PermissionDenied
+    old_email = target.email
     subgroups = Group.objects.filter(name__in=STAFF_SUBGROUPS)
     current_subgroup = target.groups.filter(name__in=STAFF_SUBGROUPS).values_list(
         "name", flat=True
@@ -817,6 +867,16 @@ def manage_user_edit(request, pk):
             if new_password:
                 target.set_password(new_password)
                 target.save(update_fields=["password"])
+            if target.email.lower() != old_email.lower():
+                _notify_safely(
+                    "email change",
+                    lambda: send_email_changed(target, old_email),
+                )
+            if new_password:
+                _notify_safely(
+                    "admin password change",
+                    lambda: send_password_changed(target),
+                )
             log_action(
                 request,
                 "user.edit",
@@ -1016,6 +1076,11 @@ def account_delete(request):
             return redirect("profile")
 
     email = request.user.email
+    display_name = request.user.display_name
+    _notify_safely(
+        "account deletion",
+        lambda: send_account_deleted(email, display_name),
+    )
     log_action(request, "account.delete", email)
     request.user.delete()
     auth_logout(request)

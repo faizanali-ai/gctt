@@ -349,3 +349,64 @@ class PromotionalEmailTests(TestCase):
             reverse("promotional_unsubscribe", args=["not-a-token"])
         )
         self.assertEqual(response.status_code, 400)
+
+
+@override_settings(EMAIL_BACKEND=LOCMEM)
+class AccountSecurityEmailTests(TestCase):
+    def setUp(self):
+        cache.clear()
+        mail.outbox.clear()
+        self.user = User.objects.create_user(
+            email="security@example.com", password="test-pass-12345"
+        )
+
+    def test_password_change_sends_notification(self):
+        self.client.force_login(self.user)
+        response = self.client.post(
+            reverse("password_change"),
+            {
+                "old_password": "test-pass-12345",
+                "new_password1": "new-test-pass-12345",
+                "new_password2": "new-test-pass-12345",
+            },
+        )
+        self.assertRedirects(response, reverse("profile"))
+        message = next(
+            message for message in mail.outbox if "password changed" in message.subject.lower()
+        )
+        self.assertEqual(message.to, [self.user.email])
+        self.assertTrue(any(content_type == "text/html" for _, content_type in message.alternatives))
+
+    def test_admin_email_change_notifies_old_and_new_addresses(self):
+        admin = User.objects.create_superuser(
+            email="admin-security@example.com", password="test-pass-12345"
+        )
+        self.client.force_login(admin)
+        response = self.client.post(
+            reverse("manage_user_edit", args=[self.user.pk]),
+            {
+                "email": "new-security@example.com",
+                "first_name": "Security",
+                "last_name": "User",
+                "phone": "",
+                "job_title": "",
+                "designation": "candidate",
+                "is_active": "on",
+                "email_verified": "on",
+            },
+        )
+        self.assertRedirects(response, reverse("manage_users"))
+        recipients = {address for message in mail.outbox for address in message.to}
+        self.assertIn("security@example.com", recipients)
+        self.assertIn("new-security@example.com", recipients)
+
+    def test_account_deletion_sends_confirmation_before_delete(self):
+        self.client.force_login(self.user)
+        response = self.client.post(
+            reverse("account_delete"), {"password": "test-pass-12345"}
+        )
+        self.assertRedirects(response, reverse("home"))
+        self.assertFalse(User.objects.filter(pk=self.user.pk).exists())
+        self.assertTrue(
+            any("account was deleted" in message.subject.lower() for message in mail.outbox)
+        )

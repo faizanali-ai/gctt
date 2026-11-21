@@ -36,7 +36,7 @@ urlpatterns = [
     path("delete/", views.account_delete, name="account_delete"),
     path(
         "password-change/",
-        auth_views.PasswordChangeView.as_view(
+        views.PasswordChangeNotifyView.as_view(
             template_name="accounts/password_change.html",
             success_url=reverse_lazy("profile"),
         ),
@@ -57,7 +57,7 @@ urlpatterns = [
     ),
     path(
         "password-reset/<uidb64>/<token>/",
-        auth_views.PasswordResetConfirmView.as_view(
+        views.PasswordResetConfirmNotifyView.as_view(
             template_name="accounts/password_reset_confirm.html",
             success_url=reverse_lazy("password_reset_complete"),
         ),

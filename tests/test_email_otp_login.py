@@ -8,7 +8,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from apps.accounts.apps import assign_permissions
-from apps.accounts.models import AuditLog, User
+from apps.accounts.models import AuditLog, EmailOTP, User
 
 LOCMEM = "django.core.mail.backends.locmem.EmailBackend"
 
@@ -239,6 +239,7 @@ class EmailOTPLoginTests(TestCase):
                 action="auth.email_otp_send_failed"
             ).exists()
         )
+        self.assertFalse(EmailOTP.objects.filter(email=self.staff.email).exists())
 
     def test_reused_code_is_not_valid_after_session_clear(self):
         self.request_code(self.staff.email)

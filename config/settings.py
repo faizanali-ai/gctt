@@ -217,15 +217,24 @@ LOGOUT_REDIRECT_URL = "home"
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "accounts@gctekton.com")
 SERVER_EMAIL = os.environ.get("SERVER_EMAIL", DEFAULT_FROM_EMAIL)
 
-# SMTP & Transactional Email Settings
-# Automatically use SMTP backend if EMAIL_HOST is defined in environment variables.
+# Transactional email. Resend's HTTPS API is used in production because Render
+# Free blocks outbound SMTP ports 25, 465 and 587. SMTP remains available as a
+# local or paid-host fallback when explicitly configured.
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "").strip()
+RESEND_API_URL = os.environ.get(
+    "RESEND_API_URL", "https://api.resend.com/emails"
+).strip()
 _has_smtp_host = bool(os.environ.get("EMAIL_HOST"))
-EMAIL_BACKEND = os.environ.get(
-    "EMAIL_BACKEND",
-    "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND") or (
+    "config.email_backends.ResendEmailBackend"
+    if RESEND_API_KEY
+    else "django.core.mail.backends.smtp.EmailBackend"
     if _has_smtp_host
-    else "django.core.mail.backends.console.EmailBackend",
+    else "django.core.mail.backends.console.EmailBackend"
 )
+
+if TESTING:
+    EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "")
 EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")

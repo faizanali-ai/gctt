@@ -169,6 +169,56 @@ def send_promotional_opt_in(user):
     return bool(sent)
 
 
+def send_email_changed(user, old_email):
+    if not old_email or old_email.lower() == user.email.lower():
+        return False
+    text, html = _render_email(
+        "emails/account_email_changed.txt",
+        "emails/account_email_changed.html",
+        {"user": user, "old_email": old_email, "new_email": user.email},
+    )
+    return bool(
+        send(
+            [old_email, user.email],
+            f"Your {_brand()} email address changed",
+            text,
+            html_body=html,
+        )
+    )
+
+
+def send_password_changed(user):
+    text, html = _render_email(
+        "emails/password_changed.txt",
+        "emails/password_changed.html",
+        {"user": user},
+    )
+    return bool(
+        send(
+            user.email,
+            f"Your {_brand()} password changed",
+            text,
+            html_body=html,
+        )
+    )
+
+
+def send_account_deleted(email, display_name):
+    text, html = _render_email(
+        "emails/account_deleted.txt",
+        "emails/account_deleted.html",
+        {"display_name": display_name},
+    )
+    return bool(
+        send(
+            email,
+            f"Your {_brand()} account was deleted",
+            text,
+            html_body=html,
+        )
+    )
+
+
 def send_promotional(user, subject, content):
     try:
         unsubscribe_url = promotional_unsubscribe_url(user)

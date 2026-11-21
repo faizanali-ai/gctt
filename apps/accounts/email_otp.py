@@ -18,6 +18,10 @@ def _resend_key(email):
     return f"email-otp-issue:{email}"
 
 
+def clear_issue_cooldown(email):
+    cache.delete(_resend_key(_email(email)))
+
+
 def issue_code(email):
     """Create a single active OTP for an email. Returns (otp, raw_code) or None."""
     email = _email(email)

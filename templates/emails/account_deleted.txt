@@ -1,0 +1,9 @@
+Dear {{ display_name }},
+
+Your {{ company.name }} account and associated records have been permanently deleted.
+
+If you did not request this, contact {{ company.email }} immediately.
+
+{{ company.legal_name }}
+{{ company.address }}
+{{ company.email }}
