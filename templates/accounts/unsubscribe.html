@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block head %}<meta name="robots" content="noindex">{% endblock %}
+{% block title %}Email preferences — GCTT{% endblock %}
+{% block description %}Manage promotional email preferences.{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container-site max-w-lg">
+    <p class="eyebrow eyebrow-accent">Email preferences</p>
+    <h1 class="mt-3 text-h1">Promotional emails.</h1>
+
+    {% if invalid %}
+      <div class="alert alert-danger mt-6" role="alert">
+        This unsubscribe link is invalid or has expired. Please use the link in the most recent promotional email, or contact {{ COMPANY.email }}.
+      </div>
+      <a href="{% url 'home' %}" class="btn btn-secondary mt-6">Return home</a>
+    {% elif unsubscribed %}
+      <div class="alert alert-info mt-6" role="status">
+        {{ target.email }} is already removed from promotional emails. Transactional messages such as enrolment confirmations and security notices may still be sent.
+      </div>
+      <a href="{% url 'home' %}" class="btn btn-secondary mt-6">Return home</a>
+    {% else %}
+      <p class="mt-3 text-body-lg text-muted">
+        Remove <strong class="text-ink">{{ target.email }}</strong> from offers and programme news?
+        You will still receive transactional messages such as enrolment confirmations, certificates and security notices.
+      </p>
+      <form method="post" class="mt-6 flex flex-wrap gap-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Unsubscribe</button>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Keep receiving emails</a>
+      </form>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

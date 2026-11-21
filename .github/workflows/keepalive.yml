@@ -13,11 +13,11 @@ jobs:
     steps:
       - name: Ping Healthz Endpoint
         run: |
-          echo "Pinging https://gctekton.com/healthz/ to keep instance awake..."
-          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}s\n" "https://gctekton.com/healthz/")
+          echo "Pinging https://gctekton.com/wake/ to keep the instance awake..."
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}s\n" "https://gctekton.com/wake/")
           echo "$RESPONSE"
           if echo "$RESPONSE" | grep -q "HTTP_STATUS:200"; then
-            echo "Service is awake, responsive, and database connection pool verified."
+            echo "Service is awake (database not touched)."
           else
             echo "Warning: Response status was not 200 OK."
           fi

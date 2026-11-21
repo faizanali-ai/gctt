@@ -25,6 +25,7 @@ jobs:
           ./tailwindcss -i static/css/input.css -o static/css/output.css --minify
           git diff --exit-code -- static/css/output.css
       - run: node --check static/js/ui.js
+      - run: node --check static/js/theme-init.js
       - run: uv run python scripts/check_contrast.py
       - run: uv run ruff check .
       - run: uv run python manage.py check

@@ -1,4 +1,7 @@
+from unittest.mock import patch
+
 from django.contrib.auth.models import Group
+from django.db import DatabaseError
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
@@ -62,3 +65,16 @@ class BackupCommandTests(TestCase):
             call_command("backup_db", output=str(target))
             self.assertTrue(target.exists())
             self.assertIn("accounts.user", target.read_text())
+
+
+class LivenessTests(TestCase):
+    def test_wake_does_not_require_the_database(self):
+        with patch("config.views.connection.cursor", side_effect=DatabaseError):
+            response = self.client.get(reverse("wake"))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"ok")
+
+    def test_healthz_still_reports_database_failure(self):
+        with patch("config.views.connection.cursor", side_effect=DatabaseError):
+            response = self.client.get(reverse("healthz"))
+        self.assertEqual(response.status_code, 503)

@@ -1,7 +1,7 @@
 import uuid
 
 from django.conf import settings
-from django.db import models
+from django.db import IntegrityError, models, transaction
 from django.utils.text import slugify
 
 
@@ -39,19 +39,29 @@ class Programme(models.Model):
     published = models.BooleanField(default=False, db_index=True)
     order = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["order", "-created_at"]
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            base = slugify(self.title)[:200] or "programme"
+        generated = not self.slug
+        base = slugify(self.title)[:200] or "programme"
+        if generated:
             slug, n = base, 1
             while Programme.objects.filter(slug=slug).exclude(pk=self.pk).exists():
                 n += 1
                 slug = f"{base}-{n}"
             self.slug = slug
-        super().save(*args, **kwargs)
+        try:
+            with transaction.atomic():
+                super().save(*args, **kwargs)
+        except IntegrityError:
+            if not generated:
+                raise
+            self.slug = f"{base}-{uuid.uuid4().hex[:6]}"
+            with transaction.atomic():
+                super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title

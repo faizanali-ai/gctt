@@ -46,7 +46,7 @@ class ProgrammeSitemap(Sitemap):
         )
 
     def lastmod(self, obj):
-        return obj.created_at
+        return obj.updated_at
 
     def location(self, obj):
         return f"/training/{obj.slug}/"

@@ -18,20 +18,16 @@ class SecurityHeadersMiddleware:
         response["X-Content-Type-Options"] = "nosniff"
         response["Referrer-Policy"] = "strict-origin-when-cross-origin"
         response["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
-        style_src = f"'self' 'nonce-{request.csp_nonce}'"
-        if request.path.startswith("/admin/"):
-            # A nonce makes browsers ignore 'unsafe-inline', so the break-glass
-            # admin gets the inline exception instead of a nonce.
-            # Django admin ships inline styles; documented in RUNBOOK.
-            style_src = "'self' 'unsafe-inline'"
         response["Content-Security-Policy"] = (
             "default-src 'self'; "
             f"script-src 'self' 'nonce-{request.csp_nonce}'; "
-            f"style-src {style_src} https://fonts.googleapis.com; "
-            "font-src 'self' data: https://fonts.gstatic.com; "
+            f"style-src 'self' 'nonce-{request.csp_nonce}'; "
+            "font-src 'self' data:; "
             "img-src 'self' data: https:; "
             "frame-ancestors 'none';"
         )
+        if getattr(request, "user", None) and request.user.is_authenticated:
+            response["Cache-Control"] = "no-store"
         return response
 
 

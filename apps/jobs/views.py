@@ -22,6 +22,7 @@ from config.emails import (
     notify_staff_new_application,
     send_password_setup,
     send_pending_application,
+    send_welcome_if_first_login,
 )
 
 from .forms import ApplicationForm, ApplicationManageForm, JobForm
@@ -35,6 +36,13 @@ STAFF_STATUSES = {
 }
 
 logger = logging.getLogger(__name__)
+
+
+def _notify_safely(label, callback):
+    try:
+        callback()
+    except Exception:
+        logger.exception("Notification failed: %s", label)
 
 
 def _message_with_work_auth(form):
@@ -135,9 +143,10 @@ def job_apply(request, slug):
 
             existing_user = User.objects.filter(email__iexact=email).first()
             if existing_user:
-                _create_pending_application(
-                    job, existing_user.email, resume, message
-                )
+                if existing_user.is_candidate:
+                    _create_pending_application(
+                        job, existing_user.email, resume, message
+                    )
                 messages.info(request, generic_message)
                 return redirect("job_detail", slug=job.slug)
 
@@ -169,14 +178,6 @@ def job_apply(request, slug):
         try:
             with transaction.atomic():
                 application.save()
-            notify_application(application)
-            notify_staff_new_application(application)
-            if is_auth:
-                messages.success(request, "Your application has been received by GCTT technical recruitment directors.")
-                return redirect("dashboard")
-            send_password_setup(user)
-            messages.info(request, generic_message)
-            return redirect("job_detail", slug=job.slug)
         except IntegrityError:
             messages.error(request, "You have already applied to this job.")
             return redirect("job_detail", slug=job.slug)
@@ -189,6 +190,17 @@ def job_apply(request, slug):
                 "moment, or email jobs@gctekton.com.",
             )
             return redirect("job_detail", slug=job.slug)
+
+        _notify_safely("application", lambda: notify_application(application))
+        _notify_safely(
+            "staff application", lambda: notify_staff_new_application(application)
+        )
+        if is_auth:
+            messages.success(request, "Your application has been received by GCTT technical recruitment directors.")
+            return redirect("dashboard")
+        _notify_safely("password setup", lambda: send_password_setup(user))
+        messages.info(request, generic_message)
+        return redirect("job_detail", slug=job.slug)
     return render(
         request,
         "jobs/job_detail.html",
@@ -209,11 +221,12 @@ def pending_application(request, token):
         raise Http404
     if request.user.is_authenticated and request.user.pk != user.pk:
         raise Http404
-    if not request.user.is_authenticated:
-        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
     if not user.is_candidate:
         messages.error(request, "Use a candidate account to apply for roles.")
-        return redirect("dashboard")
+        return redirect("login")
+    if not request.user.is_authenticated:
+        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+        send_welcome_if_first_login(user)
 
     if request.method == "POST":
         if Application.objects.filter(job=pending.job, applicant=user).exists():
@@ -232,16 +245,18 @@ def pending_application(request, token):
                 application.save()
                 pending.consumed_at = timezone.now()
                 pending.save(update_fields=["consumed_at"])
-            notify_application(application)
-            notify_staff_new_application(application)
-            messages.success(
-                request,
-                "Your application has been received by GCTT technical recruitment directors.",
-            )
-            return redirect("dashboard")
         except IntegrityError:
             messages.info(request, "You have already applied to this job.")
             return redirect("dashboard")
+        _notify_safely("application", lambda: notify_application(application))
+        _notify_safely(
+            "staff application", lambda: notify_staff_new_application(application)
+        )
+        messages.success(
+            request,
+            "Your application has been received by GCTT technical recruitment directors.",
+        )
+        return redirect("dashboard")
 
     return render(
         request,
@@ -458,14 +473,37 @@ def staff_application_delete(request, uuid):
 def staff_applications_bulk(request):
     status = request.POST.get("bulk_status", "")
     selected = request.POST.getlist("selected")
-    if status in STAFF_STATUSES and selected:
-        updated = Application.objects.filter(
-            pk__in=selected, applicant__is_staff=False
-        ).update(status=status)
-        log_action(request, "application.bulk_status", f"{updated}", status)
-        messages.success(request, f"{updated} application(s) updated.")
-    else:
+    if status not in STAFF_STATUSES or not selected:
         messages.error(request, "Select applications and a valid status.")
+        return redirect("staff_applications")
+    try:
+        ids = {int(value) for value in selected}
+    except (TypeError, ValueError):
+        messages.error(request, "Select applications and a valid status.")
+        return redirect("staff_applications")
+
+    applications = list(
+        Application.objects.filter(
+            pk__in=ids, applicant__is_staff=False
+        ).select_related("applicant", "job")
+    )
+    changed = [application for application in applications if application.status != status]
+    with transaction.atomic():
+        for application in changed:
+            application.status = status
+            application.save(update_fields=["status"])
+        log_action(
+            request,
+            "application.bulk_status",
+            f"{len(changed)} application(s)",
+            f"ids={sorted(ids)} status={status}",
+        )
+    for application in changed:
+        _notify_safely(
+            "application status",
+            lambda application=application: notify_application_status(application),
+        )
+    messages.success(request, f"{len(changed)} application(s) updated.")
     return redirect("staff_applications")
 
 

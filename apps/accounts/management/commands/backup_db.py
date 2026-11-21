@@ -7,7 +7,7 @@ from django.utils import timezone
 
 class Command(BaseCommand):
     help = (
-        "Dump all application data to a timestamped JSON file. "
+        "Dump a restorable application/auth snapshot to a timestamped JSON file. "
         "Use pg_dump against DATABASE_URL for full Postgres backups."
     )
 
@@ -25,10 +25,7 @@ class Command(BaseCommand):
             call_command(
                 "dumpdata",
                 exclude=[
-                    "contenttypes",
-                    "auth.Permission",
                     "sessions.Session",
-                    "admin.LogEntry",
                     "otp_totp.TOTPDevice",
                 ],
                 indent=2,

@@ -1,10 +1,20 @@
-from datetime import timedelta
+import calendar
 
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
+from django.db import transaction
 from django.utils import timezone
 
 from apps.jobs.models import Application
 from apps.training.models import Registration
+
+
+def _months_before(value, months):
+    """Calendar-month subtraction, clamping 29 February to the target month."""
+    index = value.year * 12 + value.month - 1 - months
+    year, month = divmod(index, 12)
+    month += 1
+    day = min(value.day, calendar.monthrange(year, month)[1])
+    return value.replace(year=year, month=month, day=day)
 
 
 class Command(BaseCommand):
@@ -19,7 +29,10 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        cutoff = timezone.now() - timedelta(days=options["months"] * 30)
+        months = options["months"]
+        if months < 1:
+            raise CommandError("--months must be at least 1")
+        cutoff = _months_before(timezone.now(), months)
         applications = Application.objects.filter(created_at__lt=cutoff)
         uncertified = Registration.objects.filter(
             created_at__lt=cutoff, certificate_issued=False
@@ -38,11 +51,12 @@ class Command(BaseCommand):
             self.stdout.write("Dry run; pass --apply to delete.")
             return
 
-        application_count = applications.count()
-        applications.delete()
-        registration_count = uncertified.count()
-        uncertified.delete()
-        cleared = certified.update(message="")
+        with transaction.atomic():
+            application_count = applications.count()
+            applications.delete()
+            registration_count = uncertified.count()
+            uncertified.delete()
+            cleared = certified.update(message="")
         self.stdout.write(
             f"Deleted {application_count} applications and {registration_count} "
             f"uncertified registrations; cleared {cleared} messages."

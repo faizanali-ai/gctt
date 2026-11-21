@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager as DjangoUserManager
-from django.db import models
+from django.db import models, transaction
 
 from config.constants import COMPANY
 
@@ -50,6 +50,10 @@ class User(AbstractUser):
     )
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.STAFF)
     email_verified = models.BooleanField(default=False)
+    welcome_email_sent_at = models.DateTimeField(null=True, blank=True)
+    promotional_opt_in = models.BooleanField(default=False)
+    promotional_opt_in_at = models.DateTimeField(null=True, blank=True)
+    promotional_opt_in_requested_at = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -65,11 +69,11 @@ class User(AbstractUser):
 
     @property
     def is_candidate(self):
-        return self.account_type == self.AccountType.CANDIDATE
+        return not self.is_staff and self.account_type == self.AccountType.CANDIDATE
 
     @property
     def is_student(self):
-        return self.account_type == self.AccountType.STUDENT
+        return not self.is_staff and self.account_type == self.AccountType.STUDENT
 
     @property
     def is_admin(self):
@@ -95,6 +99,11 @@ class User(AbstractUser):
     @property
     def is_portal_staff(self):
         return self.is_staff
+
+    @property
+    def requires_email_otp(self):
+        """Every staff account and every role=admin account requires OTP."""
+        return self.is_staff or self.role == self.Role.ADMIN
 
     @property
     def can_manage_users(self):
@@ -133,8 +142,9 @@ class User(AbstractUser):
             self.is_superuser = False
         else:
             raise ValueError(f"Unknown designation: {designation}")
-        self.save()
-        sync_access(self, subgroup if designation == "staff" else None)
+        with transaction.atomic():
+            self.save()
+            sync_access(self, subgroup if designation == "staff" else None)
         return self
 
 
@@ -209,6 +219,9 @@ class SiteSettings(models.Model):
         if self._state.adding and type(self).objects.filter(pk=1).exists():
             kwargs["force_update"] = True
         super().save(*args, **kwargs)
+        from config.site import clear_company_cache
+
+        clear_company_cache()
 
     @classmethod
     def load(cls):

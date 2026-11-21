@@ -51,7 +51,6 @@ if RENDER_EXTERNAL_HOSTNAME:
         CSRF_TRUSTED_ORIGINS.append(render_origin)
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -196,6 +195,19 @@ if TESTING:
     # Tests must never touch remote storage, whatever the environment says.
     STORAGES["default"] = {"BACKEND": "django.core.files.storage.FileSystemStorage"}
 
+if (
+    not DEBUG
+    and not TESTING
+    and "FileSystemStorage" in STORAGES["default"]["BACKEND"]
+    and "gunicorn" in Path(sys.argv[0]).name
+):
+    raise RuntimeError(
+        "Production media storage is not configured. Set R2_* or the complete "
+        "SUPABASE_* variable set; FileSystemStorage is ephemeral on Render."
+    )
+
+SITE_SETTINGS_CACHE_SECONDS = int(os.environ.get("SITE_SETTINGS_CACHE_SECONDS", "30"))
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_URL = "login"
@@ -221,6 +233,8 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "1" if EMAIL_PORT == 465 else "0") == "1"
 EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "0" if EMAIL_USE_SSL else "1") == "1"
 EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", "10"))
+EMAIL_SEND_RETRIES = int(os.environ.get("EMAIL_SEND_RETRIES", "1"))
+EMAIL_RETRY_DELAY_SECONDS = float(os.environ.get("EMAIL_RETRY_DELAY_SECONDS", "0.5"))
 
 # Email OTP login
 EMAIL_OTP_TTL_SECONDS = int(os.environ.get("EMAIL_OTP_TTL_SECONDS", "600"))
@@ -244,9 +258,9 @@ LOGGING = {
     },
 }
 
-# Internal email OTP. Keep disabled as a password-only fallback until email
-# delivery is verified; enable with REQUIRE_EMAIL_OTP=1.
-REQUIRE_EMAIL_OTP = (os.environ.get("REQUIRE_EMAIL_OTP", "0") == "1") and not TESTING
+# Email OTP is required for every staff/admin login. The default is on; set
+# REQUIRE_EMAIL_OTP=0 only for a deliberate emergency password-only fallback.
+REQUIRE_EMAIL_OTP = (os.environ.get("REQUIRE_EMAIL_OTP", "1") == "1") and not TESTING
 
 # Google OAuth 2.0 Credentials
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "").strip()

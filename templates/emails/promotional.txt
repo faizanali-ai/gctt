@@ -1,0 +1,9 @@
+{{ content }}
+
+You are receiving this because you opted in to {{ company.name }} offers and programme news.
+
+{{ company.legal_name }}
+{{ company.address }}
+{{ company.email }}
+
+Unsubscribe: {{ unsubscribe_url }}

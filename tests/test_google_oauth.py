@@ -73,7 +73,11 @@ class GoogleOAuthTests(TestCase):
             self.assertEqual(response.url, reverse("email_otp_verify"))
             self.assertNotIn("_auth_user_id", self.client.session)
 
-    @override_settings(GOOGLE_CLIENT_ID="mock-client-id", GOOGLE_CLIENT_SECRET="mock-client-secret")
+    @override_settings(
+        GOOGLE_CLIENT_ID="mock-client-id",
+        GOOGLE_CLIENT_SECRET="mock-client-secret",
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    )
     def test_google_callback_creates_new_candidate(self):
         session = self.client.session
         session["google_oauth_state"] = "valid-state"
@@ -105,3 +109,7 @@ class GoogleOAuthTests(TestCase):
             self.assertFalse(new_user.is_staff)
             self.assertFalse(new_user.has_usable_password())
             self.assertEqual(int(self.client.session["_auth_user_id"]), new_user.id)
+            self.assertIsNotNone(new_user.welcome_email_sent_at)
+            from django.core import mail
+
+            self.assertTrue(any("Welcome" in message.subject for message in mail.outbox))

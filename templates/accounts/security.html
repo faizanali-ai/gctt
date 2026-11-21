@@ -23,7 +23,7 @@
         {% endif %}
       </dd>
     </div>
-    {% if user.is_staff %}
+    {% if user.requires_email_otp %}
       <div class="flex items-center justify-between gap-4 p-5">
         <dt class="text-sm font-medium">Email OTP login</dt>
         <dd class="text-sm text-muted">{% if email_otp_required %}Required{% else %}Not currently required{% endif %}</dd>

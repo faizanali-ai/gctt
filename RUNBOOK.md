@@ -8,7 +8,7 @@ Neon (Postgres), R2 (media), Resend (email).
 1. Merge to `main` (Render auto-deploys from the branch).
 2. Render builds, then the start command runs: `migrate`, `createcachetable`,
    `collectstatic`, gunicorn.
-3. Confirm `/healthz/` returns `ok` and the deploy log has no errors.
+3. Confirm `/wake/` and `/healthz/` return `ok` and the deploy log has no errors.
 
 Rollback: Render → Deploys → previous deploy → **Redeploy**. Migrations are
 forward-only — if a migration must be undone, restore a backup first.
@@ -45,6 +45,37 @@ invalid roles, external accounts with internal access, missing admin flags/group
 zero active admins. It never changes data. Fix flagged accounts in
 `/manage/users/`, then rerun with `--strict`.
 
+## Email service
+
+Required provider variables: `EMAIL_BACKEND`, `EMAIL_HOST`, `EMAIL_PORT`,
+`EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `DEFAULT_FROM_EMAIL`, and `SITE_URL`.
+`SITE_URL` must be the public origin because welcome, enrollment and unsubscribe
+links are built from it. Promotional commands use command flags rather than new
+environment variables.
+
+`config/emails.py` is the single email service. It sends through Resend SMTP and
+supports HTML plus plain-text alternatives. Plain transactional messages are
+sent immediately; the promotional command runs outside the request path.
+
+- Welcome: sent exactly once, after the first successful login.
+- Enrollment: sent after a registration is confirmed. Transactional, no opt-out.
+- Promotional: double opt-in. A request sends a confirmation email; only confirmed
+  users (`promotional_opt_in=True`) are eligible. Preview with
+  `uv run python manage.py send_promotional --subject "..." --body-file file.txt`;
+  add `--send` to deliver. Defaults: 50 recipients, one second between sends.
+  Use the printed `--after-id` value on the next run to avoid resending the first batch.
+- Unsubscribe: signed link in every promotional email. It opens a confirmation page
+  and never blocks transactional mail.
+- Test mode: tests use Django’s `locmem` backend; local development uses the
+  console backend when `EMAIL_HOST` is empty. Use Resend’s test mode or a
+  controlled mailbox in staging.
+- Retry: transient send failures are retried once by default. Configure
+  `EMAIL_SEND_RETRIES` and `EMAIL_RETRY_DELAY_SECONDS`; permanent failures are
+  logged and do not block account or registration completion.
+- Provider limits: Resend Free currently allows 100 emails/day and 3,000/month.
+  The promotional command’s 50-recipient default leaves headroom for OTP and
+  transactional mail.
+
 ## Email OTP delivery
 
 OTP email requires a working SMTP provider and a verified sender domain. The
@@ -64,8 +95,11 @@ The Resend DKIM record must exist, the `send` subdomain must carry Resend's
 records, and the root SPF must include Resend's SPF include. If those are absent,
 Resend cannot authenticate `accounts@gctekton.com`; messages may be rejected,
 quarantined by DMARC, or never delivered. Add the domain in Resend, publish the
-records it provides, wait for verification, then set `REQUIRE_EMAIL_OTP=1` and
-retest OTP login. Keep it at `0` for password-only fallback until then.
+records it provides, then test delivery with
+`uv run python manage.py test_email <your-mailbox>`. Email OTP is enabled by
+default for every staff/admin login. If Resend is unavailable, an operator can
+set `REQUIRE_EMAIL_OTP=0` in Render for emergency password-only access and
+restart; change it back after delivery is restored.
 
 Check the Render dashboard logs for `Failed to send email` and the Django Audit
 log for `auth.email_otp_send_failed`. Common causes: unverified Resend domain,
@@ -101,10 +135,44 @@ Never commit `.env`; it is gitignored.
 
 ## Internal email OTP
 
-`REQUIRE_EMAIL_OTP=0` keeps password-only fallback active. Set it to `1` after
-email delivery is verified; admin/staff logins then require an email code.
-Candidates/students always use normal password login. There is no authenticator
-app/TOTP step. The old `REQUIRE_STAFF_2FA` environment variable is ignored.
+Email OTP is required for every staff account and every `role=admin` account,
+including an admin whose `is_staff` flag is temporarily inconsistent. The
+default is `1`; `render.yaml` sets it explicitly. Candidates/students always use
+normal password login. There is no authenticator app/TOTP step. The old
+`REQUIRE_STAFF_2FA` environment variable is ignored.
+
+If a staff member cannot receive mail, confirm the Resend sender/DNS, check
+Render logs and the `auth.email_otp_send_failed` audit event, then use
+`REQUIRE_EMAIL_OTP=0` only as a short emergency rollback with a restart.
+
+## Client IP and rate limits
+
+Render documents that the first `X-Forwarded-For` entry is the real client IP.
+The rate-limit and audit helpers use that first entry and fall back to
+`REMOTE_ADDR`. `CF-Connecting-IP` is ignored while Cloudflare is not linked.
+Verify this behavior after any proxy change; an incorrect trust assumption can
+weaken login and enrollment limits.
+
+## Django admin and emergency recovery
+
+Django admin is not installed. Manage users, team profiles, content, audit
+history and site settings at `/manage/` and `/dashboard/`. For emergency
+recovery, use `manage.py shell`, `manage.py audit_access`, the JSON backup
+command and Neon backups. The historical `django_admin_log` table may remain in
+the database but is unused.
+
+## Liveness and readiness
+
+`/wake/` is the database-free liveness endpoint used by Render and the GitHub
+keepalive. `/healthz/` checks the database and is the readiness/monitoring
+endpoint. Keep the keepalive on `/wake/` so a free Neon database can sleep.
+
+## Media storage
+
+Production requires R2 or a complete Supabase storage configuration. Run
+`uv run python manage.py check_storage` after deployment and whenever storage
+credentials change. FileSystemStorage is ephemeral on Render and is rejected
+when gunicorn starts without a remote backend.
 
 ## Staff offboarding (admin only)
 
@@ -125,8 +193,19 @@ and subgroup changes admin-only.
 ## Scheduled maintenance checks
 
 - Daily at 03:17 UTC, GitHub Actions runs `.github/workflows/maintenance.yml`:
-  `purge_retention --apply` using the `production` environment secrets, then fails
-  once the legacy sunset date has passed. Use **Run workflow** to trigger it manually.
+  `purge_retention --apply`, `purge_pending` and `purge_email_otp` using the
+  `production` environment secrets, then fails once the legacy sunset date has
+  passed. Use **Run workflow** to trigger it manually.
+
+## Access repair policy
+
+Run `uv run python manage.py audit_access --strict` first; it is read-only.
+After review, run `uv run python manage.py repair_internal_accounts --apply` to
+repair admin/staff flags and groups. Direct permissions are cleared by design;
+the role + subgroup model is the source of truth. Staff without a valid subgroup
+are reported and left unchanged so a human can assign the correct subgroup in
+`/manage/users/`. Neither command should be run against production without a
+backup and an approved window.
 - Daily or weekly: `uv run python manage.py purge_email_otp` and
   `uv run python manage.py purge_pending` to remove expired auth/pending records.
 - Monthly: dependency updates (`uv lock --upgrade`, run tests, redeploy); run
@@ -139,15 +218,13 @@ Admins edit company identity, contact details and home-hero copy at
 `/manage/settings/`. The context processor falls back to `config/constants.py`
 if no row exists or the database is unreachable. The public/auth/portal header
 toggle stores the choice in `localStorage` under `gctt-theme`; without a choice
-the site follows the operating system. Django admin stays light-only.
+the site follows the operating system.
 
 ## Content security policy
 
 Public, auth and portal pages use per-request nonces with no `unsafe-inline`.
-The two JSON-LD blocks and the admin stylesheet carry the nonce. Django admin
-alone gets a `/admin/`-scoped `style-src 'unsafe-inline'` exception because its
-break-glass screens include inline styles. Verify the admin in a browser after
-any Django upgrade.
+The two JSON-LD blocks carry the nonce. Django admin is not installed, so there
+is no admin exception to maintain.
 
 ## Legacy URLs and retention
 

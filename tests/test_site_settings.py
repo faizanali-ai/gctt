@@ -5,6 +5,11 @@ from apps.accounts.models import AuditLog, SiteSettings, User
 
 
 class SiteSettingsTests(TestCase):
+    def setUp(self):
+        from config.site import clear_company_cache
+
+        clear_company_cache()
+
     def test_defaults_are_visible_without_a_saved_row(self):
         response = self.client.get(reverse("home"))
         company = response.context["COMPANY"]

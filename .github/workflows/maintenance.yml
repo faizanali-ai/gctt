@@ -27,3 +27,7 @@ jobs:
           fi
       - name: Purge records past the retention window
         run: uv run python manage.py purge_retention --apply
+      - name: Purge expired OTP and pending rows
+        run: |
+          uv run python manage.py purge_email_otp
+          uv run python manage.py purge_pending

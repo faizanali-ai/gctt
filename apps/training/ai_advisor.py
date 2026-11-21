@@ -1,11 +1,3 @@
-import json
-import logging
-import os
-import urllib.error
-import urllib.request
-
-logger = logging.getLogger(__name__)
-
 CAREER_ARCHETYPES = [
     {
         "keywords": ["financ", "account", "cpa", "audit", "banking", "invoic", "ledger", "bookkeep", "fico", "erp"],
@@ -97,29 +89,5 @@ def analyze_career_trajectory(current_role="", experience_years="", interests=""
         if matches > max_matches:
             max_matches = matches
             best_match = archetype
-
-    # If Gemini API Key is configured, attempt LLM enhancement
-    gemini_key = os.environ.get("GEMINI_API_KEY", "").strip()
-    if gemini_key and len(combined.strip()) > 5:
-        try:
-            prompt = (
-                f"Candidate Background: Role='{current_role}', Experience='{experience_years}', Interests='{interests}'. "
-                f"Matched Track: {best_match['track']}. "
-                f"Provide a 2-sentence encouraging, executive analysis explaining why this candidate's previous background "
-                f"uniquely positions them to excel in {best_match['programme']} at GCTT."
-            )
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={gemini_key}"
-            payload = json.dumps({"contents": [{"parts": [{"text": prompt}]}]}).encode("utf-8")
-            req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"}, method="POST")
-            with urllib.request.urlopen(req, timeout=5) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-                llm_summary = data["candidates"][0]["content"]["parts"][0]["text"].strip()
-                if llm_summary:
-                    return {
-                        **best_match,
-                        "summary": llm_summary
-                    }
-        except (urllib.error.URLError, json.JSONDecodeError, KeyError, IndexError, TimeoutError, OSError) as exc:
-            logger.info("Gemini API call bypassed or timed out: %s. Using heuristic result.", exc)
 
     return best_match

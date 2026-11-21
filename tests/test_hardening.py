@@ -43,23 +43,23 @@ class UploadHardeningTests(TestCase):
         self.assertFalse(Application.objects.exists())
 
 
-class AdminLoginThrottleTests(TestCase):
+class LoginThrottleTests(TestCase):
     def setUp(self):
         from django.core.cache import cache
         cache.clear()
 
-    def test_admin_login_is_rate_limited(self):
-        payload = {"username": "nobody@example.com", "password": "wrong", "next": "/admin/"}
+    def test_login_is_rate_limited(self):
+        payload = {"username": "nobody@example.com", "password": "wrong"}
         statuses = [
             self.client.post(
-                "/admin/login/", payload, REMOTE_ADDR="203.0.113.7"
+                reverse("login"), payload, REMOTE_ADDR="203.0.113.7"
             ).status_code
             for _ in range(15)
         ]
         self.assertIn(403, statuses)
 
     def test_forwarded_for_list_is_handled(self):
-        """Cloudflare + Render send 'client, edge, internal' — must not 500."""
+        """A forwarded list must not crash login; no proxy header is trusted blindly."""
         payload = {"login": "nobody@example.com", "password": "wrong", "next": "/dashboard/"}
         response = self.client.post(
             "/accounts/login/",
@@ -79,6 +79,16 @@ class ClientIpTests(TestCase):
             "/", HTTP_X_FORWARDED_FOR="198.51.100.24, 104.23.160.220, 10.31.96.9"
         )
         self.assertEqual(client_ip(request), "198.51.100.24")
+
+    def test_cf_header_is_ignored(self):
+        from django.test import RequestFactory
+
+        from config.ratelimit import client_ip
+
+        request = RequestFactory().get(
+            "/", HTTP_CF_CONNECTING_IP="1.2.3.4", REMOTE_ADDR="192.0.2.10"
+        )
+        self.assertEqual(client_ip(request), "192.0.2.10")
 
     def test_falls_back_to_remote_addr(self):
         from django.test import RequestFactory

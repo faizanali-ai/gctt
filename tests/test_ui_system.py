@@ -10,8 +10,8 @@ SOURCE_CSS = Path(__file__).resolve().parent.parent / "static" / "css" / "input.
 IMAGES = Path(__file__).resolve().parent.parent / "static" / "images"
 FONTS = Path(__file__).resolve().parent.parent / "static" / "fonts"
 
-# Django admin has its own stylesheet and is excluded from the template guards.
-EXCLUDED_DIRS = {TEMPLATES / "admin"}
+# HTML email clients require inline colours; the web token guard does not apply.
+EXCLUDED_DIRS = {TEMPLATES / "emails"}
 
 
 def template_files():
@@ -126,6 +126,11 @@ class VisualStructureTests(SimpleTestCase):
 
 
 class PublicPageTests(TestCase):
+    def setUp(self):
+        from config.site import clear_company_cache
+
+        clear_company_cache()
+
     def test_marketing_pages_render_one_h1_with_shell(self):
         pages = [
             "home",

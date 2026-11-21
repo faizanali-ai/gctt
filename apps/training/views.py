@@ -1,4 +1,5 @@
 import json
+import logging
 
 from django.contrib import messages
 from django.contrib.auth import login
@@ -23,6 +24,7 @@ from config.emails import (
     notify_staff_new_registration,
     send_password_setup,
     send_pending_registration,
+    send_welcome_if_first_login,
 )
 
 from .ai_advisor import analyze_career_trajectory
@@ -35,6 +37,15 @@ from .forms import (
     RegistrationManageForm,
 )
 from .models import Category, PendingRegistration, Programme, Registration
+
+logger = logging.getLogger(__name__)
+
+
+def _notify_safely(label, callback):
+    try:
+        callback()
+    except Exception:
+        logger.exception("Notification failed: %s", label)
 
 
 def _create_pending_registration(programme, email, message):
@@ -139,11 +150,15 @@ def programme_register(request, slug):
             try:
                 with transaction.atomic():
                     registration.save()
-                messages.success(request, "Your registration has been sent.")
-                notify_registration(registration)
-                notify_staff_new_registration(registration)
             except IntegrityError:
                 messages.error(request, "You are already registered for this programme.")
+            else:
+                _notify_safely("registration", lambda: notify_registration(registration))
+                _notify_safely(
+                    "staff registration",
+                    lambda: notify_staff_new_registration(registration),
+                )
+                messages.success(request, "Your registration has been sent.")
             return redirect("programme_detail", slug=programme.slug)
         return render(
             request,
@@ -177,7 +192,10 @@ def programme_register(request, slug):
 
             existing_user = User.objects.filter(email__iexact=email).first()
             if existing_user:
-                _create_pending_registration(programme, existing_user.email, message)
+                if existing_user.is_student:
+                    _create_pending_registration(
+                        programme, existing_user.email, message
+                    )
                 messages.info(request, generic_message)
                 return redirect("programme_detail", slug=programme.slug)
 
@@ -194,22 +212,15 @@ def programme_register(request, slug):
                 student.save()
             except IntegrityError:
                 existing_user = User.objects.filter(email__iexact=email).first()
-                if existing_user:
+                if existing_user and existing_user.is_student:
                     _create_pending_registration(
                         programme, existing_user.email, message
                     )
                 messages.info(request, generic_message)
                 return redirect("programme_detail", slug=programme.slug)
 
-            registration, reg_created = Registration.objects.get_or_create(
-                programme=programme,
-                student=student,
-                defaults={"message": message},
-            )
-            if reg_created:
-                notify_registration(registration)
-                notify_staff_new_registration(registration)
-            send_password_setup(student)
+            # New accounts confirm by email before a registration is created.
+            _create_pending_registration(programme, email, message)
             messages.info(request, generic_message)
             return redirect("programme_detail", slug=programme.slug)
         return render(
@@ -234,11 +245,12 @@ def pending_registration(request, token):
         raise Http404
     if request.user.is_authenticated and request.user.pk != user.pk:
         raise Http404
-    if not request.user.is_authenticated:
-        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
     if not user.is_student:
         messages.error(request, "Use a student account to register for training.")
-        return redirect("dashboard")
+        return redirect("login")
+    if not request.user.is_authenticated:
+        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+        send_welcome_if_first_login(user)
 
     if request.method == "POST":
         if Registration.objects.filter(
@@ -258,13 +270,17 @@ def pending_registration(request, token):
                 registration.save()
                 pending.consumed_at = timezone.now()
                 pending.save(update_fields=["consumed_at"])
-            notify_registration(registration)
-            notify_staff_new_registration(registration)
-            messages.success(request, "Your registration has been sent.")
-            return redirect("dashboard")
         except IntegrityError:
             messages.info(request, "You are already registered for this programme.")
             return redirect("dashboard")
+        _notify_safely("registration", lambda: notify_registration(registration))
+        _notify_safely(
+            "staff registration", lambda: notify_staff_new_registration(registration)
+        )
+        if not user.has_usable_password():
+            _notify_safely("password setup", lambda: send_password_setup(user))
+        messages.success(request, "Your registration has been sent.")
+        return redirect("dashboard")
 
     return render(
         request,
@@ -311,7 +327,9 @@ def download_certificate(request, ref):
     response = HttpResponse(
         generate_certificate_pdf(registration), content_type="application/pdf"
     )
-    filename = f"{ref}.pdf" if ref.startswith("GCTT-") else f"GCTT-{ref}.pdf"
+    safe_ref = "".join(character for character in ref if character.isalnum() or character in "-_")
+    safe_ref = safe_ref[:100] or "certificate"
+    filename = f"{safe_ref}.pdf" if safe_ref.startswith("GCTT-") else f"GCTT-{safe_ref}.pdf"
     response["Content-Disposition"] = f'attachment; filename="{filename}"'
     return response
 

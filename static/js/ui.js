@@ -539,6 +539,10 @@
     });
   }
 
+  /* ------------------------------------------------------ error summary */
+  var errorSummary = $("[data-form-errors]");
+  if (errorSummary) errorSummary.focus();
+
   /* ---------------------------------------------------- field error wiring */
   $$(".field-error").forEach(function (field) {
     var control = field.querySelector("input, select, textarea");

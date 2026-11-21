@@ -1,0 +1,13 @@
+Dear {{ student.display_name }},
+
+We have received your registration for "{{ registration.programme.title }}".
+
+Our education practice coordinators will verify prerequisites, schedules, and access details, and will contact you with onboarding instructions.
+
+You can monitor cohort announcements and credential milestones from your dashboard:
+{{ site_url }}/dashboard/
+
+Warm regards,
+{{ company.legal_name }}
+{{ company.address }}
+{{ company.email }}

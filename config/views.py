@@ -5,6 +5,11 @@ from django.shortcuts import render
 from apps.accounts.models import TeamProfile
 
 
+def wake(request):
+    """Liveness endpoint with no database dependency (Render/keepalive target)."""
+    return HttpResponse("ok", content_type="text/plain")
+
+
 def healthz(request):
     try:
         with connection.cursor() as cursor:

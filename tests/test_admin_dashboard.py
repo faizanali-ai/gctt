@@ -121,19 +121,9 @@ class AdminDashboardTests(TestCase):
         self.assertContains(response, "Candidate")
         self.assertNotContains(response, "Django admin")
 
-    def test_staff_admin_login_does_not_loop(self):
-        response = self.client.post(
-            "/admin/login/",
-            {
-                "username": self.staff.email,
-                "password": "test-pass-12345",
-                "next": "/admin/",
-            },
-            follow=True,
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.request["PATH_INFO"], reverse("dashboard"))
-        self.assertNotContains(response, 'name="username"')
+    def test_admin_site_is_not_available(self):
+        response = self.client.get("/admin/")
+        self.assertEqual(response.status_code, 404)
 
     def test_team_designation_is_editable(self):
         self.client.force_login(self.admin)

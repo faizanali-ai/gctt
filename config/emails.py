@@ -1,20 +1,38 @@
 import logging
+import time
 
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
+from django.core import signing
 from django.core.cache import cache
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
 from apps.accounts.tokens import email_verification_token_generator
 
-from .constants import COMPANY
+from .site import company
 
 logger = logging.getLogger(__name__)
 
 PASSWORD_SETUP_COOLDOWN = 900  # seconds
+PROMOTIONAL_OPT_IN_MAX_AGE = 7 * 24 * 60 * 60
+PROMOTIONAL_OPT_IN_COOLDOWN = 60
+
+
+def _company():
+    return company()
+
+
+def _brand():
+    return _company()["name"]
+
+
+def _legal():
+    return f"{_company()['legal_name']} ({_company()['name']})"
 
 
 def _mask_email(email):
@@ -22,26 +40,157 @@ def _mask_email(email):
     return f"{local[:2]}***@{domain}" if domain else "***"
 
 
-def send(to, subject, body):
+def send(to, subject, body, html_body=None, headers=None):
     recipients = [to] if isinstance(to, str) else list(to)
     sent = 0
+    retries = max(0, int(getattr(settings, "EMAIL_SEND_RETRIES", 1)))
+    delay = max(0.0, float(getattr(settings, "EMAIL_RETRY_DELAY_SECONDS", 0.5)))
+
     for recipient in recipients:
-        try:
-            if send_mail(
-                subject,
-                body,
-                settings.DEFAULT_FROM_EMAIL,
-                [recipient],
-                fail_silently=False,
-            ):
-                sent += 1
-        except Exception:
-            logger.exception(
-                "Failed to send email to %s (subject: %s)",
-                _mask_email(recipient),
-                subject,
-            )
+        for attempt in range(retries + 1):
+            try:
+                message = EmailMultiAlternatives(
+                    subject,
+                    body,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [recipient],
+                    headers=headers or None,
+                )
+                if html_body:
+                    message.attach_alternative(html_body, "text/html")
+                if message.send(fail_silently=False):
+                    sent += 1
+                break
+            except Exception:
+                if attempt < retries:
+                    logger.warning(
+                        "Transient email failure for %s (subject: %s); retrying",
+                        _mask_email(recipient),
+                        subject,
+                    )
+                    if delay:
+                        time.sleep(delay)
+                    continue
+                logger.exception(
+                    "Failed to send email to %s (subject: %s)",
+                    _mask_email(recipient),
+                    subject,
+                )
     return sent
+
+
+def _site_url():
+    return getattr(settings, "SITE_URL", "https://gctekton.com").rstrip("/")
+
+
+def promotional_unsubscribe_url(user):
+    token = signing.dumps({"uid": user.pk}, salt="gctt-promotional-unsubscribe")
+    return f"{_site_url()}{reverse('promotional_unsubscribe', args=[token])}"
+
+
+def _render_email(text_template, html_template, context):
+    context = {
+        **context,
+        "company": _company(),
+        "site_url": _site_url(),
+    }
+    return (
+        render_to_string(text_template, context),
+        render_to_string(html_template, context),
+    )
+
+
+def send_welcome(user):
+    text, html = _render_email(
+        "emails/welcome.txt", "emails/welcome.html", {"user": user}
+    )
+    return bool(
+        send(user.email, f"Welcome to {_brand()}", text, html_body=html)
+    )
+
+
+def send_welcome_if_first_login(user):
+    """Send exactly one welcome email, after the first successful login."""
+    if user.welcome_email_sent_at:
+        return False
+    try:
+        if not send_welcome(user):
+            return False
+    except Exception:
+        logger.exception("Failed to prepare welcome email for %s", _mask_email(user.email))
+        return False
+    sent_at = timezone.now()
+    try:
+        type(user).objects.filter(
+            pk=user.pk, welcome_email_sent_at__isnull=True
+        ).update(welcome_email_sent_at=sent_at)
+    except Exception:
+        logger.exception(
+            "Welcome email sent but timestamp update failed for %s",
+            _mask_email(user.email),
+        )
+        return False
+    user.welcome_email_sent_at = sent_at
+    return True
+
+
+def promotional_opt_in_url(user):
+    token = signing.TimestampSigner(salt="gctt-promotional-opt-in").sign(
+        str(user.pk)
+    )
+    return f"{_site_url()}{reverse('promotional_opt_in_confirm', args=[token])}"
+
+
+def send_promotional_opt_in(user):
+    key = f"promotional-opt-in:{user.pk}"
+    if not cache.add(key, True, PROMOTIONAL_OPT_IN_COOLDOWN):
+        return False
+    try:
+        text, html = _render_email(
+            "emails/promotional_opt_in.txt",
+            "emails/promotional_opt_in.html",
+            {"user": user, "confirm_url": promotional_opt_in_url(user)},
+        )
+        sent = send(
+            user.email,
+            f"Confirm your {_brand()} email preferences",
+            text,
+            html_body=html,
+        )
+    except Exception:
+        logger.exception(
+            "Failed to prepare promotional opt-in email for %s",
+            _mask_email(user.email),
+        )
+        cache.delete(key)
+        return False
+    if not sent:
+        cache.delete(key)
+    return bool(sent)
+
+
+def send_promotional(user, subject, content):
+    try:
+        unsubscribe_url = promotional_unsubscribe_url(user)
+        text, html = _render_email(
+            "emails/promotional.txt",
+            "emails/promotional.html",
+            {"user": user, "content": content, "unsubscribe_url": unsubscribe_url},
+        )
+    except Exception:
+        logger.exception(
+            "Failed to prepare promotional email for %s", _mask_email(user.email)
+        )
+        return False
+    return bool(
+        send(
+            user.email,
+            subject,
+            text,
+            html_body=html,
+            headers={"List-Unsubscribe": f"<{unsubscribe_url}>"},
+        )
+    )
 
 
 def staff_recipients(subgroup):
@@ -77,12 +226,12 @@ def send_password_setup(user):
     link = f"{base}{reverse('password_reset_confirm', args=[uidb64, token])}"
     sent = send(
         user.email,
-        "Set your GCTT account password",
+        f"Set your {_brand()} account password",
         f"Dear {user.display_name},\n\n"
-        "Use the secure link below to set or reset the password for your GCTT account:\n\n"
+        f"Use the secure link below to set or reset the password for your {_brand()} account:\n\n"
         f"{link}\n\n"
         "If you did not request this, no action is required.\n\n"
-        "Global Center for Technology & Training (GCTT)",
+        f"{_legal()}",
     )
     if not sent:
         cache.delete(key)
@@ -94,11 +243,11 @@ def send_login_otp(email, code):
     return bool(
         send(
             email,
-            "Your GCTT sign-in code",
-            "Your one-time GCTT sign-in code is:\n\n"
+            f"Your {_brand()} sign-in code",
+            f"Your one-time {_brand()} sign-in code is:\n\n"
             f"{code}\n\n"
             f"It expires in {minutes} minutes. If you did not request it, ignore this email.\n\n"
-            "Global Center for Technology & Training (GCTT)",
+            f"{_legal()}",
         )
     )
 
@@ -114,17 +263,17 @@ def verification_url(user, request=None):
 def send_verification(user, request):
     send(
         user.email,
-        "Verify your GCTT email address",
+        f"Verify your {_brand()} email address",
         f"Dear {user.display_name},\n\n"
-        f"Thank you for registering with the Global Center for Technology & Training (GCTT).\n\n"
+        f"Thank you for registering with the {_legal()}.\n\n"
         f"To complete your account activation and access your authenticated candidate or learner portal, please confirm your email address by following this secure link:\n\n"
         f"{verification_url(user, request)}\n\n"
         f"If you did not initiate this registration, no further action is required.\n\n"
         f"Warm regards,\n\n"
         f"Executive Admissions & Talent Governance\n"
-        f"Global Center for Technology & Training (GCTT)\n"
-        f"{COMPANY['address']}\n"
-        f"{COMPANY['email']}",
+        f"{_legal()}\n"
+        f"{_company()['address']}\n"
+        f"{_company()['email']}",
     )
 
 
@@ -139,7 +288,7 @@ def send_pending_application(pending, token):
         "Use the single-use link below to sign in and confirm your application. "
         "It expires in 24 hours.\n\n"
         f"{link}\n\n"
-        "Global Center for Technology & Training (GCTT)",
+        f"{_legal()}",
     )
 
 
@@ -154,7 +303,7 @@ def send_pending_registration(pending, token):
         "Use the single-use link below to sign in and confirm your registration. "
         "It expires in 24 hours.\n\n"
         f"{link}\n\n"
-        "Global Center for Technology & Training (GCTT)",
+        f"{_legal()}",
     )
 
 
@@ -176,15 +325,15 @@ def notify_enquiry(enquiry):
 def notify_enquiry_received(enquiry):
     send(
         enquiry.email,
-        "We received your enquiry — GCTT",
+        f"We received your enquiry — {_brand()}",
         f"Dear {enquiry.name},\n\n"
-        f"Thank you for contacting the Global Center for Technology & Training (GCTT).\n\n"
+        f"Thank you for contacting the {_legal()}.\n\n"
         f"We have received your enquiry regarding “{enquiry.get_category_display()}”. A dedicated practice director from our Irving, Texas headquarters will review your specifications and follow up within 24 business hours.\n\n"
         f"Warm regards,\n\n"
         f"Corporate Advisory Practice\n"
-        f"Global Center for Technology & Training (GCTT)\n"
-        f"{COMPANY['address']}\n"
-        f"{COMPANY['email']}",
+        f"{_legal()}\n"
+        f"{_company()['address']}\n"
+        f"{_company()['email']}",
     )
 
 
@@ -193,13 +342,13 @@ def notify_application(application):
         application.applicant.email,
         f"We received your application: {application.job.title}",
         f"Dear {application.applicant.display_name},\n\n"
-        f"Thank you for applying for the {application.job.title} engagement ({application.job.location}) with GCTT.\n\n"
+        f"Thank you for applying for the {application.job.title} engagement ({application.job.location}) with {_brand()}.\n\n"
         f"Your resume and candidate dossier have been submitted directly to our practice recruiting team. We evaluate candidates on hands-on architectural capability, project track record, and delivery velocity.\n\n"
         f"You may monitor the real-time review status of your submission directly via your authenticated candidate dashboard.\n\n"
         f"Warm regards,\n\n"
         f"Technical Search & Talent Acquisition Practice\n"
-        f"Global Center for Technology & Training (GCTT)\n"
-        f"{COMPANY['jobs_email']}",
+        f"{_legal()}\n"
+        f"{_company()['jobs_email']}",
     )
 
 
@@ -230,23 +379,22 @@ def notify_application_status(application):
         f"Please log in to your candidate dashboard to review upcoming interview milestones and direct recruiter notes.\n\n"
         f"Warm regards,\n\n"
         f"Executive Talent Acquisition Team\n"
-        f"Global Center for Technology & Training (GCTT)\n"
-        f"{COMPANY['jobs_email']}",
+        f"{_legal()}\n"
+        f"{_company()['jobs_email']}",
     )
 
 
 def notify_registration(registration):
+    text, html = _render_email(
+        "emails/enrollment.txt",
+        "emails/enrollment.html",
+        {"registration": registration, "student": registration.student},
+    )
     send(
         registration.student.email,
         f"Registration received: {registration.programme.title}",
-        f"Dear {registration.student.display_name},\n\n"
-        f"We have received your cohort enrolment registration for “{registration.programme.title}”.\n\n"
-        f"Our education practice coordinators will verify prerequisites, calendar schedules, and enterprise sandbox access, and will contact you with onboarding instructions.\n\n"
-        f"You can monitor cohort announcements and credential milestones from your authenticated dashboard.\n\n"
-        f"Warm regards,\n\n"
-        f"Workforce Development & Academy\n"
-        f"Global Center for Technology & Training (GCTT)\n"
-        f"{COMPANY['email']}",
+        text,
+        html_body=html,
     )
 
 
@@ -271,8 +419,8 @@ def notify_registration_status(registration):
         f"Please check your student dashboard for syllabus updates and scheduled sessions.\n\n"
         f"Warm regards,\n\n"
         f"Workforce Development & Academy\n"
-        f"Global Center for Technology & Training (GCTT)\n"
-        f"{COMPANY['email']}",
+        f"{_legal()}\n"
+        f"{_company()['email']}",
     )
 
 
@@ -291,6 +439,6 @@ def notify_certificate(registration, request):
         f"You can share this authenticated credential with enterprise employers and add it directly to your LinkedIn profile from your dashboard.\n\n"
         f"Warm regards,\n\n"
         f"Academic Board & Certification Registry\n"
-        f"Global Center for Technology & Training (GCTT)\n"
-        f"{COMPANY['email']}",
+        f"{_legal()}\n"
+        f"{_company()['email']}",
     )

@@ -16,9 +16,20 @@ class StyledAuthenticationForm(AuthenticationForm):
 
 
 class SignupForm(UserCreationForm):
+    promotional_opt_in = forms.BooleanField(
+        required=False,
+        label="Send me occasional offers and programme news",
+        help_text="We will email you once to confirm. You can unsubscribe at any time.",
+    )
+
     class Meta:
         model = User
-        fields = ("account_type", "email", "first_name", "last_name")
+        fields = (
+            "account_type",
+            "email",
+            "first_name",
+            "last_name",
+        )
         widgets = {"account_type": forms.RadioSelect}
         labels = {"account_type": "I am a…"}
 
@@ -54,9 +65,20 @@ class TeamProfileForm(forms.ModelForm):
 
 
 class ProfileForm(forms.ModelForm):
+    promotional_opt_in = forms.BooleanField(
+        required=False,
+        label="Send me occasional offers and programme news",
+        help_text="We will email you once to confirm. You can unsubscribe at any time.",
+    )
+
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "phone", "job_title")
+        fields = (
+            "first_name",
+            "last_name",
+            "phone",
+            "job_title",
+        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -68,6 +90,10 @@ class ProfileForm(forms.ModelForm):
         )
         self.fields["job_title"].widget.attrs.setdefault(
             "placeholder", "e.g. SAP Functional Consultant"
+        )
+        self.fields["promotional_opt_in"].initial = bool(
+            self.instance.promotional_opt_in
+            or self.instance.promotional_opt_in_requested_at
         )
 
 

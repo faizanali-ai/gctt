@@ -1,13 +1,9 @@
-from urllib.parse import urlencode
 
 from django.conf import settings
 from django.conf.urls.static import static
-from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
-from django.shortcuts import redirect
-from django.urls import include, path, reverse
+from django.urls import include, path
 from django.views.generic import TemplateView
-from django_ratelimit.decorators import ratelimit
 
 from apps.accounts import views as accounts_views
 from apps.enquiries import views as enquiries_views
@@ -16,33 +12,6 @@ from apps.training import views as training_views
 
 from . import views
 from .sitemaps import JobSitemap, ProgrammeSitemap, StaticSitemap
-
-admin.site.site_header = "GCTT Administration"
-admin.site.site_title = "GCTT Admin"
-admin.site.index_title = "Operations"
-
-_admin_login = admin.site.login
-
-
-@ratelimit(key="ip", rate="10/m", method="POST", block=True)
-def _admin_login_guard(request, extra_context=None):
-    # Django authenticates any is_staff account here but admin.site.has_permission
-    # only admits active admins. Send everyone else to the portal instead of
-    # bouncing them back to this login form.
-    if request.user.is_authenticated:
-        if getattr(request.user, "is_admin", False):
-            return redirect("/admin/")
-        return redirect("dashboard")
-
-    if settings.REQUIRE_EMAIL_OTP:
-        target = request.GET.get("next") or request.POST.get("next") or "/admin/"
-        return redirect(
-            f"{reverse('email_otp_request')}?{urlencode({'next': target})}"
-        )
-    return _admin_login(request, extra_context)
-
-
-admin.site.login = _admin_login_guard
 
 sitemaps = {
     "static": StaticSitemap,
@@ -234,8 +203,8 @@ urlpatterns = [
         training_views.staff_registration_certificate,
         name="staff_registration_certificate_legacy",
     ),
-    path("admin/", admin.site.urls),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
+    path("wake/", views.wake, name="wake"),
     path("healthz/", views.healthz, name="healthz"),
     path("health/", views.healthz),
     path(

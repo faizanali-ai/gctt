@@ -11,7 +11,6 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
-from apps.accounts.admin import AuditLogAdmin
 from apps.accounts.apps import assign_permissions
 from apps.accounts.models import AuditLog, User
 from apps.enquiries.models import Enquiry
@@ -23,12 +22,12 @@ LOCMEM = "django.core.mail.backends.locmem.EmailBackend"
 
 
 class CspAndSecurityHeadersTests(TestCase):
-    def test_csp_headers_contain_google_fonts(self):
+    def test_csp_uses_self_hosted_fonts(self):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         csp = response.headers.get("Content-Security-Policy", "")
-        self.assertIn("https://fonts.googleapis.com", csp)
-        self.assertIn("https://fonts.gstatic.com", csp)
+        self.assertIn("font-src 'self'", csp)
+        self.assertNotIn("fonts.googleapis.com", csp)
 
     def test_public_pages_use_nonces_instead_of_unsafe_inline(self):
         response = self.client.get("/")
@@ -40,13 +39,9 @@ class CspAndSecurityHeadersTests(TestCase):
         nonce = re.search(r"'nonce-([^']+)'", csp).group(1)
         self.assertIn(f'nonce="{nonce}"', response.content.decode())
 
-    def test_admin_style_exception_is_scoped(self):
+    def test_admin_site_is_removed(self):
         response = self.client.get("/admin/login/")
-        csp = response.headers.get("Content-Security-Policy", "")
-        script_src = csp.split("script-src")[1].split(";")[0]
-        style_src = csp.split("style-src")[1].split(";")[0]
-        self.assertNotIn("unsafe-inline", script_src)
-        self.assertIn("unsafe-inline", style_src)
+        self.assertEqual(response.status_code, 404)
 
 class ResumeUploadAndCleanupTests(TestCase):
     def setUp(self):
@@ -347,10 +342,6 @@ class UserManagementAndAuthBugTests(TestCase):
             },
         )
         self.assertTrue(AuditLog.objects.filter(action="user.edit", target="newstaff@example.com").exists())
-
-    def test_audit_log_admin_has_no_delete_permission(self):
-        admin_instance = AuditLogAdmin(AuditLog, None)
-        self.assertFalse(admin_instance.has_delete_permission(None))
 
     def test_robots_txt_disallows_manage(self):
         response = self.client.get(reverse("robots"))

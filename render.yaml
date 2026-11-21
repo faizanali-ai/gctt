@@ -5,7 +5,7 @@ services:
     plan: free
     region: oregon
     autoDeploy: true
-    healthCheckPath: /healthz/
+    healthCheckPath: /wake/
     buildCommand: >-
       pip install --cache-dir /opt/render/project/.cache/pip uv &&
       UV_CACHE_DIR=/opt/render/project/.cache/uv uv sync --frozen --no-dev &&
@@ -43,6 +43,8 @@ services:
         sync: false
       - key: DEFAULT_FROM_EMAIL
         value: accounts@gctekton.com
+      - key: REQUIRE_EMAIL_OTP
+        value: "1"
       - key: R2_BUCKET
         sync: false
       - key: R2_ENDPOINT

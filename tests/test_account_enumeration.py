@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from apps.accounts.models import User
 from apps.jobs.models import Application, Job
-from apps.training.models import Programme, Registration
+from apps.training.models import PendingRegistration, Programme, Registration
 
 LOCMEM = "django.core.mail.backends.locmem.EmailBackend"
 
@@ -89,7 +89,10 @@ class EnumerationTests(TestCase):
         self.assertEqual(existing_response.status_code, 302)
         self.assertEqual(new_response.status_code, 302)
         self.assertFalse(Registration.objects.filter(student=self.existing).exists())
-        self.assertTrue(
+        self.assertFalse(
             Registration.objects.filter(student__email="brand-new@example.com").exists()
+        )
+        self.assertTrue(
+            PendingRegistration.objects.filter(email="brand-new@example.com").exists()
         )
         self.assertNotIn("_auth_user_id", self.client.session)

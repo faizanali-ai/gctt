@@ -11,24 +11,32 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView
+from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.encoding import force_str
 from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_decode
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_http_methods, require_POST
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.tokens import email_verification_token_generator
 from apps.enquiries.models import Enquiry
 from apps.jobs.models import Application, Job
 from apps.training.models import Programme, Registration
-from config.emails import send_login_otp, send_password_setup, send_verification
+from config.emails import (
+    PROMOTIONAL_OPT_IN_MAX_AGE,
+    send_login_otp,
+    send_password_setup,
+    send_promotional_opt_in,
+    send_verification,
+    send_welcome_if_first_login,
+)
 
 from .audit import log_action
 from .decorators import staff_required
@@ -65,6 +73,7 @@ def signup(request):
             )
             return redirect("login")
         if form.is_valid():
+            requested_promotions = form.cleaned_data.get("promotional_opt_in", False)
             try:
                 user = form.save()
             except IntegrityError:
@@ -72,6 +81,16 @@ def signup(request):
                     request, "If this email can be used, check your inbox to continue."
                 )
                 return redirect("login")
+            if requested_promotions:
+                user.promotional_opt_in = False
+                user.promotional_opt_in_requested_at = timezone.now()
+                user.save(
+                    update_fields=[
+                        "promotional_opt_in",
+                        "promotional_opt_in_requested_at",
+                    ]
+                )
+                send_promotional_opt_in(user)
             send_verification(user, request)
             messages.success(
                 request, "If this email can be used, check your inbox to continue."
@@ -96,11 +115,13 @@ class CustomLoginView(LoginView):
 
     def form_valid(self, form):
         user = form.get_user()
-        if user.is_staff and settings.REQUIRE_EMAIL_OTP:
+        if user.requires_email_otp and settings.REQUIRE_EMAIL_OTP:
             return _start_email_otp(
                 self.request, user, self.get_success_url()
             )
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        send_welcome_if_first_login(user)
+        return response
 
 
 @ratelimit(key="ip", rate="10/m", method="POST", block=True)
@@ -143,6 +164,7 @@ def _start_email_otp(request, user, next_url=None):
 def _complete_email_otp_login(request, user):
     next_url = request.session.pop("email_otp_next", None)
     login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+    send_welcome_if_first_login(user)
     if next_url:
         return redirect(next_url)
     return redirect("dashboard")
@@ -160,9 +182,11 @@ def email_otp_request(request):
         email = request.POST.get("email", "").strip().lower()
         next_url = _safe_next(request, request.POST.get("next", ""))
 
-        user = User.objects.filter(
-            email__iexact=email, is_active=True, is_staff=True
-        ).first()
+        user = (
+            User.objects.filter(email__iexact=email, is_active=True)
+            .filter(Q(is_staff=True) | Q(role=User.Role.ADMIN))
+            .first()
+        )
         if user:
             return _start_email_otp(request, user, next_url)
 
@@ -203,9 +227,11 @@ def email_otp_verify(request):
     if request.method == "POST":
         code = request.POST.get("code", "").strip()
         if verify_code(email, code):
-            user = User.objects.filter(
-                email__iexact=email, is_active=True
-            ).first()
+            user = (
+                User.objects.filter(email__iexact=email, is_active=True)
+                .filter(Q(is_staff=True) | Q(role=User.Role.ADMIN))
+                .first()
+            )
             if user:
                 if not user.email_verified:
                     user.email_verified = True
@@ -235,9 +261,11 @@ def email_otp_resend(request):
     if not email:
         return redirect("email_otp_request")
 
-    user = User.objects.filter(
-        email__iexact=email, is_active=True, is_staff=True
-    ).first()
+    user = (
+        User.objects.filter(email__iexact=email, is_active=True)
+        .filter(Q(is_staff=True) | Q(role=User.Role.ADMIN))
+        .first()
+    )
     if user:
         issued = issue_code(email)
         if issued:
@@ -384,7 +412,7 @@ def google_callback(request):
             user.email_verified = True
             user.save(update_fields=["email_verified"])
 
-        if user.is_staff and settings.REQUIRE_EMAIL_OTP:
+        if user.requires_email_otp and settings.REQUIRE_EMAIL_OTP:
             return _start_email_otp(
                 request, user, request.session.pop("google_oauth_next", None)
             )
@@ -424,6 +452,7 @@ def google_callback(request):
         messages.success(request, f"Welcome to GCTT, {user.first_name or user.email}!")
 
     login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+    send_welcome_if_first_login(user)
 
     next_url = request.session.pop("google_oauth_next", None)
     if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
@@ -439,10 +468,7 @@ def verify_email(request, uidb64, token):
         pass
     if user and user.email_verified:
         messages.info(request, "Your email is already verified.")
-    elif user and (
-        email_verification_token_generator.check_token(user, token)
-        or default_token_generator.check_token(user, token)
-    ):
+    elif user and email_verification_token_generator.check_token(user, token):
         user.email_verified = True
         user.save(update_fields=["email_verified"])
         messages.success(request, "Email verified — thank you.")
@@ -544,7 +570,39 @@ def _staff_dashboard(request):
 def profile_edit(request):
     form = ProfileForm(request.POST or None, instance=request.user)
     if request.method == "POST" and form.is_valid():
+        requested_promotions = form.cleaned_data.get("promotional_opt_in", False)
         form.save()
+        if requested_promotions and not request.user.promotional_opt_in:
+            request.user.promotional_opt_in = False
+            request.user.promotional_opt_in_requested_at = timezone.now()
+            request.user.save(
+                update_fields=[
+                    "promotional_opt_in",
+                    "promotional_opt_in_requested_at",
+                ]
+            )
+            if send_promotional_opt_in(request.user):
+                messages.info(
+                    request,
+                    "Check your email and confirm to start receiving offers.",
+                )
+            else:
+                messages.info(
+                    request,
+                    "A confirmation email was requested recently. Please check your inbox.",
+                )
+        elif not requested_promotions and (
+            request.user.promotional_opt_in
+            or request.user.promotional_opt_in_requested_at
+        ):
+            request.user.promotional_opt_in = False
+            request.user.promotional_opt_in_requested_at = None
+            request.user.save(
+                update_fields=[
+                    "promotional_opt_in",
+                    "promotional_opt_in_requested_at",
+                ]
+            )
         messages.success(request, "Profile saved.")
         return redirect("profile")
     return render(request, "accounts/profile_edit.html", {"form": form})
@@ -965,6 +1023,87 @@ def account_delete(request):
     return redirect("home")
 
 
+@require_http_methods(["GET", "POST"])
+def promotional_opt_in_confirm(request, token):
+    try:
+        uid = signing.TimestampSigner(salt="gctt-promotional-opt-in").unsign(
+            token, max_age=PROMOTIONAL_OPT_IN_MAX_AGE
+        )
+        user = User.objects.filter(pk=int(uid)).first()
+    except (signing.BadSignature, ValueError, TypeError):
+        user = None
+
+    if user is None or (
+        not user.promotional_opt_in
+        and not user.promotional_opt_in_requested_at
+    ):
+        return render(
+            request,
+            "accounts/promotional_opt_in_confirm.html",
+            {"invalid": True},
+            status=400,
+        )
+
+    if request.method == "POST":
+        user.promotional_opt_in = True
+        user.promotional_opt_in_at = timezone.now()
+        user.promotional_opt_in_requested_at = None
+        user.save(
+            update_fields=[
+                "promotional_opt_in",
+                "promotional_opt_in_at",
+                "promotional_opt_in_requested_at",
+            ]
+        )
+        messages.success(request, "You can now receive offers and programme news.")
+        return redirect("promotional_opt_in_confirm", token=token)
+
+    return render(
+        request,
+        "accounts/promotional_opt_in_confirm.html",
+        {
+            "invalid": False,
+            "target": user,
+            "confirmed": user.promotional_opt_in,
+        },
+    )
+
+
+@require_http_methods(["GET", "POST"])
+def promotional_unsubscribe(request, token):
+    try:
+        payload = signing.loads(token, salt="gctt-promotional-unsubscribe")
+        user = User.objects.filter(pk=payload.get("uid")).first()
+    except (signing.BadSignature, ValueError, TypeError, AttributeError):
+        user = None
+
+    if user is None:
+        return render(
+            request,
+            "accounts/unsubscribe.html",
+            {"invalid": True},
+            status=400,
+        )
+
+    if request.method == "POST":
+        user.promotional_opt_in = False
+        user.promotional_opt_in_requested_at = None
+        user.save(
+            update_fields=[
+                "promotional_opt_in",
+                "promotional_opt_in_requested_at",
+            ]
+        )
+        messages.success(request, "You have been removed from promotional emails.")
+        return redirect("promotional_unsubscribe", token=token)
+
+    return render(
+        request,
+        "accounts/unsubscribe.html",
+        {"invalid": False, "target": user, "unsubscribed": not user.promotional_opt_in},
+    )
+
+
 @login_required
 def security(request):
     return render(
@@ -972,7 +1111,7 @@ def security(request):
         "accounts/security.html",
         {
             "email_otp_required": (
-                settings.REQUIRE_EMAIL_OTP and request.user.is_staff
+                settings.REQUIRE_EMAIL_OTP and request.user.requires_email_otp
             ),
         },
     )

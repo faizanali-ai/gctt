@@ -26,9 +26,8 @@ class ThemeShellTests(TestCase):
             "data-theme-toggle", self.client.get(reverse("dashboard")).content.decode()
         )
 
-    def test_admin_stays_light_only(self):
-        html = self.client.get("/admin/login/").content.decode()
-        self.assertNotIn("data-theme-toggle", html)
+    def test_admin_site_is_removed(self):
+        self.assertEqual(self.client.get("/admin/login/").status_code, 404)
 
     def test_theme_assets_exist(self):
         script = (STATIC / "js" / "theme-init.js").read_text(encoding="utf-8")

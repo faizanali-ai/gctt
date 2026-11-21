@@ -115,9 +115,9 @@ class VisibilityTests(TestCase):
             self.client.get(reverse("staff_registrations")), other_staff.email
         )
 
-    def test_staff_cannot_access_django_admin(self):
+    def test_django_admin_is_removed(self):
         self.client.force_login(self.recruiter)
-        self.assertNotEqual(self.client.get("/admin/").status_code, 200)
+        self.assertEqual(self.client.get("/admin/").status_code, 404)
 
     def test_admin_sees_user_directory(self):
         other = staff_user("other.recruiter@example.com", "Recruiter")

@@ -41,6 +41,13 @@ class EmailOTPLoginTests(TestCase):
             account_type=User.AccountType.STUDENT,
             email_verified=True,
         )
+        cls.role_admin = User.objects.create_user(
+            email="role-admin@example.com",
+            password="test-pass-12345",
+            role=User.Role.ADMIN,
+            is_staff=False,
+            email_verified=True,
+        )
 
     def setUp(self):
         cache.clear()
@@ -122,6 +129,72 @@ class EmailOTPLoginTests(TestCase):
         self.assertNotIn("_auth_user_id", self.client.session)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, [self.admin.email])
+
+    def test_role_admin_without_staff_flag_requires_otp(self):
+        response = self.client.post(
+            reverse("login"),
+            {
+                "username": self.role_admin.email,
+                "password": "test-pass-12345",
+            },
+        )
+        self.assertRedirects(response, reverse("email_otp_verify"))
+        self.assertNotIn("_auth_user_id", self.client.session)
+        self.assertEqual(mail.outbox[-1].to, [self.role_admin.email])
+        response = self.client.post(
+            reverse("email_otp_verify"), {"code": self.code()}
+        )
+        self.assertRedirects(response, reverse("dashboard"))
+        self.assertIn("_auth_user_id", self.client.session)
+
+    def test_candidate_cannot_verify_a_code_even_if_one_exists(self):
+        from apps.accounts.email_otp import issue_code
+
+        issued = issue_code(self.candidate.email)
+        self.assertIsNotNone(issued)
+        session = self.client.session
+        session["email_otp_email"] = self.candidate.email
+        session.save()
+        response = self.client.post(
+            reverse("email_otp_verify"), {"code": issued[1]}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn("_auth_user_id", self.client.session)
+
+    def test_otp_login_sends_welcome_once(self):
+        self.client.post(
+            reverse("login"),
+            {
+                "username": self.staff.email,
+                "password": "test-pass-12345",
+            },
+        )
+        self.client.post(
+            reverse("email_otp_verify"), {"code": self.code()}
+        )
+        self.staff.refresh_from_db()
+        self.assertIsNotNone(self.staff.welcome_email_sent_at)
+        first_welcome_count = sum(
+            "Welcome" in message.subject for message in mail.outbox
+        )
+        self.assertEqual(first_welcome_count, 1)
+
+        self.client.logout()
+        mail.outbox.clear()
+        cache.clear()
+        self.client.post(
+            reverse("login"),
+            {
+                "username": self.staff.email,
+                "password": "test-pass-12345",
+            },
+        )
+        self.client.post(
+            reverse("email_otp_verify"), {"code": self.code()}
+        )
+        self.assertEqual(
+            sum("Welcome" in message.subject for message in mail.outbox), 0
+        )
 
     def test_wrong_code_does_not_log_in(self):
         self.request_code(self.staff.email)

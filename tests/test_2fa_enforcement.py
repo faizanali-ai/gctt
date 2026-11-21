@@ -1,10 +1,7 @@
-from django.contrib import admin as django_admin
 from django.contrib.auth.models import Permission
-from django.core.exceptions import PermissionDenied
-from django.test import RequestFactory, TestCase, override_settings
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
-from apps.accounts.admin import UserAdmin
 from apps.accounts.apps import assign_permissions
 from apps.accounts.models import User
 
@@ -46,9 +43,9 @@ class EmailOTPEnforcementTests(TestCase):
         self.assertRedirects(response, reverse("email_otp_verify"))
         self.assertNotIn("_auth_user_id", self.client.session)
 
-    def test_admin_can_access_admin_without_totp(self):
+    def test_admin_site_is_removed(self):
         self.client.force_login(self.admin)
-        self.assertEqual(self.client.get("/admin/").status_code, 200)
+        self.assertEqual(self.client.get("/admin/").status_code, 404)
 
     def test_candidate_password_login_is_unchanged(self):
         response = self.login(self.candidate.email)
@@ -97,22 +94,3 @@ class StaffAccessControlTests(TestCase):
             ).status_code,
             200,
         )
-
-
-class UserAdminGuardTests(TestCase):
-    def setUp(self):
-        self.admin = User.objects.create_superuser(
-            email="admin.guard@example.com", password="test-pass-12345"
-        )
-        self.model_admin = UserAdmin(User, django_admin.site)
-        self.request = RequestFactory().post("/admin/accounts/user/")
-        self.request.user = self.admin
-
-    def test_self_demotion_is_blocked(self):
-        self.admin.role = User.Role.STAFF
-        with self.assertRaises(PermissionDenied):
-            self.model_admin.save_model(self.request, self.admin, None, True)
-
-    def test_self_delete_is_hidden_and_bulk_delete_is_disabled(self):
-        self.assertFalse(self.model_admin.has_delete_permission(self.request, self.admin))
-        self.assertNotIn("delete_selected", self.model_admin.get_actions(self.request))

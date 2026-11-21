@@ -48,7 +48,10 @@ def assign_permissions(label=None):
                 )
             )
         if label:
-            permissions.update(group.permissions.all())
+            # Rebuild the current app's permissions while preserving other apps.
+            permissions.update(
+                group.permissions.exclude(content_type__app_label=label)
+            )
         group.permissions.set(permissions)
 
 
@@ -62,17 +65,3 @@ class AccountsConfig(AppConfig):
 
     def ready(self):
         post_migrate.connect(sync_role_groups, dispatch_uid="accounts.sync_role_groups")
-        from django.contrib import admin
-
-        def admin_only_permission(request):
-            user = request.user
-            return bool(
-                user
-                and user.is_authenticated
-                and user.is_active
-                and user.is_staff
-                and user.is_superuser
-                and getattr(user, "role", "") == "admin"
-            )
-
-        admin.site.has_permission = admin_only_permission

@@ -26,6 +26,12 @@ urlpatterns = [
     path("google/callback/", views.google_callback, name="google_callback"),
     path("verify/<uidb64>/<token>/", views.verify_email, name="verify_email"),
     path("verify/resend/", views.resend_verification, name="resend_verification"),
+    path(
+        "email/confirm-promotions/<str:token>/",
+        views.promotional_opt_in_confirm,
+        name="promotional_opt_in_confirm",
+    ),
+    path("email/unsubscribe/<str:token>/", views.promotional_unsubscribe, name="promotional_unsubscribe"),
     path("security/", views.security, name="security"),
     path("delete/", views.account_delete, name="account_delete"),
     path(

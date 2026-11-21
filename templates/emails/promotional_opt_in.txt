@@ -1,0 +1,12 @@
+Dear {{ user.display_name }},
+
+Please confirm that you want to receive occasional offers and programme news from {{ company.name }}.
+
+Confirm here:
+{{ confirm_url }}
+
+This link expires in seven days. If you did not request this, ignore this email; you will not receive promotional mail.
+
+{{ company.legal_name }}
+{{ company.address }}
+{{ company.email }}

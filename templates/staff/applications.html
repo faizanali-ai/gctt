@@ -13,9 +13,9 @@
 </div>
 
 <div class="mt-6 flex flex-wrap gap-2">
-  <a href="{% url 'staff_applications' %}{% if q %}?q={{ q }}{% endif %}{% if job %}&amp;job={{ job }}{% endif %}" class="btn btn-sm {% if not status %}btn-solid{% else %}btn-secondary{% endif %}">All</a>
+  <a href="{% url 'staff_applications' %}{% if q %}?q={{ q|urlencode }}{% endif %}{% if job %}&amp;job={{ job|urlencode }}{% endif %}" class="btn btn-sm {% if not status %}btn-solid{% else %}btn-secondary{% endif %}">All</a>
   {% for value, label in statuses %}
-    <a href="{% url 'staff_applications' %}?status={{ value }}{% if q %}&amp;q={{ q }}{% endif %}{% if job %}&amp;job={{ job }}{% endif %}" class="btn btn-sm {% if status == value %}btn-solid{% else %}btn-secondary{% endif %}">{{ label }}</a>
+    <a href="{% url 'staff_applications' %}?status={{ value }}{% if q %}&amp;q={{ q }}{% endif %}{% if job %}&amp;job={{ job|urlencode }}{% endif %}" class="btn btn-sm {% if status == value %}btn-solid{% else %}btn-secondary{% endif %}">{{ label }}</a>
   {% endfor %}
 </div>
 

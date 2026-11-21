@@ -1,5 +1,4 @@
 from django.contrib.auth.models import Group
-from django.contrib.auth.tokens import default_token_generator
 from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -8,6 +7,7 @@ from django.utils.http import urlsafe_base64_encode
 
 from apps.accounts.apps import assign_permissions
 from apps.accounts.models import AuditLog, TeamProfile, User
+from apps.accounts.tokens import email_verification_token_generator
 from apps.jobs.models import Application, Job
 from apps.training.models import Programme, Registration
 
@@ -35,7 +35,7 @@ class VerificationTests(TestCase):
     def test_verification_link_marks_verified(self):
         user = User.objects.create_user(email="v@example.com", password="test-pass-12345")
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = default_token_generator.make_token(user)
+        token = email_verification_token_generator.make_token(user)
         response = self.client.get(reverse("verify_email", args=[uid, token]), follow=True)
         self.assertContains(response, "Email verified")
         user.refresh_from_db()

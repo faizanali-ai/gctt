@@ -1,15 +1,14 @@
 def client_ip(request):
-    """The real client IP.
+    """Return the client address supplied by the Render edge.
 
-    In production behind Cloudflare, CF-Connecting-IP is set by Cloudflare edge
-    and cannot be spoofed by clients sending forged X-Forwarded-For headers.
-    In environments without CF-Connecting-IP, fall back to the first address in
-    X-Forwarded-For or REMOTE_ADDR.
+    Render documents that it sets the first ``X-Forwarded-For`` entry to the
+    real client IP. Later entries can be client-supplied, so they are ignored.
+    There is no Cloudflare proxy in front of the origin, so CF-Connecting-IP is
+    deliberately ignored: a client can forge it.
     """
-    cf_ip = request.META.get("HTTP_CF_CONNECTING_IP", "").strip()
-    if cf_ip:
-        return cf_ip
     forwarded = request.META.get("HTTP_X_FORWARDED_FOR", "")
     if forwarded:
-        return forwarded.split(",")[0].strip()
-    return request.META.get("REMOTE_ADDR", "").strip()
+        candidate = forwarded.split(",")[0].strip()
+        if candidate:
+            return candidate[:45]
+    return request.META.get("REMOTE_ADDR", "").strip()[:45]

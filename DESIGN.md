@@ -77,7 +77,7 @@ Partials: `_header`, `_footer`, `_messages`, `_pagination`, `_hero`, `_hero-art`
 
 ## Theme
 
-The OS preference sets the default. The header toggle writes `light` or `dark` to `data-theme` on `<html>` and to `localStorage` (`gctt-theme`); `static/js/theme-init.js` applies it before the stylesheet to avoid a flash. Django admin stays light-only. Night surfaces are intentionally fixed.
+The OS preference sets the default. The header toggle writes `light` or `dark` to `data-theme` on `<html>` and to `localStorage` (`gctt-theme`); `static/js/theme-init.js` applies it before the stylesheet to avoid a flash. Night surfaces are intentionally fixed.
 
 ## Motion
 
@@ -96,7 +96,7 @@ WCAG 2.2 AA. Skip link, one `<h1>`, visible focus, 24×24 target minimum, native
 
 ## Guardrails
 
-- `tests/test_ui_system.py` fails on hardcoded hex in templates, legacy theme/font code, `alert()`/`confirm()`, inline handlers, non-JSON-LD inline scripts, legacy component classes, missing compiled utilities, or more than one `<h1>`. Django admin is excluded because it has its own stylesheet and palette.
+- `tests/test_ui_system.py` fails on hardcoded hex in templates, legacy theme/font code, `alert()`/`confirm()`, inline handlers, non-JSON-LD inline scripts, legacy component classes, missing compiled utilities, or more than one `<h1>`.
 - Rebuild `output.css` after any class change. CI rebuilds at v4.3.5 and fails on a diff.
 - The Tailwind build uses `source(none)` with explicit `@source` roots (`templates/`, `static/js/`). Add a root here if a new directory starts carrying class names. Never let it scan `output.css`.
 - Keep class names literal in templates; Tailwind cannot see classes built in Python.

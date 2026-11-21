@@ -4,7 +4,7 @@ from pathlib import Path
 
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
-from django.db import models
+from django.db import IntegrityError, models, transaction
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.utils.text import slugify
@@ -41,14 +41,23 @@ class Job(models.Model):
         ordering = ["-created_at"]
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            base = slugify(self.title)[:200] or "job"
+        generated = not self.slug
+        base = slugify(self.title)[:200] or "job"
+        if generated:
             slug, n = base, 1
             while Job.objects.filter(slug=slug).exclude(pk=self.pk).exists():
                 n += 1
                 slug = f"{base}-{n}"
             self.slug = slug
-        super().save(*args, **kwargs)
+        try:
+            with transaction.atomic():
+                super().save(*args, **kwargs)
+        except IntegrityError:
+            if not generated:
+                raise
+            self.slug = f"{base}-{uuid.uuid4().hex[:6]}"
+            with transaction.atomic():
+                super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -114,8 +123,9 @@ def delete_resume_file(sender, instance, **kwargs):
     if instance.resume:
         try:
             instance.resume.delete(save=False)
-        except OSError:
-            logger.warning(
-                "Failed to remove resume file %s on application delete", instance.resume.name
+        except Exception:
+            logger.exception(
+                "Failed to remove resume file %s on application delete",
+                instance.resume.name,
             )
 

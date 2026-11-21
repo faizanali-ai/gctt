@@ -66,7 +66,10 @@ def main() -> int:
     text = CSS.read_text(encoding="utf-8")
     light = read_tokens(LIGHT_RE.search(text).group(1))
     dark_match = DARK_RE.search(text)
-    dark = {**light, **read_tokens(dark_match.group(1))} if dark_match else light
+    if dark_match is None:
+        print("Dark token block not found in input.css", file=sys.stderr)
+        return 1
+    dark = {**light, **read_tokens(dark_match.group(1))}
 
     failures: list[str] = []
     for theme, palette in (("light", light), ("dark", dark)):

@@ -42,23 +42,21 @@ Until the domain verifies, Resend only delivers to your own signup address.
 
 ---
 
-## 3. Cloudflare R2 — media (resumes)
+## 3. Media storage — Supabase (primary) or Cloudflare R2
 
-1. Cloudflare dashboard → **R2** → enable (card required; usage stays $0 within 10 GB).
-2. **Create bucket** → `gctt-media` → keep **private** (the app issues signed URLs).
-3. **Manage R2 API Tokens → Create token** → permission **Object Read & Write** →
-   scope it to `gctt-media`. Copy **Access Key ID** and **Secret Access Key**.
-4. Endpoint: `https://<account-id>.r2.cloudflarestorage.com`
-   (account ID is on the R2 overview page).
+Production refuses to start gunicorn with local FileSystemStorage. Use the
+Supabase S3-compatible endpoint already declared in `render.yaml`:
 
-Values:
-
-| Variable | Example |
+| Variable | Meaning |
 |---|---|
-| `R2_BUCKET` | `gctt-media` |
-| `R2_ENDPOINT` | `https://abc123.r2.cloudflarestorage.com` |
-| `R2_ACCESS_KEY_ID` | from the token |
-| `R2_SECRET_ACCESS_KEY` | from the token |
+| `SUPABASE_URL` | Project URL (the `/storage/v1/s3` suffix is stripped) |
+| `SUPABASE_BUCKET` | Private bucket name |
+| `SUPABASE_REGION` | Usually `us-east-1` |
+| `SUPABASE_ACCESS_KEY_ID` / `SUPABASE_SECRET_ACCESS_KEY` | S3 access keys |
+
+R2 remains supported via `R2_BUCKET`, `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`,
+`R2_SECRET_ACCESS_KEY`. Keep either bucket private; the app issues signed URLs.
+After setting credentials run `uv run python manage.py check_storage`.
 
 ---
 
@@ -72,9 +70,12 @@ Values:
    - `DJANGO_ALLOWED_HOSTS` — your service hostname, e.g. `gctt.onrender.com`
    - `DJANGO_CSRF_TRUSTED_ORIGINS` — `https://gctt.onrender.com`
    - `EMAIL_HOST_PASSWORD` — Resend API key
+   - `DEFAULT_FROM_EMAIL` — must be on the verified Resend domain
+   - `SITE_URL` — public origin, e.g. `https://gctekton.com`
+   - `EMAIL_SEND_RETRIES` — optional, default `1`
    - `R2_BUCKET`, `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`
    - `SENTRY_DSN` — optional, leave blank
-   - `REQUIRE_STAFF_2FA` — leave `0` until staff enrol
+   - `REQUIRE_EMAIL_OTP` — `1` (default; every staff/admin login needs an email code)
 4. Deploy. First build ~3–5 minutes. The start command runs
    `migrate → createcachetable → collectstatic → gunicorn` automatically.
 5. Logs: Render → Logs. You should see migrations applying, then:
@@ -108,7 +109,7 @@ DATABASE_URL='<neon pooled url>' DJANGO_DEBUG=0 DJANGO_SECRET_KEY='<any>' \
 uv run python manage.py createsuperuser --noinput --email ceo@gctekton.com
 ```
 
-Then log in at `/admin/` and change the password.
+Then log in at `/accounts/login/`, open `/dashboard/` and change the password.
 
 ---
 
@@ -116,12 +117,13 @@ Then log in at `/admin/` and change the password.
 
 | Check | Expected |
 |---|---|
+| `https://<host>/wake/` | `ok` |
 | `https://<host>/healthz/` | `ok` |
 | Signup on `/accounts/signup/` | welcome message; verification email arrives (Resend → Emails log) |
 | `/contact/` enquiry | confirmation banner; alert email to `accounts@gctekton.com` |
 | Apply to a job with a PDF | application appears in `/staff/applications/`; object visible in R2 |
 | Trainer issues a certificate | PDF downloads; `/training/verify/<ref>/` shows **Valid certificate** |
-| `/admin/` with CEO account | dashboard loads |
+| `/dashboard/` with CEO account | portal loads |
 
 ---
 

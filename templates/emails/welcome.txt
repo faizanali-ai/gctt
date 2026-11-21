@@ -1,0 +1,15 @@
+Dear {{ user.display_name }},
+
+Welcome to {{ company.name }}.
+
+Your account is ready. From your dashboard you can review applications, manage programme registrations, and download certificates.
+
+Open your dashboard:
+{{ site_url }}/dashboard/
+
+If you did not create this account, please ignore this email or contact {{ company.email }}.
+
+Warm regards,
+{{ company.legal_name }}
+{{ company.address }}
+{{ company.email }}

@@ -80,6 +80,11 @@ class PendingSubmissionTests(TestCase):
         response = self.client.get(reverse("pending_application", args=[token]))
         self.assertEqual(response.status_code, 200)
         self.assertIn("_auth_user_id", self.client.session)
+        self.candidate.refresh_from_db()
+        self.assertIsNotNone(self.candidate.welcome_email_sent_at)
+        self.assertTrue(
+            any("Welcome" in message.subject for message in mail.outbox)
+        )
 
         response = self.client.post(
             reverse("pending_application", args=[token]),
@@ -167,3 +172,50 @@ class PendingSubmissionTests(TestCase):
         self.client.force_login(self.student)
         response = self.client.get(reverse("pending_application", args=[token]))
         self.assertEqual(response.status_code, 404)
+
+
+    def test_staff_pending_link_does_not_log_in(self):
+        staff = User.objects.create_user(
+            email="staff-member@example.com",
+            password="test-pass-12345",
+            is_staff=True,
+            role=User.Role.STAFF,
+        )
+        pending = PendingApplication.objects.create(
+            job=self.job,
+            email=staff.email,
+            resume=SimpleUploadedFile("cv.pdf", b"%PDF-1.4"),
+            message="x",
+            token_hash=hash_token("staff-pending-token"),
+            expires_at=timezone.now() + timedelta(hours=1),
+        )
+        response = self.client.get(
+            reverse("pending_application", args=["staff-pending-token"])
+        )
+        self.assertRedirects(response, reverse("login"))
+        self.assertNotIn("_auth_user_id", self.client.session)
+        self.assertTrue(PendingApplication.objects.filter(pk=pending.pk).exists())
+
+    def test_new_student_registration_waits_for_email_confirmation(self):
+        response = self._register(email="new.student@example.com")
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(
+            Registration.objects.filter(student__email="new.student@example.com").exists()
+        )
+        pending = PendingRegistration.objects.get(email="new.student@example.com")
+        token = self._token("/training/pending/")
+        response = self.client.get(reverse("pending_registration", args=[token]))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("_auth_user_id", self.client.session)
+        response = self.client.post(
+            reverse("pending_registration", args=[token]), {"message": "confirmed"}
+        )
+        self.assertRedirects(response, reverse("dashboard"))
+        self.assertTrue(
+            Registration.objects.filter(
+                programme=self.programme,
+                student__email="new.student@example.com",
+            ).exists()
+        )
+        pending.refresh_from_db()
+        self.assertIsNotNone(pending.consumed_at)
