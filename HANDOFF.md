@@ -42,8 +42,9 @@ without changing the public product.
 
 ## External prerequisites
 1. Take a Neon PITR snapshot and a portable backup before applying migrations.
-2. Add `SITE_URL` in Render (public origin). Ensure `DJANGO_SECRET_KEY` is at
-   least 50 random characters.
+2. Add `SITE_URL` in Render (public origin). Keep the Render-generated
+   `DJANGO_SECRET_KEY`; the minimum accepted length is 32 characters (50+
+   recommended). Render's generated 256-bit base64 value is accepted.
 3. Add `SUPABASE_*` or `R2_*` secrets to the GitHub `production` environment so
    maintenance can delete objects.
 4. Add `PRODUCTION_SITE_URL` and storage secrets to the maintenance environment.
