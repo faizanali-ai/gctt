@@ -40,6 +40,7 @@ class ResendBackendTests(SimpleTestCase):
         payload = json.loads(request.data.decode("utf-8"))
         self.assertEqual(request.full_url, "https://api.resend.com/emails")
         self.assertEqual(request.headers["Authorization"], "Bearer re_test_key")
+        self.assertIn("GCTT-Mailer/", request.headers["User-agent"])
         self.assertEqual(payload["from"], "accounts@example.com")
         self.assertEqual(payload["to"], ["user@example.com"])
         self.assertEqual(payload["subject"], "Sign-in code")

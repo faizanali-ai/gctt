@@ -10,6 +10,10 @@ from django.core.mail.backends.base import BaseEmailBackend
 
 logger = logging.getLogger(__name__)
 
+# Cloudflare in front of api.resend.com rejects the default urllib User-Agent
+# with HTTP 403 error 1010 (browser_signature_banned), so identify the app.
+USER_AGENT = "GCTT-Mailer/1.0 (+https://gctekton.com)"
+
 
 class ResendEmailBackend(BaseEmailBackend):
     """Send Django email through Resend's HTTPS API.
@@ -86,6 +90,7 @@ class ResendEmailBackend(BaseEmailBackend):
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json",
                 "Accept": "application/json",
+                "User-Agent": USER_AGENT,
             },
             method="POST",
         )
