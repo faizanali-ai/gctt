@@ -394,6 +394,48 @@
     color: var(--canvas);
   }
 
+  /* Brand logos: light artwork on light surfaces, dark artwork on dark
+     surfaces. The plate colour matches the dark PNG backgrounds so the
+     opaque image edges blend into the padding. */
+  .logo-plate {
+    display: inline-flex;
+    align-items: center;
+    border-radius: var(--radius-md);
+    background: #ffffff;
+  }
+  .logo-plate--horizontal {
+    --logo-plate-dark: #1f1e23;
+  }
+  .logo-plate--main {
+    --logo-plate-dark: #1e1e23;
+  }
+  .logo-plate--stacked {
+    --logo-plate-dark: #1e1d23;
+  }
+  .logo-dark {
+    display: none;
+  }
+  :root[data-theme="dark"] .logo-plate {
+    background: var(--logo-plate-dark, #1f1e23);
+  }
+  :root[data-theme="dark"] .logo-light {
+    display: none;
+  }
+  :root[data-theme="dark"] .logo-dark {
+    display: block;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .logo-plate {
+      background: var(--logo-plate-dark, #1f1e23);
+    }
+    :root:not([data-theme]) .logo-light {
+      display: none;
+    }
+    :root:not([data-theme]) .logo-dark {
+      display: block;
+    }
+  }
+
   .rule {
     border: 0;
     border-top: 1px solid var(--line);
