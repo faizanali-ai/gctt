@@ -16,10 +16,11 @@ def validate_secret_key(value, *, debug, testing):
     """Reject empty, short or developer-default keys outside debug/test."""
     if debug or testing:
         return value
-    if not value or value.startswith("dev-only") or len(value) < 50:
+    if not value or value.startswith("dev-only") or len(value) < 32:
         raise RuntimeError(
             "DJANGO_SECRET_KEY must be a non-empty random value of at least "
-            "50 characters when DJANGO_DEBUG is off"
+            "32 characters when DJANGO_DEBUG is off (50+ recommended; Render's "
+            "generated 256-bit base64 value is accepted)"
         )
     return value
 

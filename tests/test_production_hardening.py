@@ -34,9 +34,16 @@ class SettingsGuardTests(TestCase):
             validate_secret_key("short", debug=False, testing=False)
         with self.assertRaises(RuntimeError):
             validate_secret_key("dev-only-insecure-key-change-me", debug=False, testing=False)
+        with self.assertRaises(RuntimeError):
+            validate_secret_key("x" * 31, debug=False, testing=False)
         self.assertEqual(
-            validate_secret_key("x" * 50, debug=False, testing=False),
-            "x" * 50,
+            validate_secret_key("x" * 32, debug=False, testing=False),
+            "x" * 32,
+        )
+        render_generated = "B0jrphAPOY7pg92AN0c9MN4yecczLMdwnx4OkA1KFUk="
+        self.assertEqual(
+            validate_secret_key(render_generated, debug=False, testing=False),
+            render_generated,
         )
 
     def test_console_email_is_rejected_for_production_web(self):
