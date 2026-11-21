@@ -1,114 +1,70 @@
-# GCTT Session Handoff — 2026-11-21
+# GCTT Session Handoff — 2026-11-22
 ## Goal
-Finish the GCTT Django site: ship the approved full-bleed hero, site-wide light/dark toggle, editable
-site/user metadata, strict CSP, legacy URL sunset, scheduled maintenance, and staff/admin email OTP.
+Keep the GCTT production Django site on Render Free while making every transactional and promotional email deliverable. Render Free blocks outbound SMTP (25/465/587), so delivery now uses Resend's HTTPS API.
+
 ## Current State
-- Production was deployed from `e6ad272`; the next hardening slice is local and uncommitted.
+- `main` at `f7f14a5`, synced with `origin/main`; only this `HANDOFF.md` is locally modified.
 - 280 tests pass; ruff, Django check, migration check, contrast, JS syntax pass.
-- Django admin has been removed; all business data is managed through the portal.
-- Staff/admin login loop fixed; candidate/student designations display correctly.
-- Public `/training/` now renders published programmes (context bug fixed).
-- Next-phase shipped: `job_title`, `SiteSettings` + `/manage/settings/`, full-bleed hero,
-  light/dark toggle, CSP nonces, legacy sunset middleware, `purge_retention`, maintenance workflow.
-## Confirmed Decisions
-- Hero: all heroes full-bleed/left-anchored; solid sticky header; centered footer; 20/24/32px gutter;
-  home stats in a full-width strip; content-driven height; keep current headline scale;
-  full-bleed low-opacity art, reduced on mobile.
-- Theme: two-state light/dark; OS default until chosen; persist in `localStorage`;
-  public/auth/portal only.
-- Django admin: removed entirely; portal is the only data UI. Recovery is shell/backups.
-- Storage: Supabase is the configured remote backend; production refuses FileSystemStorage.
-- Keepalive and Render health checks use `/wake/` (no DB); `/healthz/` is readiness.
-- Pending magic links are candidate/student only; staff/admin use normal login/OTP.
-- Retention: calendar 24 months; applications and uncertified registrations deleted;
-  certified registrations kept with message cleared; audit logs kept.
-- Users: designation remains Admin/Staff/Candidate/Training Student; add optional free-text `job_title`.
-- Permissions: keep fixed role + subgroup model; do not expose raw group/permission matrix.
-- SiteSettings: company identity/contact + home-hero copy only; other page copy stays in templates.
-- Team photos: keep `photo_url`; uploads deferred.
-- CSP: remove `unsafe-inline` with per-request nonces; documented admin-only style exception if required.
-- Retention: 24 months; delete old applications; delete old uncertified registrations; keep certified
-  registrations but clear messages; keep audit logs.
-- Legacy URLs: sunset `2027-02-19`; `Deprecation`/`Sunset` headers before, `410 Gone` after.
-- GitHub Actions: daily maintenance at `03:17 UTC` + manual dispatch; fail after sunset until removed.
-- Production repair/access audit deferred.
-## Completed Work
-- Full UI rebuild: ink/copper tokens, self-hosted fonts, sprite icons, vanilla JS, responsive shell,
-  new OG image/favicon, auth/portal/admin styling.
-- Portal admin: all users and designations, create/edit/delete, activation, verification, password reset;
-  team profiles; jobs; categories; programmes; applications (status/bulk/delete); registrations
-  (status/certificate/delete); enquiries (edit/status/delete); read-only audit log.
-- Admin login guard: authenticated non-admins go to `/dashboard/`, no admin-login loop.
-- Designation mapping: role/account_type/flags/groups synchronized transactionally.
-- Registration feedback, form error summaries, metadata/noindex, sticky staff tables, dashboard mobile fix.
-- `repair_internal_accounts` command for legacy broken staff flags.
-- Removed all portal links to Django admin.
+- Latest deploy was triggered after pushing `dc8ee04..f7f14a5`; confirm Render deploy completes.
+- Resend domain `gctekton.com` is verified (GoDaddy DNS, Resend Forge ready).
+- Render service `gctt` is Free, region Oregon, health path `/wake/`.
+- Required production email env: `EMAIL_BACKEND=config.email_backends.ResendEmailBackend`, `RESEND_API_KEY`, `DEFAULT_FROM_EMAIL=accounts@gctekton.com`, `SITE_URL`, `REQUIRE_EMAIL_OTP=1`.
+- Remove old `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `REQUIRE_STAFF_2FA` from Render.
+
+## Completed Edits & Decisions
+- Removed Django admin entirely; portal dashboard is the only business-data UI.
+- OTP required for every `is_staff` or `role=admin` account; candidates/students use password login.
+- Added Resend HTTP email backend with HTML/text, headers, attachments, clear HTTP errors, Retry once.
+- OTP send failure now deletes the unsent code, clears resend cooldown, shows error and audits failure.
+- Email flows: verification, password setup/reset, password/email-change and account-deleted notifications, first-login welcome, pending application/registration, application/registration receipts and status, staff notifications, certificate, enquiry ack/staff, double-opt-in promotional, unsubscribe.
+- Double opt-in: checkbox requests confirmation; `promotional_opt_in` only after signed confirmation; `promotional_opt_in_requested_at` tracks pending.
+- Promotional command supports `--after-id` resume, `--limit` 50, `--sleep` 1, dry-run default, stops on failure; unsubscribe page uses signed token.
+- Account security notifications: password change/reset, admin email change (old+new), account deletion.
+- Welcome sent once on first successful login (password, OTP, Google, pending link); existing users backfilled.
+- Render IP fix: first `X-Forwarded-For` entry; audit uses same helper.
+- `/wake/` liveness has no DB; `/healthz/` is readiness; keepalive uses `/wake/`.
+- Media storage requires Supabase/R2 in production; FileSystemStorage rejected under gunicorn.
+- Retention uses calendar months; certified registrations kept with message cleared; audit logs kept.
+- Client IP, permissions, backup, bulk status, sitemap, CSP, theme, certificate styling and admin removal hardened.
 
 ## Modified Files
-- `config/urls.py` — portal CRUD routes, admin login guard, content routes.
-- `config/context_processors.py`, `config/constants.py` — shared COMPANY/nav context.
-- `apps/accounts/models.py` — designation/designation_value, apply_designation, choices.
-- `apps/accounts/views.py` — user/team/audit management, designations, dashboard labels.
-- `apps/accounts/forms.py` — TeamProfileForm; profile/user form support.
-- `apps/accounts/admin.py`, `apps/accounts/apps.py` — admin user consistency; team/audit permissions.
-- `apps/accounts/management/commands/repair_internal_accounts.py` — new repair command.
-- `apps/jobs/{models,forms,views}.py` — job/application forms, CRUD, bulk status, application count.
-- `apps/training/{models,forms,views,admin}.py` — category/programme/registration CRUD; public list fix.
-- `apps/enquiries/{forms,views}.py` — enquiry edit/delete.
-- `static/css/{input,output,certificate}.css` — tokens/components, sticky tables, responsive rules.
-- `static/fonts/*` — self-hosted Inter/Space Grotesk/JetBrains Mono + OFL files.
-- `static/images/{icons.svg,logo-icon.svg,logo-icon-512.png,og-gctt-v3.jpg,google.svg}` — new assets.
-- Deleted `static/images/{hero-office.jpg,logo.png,logo.svg,logo-small.webp,og-gctt-v2.jpg}`.
-- `static/js/ui.js` — dialogs, nav, toasts, forms, animations.
-- `templates/base.html`, `templates/partials/*` — shell, hero, fields, errors, pagination, nav.
-- `templates/pages/*`, `templates/jobs/*`, `templates/training/*` — rewritten public/auth pages.
-- `templates/accounts/*`, `templates/portals/*`, `templates/staff/*` — new portal UI.
-- New staff pages: `team.html`, `team_form.html`, `audit.html`, `categories.html`, `category_form.html`,
-  `job_form.html`, `programme_form.html`, `application_detail.html`, `registration_detail.html`, `enquiry_detail.html`.
-- Deleted `templates/admin/color_theme_toggle.html`, `templates/staff/_nav.html`.
-- `tests/test_admin_dashboard.py`, `test_ui_audit.py`, `test_ui_system.py` — new coverage.
-- Updated `tests/test_bugfixes.py`, `test_p0.py`, `test_staff.py`, `test_ui_linkedin_ai.py`.
-- `README.md`, `HANDOFF.md`, `DESIGN.md`, `DESIGN_SYSTEM_RULES.md`, `render.yaml` — docs/config.
-- `.github/workflows/ci.yml`, `scripts/check_contrast.py` — UI/build guards.
-- `apps/accounts/models.py` — `job_title`, singleton `SiteSettings`.
-- `apps/accounts/migrations/0012_sitesettings_user_job_title.py` — new schema.
-- `apps/accounts/{forms,views}.py` — metadata forms and settings page.
-- `config/{context_processors,urls,middleware,settings}.py`, `config/legacy.py` — settings context, CSP nonces, sunset, middleware.
-- `templates/partials/{_hero,_header,_theme_toggle}.html`, `templates/pages/{home,services}.html` — hero/stagger/theme.
-- `templates/{base,accounts/base_auth,portals/base_portal,portals/site_settings,portals/user_form,portals/users,portals/_nav}.html` — theme, settings, metadata UI.
-- `templates/{jobs/job_detail,training/certificate}.html` — nonce and inline-style cleanup.
-- `static/js/{theme-init.js,ui.js}`, `static/css/{input,output,certificate}.css`, `static/images/icons.svg` — theme assets and tokens.
-- `apps/accounts/management/commands/{check_legacy_urls,purge_retention}.py` — sunset check and retention.
-- `.github/workflows/maintenance.yml`, new tests for settings, theme, legacy and retention.
+- `config/email_backends.py` — new Resend HTTPS backend.
+- `config/settings.py` — Resend env/backend selection, retry settings, OTP default, storage guard.
+- `config/emails.py` — send retries/HTML, welcome/enrollment/promo/account email senders.
+- `config/emails.py` + `templates/emails/*` — transactional/promotional HTML+text templates (account, welcome, enrollment, promotional, opt-in).
+- `config/context_processors.py`, `config/site.py` — cached company/site settings.
+- `config/{middleware,ratelimit,views,urls,legacy,sitemaps}.py` — CSP, IP, wake/health, legacy/sitemap.
+- `config/settings.py`, `render.yaml`, `.github/workflows/{ci,keepalive,maintenance}.yml` — deploy/email/quota/cleanup configuration.
+- `apps/accounts/{models,forms,views,urls,email_otp,apps,audit}.py`, migrations `0012`–`0014` — OTP, welcome, promotional, settings, account emails.
+- `apps/accounts/management/commands/{send_promotional,repair_internal_accounts,purge_retention,backup_db,check_legacy_urls}.py` — email/ops commands.
+- `apps/jobs/{models,views}.py` — application welcome, notifications, bulk status, safe deletes, slug retry.
+- `apps/training/{models,views,ai_advisor,certificates}.py`, migration `0006` — enrollment, certificate styling, Gemini removal, sitemap timestamp.
+- `templates/emails/*`, `templates/accounts/{security,unsubscribe,promotional_opt_in_confirm}.html` — email/account UI.
+- Deleted `apps/accounts/admin.py`, `templates/admin/base_site.html`, `tests/test_admin_ui.py` — admin removal.
+- `templates/{base,pages/home,pages/services,partials/*,jobs/job_detail,training/certificate,staff/applications,500,robots}.html` — shell/theme/CSP/hero fixes.
+- `static/css/{input,output,certificate}.css`, `static/js/{ui,theme-init}.js`, `static/images/icons.svg` — theme/hero/assets.
+- Tests: `test_email_service.py`, `test_resend_backend.py`, `test_email_otp_login.py`, `test_pending_submissions.py`, `test_google_oauth.py`, `test_site_settings.py`, `test_theme.py`, `test_hardening.py`, `test_ops.py`, admin/UI tests.
+- Docs: `README.md`, `RUNBOOK.md`, `DEPLOY.md`, `DESIGN.md`, `HANDOFF.md`.
 
 ## Known Issues / Blockers
-- GitHub `production` secrets (`PRODUCTION_DATABASE_URL`, `PRODUCTION_DJANGO_SECRET_KEY`)
-  are not set yet; the maintenance workflow cannot run until they are.
-- Resend is verified; email OTP is enabled by default for every staff/admin account.
-- Production `repair_internal_accounts --apply` and `audit_access --strict` not run; deferred.
-- Run `manage.py check_storage` against production to confirm Supabase wiring.
-- Rate limiting assumes Render appends the client address to `X-Forwarded-For`; no
-  Cloudflare proxy is currently trusted.
-- Legacy numeric URLs still work until `2027-02-19`, then return `410 Gone`.
-- Theme and hero changes need a manual pass at all breakpoints in both themes.
+- Render dashboard previously still had old SMTP keys; after redeploy verify `EMAIL_BACKEND` is Resend and `RESEND_API_KEY` exists. Dashboard overrides beat `render.yaml`.
+- Live Resend delivery has not been verified from this environment; code/tests use mocked HTTP.
+- Render Free still sleeps after 15 minutes; keepalive may be delayed. `/wake/` avoids keeping Neon awake, but uptime is best-effort.
+- Email is synchronous with one retry; no durable outbox. A Resend outage can lose a non-OTP notification.
+- Resend Free limits: 100/day, 3,000/month. Promo default 50 leaves headroom.
+- Enquiry status changes do not email the visitor; profile-only changes do not email.
+- Production `audit_access --strict` / `repair_internal_accounts --apply` not run.
+- One-click unsubscribe is intentionally not implemented; confirmation page only.
 
-## Remaining Work
-1. Withdraw the four legacy routes after `2027-02-19` (the maintenance workflow fails until then).
-2. Configure GitHub `production` secrets and dispatch the maintenance workflow once.
-3. Run `audit_access --strict`, then `repair_internal_accounts --apply` in production with a backup.
-4. Confirm `check_storage` passes and `/wake/` is the Render health check.
-5. Keep an emergency rollback path: set `REQUIRE_EMAIL_OTP=0` and restart if Resend fails.
+## Exact Next Steps
+1. Confirm Render deploy of `f7f14a5`; check `/wake/` and `/healthz/` return `ok`.
+2. In Render environment set the Resend values and remove SMTP keys listed above; restart if needed.
+3. Test staff login OTP and confirm Resend → Emails shows delivery and API-key “Last used” changes.
+4. Run `uv run python manage.py test_email <mailbox>` if Render Shell is available.
+5. Test verification, password reset/change, email change, account deletion, welcome, enrollment, application/status, enquiry and promo opt-in/unsubscribe.
+6. If email fails: inspect Render logs for `Resend API returned HTTP ...`, `Failed to send email`, and audit `auth.email_otp_send_failed`; do not re-enable SMTP on Free.
+7. Run production `audit_access --strict`; defer `repair_internal_accounts --apply` until backup/approval.
+8. Optional production hardening: durable email outbox/worker, external uptime monitor, Resend delivery alerts.
 
 ## Verification Commands
-`uv run ruff check .` · `uv run python manage.py check` · `uv run python manage.py makemigrations --check --dry-run`
-`uv run python manage.py test tests` · `uv run python scripts/check_contrast.py` · `node --check static/js/ui.js`
-Rebuild CSS with Tailwind v4.3.5 and confirm `output.css` is deterministic.
-
-## Assumptions
-- Sunset date `2027-02-19`; maintenance daily at `03:17 UTC`, secrets scoped to GitHub `production`.
-- Retention policy: applications >24m deleted; uncertified registrations >24m deleted; certified kept with
-  message cleared; audit logs kept.
-- Theme: OS default, then explicit localStorage choice.
-- Email OTP: required for all staff and role=admin accounts; candidates/students use password login.
-- Email service: first-login welcome, HTML+text enrollment, double-opt-in promotional flow, confirmation-page unsubscribe, resumable `send_promotional` command, and account security notifications.
-- Resend HTTPS API is configured; `REQUIRE_EMAIL_OTP=1` is the default and is declared in `render.yaml`.
+`uv run ruff check .` · `DJANGO_DEBUG=1 uv run python manage.py check` · `DJANGO_DEBUG=1 uv run python manage.py makemigrations --check --dry-run` · `DJANGO_DEBUG=1 uv run python manage.py test tests` · `DJANGO_DEBUG=1 uv run python scripts/check_contrast.py` · `node --check static/js/ui.js` · `node --check static/js/theme-init.js`
