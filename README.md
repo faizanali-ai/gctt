@@ -60,6 +60,25 @@ DJANGO_DEBUG=1 DJANGO_SUPERUSER_PASSWORD='choose-a-local-password' \
 
 Sign in at `/accounts/login/` (portal) or `/admin/login/`. Keep `REQUIRE_EMAIL_OTP=0` for password-only staff/admin login; it defaults to `0`. `seed_demo` creates sample jobs and programmes only, not users. Never reuse local credentials in production.
 
+## Admin dashboard
+
+Admins use the portal at `/dashboard/`, not Django admin:
+
+- **Users & roles** — every account type (Admin, Staff, Candidate, Training Student), designation editing, activation, email verification, password reset and deletion.
+- **Team profiles** — About-page people, including designation, bio, photo URL and visibility.
+- **Mandates, Programmes, Categories** — create, edit, publish and delete public content.
+- **Applications, Registrations, Enquiries** — review records, change status, issue/revoke certificates and delete.
+- **Audit log** — read-only record of changes.
+
+Django admin remains at `/admin/` as a break-glass tool for superusers. Non-admin staff who open `/admin/login/` are sent to the portal instead of being looped back to the login form.
+
+If accounts were created before the designation fix, repair internal flags once:
+
+```bash
+uv run python manage.py repair_internal_accounts          # dry run
+uv run python manage.py repair_internal_accounts --apply  # write
+```
+
 ## Test
 
 ```bash
