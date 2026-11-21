@@ -7,18 +7,16 @@
   <p class="eyebrow eyebrow-accent">Administration</p>
   <h1 class="mt-2 text-h1">{% if mode == "edit" %}Edit {{ target.display_name }}.{% else %}Provision a user.{% endif %}</h1>
   <p class="mt-2 text-sm text-muted">
-    {% if mode == "edit" %}Change the role, subgroup or activation state. Leave the password blank to keep it.{% else %}The account becomes active immediately. Share the temporary password through a secure channel.{% endif %}
+    {% if mode == "edit" %}Change the designation, email, subgroup or activation state. Leave the password blank to keep it.{% else %}The account becomes active immediately. Share the temporary password through a secure channel.{% endif %}
   </p>
 
   <form method="post" class="form card mt-6 p-6 sm:p-8">
     {% csrf_token %}
     {% include "partials/_error_summary.html" with errors=form_errors %}
-    {% if mode == "create" %}
-      <div class="field">
-        <label for="id_email">Work email <span class="text-accent" aria-hidden="true">*</span></label>
-        <input id="id_email" type="email" name="email" required autocomplete="off" placeholder="user@gctekton.com" value="{{ values.email|default:'' }}">
-      </div>
-    {% endif %}
+    <div class="field">
+      <label for="id_email">Work email <span class="text-accent" aria-hidden="true">*</span></label>
+      <input id="id_email" type="email" name="email" required autocomplete="off" placeholder="user@gctekton.com" value="{% firstof values.email target.email '' %}">
+    </div>
 
     <div class="grid gap-4 sm:grid-cols-2">
       <div class="field">
@@ -33,28 +31,36 @@
 
     <div class="grid gap-4 sm:grid-cols-2">
       <div class="field">
-        <label for="id_role">Role</label>
-        <select id="id_role" name="role" data-role-select>
-          {% for value, label in assignable %}<option value="{{ value }}" {% if selected_role == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
-        </select>
+        <label for="id_phone">Phone</label>
+        <input id="id_phone" type="tel" name="phone" value="{% firstof values.phone target.phone '' %}" autocomplete="tel">
       </div>
-      <div class="field" id="subgroup-field" data-subgroup-field>
-        <label for="id_group">Staff Subgroup</label>
-        <select id="id_group" name="group">
-          {% for group in groups %}<option value="{{ group.name }}" {% if selected_group == group.name %}selected{% endif %}>{{ group.name }}</option>{% endfor %}
+      <div class="field">
+        <label for="id_designation">Designation</label>
+        <select id="id_designation" name="designation" data-role-select>
+          {% for value, label in designations %}<option value="{{ value }}" {% if selected_designation == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
         </select>
-        <p class="hint">Required for staff. Ignored for admin.</p>
+        <p class="hint">Candidate and student accounts sign in to the same portal.</p>
       </div>
     </div>
 
-    {% if mode == "edit" %}
-      <div class="field">
-        <label class="flex items-center gap-2.5 text-sm">
-          <input type="checkbox" name="is_active" {% if values %}{% if values.is_active %}checked{% endif %}{% elif target.is_active %}checked{% endif %}>
-          Active account (can sign in)
-        </label>
-      </div>
-    {% endif %}
+    <div class="field" id="subgroup-field" data-subgroup-field>
+      <label for="id_group">Staff Subgroup</label>
+      <select id="id_group" name="group">
+        {% for group in groups %}<option value="{{ group.name }}" {% if selected_group == group.name %}selected{% endif %}>{{ group.name }}</option>{% endfor %}
+      </select>
+      <p class="hint">Required for staff. Ignored for admin, candidate and student.</p>
+    </div>
+
+    <div class="grid gap-3 sm:grid-cols-2">
+      <label class="flex items-center gap-2.5 text-sm">
+        <input type="checkbox" name="is_active" {% if is_active_value %}checked{% endif %}>
+        Active account (can sign in)
+      </label>
+      <label class="flex items-center gap-2.5 text-sm">
+        <input type="checkbox" name="email_verified" {% if email_verified_value %}checked{% endif %}>
+        Email verified
+      </label>
+    </div>
 
     <div class="field">
       <label for="id_password">{% if mode == "edit" %}Reset password (leave blank to keep){% else %}Temporary password{% endif %}</label>
@@ -68,12 +74,19 @@
     </div>
   </form>
 
-  {% if mode == "edit" and target != user and target.role != "admin" %}
+  {% if mode == "edit" %}
+    <dl class="mt-6 grid gap-3 rounded-card border border-line bg-raised p-5 text-sm sm:grid-cols-2">
+      <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Joined</dt><dd class="mt-1">{{ target.date_joined|date:"M j, Y" }}</dd></div>
+      <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Last login</dt><dd class="mt-1">{{ target.last_login|date:"M j, Y H:i"|default:"Never" }}</dd></div>
+    </dl>
+  {% endif %}
+
+  {% if mode == "edit" and target != user and not target.is_admin %}
     <section class="mt-10 border-t border-line pt-8">
       <p class="font-mono text-2xs uppercase tracking-[0.1em] text-danger">Danger zone</p>
       <h2 class="mt-2 text-h3">Remove this account</h2>
-      <p class="mt-2 text-sm text-muted">All access and permissions end immediately. This cannot be undone.</p>
-      <form method="post" action="{% url 'manage_user_delete' target.pk %}" data-confirm="Permanently remove {{ target.email|escapejs }}? This cannot be undone." data-confirm-action="Remove" class="mt-4">
+      <p class="mt-2 text-sm text-muted">All access ends immediately and their applications and registrations are deleted. This cannot be undone.</p>
+      <form method="post" action="{% url 'manage_user_delete' target.pk %}" data-confirm="Permanently remove {{ target.email|escapejs }} and their records? This cannot be undone." data-confirm-action="Remove" class="mt-4">
         {% csrf_token %}
         <button type="submit" class="btn btn-ghost text-danger">Permanently remove account</button>
       </form>

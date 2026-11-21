@@ -33,8 +33,14 @@ from config.emails import send_login_otp, send_password_setup, send_verification
 from .audit import log_action
 from .decorators import staff_required
 from .email_otp import issue_code, verify_code
-from .forms import ProfileForm, SignupForm, StyledAuthenticationForm
-from .models import STAFF_SUBGROUPS, User, sync_access
+from .forms import ProfileForm, SignupForm, StyledAuthenticationForm, TeamProfileForm
+from .models import (
+    DESIGNATION_CHOICES,
+    STAFF_SUBGROUPS,
+    AuditLog,
+    TeamProfile,
+    User,
+)
 
 
 @ratelimit(key="ip", rate="10/h", method="POST", block=True)
@@ -552,17 +558,25 @@ def _active_admin_count():
 @staff_required
 def manage_users(request):
     _require_user_manager(request)
-    users = User.objects.filter(is_staff=True).select_related()
+    users = User.objects.prefetch_related("groups")
     q = request.GET.get("q", "").strip()
-    role = request.GET.get("role", "")
+    designation = request.GET.get("designation", request.GET.get("role", ""))
     if q:
         users = users.filter(
             Q(email__icontains=q)
             | Q(first_name__icontains=q)
             | Q(last_name__icontains=q)
         )
-    if role:
-        users = users.filter(role=role)
+    if designation == "admin":
+        users = users.filter(role=User.Role.ADMIN)
+    elif designation == "staff":
+        users = users.filter(role=User.Role.STAFF, is_staff=True)
+    elif designation == "candidate":
+        users = users.filter(
+            is_staff=False, account_type=User.AccountType.CANDIDATE
+        )
+    elif designation == "student":
+        users = users.filter(is_staff=False, account_type=User.AccountType.STUDENT)
     page_obj = Paginator(users.order_by("role", "email"), 25).get_page(request.GET.get("page"))
     return render(
         request,
@@ -570,39 +584,43 @@ def manage_users(request):
         {
             "page_obj": page_obj,
             "q": q,
-            "role": role,
-            "roles": User.Role.choices,
+            "designation": designation,
+            "designations": DESIGNATION_CHOICES,
         },
     )
+
+
+def _submitted_designation(request, fallback="staff"):
+    value = (
+        request.POST.get("designation")
+        or request.POST.get("role")
+        or fallback
+    )
+    return value if value in {choice[0] for choice in DESIGNATION_CHOICES} else fallback
 
 
 @login_required
 @staff_required
 def manage_user_create(request):
     _require_user_manager(request)
-    assignable = request.user.assignable_roles()
     subgroups = Group.objects.filter(name__in=STAFF_SUBGROUPS)
-    allowed_roles = {value for value, _ in assignable}
-    default_role = User.Role.STAFF.value
-    selected_role = request.POST.get("role", default_role)
-    if selected_role not in allowed_roles:
-        selected_role = default_role
+    selected_designation = _submitted_designation(request)
     selected_group = request.POST.get("group", "")
     form_errors = []
     if request.method == "POST":
         email = request.POST.get("email", "").strip().lower()
-        role = request.POST.get("role", "")
         first_name = request.POST.get("first_name", "").strip()
         last_name = request.POST.get("last_name", "").strip()
+        phone = request.POST.get("phone", "").strip()
         subgroup = request.POST.get("group", "")
         password = request.POST.get("password", "")
+        is_active = request.POST.get("is_active", "on") == "on"
+        email_verified = request.POST.get("email_verified", "on") == "on"
         error = None
-        if role not in [value for value, _ in assignable]:
-            error = "You cannot assign that role."
-        elif role == User.Role.STAFF and subgroup not in STAFF_SUBGROUPS:
-            error = "Select a valid staff subgroup."
-        elif not email:
+        if not email:
             error = "Email is required."
+        elif selected_designation == "staff" and subgroup not in STAFF_SUBGROUPS:
+            error = "Select a valid staff subgroup."
         elif User.objects.filter(email__iexact=email).exists():
             error = "A user with that email already exists."
         else:
@@ -620,41 +638,36 @@ def manage_user_create(request):
                     password=password,
                     first_name=first_name,
                     last_name=last_name,
-                    role=role,
-                    is_staff=True,
+                    phone=phone,
+                    is_active=is_active,
+                    email_verified=email_verified,
                 )
-                sync_access(user, subgroup if role == User.Role.STAFF else None)
+                user.apply_designation(selected_designation, subgroup)
             except IntegrityError:
                 messages.error(request, "A user with that email already exists.")
-                return render(
+                form_errors = ["A user with that email already exists."]
+            else:
+                log_action(
                     request,
-                    "portals/user_form.html",
-                    {
-                        "mode": "create",
-                        "assignable": assignable,
-                        "groups": subgroups,
-                        "selected_role": selected_role,
-                        "selected_group": selected_group,
-                        "values": request.POST,
-                        "form_errors": ["A user with that email already exists."],
-                    },
+                    "user.create",
+                    user.email,
+                    f"designation={selected_designation}",
                 )
-            log_action(request, "user.create", user.email, f"role={user.role}")
-            messages.success(
-                request, f"{email} added as {user.get_role_display()}."
-            )
-            return redirect("manage_users")
+                messages.success(request, f"{email} added as {user.designation}.")
+                return redirect("manage_users")
     return render(
         request,
         "portals/user_form.html",
         {
             "mode": "create",
-            "assignable": assignable,
             "groups": subgroups,
-            "selected_role": selected_role,
+            "designations": DESIGNATION_CHOICES,
+            "selected_designation": selected_designation,
             "selected_group": selected_group,
             "values": request.POST,
             "form_errors": form_errors,
+            "is_active_value": request.POST.get("is_active", "on") == "on",
+            "email_verified_value": request.POST.get("email_verified", "on") == "on",
         },
     )
 
@@ -663,29 +676,41 @@ def manage_user_create(request):
 @staff_required
 def manage_user_edit(request, pk):
     _require_user_manager(request)
-    target = get_object_or_404(User.objects.filter(is_staff=True), pk=pk)
+    target = get_object_or_404(User, pk=pk)
     if not request.user.can_manage_account(target):
         raise PermissionDenied
-    assignable = request.user.assignable_roles()
     subgroups = Group.objects.filter(name__in=STAFF_SUBGROUPS)
     current_subgroup = target.groups.filter(name__in=STAFF_SUBGROUPS).values_list(
         "name", flat=True
     ).first()
+    selected_designation = _submitted_designation(request, target.designation_value)
+    selected_group = request.POST.get("group", current_subgroup or "")
     form_errors = []
     if request.method == "POST":
-        role = request.POST.get("role", target.role)
+        email = request.POST.get("email", target.email).strip().lower()
         subgroup = request.POST.get("group", current_subgroup or "")
         is_active = request.POST.get("is_active") == "on"
+        email_verified = (
+            request.POST.get("email_verified") == "on"
+            if "email_verified" in request.POST
+            else target.email_verified
+        )
         error = None
-        if role not in [value for value, _ in assignable]:
-            error = "You cannot assign that role."
-        elif role == User.Role.STAFF and subgroup not in STAFF_SUBGROUPS:
+        if not email:
+            error = "Email is required."
+        elif User.objects.filter(email__iexact=email).exclude(pk=target.pk).exists():
+            error = "A user with that email already exists."
+        elif selected_designation == "staff" and subgroup not in STAFF_SUBGROUPS:
             error = "Select a valid staff subgroup."
-        elif target == request.user and role != User.Role.ADMIN:
-            error = "You cannot change your own admin role."
+        elif target == request.user and selected_designation != "admin":
+            error = "You cannot change your own admin designation."
         elif target == request.user and not is_active:
             error = "You cannot deactivate your own account."
-        elif target.is_admin and (role != User.Role.ADMIN or not is_active) and _active_admin_count() <= 1:
+        elif (
+            target.is_admin
+            and (selected_designation != "admin" or not is_active)
+            and _active_admin_count() <= 1
+        ):
             error = "You cannot remove the last active admin."
         if error:
             messages.error(request, error)
@@ -704,26 +729,31 @@ def manage_user_edit(request, pk):
                         {
                             "mode": "edit",
                             "target": target,
-                            "assignable": assignable,
                             "groups": subgroups,
-                            "selected_role": request.POST.get("role", target.role),
-                            "selected_group": request.POST.get("group", current_subgroup or ""),
+                            "designations": DESIGNATION_CHOICES,
+                            "selected_designation": selected_designation,
+                            "selected_group": selected_group,
                             "values": request.POST,
                             "form_errors": exc.messages,
+                            "is_active_value": is_active,
+                            "email_verified_value": email_verified,
                         },
                     )
+            target.email = email
             target.first_name = request.POST.get("first_name", "").strip()
             target.last_name = request.POST.get("last_name", "").strip()
-            target.role = role
+            target.phone = request.POST.get("phone", "").strip()
             target.is_active = is_active
-            target.is_staff = True
-            target.save()
-            sync_access(target, subgroup if role == User.Role.STAFF else None)
+            target.email_verified = email_verified
+            target.apply_designation(selected_designation, subgroup)
             if new_password:
                 target.set_password(new_password)
                 target.save(update_fields=["password"])
             log_action(
-                request, "user.edit", target.email, f"role={role}, active={target.is_active}"
+                request,
+                "user.edit",
+                target.email,
+                f"designation={selected_designation}, active={target.is_active}",
             )
             messages.success(request, "User updated.")
             return redirect("manage_users")
@@ -733,12 +763,22 @@ def manage_user_edit(request, pk):
         {
             "mode": "edit",
             "target": target,
-            "assignable": assignable,
             "groups": subgroups,
-            "selected_role": request.POST.get("role", target.role),
-            "selected_group": request.POST.get("group", current_subgroup or ""),
+            "designations": DESIGNATION_CHOICES,
+            "selected_designation": selected_designation,
+            "selected_group": selected_group,
             "values": request.POST,
             "form_errors": form_errors,
+            "is_active_value": (
+                request.POST.get("is_active") == "on"
+                if request.method == "POST"
+                else target.is_active
+            ),
+            "email_verified_value": (
+                request.POST.get("email_verified") == "on"
+                if request.method == "POST" and "email_verified" in request.POST
+                else target.email_verified
+            ),
         },
     )
 
@@ -748,7 +788,7 @@ def manage_user_edit(request, pk):
 @require_POST
 def manage_user_delete(request, pk):
     _require_user_manager(request)
-    target = get_object_or_404(User.objects.filter(is_staff=True), pk=pk)
+    target = get_object_or_404(User, pk=pk)
     if not request.user.can_manage_account(target):
         raise PermissionDenied
     if target == request.user:
@@ -763,6 +803,115 @@ def manage_user_delete(request, pk):
     log_action(request, "manage.user_delete", target_email)
     messages.success(request, f"User account {target_email} has been permanently deleted.")
     return redirect("manage_users")
+
+
+@login_required
+@staff_required
+def manage_team(request):
+    _require_user_manager(request)
+    profiles = TeamProfile.objects.all()
+    q = request.GET.get("q", "").strip()
+    section = request.GET.get("section", "")
+    if q:
+        profiles = profiles.filter(
+            Q(name__icontains=q)
+            | Q(designation__icontains=q)
+            | Q(bio__icontains=q)
+        )
+    if section in TeamProfile.Section.values:
+        profiles = profiles.filter(section=section)
+    page_obj = Paginator(profiles, 25).get_page(request.GET.get("page"))
+    return render(
+        request,
+        "staff/team.html",
+        {
+            "page_obj": page_obj,
+            "q": q,
+            "section": section,
+            "sections": TeamProfile.Section.choices,
+        },
+    )
+
+
+@login_required
+@staff_required
+def manage_team_create(request):
+    _require_user_manager(request)
+    form = TeamProfileForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        profile = form.save()
+        log_action(request, "team.create", profile.name, profile.designation)
+        messages.success(request, f"{profile.name} added.")
+        return redirect("manage_team")
+    return render(
+        request,
+        "staff/team_form.html",
+        {"form": form, "mode": "create"},
+    )
+
+
+@login_required
+@staff_required
+def manage_team_edit(request, pk):
+    _require_user_manager(request)
+    profile = get_object_or_404(TeamProfile, pk=pk)
+    form = TeamProfileForm(request.POST or None, instance=profile)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        log_action(request, "team.edit", profile.name, profile.designation)
+        messages.success(request, "Team profile updated.")
+        return redirect("manage_team")
+    return render(
+        request,
+        "staff/team_form.html",
+        {"form": form, "mode": "edit", "profile": profile},
+    )
+
+
+@login_required
+@staff_required
+@require_POST
+def manage_team_delete(request, pk):
+    _require_user_manager(request)
+    profile = get_object_or_404(TeamProfile, pk=pk)
+    name = profile.name
+    profile.delete()
+    log_action(request, "team.delete", name)
+    messages.success(request, f"{name} removed.")
+    return redirect("manage_team")
+
+
+@login_required
+@staff_required
+def manage_audit(request):
+    _require_user_manager(request)
+    entries = AuditLog.objects.select_related("actor")
+    q = request.GET.get("q", "").strip()
+    action = request.GET.get("action", "").strip()
+    if q:
+        entries = entries.filter(
+            Q(actor__email__icontains=q)
+            | Q(action__icontains=q)
+            | Q(target__icontains=q)
+            | Q(details__icontains=q)
+        )
+    if action:
+        entries = entries.filter(action=action)
+    page_obj = Paginator(entries, 50).get_page(request.GET.get("page"))
+    return render(
+        request,
+        "staff/audit.html",
+        {
+            "page_obj": page_obj,
+            "q": q,
+            "action": action,
+            "actions": (
+                AuditLog.objects.order_by("action")
+                .values_list("action", flat=True)
+                .distinct()
+            ),
+        },
+    )
 
 
 @login_required

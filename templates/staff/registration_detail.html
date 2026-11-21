@@ -1,0 +1,46 @@
+{% extends "portals/base_portal.html" %}
+{% block title %}Registration — {{ registration.student.display_name }}{% endblock %}
+{% block portal_title %}Registration{% endblock %}
+
+{% block portal_content %}
+<div class="max-w-3xl">
+  <p class="eyebrow eyebrow-accent">Registration</p>
+  <h1 class="mt-2 text-h1">{{ registration.student.display_name }}.</h1>
+  <p class="mt-2 text-sm text-muted">{{ registration.student.email }} · {{ registration.programme.title }}</p>
+
+  <dl class="mt-6 grid gap-3 rounded-card border border-line bg-raised p-5 text-sm sm:grid-cols-2">
+    <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Registered</dt><dd class="mt-1">{{ registration.created_at|date:"M j, Y H:i" }}</dd></div>
+    <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Certificate</dt><dd class="mt-1">{{ registration.certificate_ref|default:"Not issued" }}</dd></div>
+    <div class="sm:col-span-2"><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Student message</dt><dd class="mt-1 whitespace-pre-line text-muted">{{ registration.message|default:"—" }}</dd></div>
+  </dl>
+
+  <form method="post" class="form card mt-6 p-6 sm:p-8">
+    {% csrf_token %}
+    {% include "partials/_form_errors.html" with form=form %}
+    {% for field in form %}
+      {% include "partials/_field.html" with field=field %}
+    {% endfor %}
+    <div class="flex flex-wrap gap-3">
+      <button type="submit" class="btn btn-primary">Save registration</button>
+      <a href="{% url 'staff_registrations' %}" class="btn btn-secondary">Back</a>
+    </div>
+  </form>
+
+  <form method="post" action="{% url 'staff_registration_certificate' registration.uuid %}" class="mt-6 border-t border-line pt-6">
+    {% csrf_token %}
+    {% if registration.certificate_issued %}
+      <input type="hidden" name="action" value="revoke">
+      <button type="submit" class="btn btn-ghost text-danger" data-confirm="Revoke this certificate? The public reference will stop verifying." data-confirm-action="Revoke">Revoke certificate</button>
+    {% else %}
+      <button type="submit" class="btn btn-secondary">Issue certificate</button>
+    {% endif %}
+  </form>
+
+  {% if perms.training.delete_registration %}
+    <form method="post" action="{% url 'staff_registration_delete' registration.uuid %}" data-confirm="Delete this registration? This cannot be undone." data-confirm-action="Delete" class="mt-6">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-ghost text-danger">Delete registration</button>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

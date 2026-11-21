@@ -2,7 +2,7 @@ from pathlib import Path
 
 from django import forms
 
-from .models import Application
+from .models import Application, Job
 
 # First bytes of each allowed format. Extension alone is not trustworthy.
 SIGNATURES = {
@@ -10,6 +10,36 @@ SIGNATURES = {
     "doc": b"\xd0\xcf\x11\xe0",
     "docx": b"PK\x03\x04",
 }
+
+
+class JobForm(forms.ModelForm):
+    slug = forms.SlugField(
+        required=False,
+        help_text="Leave blank to generate from the title.",
+    )
+
+    class Meta:
+        model = Job
+        fields = (
+            "title",
+            "slug",
+            "location",
+            "employment_type",
+            "description",
+            "requirements",
+            "published",
+        )
+        widgets = {
+            "description": forms.Textarea(attrs={"rows": 6}),
+            "requirements": forms.Textarea(attrs={"rows": 5}),
+        }
+
+
+class ApplicationManageForm(forms.ModelForm):
+    class Meta:
+        model = Application
+        fields = ("status", "message")
+        widgets = {"message": forms.Textarea(attrs={"rows": 4})}
 
 
 class ApplicationForm(forms.ModelForm):

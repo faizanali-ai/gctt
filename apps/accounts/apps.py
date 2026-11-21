@@ -15,6 +15,8 @@ ROLE_PERMISSIONS = {
         ("enquiries", "enquiry", ["view", "change"]),
     ],
     "Admin": [
+        ("accounts", "teamprofile", ["view", "add", "change", "delete"]),
+        ("accounts", "auditlog", ["view"]),
         ("jobs", "job", ["view", "add", "change", "delete"]),
         ("jobs", "application", ["view", "change", "delete"]),
         ("training", "category", ["view", "add", "change", "delete"]),

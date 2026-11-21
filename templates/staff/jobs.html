@@ -10,7 +10,7 @@
     <h1 class="mt-2 text-h1">Mandates.</h1>
     <p class="mt-2 text-sm text-muted">Publish roles, check applicant volume and control visibility.</p>
   </div>
-  {% if user.is_admin %}<a href="{% url 'admin:jobs_job_add' %}" class="btn btn-primary">Post a mandate</a>{% endif %}
+  {% if perms.jobs.add_job %}<a href="{% url 'staff_job_create' %}" class="btn btn-primary">Post a mandate</a>{% endif %}
 </div>
 
 <div class="card mt-6 p-4">
@@ -60,7 +60,7 @@
             <td data-label="Location" class="text-sm text-muted">{{ job.location }}</td>
             <td data-label="Engagement" class="text-sm">{{ job.get_employment_type_display }}</td>
             <td data-label="Applicants">
-              <a href="{% url 'staff_applications' %}?job={{ job.pk }}" class="text-sm font-semibold text-accent">{% if user.is_admin %}{{ job.applications.count }}{% else %}View{% endif %}</a>
+              <a href="{% url 'staff_applications' %}?job={{ job.pk }}" class="text-sm font-semibold text-accent">{% if user.is_admin %}{{ job.application_count }}{% else %}View{% endif %}</a>
             </td>
             <td data-label="Action" class="text-right">
               <button type="button" class="btn btn-secondary btn-sm" data-drawer-template="job-{{ job.pk }}" data-drawer-title="{{ job.title }}">Manage</button>
@@ -81,6 +81,7 @@
         </div>
         <p class="text-sm leading-relaxed text-muted">{{ job.description|truncatewords:60 }}</p>
         <a href="{% url 'job_detail' job.slug %}" class="btn btn-secondary w-full">Open public page</a>
+        {% if perms.jobs.change_job %}<a href="{% url 'staff_job_edit' job.pk %}" class="btn btn-secondary w-full">Edit mandate details</a>{% endif %}
 
         {% if job.published %}
           <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.scheme }}://{{ request.get_host }}{% url 'job_detail' job.slug %}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary w-full">Share on LinkedIn</a>
@@ -96,16 +97,17 @@
             {% if job.published %}Unpublish{% else %}Publish live{% endif %}
           </button>
         </form>
+        {% if perms.jobs.delete_job %}
+          <form method="post" action="{% url 'staff_job_delete' job.pk %}" data-confirm="Delete “{{ job.title|escapejs }}” and all its applications? This cannot be undone." data-confirm-action="Delete">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-ghost w-full text-danger">Delete mandate</button>
+          </form>
+        {% endif %}
       </div>
     </template>
   {% endfor %}
 
   {% include "partials/_pagination.html" %}
-
-  <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-sm text-muted">
-    <p>Salary ranges and client codes are edited in Django admin.</p>
-    <a href="{% url 'admin:jobs_job_changelist' %}" class="font-semibold text-accent">Open jobs in admin</a>
-  </div>
 {% else %}
   <div class="card mt-4 p-10 text-center">
     <h2 class="text-h3">No mandates match the filters.</h2>

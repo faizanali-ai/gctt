@@ -130,6 +130,7 @@
           </form>
         {% else %}
           <p class="border-t border-line pt-5 text-sm text-muted">Set the status to completed before issuing a certificate.</p>
+          <a href="{% url 'staff_registration_edit' registration.uuid %}" class="btn btn-secondary w-full">Open full record</a>
         {% endif %}
       </div>
     </template>

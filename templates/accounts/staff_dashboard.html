@@ -8,7 +8,7 @@
   <div>
     <p class="eyebrow eyebrow-accent">Internal portal</p>
     <h1 class="mt-2 text-h1">Operations: {{ user.display_name }}.</h1>
-    <p class="mt-1 text-sm text-muted">{{ user.email }} · {{ user.get_role_display }}</p>
+    <p class="mt-1 text-sm text-muted">{{ user.email }} · {{ user.designation }}</p>
     {% if user.is_admin %}
       <p class="mt-2 font-mono text-2xs uppercase tracking-[0.06em] text-muted">
         Accounts: {{ stats.accounts_total }} · Admins: {{ stats.admins_total }} · Staff: {{ stats.staff_total }} · Candidates: {{ stats.candidates_total }} · Students: {{ stats.students_total }}
@@ -17,23 +17,24 @@
   </div>
   <div class="flex flex-wrap gap-2">
     {% if can_manage_users %}<a href="{% url 'manage_users' %}" class="btn btn-secondary btn-sm">Users and roles</a>{% endif %}
-    {% if user.is_admin %}<a href="{% url 'admin:index' %}" class="btn btn-secondary btn-sm">Django admin</a>{% endif %}
+    {% if can_manage_users %}<a href="{% url 'manage_team' %}" class="btn btn-secondary btn-sm">Team profiles</a>{% endif %}
   </div>
 </div>
 
 <div class="mt-6 flex flex-wrap items-center gap-2 border-b border-line pb-4">
   <span class="font-mono text-2xs uppercase tracking-[0.1em] text-muted">Quick actions</span>
-  {% if user.is_admin and perms.jobs.change_job %}
-    <a href="{% url 'admin:jobs_job_add' %}" class="btn btn-secondary btn-sm">Post a mandate</a>
+  {% if perms.jobs.add_job %}
+    <a href="{% url 'staff_job_create' %}" class="btn btn-secondary btn-sm">Post a mandate</a>
   {% endif %}
   {% if perms.jobs.view_application %}
     <a href="{% url 'staff_applications' %}" class="btn btn-secondary btn-sm">Review applications</a>
   {% endif %}
-  {% if user.is_admin and perms.training.change_programme %}
-    <a href="{% url 'admin:training_programme_add' %}" class="btn btn-secondary btn-sm">Publish a programme</a>
+  {% if perms.training.add_programme %}
+    <a href="{% url 'staff_programme_create' %}" class="btn btn-secondary btn-sm">Create a programme</a>
   {% endif %}
   {% if can_manage_users %}
     <a href="{% url 'manage_user_create' %}" class="btn btn-secondary btn-sm">Invite a team member</a>
+    <a href="{% url 'manage_audit' %}" class="btn btn-secondary btn-sm">Audit log</a>
   {% endif %}
   <a href="{% url 'profile' %}" class="btn btn-secondary btn-sm">Edit profile</a>
 </div>

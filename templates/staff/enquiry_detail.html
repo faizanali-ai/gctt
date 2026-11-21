@@ -1,0 +1,30 @@
+{% extends "portals/base_portal.html" %}
+{% block title %}Enquiry — {{ enquiry.name }}{% endblock %}
+{% block portal_title %}Enquiry{% endblock %}
+
+{% block portal_content %}
+<div class="max-w-3xl">
+  <p class="eyebrow eyebrow-accent">Enquiry</p>
+  <h1 class="mt-2 text-h1">{{ enquiry.name }}.</h1>
+  <p class="mt-2 text-sm text-muted">{{ enquiry.email }} · {{ enquiry.get_category_display }} · {{ enquiry.created_at|date:"M j, Y H:i" }}</p>
+
+  <form method="post" class="form card mt-6 p-6 sm:p-8">
+    {% csrf_token %}
+    {% include "partials/_form_errors.html" with form=form %}
+    {% for field in form %}
+      {% include "partials/_field.html" with field=field %}
+    {% endfor %}
+    <div class="flex flex-wrap gap-3">
+      <button type="submit" class="btn btn-primary">Save enquiry</button>
+      <a href="{% url 'staff_enquiries' %}" class="btn btn-secondary">Back</a>
+    </div>
+  </form>
+
+  {% if perms.enquiries.delete_enquiry %}
+    <form method="post" action="{% url 'staff_enquiry_delete' enquiry.pk %}" data-confirm="Delete this enquiry? This cannot be undone." data-confirm-action="Delete" class="mt-8 border-t border-line pt-6">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-ghost text-danger">Delete enquiry</button>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

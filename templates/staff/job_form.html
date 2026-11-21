@@ -1,0 +1,23 @@
+{% extends "portals/base_portal.html" %}
+{% block title %}{% if mode == "edit" %}Edit {{ job.title }}{% else %}Post a mandate{% endif %} — GCTT Portal{% endblock %}
+{% block portal_title %}Mandate{% endblock %}
+
+{% block portal_content %}
+<div class="max-w-3xl">
+  <p class="eyebrow eyebrow-accent">Talent acquisition</p>
+  <h1 class="mt-2 text-h1">{% if mode == "edit" %}Edit {{ job.title }}.{% else %}Post a mandate.{% endif %}</h1>
+  <p class="mt-2 text-sm text-muted">Publishing makes the role visible on the public careers page.</p>
+
+  <form method="post" class="form card mt-6 p-6 sm:p-8">
+    {% csrf_token %}
+    {% include "partials/_form_errors.html" with form=form %}
+    {% for field in form %}
+      {% include "partials/_field.html" with field=field %}
+    {% endfor %}
+    <div class="flex flex-wrap gap-3">
+      <button type="submit" class="btn btn-primary">Save mandate</button>
+      <a href="{% url 'staff_jobs' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

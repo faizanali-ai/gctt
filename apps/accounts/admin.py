@@ -82,13 +82,24 @@ class UserAdmin(BaseUserAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": ("email", "first_name", "last_name", "password1", "password2"),
+                "fields": (
+                    "email",
+                    "first_name",
+                    "last_name",
+                    "role",
+                    "account_type",
+                    "is_active",
+                    "email_verified",
+                    "password1",
+                    "password2",
+                ),
             },
         ),
     )
 
     def save_model(self, request, obj, form, change):
         with transaction.atomic():
+            obj.is_staff = obj.role in (User.Role.ADMIN, User.Role.STAFF)
             if change:
                 previous = User.objects.get(pk=obj.pk)
                 self_downgrade = obj.pk == request.user.pk and (

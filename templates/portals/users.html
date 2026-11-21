@@ -19,15 +19,15 @@
       <input id="user-q" type="search" name="q" value="{{ q }}" placeholder="Name, email or role">
     </div>
     <div class="field sm:w-52">
-      <label for="user-role" class="sr-only">Role</label>
-      <select id="user-role" name="role">
-        <option value="">All roles</option>
-        {% for value, label in roles %}<option value="{{ value }}" {% if role == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      <label for="user-designation" class="sr-only">Designation</label>
+      <select id="user-designation" name="designation">
+        <option value="">All designations</option>
+        {% for value, label in designations %}<option value="{{ value }}" {% if designation == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
       </select>
     </div>
     <div class="flex gap-2">
       <button type="submit" class="btn btn-primary">Filter</button>
-      {% if q or role %}<a href="{% url 'manage_users' %}" class="btn btn-secondary">Clear</a>{% endif %}
+      {% if q or designation %}<a href="{% url 'manage_users' %}" class="btn btn-secondary">Clear</a>{% endif %}
     </div>
   </form>
 </div>
@@ -39,7 +39,7 @@
       <thead>
         <tr>
           <th scope="col">Identity</th>
-          <th scope="col">Role</th>
+          <th scope="col">Designation</th>
           <th scope="col">Subgroup</th>
           <th scope="col">State</th>
           <th scope="col" class="text-right">Actions</th>
@@ -52,14 +52,19 @@
               <p class="font-semibold">{{ item.display_name }}</p>
               <p class="text-2xs text-muted">{{ item.email }}</p>
             </td>
-            <td data-label="Role" class="text-sm">{{ item.get_role_display }}</td>
+            <td data-label="Designation" class="text-sm">{{ item.designation }}</td>
             <td data-label="Subgroup">
               <div class="flex flex-wrap gap-1">
-                {% for group in item.groups.all %}<span class="chip">{{ group.name }}</span>{% empty %}<span class="text-sm text-muted">—</span>{% endfor %}
+                {% if item.is_staff %}
+                  {% for group in item.groups.all %}<span class="chip">{{ group.name }}</span>{% empty %}<span class="text-sm text-muted">None</span>{% endfor %}
+                {% else %}
+                  <span class="text-sm text-muted">—</span>
+                {% endif %}
               </div>
             </td>
             <td data-label="State">
               {% if item.is_active %}<span class="chip chip-success">Active</span>{% else %}<span class="chip chip-danger">Deactivated</span>{% endif %}
+              {% if not item.email_verified %}<p class="mt-1 text-2xs text-muted">Email unverified</p>{% endif %}
             </td>
             <td data-label="Actions" class="text-right">
               <div class="flex flex-wrap justify-end gap-2">

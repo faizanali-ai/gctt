@@ -10,7 +10,10 @@
     <h1 class="mt-2 text-h1">Programmes.</h1>
     <p class="mt-2 text-sm text-muted">Publish syllabi, control registration and check cohort size.</p>
   </div>
-  {% if user.is_admin %}<a href="{% url 'admin:training_programme_add' %}" class="btn btn-primary">Create a programme</a>{% endif %}
+  <div class="flex flex-wrap gap-2">
+    {% if perms.training.view_category %}<a href="{% url 'staff_categories' %}" class="btn btn-secondary">Categories</a>{% endif %}
+    {% if perms.training.add_programme %}<a href="{% url 'staff_programme_create' %}" class="btn btn-primary">Create a programme</a>{% endif %}
+  </div>
 </div>
 
 <div class="card mt-6 p-4">
@@ -104,6 +107,8 @@
         </div>
         <p class="text-sm leading-relaxed text-muted">{{ programme.description|truncatewords:60 }}</p>
         <a href="{% url 'programme_detail' programme.slug %}" class="btn btn-secondary w-full">Open public page</a>
+        <a href="{% url 'staff_registrations' %}?programme={{ programme.pk }}" class="btn btn-secondary w-full">View registrations</a>
+        {% if perms.training.change_programme %}<a href="{% url 'staff_programme_edit' programme.pk %}" class="btn btn-secondary w-full">Edit programme details</a>{% endif %}
 
         {% if programme.published %}
           <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.scheme }}://{{ request.get_host }}{% url 'programme_detail' programme.slug %}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary w-full">Share on LinkedIn</a>
@@ -120,17 +125,18 @@
             <input type="hidden" name="field" value="registration_open">
             <button type="submit" class="btn {% if programme.registration_open %}btn-secondary{% else %}btn-primary{% endif %} w-full">{% if programme.registration_open %}Close registration{% else %}Open registration{% endif %}</button>
           </form>
+          {% if perms.training.delete_programme %}
+            <form method="post" action="{% url 'staff_programme_delete' programme.pk %}" data-confirm="Delete “{{ programme.title|escapejs }}” and all its registrations? This cannot be undone." data-confirm-action="Delete">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-ghost w-full text-danger">Delete programme</button>
+            </form>
+          {% endif %}
         </div>
       </div>
     </template>
   {% endfor %}
 
   {% include "partials/_pagination.html" %}
-
-  <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-sm text-muted">
-    <p>Modules, syllabi and instructor profiles are edited in Django admin.</p>
-    <a href="{% url 'admin:training_programme_changelist' %}" class="font-semibold text-accent">Open programmes in admin</a>
-  </div>
 {% else %}
   <div class="card mt-4 p-10 text-center">
     <h2 class="text-h3">No programmes match the filters.</h2>

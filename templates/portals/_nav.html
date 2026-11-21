@@ -29,6 +29,12 @@
       Programmes
     </a>
   {% endif %}
+  {% if perms.training.view_category %}
+    <a href="{% url 'staff_categories' %}" class="portal-link" {% if '/staff/categories/' in request.path %}aria-current="page"{% endif %}>
+      <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#filter"></use></svg>
+      Categories
+    </a>
+  {% endif %}
   {% if perms.training.view_registration %}
     <a href="{% url 'staff_registrations' %}" class="portal-link" {% if '/staff/registrations/' in request.path %}aria-current="page"{% endif %}>
       <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#calendar"></use></svg>
@@ -47,17 +53,19 @@
   </a>
 
   {% if user.can_manage_users or user.is_admin %}
-    <p class="portal-group">Administration</p>
+    <p class="portal-group">Manage</p>
     {% if user.can_manage_users %}
       <a href="{% url 'manage_users' %}" class="portal-link" {% if '/manage/users/' in request.path %}aria-current="page"{% endif %}>
         <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#users"></use></svg>
         Users &amp; roles
       </a>
-    {% endif %}
-    {% if user.is_admin %}
-      <a href="{% url 'admin:index' %}" class="portal-link">
-        <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#external"></use></svg>
-        Django admin
+      <a href="{% url 'manage_team' %}" class="portal-link" {% if '/manage/team/' in request.path %}aria-current="page"{% endif %}>
+        <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#users"></use></svg>
+        Team profiles
+      </a>
+      <a href="{% url 'manage_audit' %}" class="portal-link" {% if '/manage/audit/' in request.path %}aria-current="page"{% endif %}>
+        <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#file"></use></svg>
+        Audit log
       </a>
     {% endif %}
   {% endif %}

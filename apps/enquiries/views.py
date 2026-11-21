@@ -11,7 +11,7 @@ from apps.accounts.audit import log_action
 from apps.accounts.decorators import staff_required
 from config.emails import notify_enquiry, notify_enquiry_received
 
-from .forms import EnquiryForm
+from .forms import EnquiryForm, EnquiryManageForm
 from .models import Enquiry
 
 
@@ -93,6 +93,37 @@ def staff_enquiries(request):
             "categories": Enquiry.Category.choices,
         },
     )
+
+
+@login_required
+@staff_required
+@permission_required("enquiries.change_enquiry", raise_exception=True)
+def staff_enquiry_edit(request, pk):
+    enquiry = get_object_or_404(Enquiry, pk=pk)
+    form = EnquiryManageForm(request.POST or None, instance=enquiry)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        log_action(request, "enquiry.edit", f"{enquiry.pk}", enquiry.status)
+        messages.success(request, "Enquiry updated.")
+        return redirect("staff_enquiries")
+    return render(
+        request,
+        "staff/enquiry_detail.html",
+        {"form": form, "enquiry": enquiry},
+    )
+
+
+@login_required
+@staff_required
+@permission_required("enquiries.delete_enquiry", raise_exception=True)
+@require_POST
+def staff_enquiry_delete(request, pk):
+    enquiry = get_object_or_404(Enquiry, pk=pk)
+    label = f"{enquiry.name} ({enquiry.email})"
+    enquiry.delete()
+    log_action(request, "enquiry.delete", label)
+    messages.success(request, "Enquiry deleted.")
+    return redirect("staff_enquiries")
 
 
 @login_required

@@ -26,9 +26,15 @@ _admin_login = admin.site.login
 
 @ratelimit(key="ip", rate="10/m", method="POST", block=True)
 def _admin_login_guard(request, extra_context=None):
-    if settings.REQUIRE_EMAIL_OTP:
-        if request.user.is_authenticated and getattr(request.user, "is_admin", False):
+    # Django authenticates any is_staff account here but admin.site.has_permission
+    # only admits active admins. Send everyone else to the portal instead of
+    # bouncing them back to this login form.
+    if request.user.is_authenticated:
+        if getattr(request.user, "is_admin", False):
             return redirect("/admin/")
+        return redirect("dashboard")
+
+    if settings.REQUIRE_EMAIL_OTP:
         target = request.GET.get("next") or request.POST.get("next") or "/admin/"
         return redirect(
             f"{reverse('email_otp_request')}?{urlencode({'next': target})}"
@@ -88,13 +94,39 @@ urlpatterns = [
     path("manage/users/new/", accounts_views.manage_user_create, name="manage_user_create"),
     path("manage/users/<int:pk>/", accounts_views.manage_user_edit, name="manage_user_edit"),
     path("manage/users/<int:pk>/delete/", accounts_views.manage_user_delete, name="manage_user_delete"),
+    path("manage/team/", accounts_views.manage_team, name="manage_team"),
+    path("manage/team/new/", accounts_views.manage_team_create, name="manage_team_create"),
+    path("manage/team/<int:pk>/", accounts_views.manage_team_edit, name="manage_team_edit"),
+    path("manage/team/<int:pk>/delete/", accounts_views.manage_team_delete, name="manage_team_delete"),
+    path("manage/audit/", accounts_views.manage_audit, name="manage_audit"),
     path("staff/enquiries/", enquiries_views.staff_enquiries, name="staff_enquiries"),
+    path(
+        "staff/enquiries/<int:pk>/",
+        enquiries_views.staff_enquiry_edit,
+        name="staff_enquiry_edit",
+    ),
+    path(
+        "staff/enquiries/<int:pk>/delete/",
+        enquiries_views.staff_enquiry_delete,
+        name="staff_enquiry_delete",
+    ),
     path(
         "staff/enquiries/<int:pk>/status/",
         enquiries_views.staff_enquiry_status,
         name="staff_enquiry_status",
     ),
     path("staff/jobs/", jobs_views.staff_jobs, name="staff_jobs"),
+    path("staff/jobs/new/", jobs_views.staff_job_create, name="staff_job_create"),
+    path(
+        "staff/jobs/<int:pk>/edit/",
+        jobs_views.staff_job_edit,
+        name="staff_job_edit",
+    ),
+    path(
+        "staff/jobs/<int:pk>/delete/",
+        jobs_views.staff_job_delete,
+        name="staff_job_delete",
+    ),
     path(
         "staff/jobs/<int:pk>/publish/",
         jobs_views.staff_job_publish,
@@ -107,6 +139,21 @@ urlpatterns = [
     ),
     path("staff/applications/", jobs_views.staff_applications, name="staff_applications"),
     path(
+        "staff/applications/bulk/",
+        jobs_views.staff_applications_bulk,
+        name="staff_applications_bulk",
+    ),
+    path(
+        "staff/applications/<uuid:uuid>/",
+        jobs_views.staff_application_edit,
+        name="staff_application_edit",
+    ),
+    path(
+        "staff/applications/<uuid:uuid>/delete/",
+        jobs_views.staff_application_delete,
+        name="staff_application_delete",
+    ),
+    path(
         "staff/applications/<uuid:uuid>/status/",
         jobs_views.staff_application_status,
         name="staff_application_status",
@@ -116,7 +163,38 @@ urlpatterns = [
         jobs_views.staff_application_status,
         name="staff_application_status_legacy",
     ),
+    path("staff/categories/", training_views.staff_categories, name="staff_categories"),
+    path(
+        "staff/categories/new/",
+        training_views.staff_category_create,
+        name="staff_category_create",
+    ),
+    path(
+        "staff/categories/<int:pk>/edit/",
+        training_views.staff_category_edit,
+        name="staff_category_edit",
+    ),
+    path(
+        "staff/categories/<int:pk>/delete/",
+        training_views.staff_category_delete,
+        name="staff_category_delete",
+    ),
     path("staff/programmes/", training_views.staff_programmes, name="staff_programmes"),
+    path(
+        "staff/programmes/new/",
+        training_views.staff_programme_create,
+        name="staff_programme_create",
+    ),
+    path(
+        "staff/programmes/<int:pk>/edit/",
+        training_views.staff_programme_edit,
+        name="staff_programme_edit",
+    ),
+    path(
+        "staff/programmes/<int:pk>/delete/",
+        training_views.staff_programme_delete,
+        name="staff_programme_delete",
+    ),
     path(
         "staff/programmes/<int:pk>/toggle/",
         training_views.staff_programme_toggle,
@@ -124,6 +202,16 @@ urlpatterns = [
     ),
     path(
         "staff/registrations/", training_views.staff_registrations, name="staff_registrations"
+    ),
+    path(
+        "staff/registrations/<uuid:uuid>/",
+        training_views.staff_registration_edit,
+        name="staff_registration_edit",
+    ),
+    path(
+        "staff/registrations/<uuid:uuid>/delete/",
+        training_views.staff_registration_delete,
+        name="staff_registration_delete",
     ),
     path(
         "staff/registrations/<uuid:uuid>/status/",

@@ -1,0 +1,60 @@
+{% extends "portals/base_portal.html" %}
+{% block title %}Categories — GCTT Portal{% endblock %}
+{% block portal_title %}Categories{% endblock %}
+
+{% block portal_content %}
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <div>
+    <p class="eyebrow eyebrow-accent">Academy</p>
+    <h1 class="mt-2 text-h1">Categories.</h1>
+    <p class="mt-2 text-sm text-muted">Group programmes and control which tracks appear in the catalogue.</p>
+  </div>
+  {% if perms.training.add_category %}<a href="{% url 'staff_category_create' %}" class="btn btn-primary">Add a category</a>{% endif %}
+</div>
+
+{% if page_obj %}
+  <div class="mt-4 overflow-hidden rounded-card border border-line bg-surface md:max-h-[70vh] md:overflow-auto">
+    <table class="data-table">
+      <caption class="sr-only">Programme categories</caption>
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Programmes</th>
+          <th scope="col">State</th>
+          <th scope="col">Order</th>
+          <th scope="col" class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for category in page_obj %}
+          <tr>
+            <td data-label="Name" class="font-semibold">{{ category.name }}</td>
+            <td data-label="Programmes" class="text-sm">{{ category.programme_count }}</td>
+            <td data-label="State">
+              {% if category.published %}<span class="chip chip-success">Published</span>{% else %}<span class="chip chip-warning">Hidden</span>{% endif %}
+            </td>
+            <td data-label="Order" class="text-sm">{{ category.order }}</td>
+            <td data-label="Actions" class="text-right">
+              <div class="flex flex-wrap justify-end gap-2">
+                {% if perms.training.change_category %}<a href="{% url 'staff_category_edit' category.pk %}" class="btn btn-secondary btn-sm">Edit</a>{% endif %}
+                {% if perms.training.delete_category %}
+                  <form method="post" action="{% url 'staff_category_delete' category.pk %}" data-confirm="Delete {{ category.name|escapejs }}? Programmes in it will become uncategorised." data-confirm-action="Delete">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-ghost btn-sm text-danger">Delete</button>
+                  </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "partials/_pagination.html" %}
+{% else %}
+  <div class="card mt-4 p-10 text-center">
+    <h2 class="text-h3">No categories yet.</h2>
+    <a href="{% url 'staff_category_create' %}" class="btn btn-primary mt-5">Add the first category</a>
+  </div>
+{% endif %}
+{% endblock %}

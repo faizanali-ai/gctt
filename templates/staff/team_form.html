@@ -1,0 +1,23 @@
+{% extends "portals/base_portal.html" %}
+{% block title %}{% if mode == "edit" %}Edit {{ profile.name }}{% else %}Add a team profile{% endif %} — GCTT Portal{% endblock %}
+{% block portal_title %}Team profile{% endblock %}
+
+{% block portal_content %}
+<div class="max-w-2xl">
+  <p class="eyebrow eyebrow-accent">Administration</p>
+  <h1 class="mt-2 text-h1">{% if mode == "edit" %}Edit {{ profile.name }}.{% else %}Add a team profile.{% endif %}</h1>
+  <p class="mt-2 text-sm text-muted">Designation, bio and visibility appear on the public About page.</p>
+
+  <form method="post" class="form card mt-6 p-6 sm:p-8">
+    {% csrf_token %}
+    {% include "partials/_form_errors.html" with form=form %}
+    {% for field in form %}
+      {% include "partials/_field.html" with field=field %}
+    {% endfor %}
+    <div class="flex flex-wrap gap-3">
+      <button type="submit" class="btn btn-primary">Save profile</button>
+      <a href="{% url 'manage_team' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

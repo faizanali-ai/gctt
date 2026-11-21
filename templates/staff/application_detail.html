@@ -1,0 +1,36 @@
+{% extends "portals/base_portal.html" %}
+{% block title %}Application — {{ application.applicant.display_name }}{% endblock %}
+{% block portal_title %}Application{% endblock %}
+
+{% block portal_content %}
+<div class="max-w-3xl">
+  <p class="eyebrow eyebrow-accent">Application</p>
+  <h1 class="mt-2 text-h1">{{ application.applicant.display_name }}.</h1>
+  <p class="mt-2 text-sm text-muted">{{ application.applicant.email }} · {{ application.job.title }}</p>
+
+  <dl class="mt-6 grid gap-3 rounded-card border border-line bg-raised p-5 text-sm sm:grid-cols-2">
+    <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Applied</dt><dd class="mt-1">{{ application.created_at|date:"M j, Y H:i" }}</dd></div>
+    <div><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Resume</dt><dd class="mt-1"><a class="link" href="{{ application.resume.url }}" target="_blank" rel="noopener">Open file</a></dd></div>
+    <div class="sm:col-span-2"><dt class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Candidate message</dt><dd class="mt-1 whitespace-pre-line text-muted">{{ application.message|default:"—" }}</dd></div>
+  </dl>
+
+  <form method="post" class="form card mt-6 p-6 sm:p-8">
+    {% csrf_token %}
+    {% include "partials/_form_errors.html" with form=form %}
+    {% for field in form %}
+      {% include "partials/_field.html" with field=field %}
+    {% endfor %}
+    <div class="flex flex-wrap gap-3">
+      <button type="submit" class="btn btn-primary">Save application</button>
+      <a href="{% url 'staff_applications' %}" class="btn btn-secondary">Back</a>
+    </div>
+  </form>
+
+  {% if perms.jobs.delete_application %}
+    <form method="post" action="{% url 'staff_application_delete' application.uuid %}" data-confirm="Delete this application and its resume? This cannot be undone." data-confirm-action="Delete" class="mt-8 border-t border-line pt-6">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-ghost text-danger">Delete application</button>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,6 +1,42 @@
 from django import forms
 
-from .models import Registration
+from .models import Category, Programme, Registration
+
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ("name", "published", "order")
+
+
+class ProgrammeForm(forms.ModelForm):
+    slug = forms.SlugField(
+        required=False,
+        help_text="Leave blank to generate from the title.",
+    )
+
+    class Meta:
+        model = Programme
+        fields = (
+            "title",
+            "slug",
+            "category",
+            "delivery_mode",
+            "schedule",
+            "duration",
+            "description",
+            "registration_open",
+            "published",
+            "order",
+        )
+        widgets = {"description": forms.Textarea(attrs={"rows": 6})}
+
+
+class RegistrationManageForm(forms.ModelForm):
+    class Meta:
+        model = Registration
+        fields = ("status", "message")
+        widgets = {"message": forms.Textarea(attrs={"rows": 4})}
 
 
 class RegistrationForm(forms.ModelForm):

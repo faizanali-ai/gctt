@@ -48,10 +48,13 @@
 
 {% if page_obj %}
   <div class="mt-4 overflow-hidden rounded-card border border-line bg-surface md:max-h-[70vh] md:overflow-auto">
+    <form method="post" action="{% url 'staff_applications_bulk' %}">
+      {% csrf_token %}
     <table class="data-table">
       <caption class="sr-only">Candidate applications</caption>
       <thead>
         <tr>
+          <th scope="col"><span class="sr-only">Select</span></th>
           <th scope="col">Candidate</th>
           <th scope="col">Mandate</th>
           <th scope="col">Received</th>
@@ -63,6 +66,7 @@
       <tbody>
         {% for application in page_obj %}
           <tr>
+            <td data-label="Select"><input type="checkbox" name="selected" value="{{ application.pk }}" aria-label="Select {{ application.applicant.email }}"></td>
             <td data-label="Candidate">
               <p class="font-semibold">{{ application.applicant.display_name }}</p>
               <p class="text-2xs text-muted">{{ application.applicant.email }}{% if application.applicant.phone %} · {{ application.applicant.phone }}{% endif %}</p>
@@ -83,6 +87,14 @@
         {% endfor %}
       </tbody>
     </table>
+      <div class="flex flex-wrap items-center gap-3 border-t border-line p-4">
+        <label for="bulk-status" class="font-mono text-2xs uppercase tracking-[0.08em] text-muted">Bulk stage</label>
+        <select id="bulk-status" name="bulk_status" class="w-auto">
+          {% for value, label in statuses %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+        </select>
+        <button type="submit" class="btn btn-secondary btn-sm">Apply to selected</button>
+      </div>
+    </form>
   </div>
 
   {% for application in page_obj %}
@@ -105,6 +117,7 @@
           </div>
         {% endif %}
         <a href="{{ application.resume.url }}" target="_blank" rel="noopener" class="btn btn-secondary w-full">Open résumé</a>
+        <a href="{% url 'staff_application_edit' application.uuid %}" class="btn btn-secondary w-full">Open full record</a>
         <form method="post" action="{% url 'staff_application_status' application.uuid %}" class="form border-t border-line pt-5">
           {% csrf_token %}
           <div class="field">

@@ -1,0 +1,82 @@
+{% extends "portals/base_portal.html" %}
+{% block title %}Team profiles — GCTT Portal{% endblock %}
+{% block portal_title %}Team profiles{% endblock %}
+
+{% block portal_content %}
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <div>
+    <p class="eyebrow eyebrow-accent">Administration</p>
+    <h1 class="mt-2 text-h1">Team profiles.</h1>
+    <p class="mt-2 text-sm text-muted">Edit the people and network shown on the About page.</p>
+  </div>
+  <a href="{% url 'manage_team_create' %}" class="btn btn-primary">Add a profile</a>
+</div>
+
+<div class="card mt-6 p-4">
+  <form method="get" class="form flex flex-col gap-3 sm:flex-row sm:items-end">
+    <div class="field flex-1">
+      <label for="team-q" class="sr-only">Search team</label>
+      <input id="team-q" type="search" name="q" value="{{ q }}" placeholder="Name, designation or bio">
+    </div>
+    <div class="field sm:w-52">
+      <label for="team-section" class="sr-only">Section</label>
+      <select id="team-section" name="section">
+        <option value="">All sections</option>
+        {% for value, label in sections %}<option value="{{ value }}" {% if section == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="flex gap-2">
+      <button type="submit" class="btn btn-primary">Filter</button>
+      {% if q or section %}<a href="{% url 'manage_team' %}" class="btn btn-secondary">Clear</a>{% endif %}
+    </div>
+  </form>
+</div>
+
+{% if page_obj %}
+  <div class="mt-4 overflow-hidden rounded-card border border-line bg-surface md:max-h-[70vh] md:overflow-auto">
+    <table class="data-table">
+      <caption class="sr-only">Team profiles</caption>
+      <thead>
+        <tr>
+          <th scope="col">Person</th>
+          <th scope="col">Designation</th>
+          <th scope="col">Section</th>
+          <th scope="col">State</th>
+          <th scope="col" class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for profile in page_obj %}
+          <tr>
+            <td data-label="Person">
+              <p class="font-semibold">{{ profile.name }}</p>
+              <p class="text-2xs text-muted">Order {{ profile.order }}</p>
+            </td>
+            <td data-label="Designation" class="text-sm">{{ profile.designation|default:"—" }}</td>
+            <td data-label="Section" class="text-sm">{{ profile.get_section_display }}</td>
+            <td data-label="State">
+              {% if profile.published %}<span class="chip chip-success">Published</span>{% else %}<span class="chip chip-warning">Hidden</span>{% endif %}
+            </td>
+            <td data-label="Actions" class="text-right">
+              <div class="flex flex-wrap justify-end gap-2">
+                <a href="{% url 'manage_team_edit' profile.pk %}" class="btn btn-secondary btn-sm">Edit</a>
+                <form method="post" action="{% url 'manage_team_delete' profile.pk %}" data-confirm="Remove {{ profile.name|escapejs }}? This cannot be undone." data-confirm-action="Remove">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-ghost btn-sm text-danger">Remove</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "partials/_pagination.html" %}
+{% else %}
+  <div class="card mt-4 p-10 text-center">
+    <h2 class="text-h3">No team profiles match.</h2>
+    <p class="mt-2 text-sm text-muted">Clear the filters or add a profile.</p>
+    <a href="{% url 'manage_team' %}" class="btn btn-secondary mt-5">Clear filters</a>
+  </div>
+{% endif %}
+{% endblock %}

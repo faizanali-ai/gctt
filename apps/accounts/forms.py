@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
-from .models import User
+from .models import TeamProfile, User
 
 
 class StyledAuthenticationForm(AuthenticationForm):
@@ -35,6 +35,22 @@ class SignupForm(UserCreationForm):
 
     def clean_email(self):
         return self.cleaned_data["email"].strip().lower()
+
+
+class TeamProfileForm(forms.ModelForm):
+    class Meta:
+        model = TeamProfile
+        fields = (
+            "section",
+            "name",
+            "designation",
+            "bio",
+            "linkedin_url",
+            "photo_url",
+            "order",
+            "published",
+        )
+        widgets = {"bio": forms.Textarea(attrs={"rows": 4})}
 
 
 class ProfileForm(forms.ModelForm):

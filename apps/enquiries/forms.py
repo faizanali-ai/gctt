@@ -3,6 +3,23 @@ from django import forms
 from .models import Enquiry
 
 
+class EnquiryManageForm(forms.ModelForm):
+    class Meta:
+        model = Enquiry
+        fields = (
+            "name",
+            "email",
+            "phone",
+            "company",
+            "area",
+            "how_heard",
+            "category",
+            "message",
+            "status",
+        )
+        widgets = {"message": forms.Textarea(attrs={"rows": 4})}
+
+
 class EnquiryForm(forms.ModelForm):
     # honeypot: humans never see or fill this
     website = forms.CharField(required=False, widget=forms.HiddenInput, label="")

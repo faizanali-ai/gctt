@@ -1,0 +1,23 @@
+{% extends "portals/base_portal.html" %}
+{% block title %}{% if mode == "edit" %}Edit {{ programme.title }}{% else %}Create a programme{% endif %} — GCTT Portal{% endblock %}
+{% block portal_title %}Programme{% endblock %}
+
+{% block portal_content %}
+<div class="max-w-3xl">
+  <p class="eyebrow eyebrow-accent">Academy</p>
+  <h1 class="mt-2 text-h1">{% if mode == "edit" %}Edit {{ programme.title }}.{% else %}Create a programme.{% endif %}</h1>
+  <p class="mt-2 text-sm text-muted">Publishing shows the programme in the Academy catalogue.</p>
+
+  <form method="post" class="form card mt-6 p-6 sm:p-8">
+    {% csrf_token %}
+    {% include "partials/_form_errors.html" with form=form %}
+    {% for field in form %}
+      {% include "partials/_field.html" with field=field %}
+    {% endfor %}
+    <div class="flex flex-wrap gap-3">
+      <button type="submit" class="btn btn-primary">Save programme</button>
+      <a href="{% url 'staff_programmes' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

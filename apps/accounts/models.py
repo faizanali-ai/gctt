@@ -4,6 +4,13 @@ from django.db import models
 
 STAFF_SUBGROUPS = ("Recruiter", "Trainer", "Enquiry Manager")
 
+DESIGNATION_CHOICES = (
+    ("admin", "Admin"),
+    ("staff", "Staff"),
+    ("candidate", "Candidate"),
+    ("student", "Training Student"),
+)
+
 
 class UserManager(DjangoUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -66,6 +73,23 @@ class User(AbstractUser):
         return self.role == self.Role.ADMIN and self.is_active and self.is_staff
 
     @property
+    def designation(self):
+        """The account label shown in the portal and user directory."""
+        if self.role == self.Role.ADMIN:
+            return self.Role.ADMIN.label
+        if self.is_staff:
+            return self.Role.STAFF.label
+        return self.get_account_type_display()
+
+    @property
+    def designation_value(self):
+        if self.role == self.Role.ADMIN:
+            return "admin"
+        if self.is_staff:
+            return "staff"
+        return self.account_type
+
+    @property
     def is_portal_staff(self):
         return self.is_staff
 
@@ -84,6 +108,31 @@ class User(AbstractUser):
 
     def can_manage_account(self, other):
         return self.is_admin
+
+    def apply_designation(self, designation, subgroup=None):
+        """Persist a portal designation and synchronise access flags/groups."""
+        if designation == "admin":
+            self.role = self.Role.ADMIN
+            self.is_staff = True
+            self.is_superuser = True
+        elif designation == "staff":
+            self.role = self.Role.STAFF
+            self.is_staff = True
+            self.is_superuser = False
+        elif designation in ("candidate", "student"):
+            self.role = self.Role.STAFF
+            self.account_type = (
+                self.AccountType.CANDIDATE
+                if designation == "candidate"
+                else self.AccountType.STUDENT
+            )
+            self.is_staff = False
+            self.is_superuser = False
+        else:
+            raise ValueError(f"Unknown designation: {designation}")
+        self.save()
+        sync_access(self, subgroup if designation == "staff" else None)
+        return self
 
 
 def sync_access(user, subgroup=None):

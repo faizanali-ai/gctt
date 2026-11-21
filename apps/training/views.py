@@ -5,7 +5,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -27,8 +27,14 @@ from config.emails import (
 
 from .ai_advisor import analyze_career_trajectory
 from .certificates import generate_certificate_pdf
-from .forms import InboundEnrollmentForm, RegistrationForm
-from .models import PendingRegistration, Programme, Registration
+from .forms import (
+    CategoryForm,
+    InboundEnrollmentForm,
+    ProgrammeForm,
+    RegistrationForm,
+    RegistrationManageForm,
+)
+from .models import Category, PendingRegistration, Programme, Registration
 
 
 def _create_pending_registration(programme, email, message):
@@ -62,7 +68,11 @@ def visible_programmes():
 def programme_list(request):
     programmes = visible_programmes().select_related("category")
     page_obj = Paginator(programmes, 12).get_page(request.GET.get("page"))
-    return render(request, "training/programme_list.html", {"page_obj": page_obj})
+    return render(
+        request,
+        "training/programme_list.html",
+        {"page_obj": page_obj, "programmes": page_obj},
+    )
 
 
 def _programme_detail_context(request, programme, form=None):
@@ -358,6 +368,105 @@ def staff_programme_toggle(request, pk):
 
 @login_required
 @staff_required
+@permission_required("training.view_category", raise_exception=True)
+def staff_categories(request):
+    categories = Category.objects.annotate(programme_count=Count("programmes")).order_by(
+        "order", "name"
+    )
+    page_obj = Paginator(categories, 25).get_page(request.GET.get("page"))
+    return render(request, "staff/categories.html", {"page_obj": page_obj})
+
+
+@login_required
+@staff_required
+@permission_required("training.add_category", raise_exception=True)
+def staff_category_create(request):
+    form = CategoryForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        category = form.save()
+        log_action(request, "category.create", category.name)
+        messages.success(request, f"{category.name} created.")
+        return redirect("staff_categories")
+    return render(request, "staff/category_form.html", {"form": form, "mode": "create"})
+
+
+@login_required
+@staff_required
+@permission_required("training.change_category", raise_exception=True)
+def staff_category_edit(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    form = CategoryForm(request.POST or None, instance=category)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        log_action(request, "category.edit", category.name)
+        messages.success(request, "Category updated.")
+        return redirect("staff_categories")
+    return render(
+        request,
+        "staff/category_form.html",
+        {"form": form, "mode": "edit", "category": category},
+    )
+
+
+@login_required
+@staff_required
+@permission_required("training.delete_category", raise_exception=True)
+@require_POST
+def staff_category_delete(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    name = category.name
+    category.delete()
+    log_action(request, "category.delete", name)
+    messages.success(request, f"{name} deleted.")
+    return redirect("staff_categories")
+
+
+@login_required
+@staff_required
+@permission_required("training.add_programme", raise_exception=True)
+def staff_programme_create(request):
+    form = ProgrammeForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        programme = form.save()
+        log_action(request, "programme.create", programme.title)
+        messages.success(request, f"{programme.title} created.")
+        return redirect("staff_programmes")
+    return render(request, "staff/programme_form.html", {"form": form, "mode": "create"})
+
+
+@login_required
+@staff_required
+@permission_required("training.change_programme", raise_exception=True)
+def staff_programme_edit(request, pk):
+    programme = get_object_or_404(Programme, pk=pk)
+    form = ProgrammeForm(request.POST or None, instance=programme)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        log_action(request, "programme.edit", programme.title)
+        messages.success(request, "Programme updated.")
+        return redirect("staff_programmes")
+    return render(
+        request,
+        "staff/programme_form.html",
+        {"form": form, "mode": "edit", "programme": programme},
+    )
+
+
+@login_required
+@staff_required
+@permission_required("training.delete_programme", raise_exception=True)
+@require_POST
+def staff_programme_delete(request, pk):
+    programme = get_object_or_404(Programme, pk=pk)
+    title = programme.title
+    programme.delete()
+    log_action(request, "programme.delete", title)
+    messages.success(request, f"{title} deleted.")
+    return redirect("staff_programmes")
+
+
+@login_required
+@staff_required
 @permission_required("training.view_registration", raise_exception=True)
 def staff_registrations(request):
     registrations = Registration.objects.select_related("programme", "student").filter(
@@ -419,6 +528,52 @@ def staff_registration_status(request, uuid=None, pk=None):
             )
             notify_registration_status(registration)
             messages.success(request, "Status updated.")
+    return redirect("staff_registrations")
+
+
+@login_required
+@staff_required
+@permission_required("training.change_registration", raise_exception=True)
+def staff_registration_edit(request, uuid):
+    registration = get_object_or_404(
+        Registration.objects.select_related("programme", "student").filter(
+            student__is_staff=False
+        ),
+        uuid=uuid,
+    )
+    form = RegistrationManageForm(request.POST or None, instance=registration)
+    if request.method == "POST" and form.is_valid():
+        previous = registration.status
+        form.save()
+        log_action(
+            request,
+            "registration.edit",
+            f"{registration.pk}",
+            f"{previous} → {registration.status}",
+        )
+        if previous != registration.status:
+            notify_registration_status(registration)
+        messages.success(request, "Registration updated.")
+        return redirect("staff_registrations")
+    return render(
+        request,
+        "staff/registration_detail.html",
+        {"form": form, "registration": registration},
+    )
+
+
+@login_required
+@staff_required
+@permission_required("training.delete_registration", raise_exception=True)
+@require_POST
+def staff_registration_delete(request, uuid):
+    registration = get_object_or_404(
+        Registration.objects.filter(student__is_staff=False), uuid=uuid
+    )
+    label = f"{registration.student.email} → {registration.programme.title}"
+    registration.delete()
+    log_action(request, "registration.delete", label)
+    messages.success(request, "Registration deleted.")
     return redirect("staff_registrations")
 
 

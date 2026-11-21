@@ -5,7 +5,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -24,7 +24,7 @@ from config.emails import (
     send_pending_application,
 )
 
-from .forms import ApplicationForm
+from .forms import ApplicationForm, ApplicationManageForm, JobForm
 from .models import Application, Job, PendingApplication
 
 STAFF_STATUSES = {
@@ -269,7 +269,7 @@ def withdraw_application(request, uuid=None, pk=None):
 @staff_required
 @permission_required("jobs.view_job", raise_exception=True)
 def staff_jobs(request):
-    jobs = Job.objects.all()
+    jobs = Job.objects.annotate(application_count=Count("applications"))
     q = request.GET.get("q", "").strip()
     published = request.GET.get("published", "")
     if q:
@@ -358,6 +358,114 @@ def staff_application_status(request, uuid=None, pk=None):
             log_action(request, "application.status", f"{application.pk}", f"{previous} → {status}")
             notify_application_status(application)
             messages.success(request, "Status updated.")
+    return redirect("staff_applications")
+
+
+@login_required
+@staff_required
+@permission_required("jobs.add_job", raise_exception=True)
+def staff_job_create(request):
+    form = JobForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        job = form.save()
+        log_action(request, "job.create", job.title, f"published={job.published}")
+        messages.success(request, f"'{job.title}' created.")
+        return redirect("staff_jobs")
+    return render(request, "staff/job_form.html", {"form": form, "mode": "create"})
+
+
+@login_required
+@staff_required
+@permission_required("jobs.change_job", raise_exception=True)
+def staff_job_edit(request, pk):
+    job = get_object_or_404(Job, pk=pk)
+    form = JobForm(request.POST or None, instance=job)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        log_action(request, "job.edit", job.title, f"published={job.published}")
+        messages.success(request, "Mandate updated.")
+        return redirect("staff_jobs")
+    return render(
+        request,
+        "staff/job_form.html",
+        {"form": form, "mode": "edit", "job": job},
+    )
+
+
+@login_required
+@staff_required
+@permission_required("jobs.delete_job", raise_exception=True)
+@require_POST
+def staff_job_delete(request, pk):
+    job = get_object_or_404(Job, pk=pk)
+    title = job.title
+    job.delete()
+    log_action(request, "job.delete", title)
+    messages.success(request, f"'{title}' deleted.")
+    return redirect("staff_jobs")
+
+
+@login_required
+@staff_required
+@permission_required("jobs.change_application", raise_exception=True)
+def staff_application_edit(request, uuid):
+    application = get_object_or_404(
+        Application.objects.select_related("job", "applicant").filter(
+            applicant__is_staff=False
+        ),
+        uuid=uuid,
+    )
+    form = ApplicationManageForm(request.POST or None, instance=application)
+    if request.method == "POST" and form.is_valid():
+        previous = application.status
+        form.save()
+        log_action(
+            request,
+            "application.edit",
+            f"{application.pk}",
+            f"{previous} → {application.status}",
+        )
+        if previous != application.status:
+            notify_application_status(application)
+        messages.success(request, "Application updated.")
+        return redirect("staff_applications")
+    return render(
+        request,
+        "staff/application_detail.html",
+        {"form": form, "application": application},
+    )
+
+
+@login_required
+@staff_required
+@permission_required("jobs.delete_application", raise_exception=True)
+@require_POST
+def staff_application_delete(request, uuid):
+    application = get_object_or_404(
+        Application.objects.filter(applicant__is_staff=False), uuid=uuid
+    )
+    label = f"{application.applicant.email} → {application.job.title}"
+    application.delete()
+    log_action(request, "application.delete", label)
+    messages.success(request, "Application deleted.")
+    return redirect("staff_applications")
+
+
+@login_required
+@staff_required
+@permission_required("jobs.change_application", raise_exception=True)
+@require_POST
+def staff_applications_bulk(request):
+    status = request.POST.get("bulk_status", "")
+    selected = request.POST.getlist("selected")
+    if status in STAFF_STATUSES and selected:
+        updated = Application.objects.filter(
+            pk__in=selected, applicant__is_staff=False
+        ).update(status=status)
+        log_action(request, "application.bulk_status", f"{updated}", status)
+        messages.success(request, f"{updated} application(s) updated.")
+    else:
+        messages.error(request, "Select applications and a valid status.")
     return redirect("staff_applications")
 
 
