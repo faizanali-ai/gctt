@@ -17,6 +17,11 @@ ROLE_PERMISSIONS = {
     "Admin": [
         ("accounts", "teamprofile", ["view", "add", "change", "delete"]),
         ("accounts", "auditlog", ["view"]),
+        ("accounts", "pagecontent", ["view", "add", "change", "delete"]),
+        ("accounts", "pagefaq", ["view", "add", "change", "delete"]),
+        ("accounts", "navigationitem", ["view", "add", "change", "delete"]),
+        ("accounts", "mediaasset", ["view", "add", "change", "delete"]),
+        ("accounts", "sitesettings", ["view", "change"]),
         ("jobs", "job", ["view", "add", "change", "delete"]),
         ("jobs", "application", ["view", "change", "delete"]),
         ("training", "category", ["view", "add", "change", "delete"]),

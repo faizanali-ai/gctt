@@ -37,6 +37,7 @@ from apps.accounts.tokens import email_verification_token_generator
 from apps.enquiries.models import Enquiry
 from apps.jobs.models import Application, Job
 from apps.training.models import Programme, Registration
+from config.context_processors import clear_navigation_cache
 from config.emails import (
     PROMOTIONAL_OPT_IN_MAX_AGE,
     send_account_deleted,
@@ -1063,6 +1064,7 @@ def manage_team_delete(request, pk):
 
 @login_required
 @staff_required
+@ratelimit(key="user_or_ip", rate="60/m", block=True)
 def manage_site_settings(request):
     _require_user_manager(request)
     form = SiteSettingsForm(request.POST or None, instance=SiteSettings.load())
@@ -1139,6 +1141,7 @@ def manage_pages(request):
 
 @login_required
 @staff_required
+@ratelimit(key="user_or_ip", rate="60/m", block=True)
 def manage_page_edit(request, page_slug):
     _require_user_manager(request)
     slug_dict = dict(PAGE_CHOICES)
@@ -1176,6 +1179,7 @@ def manage_page_edit(request, page_slug):
 @login_required
 @staff_required
 @require_POST
+@ratelimit(key="user_or_ip", rate="60/m", block=True)
 def manage_faq_create(request, page_slug):
     _require_user_manager(request)
     form = PageFAQForm(request.POST)
@@ -1225,12 +1229,14 @@ def manage_faq_delete(request, pk):
 
 @login_required
 @staff_required
+@ratelimit(key="user_or_ip", rate="60/m", block=True)
 def manage_navigation(request):
     _require_user_manager(request)
     items = NavigationItem.objects.all().order_by("menu", "order", "id")
     form = NavigationItemForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         nav_item = form.save()
+        clear_navigation_cache()
         log_action(request, "nav.create", nav_item.menu, f"{nav_item.label} -> {nav_item.url}")
         messages.success(request, f"Navigation link '{nav_item.label}' added.")
         return redirect("manage_navigation")
@@ -1268,6 +1274,7 @@ def manage_navigation_edit(request, pk):
     form = NavigationItemForm(request.POST or None, instance=item)
     if request.method == "POST" and form.is_valid():
         item = form.save()
+        clear_navigation_cache()
         log_action(request, "nav.edit", item.menu, f"{item.label} -> {item.url}")
         messages.success(request, f"Navigation link '{item.label}' updated.")
         return redirect("manage_navigation")
@@ -1290,6 +1297,7 @@ def manage_navigation_delete(request, pk):
     label = item.label
     menu = item.menu
     item.delete()
+    clear_navigation_cache()
     log_action(request, "nav.delete", menu, label)
     messages.success(request, f"Navigation link '{label}' removed.")
     return redirect("manage_navigation")
@@ -1297,6 +1305,7 @@ def manage_navigation_delete(request, pk):
 
 @login_required
 @staff_required
+@ratelimit(key="user_or_ip", rate="60/m", block=True)
 def manage_media(request):
     _require_user_manager(request)
     form = MediaAssetForm(request.POST or None, request.FILES or None)

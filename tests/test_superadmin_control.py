@@ -15,12 +15,14 @@ from apps.accounts.models import (
 )
 from apps.jobs.models import Application, Job
 from apps.training.models import Programme, Registration
+from config.context_processors import clear_navigation_cache
 from config.site import clear_company_cache
 
 
 class SuperadminTotalControlTests(TestCase):
     def setUp(self):
         clear_company_cache()
+        clear_navigation_cache()
         self.admin = User.objects.create_superuser(
             email="owner@gctekton.com",
             password="test-secure-pass-12345",
@@ -34,6 +36,10 @@ class SuperadminTotalControlTests(TestCase):
             email="candidate@example.com",
             password="test-secure-pass-12345",
         )
+
+    def tearDown(self):
+        clear_company_cache()
+        clear_navigation_cache()
 
     def test_pages_manager_access_control(self):
         # Anonymous redirects to login
@@ -243,7 +249,7 @@ class SuperadminTotalControlTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # Upload a test asset
-        fake_file = SimpleUploadedFile("brand_banner.png", b"fake-png-content", content_type="image/png")
+        fake_file = SimpleUploadedFile("brand_banner.png", b"\x89PNG\r\n\x1a\nfake-png-content", content_type="image/png")
         response = self.client.post(
             media_url,
             {

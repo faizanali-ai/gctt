@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
@@ -13,6 +14,16 @@ from .models import (
     TeamProfile,
     User,
 )
+
+MEDIA_SIGNATURES = {
+    "png": (b"\x89PNG\r\n\x1a\n",),
+    "jpg": (b"\xff\xd8\xff",),
+    "jpeg": (b"\xff\xd8\xff",),
+    "webp": (b"RIFF",),
+    "pdf": (b"%PDF",),
+    "docx": (b"PK\x03\x04",),
+}
+ALLOWED_MEDIA_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "svg", "pdf", "docx"}
 
 
 class StyledAuthenticationForm(AuthenticationForm):
@@ -181,14 +192,18 @@ class SiteSettingsForm(forms.ModelForm):
 
     def clean_hero_cta_url(self):
         value = (self.cleaned_data.get("hero_cta_url") or "").strip()
-        if value and not value.startswith(("/", "http://", "https://")):
-            raise ValidationError("Use a relative path or an http(s) URL.")
+        if value.startswith("//"):
+            raise ValidationError("Protocol-relative URLs starting with '//' are not allowed.")
+        if value and not value.startswith(("/", "https://", "mailto:", "tel:")):
+            raise ValidationError("URL must be a relative path (/path/) or secure absolute URL (https://...).")
         return value
 
     def clean_announcement_banner_link(self):
         val = (self.cleaned_data.get("announcement_banner_link") or "").strip()
-        if val and not val.startswith(("/", "http://", "https://")):
-            raise ValidationError("Use a relative path or an http(s) URL.")
+        if val.startswith("//"):
+            raise ValidationError("Protocol-relative URLs starting with '//' are not allowed.")
+        if val and not val.startswith(("/", "https://", "mailto:", "tel:")):
+            raise ValidationError("URL must be a relative path (/path/) or secure absolute URL (https://...).")
         return val
 
 
@@ -252,8 +267,10 @@ class PageContentForm(forms.ModelForm):
 
     def clean_hero_cta_url(self):
         val = (self.cleaned_data.get("hero_cta_url") or "").strip()
-        if val and not val.startswith(("/", "http://", "https://", "mailto:", "tel:")):
-            raise ValidationError("URL must be relative (/path/) or absolute (https://...)")
+        if val.startswith("//"):
+            raise ValidationError("Protocol-relative URLs starting with '//' are not allowed.")
+        if val and not val.startswith(("/", "https://", "mailto:", "tel:")):
+            raise ValidationError("URL must be a relative path (/path/) or secure absolute URL (https://...).")
         return val
 
     def save(self, commit=True):
@@ -296,8 +313,10 @@ class NavigationItemForm(forms.ModelForm):
 
     def clean_url(self):
         val = (self.cleaned_data.get("url") or "").strip()
-        if not val.startswith(("/", "http://", "https://", "mailto:", "tel:")):
-            raise ValidationError("URL must be relative (/path/) or absolute (https://...)")
+        if val.startswith("//"):
+            raise ValidationError("Protocol-relative URLs starting with '//' are not allowed.")
+        if not val.startswith(("/", "https://", "mailto:", "tel:")):
+            raise ValidationError("URL must be a relative path (/path/) or secure absolute URL (https://...).")
         return val
 
 
@@ -310,5 +329,46 @@ class MediaAssetForm(forms.ModelForm):
             "file": "Select image or document file",
             "alt_text": "Accessibility alt text (for images)",
         }
+
+    def clean_file(self):
+        uploaded = self.cleaned_data.get("file")
+        if not uploaded:
+            raise ValidationError("Please choose a file to upload.")
+
+        # 1. 10 MB maximum file limit to protect storage quotas
+        if uploaded.size > 10 * 1024 * 1024:
+            raise ValidationError("File size exceeds the 10 MB limit.")
+
+        ext = Path(uploaded.name).suffix.lower().lstrip(".")
+        if ext not in ALLOWED_MEDIA_EXTENSIONS:
+            raise ValidationError(
+                f"Unsupported file type (.{ext}). Allowed: {', '.join(sorted(ALLOWED_MEDIA_EXTENSIONS))}."
+            )
+
+        # 2. Inspect magic bytes for binary formats
+        head = uploaded.read(16)
+        uploaded.seek(0)
+
+        if ext == "svg":
+            content = uploaded.read().decode("utf-8", errors="ignore").lower()
+            uploaded.seek(0)
+            prohibited_tokens = [
+                "<script",
+                "javascript:",
+                "onload=",
+                "onerror=",
+                "onclick=",
+                "onmouseover=",
+                "xlink:href=\"javascript:",
+                "href=\"javascript:",
+            ]
+            if any(token in content for token in prohibited_tokens):
+                raise ValidationError("SVG contains unsafe script elements or event handlers.")
+        elif ext in MEDIA_SIGNATURES:
+            signatures = MEDIA_SIGNATURES[ext]
+            if not any(head.startswith(sig) for sig in signatures):
+                raise ValidationError(f"File content does not match the .{ext} extension.")
+
+        return uploaded
 
 

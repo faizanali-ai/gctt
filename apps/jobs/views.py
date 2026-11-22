@@ -26,6 +26,7 @@ from config.emails import (
     send_pending_application,
     send_welcome_if_first_login,
 )
+from config.site import company
 
 from .forms import ApplicationForm, ApplicationManageForm, JobForm
 from .models import Application, Job, PendingApplication
@@ -129,9 +130,8 @@ def job_detail(request, slug):
 @ratelimit(key="ip", rate="30/h", method="POST", block=True)
 def job_apply(request, slug):
     job = get_object_or_404(Job, slug=slug, published=True)
-    site_settings = SiteSettings.load()
-    if not site_settings.allow_candidate_applications:
-        messages.error(request, "Candidate applications are currently paused.")
+    if not company().get("allow_candidate_applications", True):
+        messages.error(request, "Candidate applications are currently paused by the administrator.")
         return redirect("job_detail", slug=job.slug)
     is_auth = request.user.is_authenticated
     form = ApplicationForm(request.POST, request.FILES, is_authenticated=is_auth)

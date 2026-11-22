@@ -117,7 +117,14 @@
 
     <aside id="apply-wizard" class="lg:sticky lg:top-24">
       <div class="card p-6 sm:p-8">
-        {% if applied %}
+        {% if not COMPANY.allow_candidate_applications %}
+          <div class="alert alert-warning" role="status">
+            <div>
+              <p class="font-semibold">Applications are temporarily paused</p>
+              <p class="mt-1 text-muted">We are not accepting new candidate applications at this time. Please check back soon or contact us directly.</p>
+            </div>
+          </div>
+        {% elif applied %}
           <div class="alert alert-success" role="status">
             <div>
               <p class="font-semibold">You have already applied for this role.</p>
