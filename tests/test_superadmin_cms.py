@@ -57,6 +57,28 @@ class MediaAssetHardeningTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(MediaAsset.objects.filter(title="Huge Asset").exists())
 
+    def test_svg_with_whitespace_event_handler_is_rejected(self):
+        svg_with_whitespace = b'<svg xmlns="http://www.w3.org/2000/svg" onload = "alert(1)"><circle r="10"/></svg>'
+        upload = SimpleUploadedFile("whitespace_handler.svg", svg_with_whitespace, content_type="image/svg+xml")
+        response = self.client.post(
+            reverse("manage_media"),
+            {"title": "Whitespace Handler SVG", "file": upload, "alt_text": "Test"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(MediaAsset.objects.filter(title="Whitespace Handler SVG").exists())
+        self.assertContains(response, "SVG contains unsafe script elements")
+
+    def test_media_asset_serve_sets_csp_for_svg(self):
+        safe_svg = b'<svg xmlns="http://www.w3.org/2000/svg"><circle r="10"/></svg>'
+        asset = MediaAsset.objects.create(
+            title="Safe Icon",
+            file=SimpleUploadedFile("icon.svg", safe_svg, content_type="image/svg+xml"),
+            uploaded_by=self.admin,
+        )
+        response = self.client.get(reverse("media_asset_serve", args=[asset.pk]))
+        self.assertEqual(response["Content-Security-Policy"], "default-src 'none'; style-src 'unsafe-inline'")
+        self.assertEqual(response["X-Content-Type-Options"], "nosniff")
+
 
 class DynamicNavCachingTests(TestCase):
     def setUp(self):
@@ -78,6 +100,12 @@ class DynamicNavCachingTests(TestCase):
         with self.assertNumQueries(1):
             _get_dynamic_nav()
 
+    def test_navigation_delete_returns_deletion_result(self):
+        item = NavigationItem.objects.create(menu="header", label="Temp", url="/temp/", order=99)
+        count, details = item.delete()
+        self.assertEqual(count, 1)
+        self.assertIn("accounts.NavigationItem", details)
+
 
 class IntakeGatingTests(TestCase):
     def setUp(self):
@@ -89,6 +117,9 @@ class IntakeGatingTests(TestCase):
         self.programme = Programme.objects.create(
             title="Cloud Architect", description="Course", published=True, registration_open=True
         )
+
+    def tearDown(self):
+        clear_company_cache()
 
     def test_candidate_applications_toggle_pauses_apply(self):
         settings = SiteSettings.load()

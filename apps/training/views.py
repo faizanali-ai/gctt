@@ -7,7 +7,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.cache import cache
 from django.core.paginator import Paginator
-from django.db import IntegrityError, transaction
+from django.db import DatabaseError, IntegrityError, transaction
 from django.db.models import Count, Q
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -28,7 +28,6 @@ from config.emails import (
     send_pending_registration,
     send_welcome_if_first_login,
 )
-from config.site import company
 
 from .ai_advisor import analyze_career_trajectory
 from .certificates import generate_certificate_pdf
@@ -142,7 +141,11 @@ def api_career_advisor(request):
 @ratelimit(key="ip", rate="30/h", method="POST", block=True)
 def programme_register(request, slug):
     programme = get_object_or_404(Programme, slug=slug, published=True)
-    if not company().get("allow_student_registrations", True):
+    try:
+        allow_registrations = SiteSettings.load().allow_student_registrations
+    except DatabaseError:
+        allow_registrations = False
+    if not allow_registrations:
         messages.error(request, "Student registrations are currently paused by the administrator.")
         return redirect("programme_detail", slug=programme.slug)
     if not programme.registration_open:

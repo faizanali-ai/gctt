@@ -1,6 +1,8 @@
 import json
+import re
 from pathlib import Path
 
+import defusedxml.ElementTree as ET
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import ValidationError
@@ -350,20 +352,33 @@ class MediaAssetForm(forms.ModelForm):
         uploaded.seek(0)
 
         if ext == "svg":
-            content = uploaded.read().decode("utf-8", errors="ignore").lower()
+            content = uploaded.read().decode("utf-8", errors="ignore")
             uploaded.seek(0)
-            prohibited_tokens = [
-                "<script",
-                "javascript:",
-                "onload=",
-                "onerror=",
-                "onclick=",
-                "onmouseover=",
-                "xlink:href=\"javascript:",
-                "href=\"javascript:",
-            ]
-            if any(token in content for token in prohibited_tokens):
+            content_lower = content.lower()
+            if (
+                re.search(r"<\s*script", content_lower)
+                or re.search(r"\bon\w+\s*=", content_lower)
+                or re.search(r"(?:href|xlink:href)\s*=\s*['\"]?\s*javascript:", content_lower)
+            ):
                 raise ValidationError("SVG contains unsafe script elements or event handlers.")
+            try:
+                root = ET.fromstring(content)
+                for elem in root.iter():
+                    tag = elem.tag.lower()
+                    if tag.endswith("script") or tag == "script":
+                        raise ValidationError("SVG contains unsafe script elements or event handlers.")
+                    for attr, val in elem.attrib.items():
+                        attr_lower = attr.lower()
+                        if attr_lower.startswith("on") or ":on" in attr_lower:
+                            raise ValidationError("SVG contains unsafe script elements or event handlers.")
+                        if "javascript:" in val.lower().replace(" ", ""):
+                            raise ValidationError("SVG contains unsafe script elements or event handlers.")
+            except ET.DefusedXmlException:
+                raise ValidationError("SVG contains unsafe XML entities or structure.")
+            except ValidationError:
+                raise
+            except (ET.ParseError, ValueError, TypeError):
+                raise ValidationError("Invalid or unparseable SVG file.")
         elif ext in MEDIA_SIGNATURES:
             signatures = MEDIA_SIGNATURES[ext]
             if not any(head.startswith(sig) for sig in signatures):

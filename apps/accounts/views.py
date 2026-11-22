@@ -1358,10 +1358,16 @@ def media_asset_serve(request, pk):
 
     if isinstance(default_storage, FileSystemStorage):
         try:
-            return FileResponse(asset.file.open("rb"))
+            response = FileResponse(asset.file.open("rb"))
         except (FileNotFoundError, ValueError):
             raise Http404("Media file not found")
-    return HttpResponseRedirect(asset.file.url)
+    else:
+        response = HttpResponseRedirect(asset.file.url)
+
+    if asset.file.name.lower().endswith(".svg"):
+        response["Content-Security-Policy"] = "default-src 'none'; style-src 'unsafe-inline'"
+        response["X-Content-Type-Options"] = "nosniff"
+    return response
 
 
 @login_required

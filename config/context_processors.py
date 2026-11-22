@@ -8,6 +8,13 @@ from apps.enquiries.forms import EnquiryForm
 from .constants import DIVISIONS, NAV_ITEMS, SERVICES
 from .site import company
 
+# Process-local dynamic navigation cache with a 30-second TTL.
+# Cross-worker freshness contract:
+# In multi-worker production deployments (e.g. 2 Gunicorn workers on Render),
+# clearing this cache invalidates the handling worker immediately. Sibling workers
+# will observe navigation updates on their next cache expiration (up to 30s delay).
+# This bounded 30-second cross-worker delay is accepted architectural behavior to
+# eliminate database roundtrips on public page loads without shared cache latency.
 _NAV_CACHE: dict[str, object] = {"value": None, "expires_at": 0.0}
 
 

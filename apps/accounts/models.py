@@ -390,16 +390,18 @@ class NavigationItem(models.Model):
         return f"{self.label} -> {self.url} ({self.get_menu_display()})"
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+        result = super().save(*args, **kwargs)
         from config.context_processors import clear_navigation_cache
 
         clear_navigation_cache()
+        return result
 
     def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
+        result = super().delete(*args, **kwargs)
         from config.context_processors import clear_navigation_cache
 
         clear_navigation_cache()
+        return result
 
 
 def media_upload_to(instance, filename):
