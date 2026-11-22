@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}SAP &amp; Scrum Practice — GCTT{% endblock %}
-{% block description %}SAP S/4HANA functional talent and Agile delivery practitioners, with academy pathways for both.{% endblock %}
+{% block title %}{{ page_content.title|default:"SAP & Scrum Practice — GCTT" }}{% endblock %}
+{% block description %}{{ page_content.meta_description|default:"SAP S/4HANA functional talent and Agile delivery practitioners, with academy pathways for both." }}{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Talent Solutions · Practice 04" title="SAP S/4HANA and Agile delivery." subtitle="Functional SAP talent and Scrum practitioners for enterprise programmes, plus academy pathways for people building those skills." %}
+{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"Talent Solutions · Practice 04" title=page_content.hero_title|default:"SAP S/4HANA and Agile delivery." subtitle=page_content.hero_subtitle|default:"Functional SAP talent and Scrum practitioners for enterprise programmes, plus academy pathways for people building those skills." %}
 {% include "partials/_solutions_nav.html" %}
 
 <section class="bg-night py-16 text-night-ink">
@@ -78,4 +78,6 @@
     </div>
   </div>
 </section>
+
+{% include "partials/_page_faqs.html" %}
 {% endblock %}

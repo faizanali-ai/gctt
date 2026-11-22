@@ -4,7 +4,7 @@
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-12">
       <div class="lg:col-span-5">
         <a href="{% url 'home' %}" class="inline-flex items-center" aria-label="{{ COMPANY.name }} home">
-          <img src="{% static 'images/logo-stacked-dark.svg' %}" alt="{{ COMPANY.name }}" width="160" height="143" class="h-24 w-auto sm:h-28">
+          <img src="{% if COMPANY.logo_dark_url %}{{ COMPANY.logo_dark_url }}{% else %}{% static 'images/logo-stacked-dark.svg' %}{% endif %}" alt="{{ COMPANY.name }}" width="160" height="143" class="h-24 w-auto sm:h-28">
         </a>
         <p class="mt-5 max-w-sm text-sm leading-relaxed text-night-muted">
           Headquartered in Irving, Texas, with statutory E-Verify compliance.
@@ -20,32 +20,50 @@
       <nav class="lg:col-span-2" aria-label="Talent Solutions">
         <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-night-muted">Talent Solutions</h2>
         <ul class="mt-4 space-y-2.5 text-sm text-night-muted">
-          <li><a href="{% url 'it_staffing' %}" class="transition-colors hover:text-night-ink">IT Staffing</a></li>
-          <li><a href="{% url 'recruitment' %}" class="transition-colors hover:text-night-ink">Recruitment</a></li>
-          <li><a href="{% url 'talent_acquisition' %}" class="transition-colors hover:text-night-ink">Talent Acquisition</a></li>
-          <li><a href="{% url 'sap_scrum' %}" class="transition-colors hover:text-night-ink">SAP &amp; Scrum</a></li>
-          <li><a href="{% url 'employers' %}" class="transition-colors hover:text-night-ink">Request talent</a></li>
+          {% if DYNAMIC_NAV_FOOTER.talent %}
+            {% for item in DYNAMIC_NAV_FOOTER.talent %}
+              <li><a href="{{ item.url }}" class="transition-colors hover:text-night-ink" {% if item.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ item.label }}</a></li>
+            {% endfor %}
+          {% else %}
+            <li><a href="{% url 'it_staffing' %}" class="transition-colors hover:text-night-ink">IT Staffing</a></li>
+            <li><a href="{% url 'recruitment' %}" class="transition-colors hover:text-night-ink">Recruitment</a></li>
+            <li><a href="{% url 'talent_acquisition' %}" class="transition-colors hover:text-night-ink">Talent Acquisition</a></li>
+            <li><a href="{% url 'sap_scrum' %}" class="transition-colors hover:text-night-ink">SAP &amp; Scrum</a></li>
+            <li><a href="{% url 'employers' %}" class="transition-colors hover:text-night-ink">Request talent</a></li>
+          {% endif %}
         </ul>
       </nav>
 
       <nav class="lg:col-span-2" aria-label="Academy">
         <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-night-muted">Academy</h2>
         <ul class="mt-4 space-y-2.5 text-sm text-night-muted">
-          <li><a href="{% url 'training' %}" class="transition-colors hover:text-night-ink">Programmes</a></li>
-          <li><a href="{% url 'career_restart' %}" class="transition-colors hover:text-night-ink">Career Restart</a></li>
-          <li><a href="{% url 'verify_certificate_form' %}" class="transition-colors hover:text-night-ink">Verify certificate</a></li>
+          {% if DYNAMIC_NAV_FOOTER.academy %}
+            {% for item in DYNAMIC_NAV_FOOTER.academy %}
+              <li><a href="{{ item.url }}" class="transition-colors hover:text-night-ink" {% if item.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ item.label }}</a></li>
+            {% endfor %}
+          {% else %}
+            <li><a href="{% url 'training' %}" class="transition-colors hover:text-night-ink">Programmes</a></li>
+            <li><a href="{% url 'career_restart' %}" class="transition-colors hover:text-night-ink">Career Restart</a></li>
+            <li><a href="{% url 'verify_certificate_form' %}" class="transition-colors hover:text-night-ink">Verify certificate</a></li>
+          {% endif %}
         </ul>
       </nav>
 
       <nav class="lg:col-span-3" aria-label="Company">
         <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-night-muted">Company</h2>
         <ul class="mt-4 space-y-2.5 text-sm text-night-muted">
-          <li><a href="{% url 'about' %}" class="transition-colors hover:text-night-ink">About {{ COMPANY.name }}</a></li>
-          <li><a href="{% url 'careers' %}" class="transition-colors hover:text-night-ink">Open mandates</a></li>
-          <li><a href="{% url 'contact' %}" class="transition-colors hover:text-night-ink">Contact</a></li>
-          <li><a href="{% url 'privacy' %}" class="transition-colors hover:text-night-ink">Privacy</a></li>
-          <li><a href="{% url 'terms' %}" class="transition-colors hover:text-night-ink">Terms</a></li>
-          <li><a href="{% url 'login' %}" class="transition-colors hover:text-night-ink">Portal sign in</a></li>
+          {% if DYNAMIC_NAV_FOOTER.company %}
+            {% for item in DYNAMIC_NAV_FOOTER.company %}
+              <li><a href="{{ item.url }}" class="transition-colors hover:text-night-ink" {% if item.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ item.label }}</a></li>
+            {% endfor %}
+          {% else %}
+            <li><a href="{% url 'about' %}" class="transition-colors hover:text-night-ink">About {{ COMPANY.name }}</a></li>
+            <li><a href="{% url 'careers' %}" class="transition-colors hover:text-night-ink">Open mandates</a></li>
+            <li><a href="{% url 'contact' %}" class="transition-colors hover:text-night-ink">Contact</a></li>
+            <li><a href="{% url 'privacy' %}" class="transition-colors hover:text-night-ink">Privacy</a></li>
+            <li><a href="{% url 'terms' %}" class="transition-colors hover:text-night-ink">Terms</a></li>
+            <li><a href="{% url 'login' %}" class="transition-colors hover:text-night-ink">Portal sign in</a></li>
+          {% endif %}
         </ul>
       </nav>
     </div>

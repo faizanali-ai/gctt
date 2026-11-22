@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Privacy Policy — GCTT{% endblock %}
-{% block description %}How GCTT collects, uses and protects candidate, student and client data.{% endblock %}
+{% block title %}{{ page_content.title|default:"Privacy Policy — GCTT" }}{% endblock %}
+{% block description %}{{ page_content.meta_description|default:"How GCTT collects, uses and protects candidate, student and client data." }}{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Company · Governance" title="Privacy Policy" subtitle="How we handle candidate, student and client data." %}
+{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"Company · Governance" title=page_content.hero_title|default:"Privacy Policy" subtitle=page_content.hero_subtitle|default:"How we handle candidate, student and client data." %}
 
 <section class="section">
   <div class="container-site">
@@ -41,4 +41,6 @@
     </div>
   </div>
 </section>
+
+{% include "partials/_page_faqs.html" %}
 {% endblock %}

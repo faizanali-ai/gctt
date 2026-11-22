@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Terms &amp; Conditions — GCTT{% endblock %}
-{% block description %}Terms for using the GCTT website, recruitment services and training programmes.{% endblock %}
+{% block title %}{{ page_content.title|default:"Terms & Conditions — GCTT" }}{% endblock %}
+{% block description %}{{ page_content.meta_description|default:"Terms for using the GCTT website, recruitment services and training programmes." }}{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Company · Governance" title="Terms &amp; Conditions" subtitle="The terms that apply to this website, our recruitment work and our training programmes." %}
+{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"Company · Governance" title=page_content.hero_title|default:"Terms & Conditions" subtitle=page_content.hero_subtitle|default:"The terms that apply to this website, our recruitment work and our training programmes." %}
 
 <section class="section">
   <div class="container-site">
@@ -36,4 +36,6 @@
     </div>
   </div>
 </section>
+
+{% include "partials/_page_faqs.html" %}
 {% endblock %}

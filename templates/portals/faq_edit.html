@@ -1,0 +1,29 @@
+{% extends "portals/base_portal.html" %}
+{% block title %}Edit FAQ — GCTT Portal{% endblock %}
+{% block portal_title %}Edit FAQ{% endblock %}
+
+{% block portal_content %}
+<div class="max-w-xl">
+  <div class="flex items-center gap-2">
+    <a href="{% url 'manage_page_edit' faq.page_slug %}" class="text-sm font-semibold text-accent hover:underline">&larr; Back to page editor</a>
+  </div>
+  <h1 class="mt-2 text-h1">Edit FAQ.</h1>
+  <p class="mt-2 text-sm text-muted">Page: <span class="font-semibold text-foreground">{{ faq.page_slug }}</span></p>
+
+  <form method="post" class="form card mt-6 p-6 sm:p-8 space-y-4">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger" role="alert">{{ form.non_field_errors.0 }}</div>
+    {% endif %}
+
+    {% for field in form %}
+      {% include "partials/_field.html" %}
+    {% endfor %}
+
+    <div class="flex flex-wrap items-center gap-3 pt-4 border-t border-line">
+      <button type="submit" class="btn btn-primary">Save changes</button>
+      <a href="{% url 'manage_page_edit' faq.page_slug %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -53,8 +53,24 @@
   </a>
 
   {% if user.can_manage_users or user.is_admin %}
-    <p class="portal-group">Manage</p>
+    <p class="portal-group">Manage &amp; Control</p>
     {% if user.can_manage_users %}
+      <a href="{% url 'manage_pages' %}" class="portal-link" {% if '/manage/pages/' in request.path or '/manage/faqs/' in request.path %}aria-current="page"{% endif %}>
+        <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#file"></use></svg>
+        Pages &amp; content
+      </a>
+      <a href="{% url 'manage_navigation' %}" class="portal-link" {% if '/manage/navigation/' in request.path %}aria-current="page"{% endif %}>
+        <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#filter"></use></svg>
+        Navigation menus
+      </a>
+      <a href="{% url 'manage_media' %}" class="portal-link" {% if '/manage/media/' in request.path %}aria-current="page"{% endif %}>
+        <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#upload"></use></svg>
+        Media &amp; assets
+      </a>
+      <a href="{% url 'manage_site_settings' %}" class="portal-link" {% if '/manage/settings/' in request.path %}aria-current="page"{% endif %}>
+        <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#building"></use></svg>
+        Site settings &amp; banner
+      </a>
       <a href="{% url 'manage_users' %}" class="portal-link" {% if '/manage/users/' in request.path %}aria-current="page"{% endif %}>
         <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#users"></use></svg>
         Users &amp; roles
@@ -66,10 +82,6 @@
       <a href="{% url 'manage_audit' %}" class="portal-link" {% if '/manage/audit/' in request.path %}aria-current="page"{% endif %}>
         <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#file"></use></svg>
         Audit log
-      </a>
-      <a href="{% url 'manage_site_settings' %}" class="portal-link" {% if '/manage/settings/' in request.path %}aria-current="page"{% endif %}>
-        <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#building"></use></svg>
-        Site settings
       </a>
     {% endif %}
   {% endif %}

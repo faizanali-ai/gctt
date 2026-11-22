@@ -1,0 +1,18 @@
+{% if page_faqs %}
+  <section class="section border-b border-line bg-surface" aria-label="Frequently Asked Questions">
+    <div class="container-site max-w-4xl">
+      <p class="eyebrow eyebrow-accent">FAQ</p>
+      <h2 class="mt-3 text-display-2">Frequently asked questions.</h2>
+      <p class="mt-2 text-body text-muted">Clear, transparent answers from our practice leads.</p>
+
+      <div class="mt-8 divide-y divide-line rounded-card border border-line bg-raised/50 p-6 sm:p-8">
+        {% for faq in page_faqs %}
+          <div class="py-4 first:pt-0 last:pb-0">
+            <h3 class="text-base font-semibold text-foreground">{{ faq.question }}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted">{{ faq.answer|linebreaksbr }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}

@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Contact — GCTT{% endblock %}
-{% block description %}Contact GCTT in Irving, Texas for staffing, recruitment, training and certificate enquiries.{% endblock %}
+{% block title %}{{ page_content.title|default:"Contact — GCTT" }}{% endblock %}
+{% block description %}{{ page_content.meta_description|default:"Contact GCTT in Irving, Texas for staffing, recruitment, training and certificate enquiries." }}{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Contact" title="Talk to the team." subtitle="For hiring, training, certification or general enquiries. A practice director reviews every message." %}
+{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"Contact" title=page_content.hero_title|default:"Talk to the team." subtitle=page_content.hero_subtitle|default:"For hiring, training, certification or general enquiries. A practice director reviews every message." %}
 
 <section class="section">
   <div class="container-site grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
@@ -56,4 +56,6 @@
     </div>
   </div>
 </section>
+
+{% include "partials/_page_faqs.html" %}
 {% endblock %}

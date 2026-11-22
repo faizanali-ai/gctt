@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}About GCTT — Irving, Texas{% endblock %}
-{% block description %}GCTT is a technology staffing and training company headquartered in Irving, Texas.{% endblock %}
+{% block title %}{{ page_content.title|default:"About GCTT — Irving, Texas" }}{% endblock %}
+{% block description %}{{ page_content.meta_description|default:"GCTT is a technology staffing and training company headquartered in Irving, Texas." }}{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Company" title="A Texas technology workforce company." subtitle="GCTT staffs technology teams and trains the people who join them. We are headquartered in Irving, Texas and work with employers, candidates and students." %}
+{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"Company" title=page_content.hero_title|default:"A Texas technology workforce company." subtitle=page_content.hero_subtitle|default:"GCTT staffs technology teams and trains the people who join them. We are headquartered in Irving, Texas and work with employers, candidates and students." %}
 
 <section class="section border-b border-line">
   <div class="container-site grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
@@ -132,4 +132,6 @@
   </div>
 </section>
 {% endif %}
+
+{% include "partials/_page_faqs.html" %}
 {% endblock %}

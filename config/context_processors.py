@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db import DatabaseError
 
 from apps.enquiries.forms import EnquiryForm
 
@@ -10,16 +11,44 @@ def _is_active(path, prefixes):
     return any(path.startswith(prefix) for prefix in prefixes)
 
 
+def _get_dynamic_nav():
+    try:
+        from apps.accounts.models import NavigationItem
+
+        items = list(NavigationItem.objects.filter(is_published=True).order_by("order", "id"))
+        if not items:
+            return None, None
+        header = [i for i in items if i.menu == "header"]
+        footer = {
+            "talent": [i for i in items if i.menu == "footer_talent"],
+            "academy": [i for i in items if i.menu == "footer_academy"],
+            "company": [i for i in items if i.menu == "footer_company"],
+            "legal": [i for i in items if i.menu == "footer_legal"],
+        }
+        return (header or None), footer
+    except DatabaseError:
+        return None, None
+
+
 def site(request):
     path = request.path
+    comp = company()
+    dynamic_header, dynamic_footer = _get_dynamic_nav()
     return {
-        "COMPANY": company(),
+        "COMPANY": comp,
         "NAV_ITEMS": NAV_ITEMS,
         "NAV_DIVISIONS": [
             {**item, "active": _is_active(path, item["prefixes"])} for item in DIVISIONS
         ],
+        "DYNAMIC_NAV_HEADER": dynamic_header,
+        "DYNAMIC_NAV_FOOTER": dynamic_footer,
         "SERVICES": SERVICES,
         "EMAIL_OTP_ENABLED": settings.REQUIRE_EMAIL_OTP,
+        "ANNOUNCEMENT_BANNER": {
+            "enabled": comp.get("announcement_banner_enabled", False),
+            "text": comp.get("announcement_banner_text", ""),
+            "link": comp.get("announcement_banner_link", ""),
+        },
         # Repopulate a failed enquiry once, then clear it.
         "enquiry_form": EnquiryForm(initial=request.session.pop("enquiry_initial", {})),
     }

@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Request Talent — GCTT for Employers{% endblock %}
-{% block description %}Request technology talent from GCTT. Staffing, contract-to-hire, direct search and project teams.{% endblock %}
+{% block title %}{{ page_content.title|default:"Request Talent — GCTT for Employers" }}{% endblock %}
+{% block description %}{{ page_content.meta_description|default:"Request technology talent from GCTT. Staffing, contract-to-hire, direct search and project teams." }}{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="For employers" title="Request technology talent." subtitle="Tell us the role, the constraints and the start date. We will confirm whether we can fill it and how we would approach the search." %}
+{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"For employers" title=page_content.hero_title|default:"Request technology talent." subtitle=page_content.hero_subtitle|default:"Tell us the role, the constraints and the start date. We will confirm whether we can fill it and how we would approach the search." %}
 {% include "partials/_solutions_nav.html" %}
 
 <section class="section">
@@ -76,37 +76,47 @@
     </div>
 
     <div class="mt-8 space-y-3">
-      <details class="group card p-5">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
-          What engagement models does GCTT support?
-          <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
-        </summary>
-        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">W2 contract staffing, contract-to-hire with an agreed evaluation period, direct-hire search, and defined project teams. Rates, conversion terms and billing schedules are agreed before work starts.</p>
-      </details>
+      {% for faq in page_faqs %}
+        <details class="group card p-5">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
+            {{ faq.question }}
+            <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
+          </summary>
+          <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">{{ faq.answer|linebreaksbr }}</p>
+        </details>
+      {% empty %}
+        <details class="group card p-5">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
+            What engagement models does GCTT support?
+            <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
+          </summary>
+          <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">W2 contract staffing, contract-to-hire with an agreed evaluation period, direct-hire search, and defined project teams. Rates, conversion terms and billing schedules are agreed before work starts.</p>
+        </details>
 
-      <details class="group card p-5">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
-          How does GCTT assess technical qualifications?
-          <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
-        </summary>
-        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">An intake covering communication, work authorisation and project history, followed by a technical conversation with a practitioner in the relevant stack. The scorecard is agreed with you before screening.</p>
-      </details>
+        <details class="group card p-5">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
+            How does GCTT assess technical qualifications?
+            <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
+          </summary>
+          <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">An intake covering communication, work authorisation and project history, followed by a technical conversation with a practitioner in the relevant stack. The scorecard is agreed with you before screening.</p>
+        </details>
 
-      <details class="group card p-5">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
-          What turnaround should we expect?
-          <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
-        </summary>
-        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">Standard technical roles target a shortlist within 48–72 business hours. Niche SAP mandates typically take 3–5 business days for an initial pool. The target is confirmed at calibration.</p>
-      </details>
+        <details class="group card p-5">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
+            What turnaround should we expect?
+            <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
+          </summary>
+          <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">Standard technical roles target a shortlist within 48–72 business hours. Niche SAP mandates typically take 3–5 business days for an initial pool. The target is confirmed at calibration.</p>
+        </details>
 
-      <details class="group card p-5">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
-          What replacement terms are available?
-          <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
-        </summary>
-        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">Direct-hire placements carry a 90-day replacement warranty. Contract engagements include a trial period; if the practitioner is not the right fit, GCTT replaces them and does not bill the trial hours. Exact terms are set in the engagement letter.</p>
-      </details>
+        <details class="group card p-5">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
+            What replacement terms are available?
+            <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
+          </summary>
+          <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">Direct-hire placements carry a 90-day replacement warranty. Contract engagements include a trial period; if the practitioner is not the right fit, GCTT replaces them and does not bill the trial hours. Exact terms are set in the engagement letter.</p>
+        </details>
+      {% endfor %}
     </div>
   </div>
 </section>

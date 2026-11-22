@@ -48,6 +48,8 @@ def company() -> dict[str, str]:
         ("email", record.email),
         ("jobs_email", record.jobs_email),
         ("address", record.address),
+        ("phone", getattr(record, "phone", "")),
+        ("phone_raw", getattr(record, "phone_raw", "")),
         ("url", record.url.rstrip("/")),
     ):
         if value:
@@ -61,6 +63,13 @@ def company() -> dict[str, str]:
             "hero_subtitle": record.hero_subtitle,
             "hero_cta_label": record.hero_cta_label,
             "hero_cta_url": record.hero_cta_url,
+            "announcement_banner_enabled": getattr(record, "announcement_banner_enabled", False),
+            "announcement_banner_text": getattr(record, "announcement_banner_text", ""),
+            "announcement_banner_link": getattr(record, "announcement_banner_link", ""),
+            "allow_candidate_applications": getattr(record, "allow_candidate_applications", True),
+            "allow_student_registrations": getattr(record, "allow_student_registrations", True),
+            "logo_light_url": getattr(record, "logo_light_url", ""),
+            "logo_dark_url": getattr(record, "logo_dark_url", ""),
         }
     )
     _CACHE["value"] = merged

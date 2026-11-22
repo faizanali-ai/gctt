@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Talent Solutions — GCTT{% endblock %}
-{% block description %}Technology staffing, technical search and workforce advisory from GCTT in Irving, Texas.{% endblock %}
+{% block title %}{{ page_content.title|default:"Talent Solutions — GCTT" }}{% endblock %}
+{% block description %}{{ page_content.meta_description|default:"Technology staffing, technical search and workforce advisory from GCTT in Irving, Texas." }}{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Talent Solutions" title="Staffing, search and advisory for technology teams." subtitle="Four practices, one engagement standard. GCTT supplies practitioners for defined roles and advises teams on the workforce they need next." %}
+{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"Talent Solutions" title=page_content.hero_title|default:"Staffing, search and advisory for technology teams." subtitle=page_content.hero_subtitle|default:"Four practices, one engagement standard. GCTT supplies practitioners for defined roles and advises teams on the workforce they need next." %}
 {% include "partials/_solutions_nav.html" %}
 
 <section class="section border-b border-line">
@@ -98,29 +98,39 @@
     </div>
 
     <div class="mt-8 space-y-3">
-      <details class="group card p-5">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
-          How are the practices structured?
-          <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
-        </summary>
-        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">Staffing, recruitment, talent acquisition and the SAP/Scrum practice are separate engagements. A client can use one or combine them, and the commercial terms stay with each engagement.</p>
-      </details>
+      {% for faq in page_faqs %}
+        <details class="group card p-5">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
+            {{ faq.question }}
+            <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
+          </summary>
+          <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">{{ faq.answer|linebreaksbr }}</p>
+        </details>
+      {% empty %}
+        <details class="group card p-5">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
+            How are the practices structured?
+            <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
+          </summary>
+          <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">Staffing, recruitment, talent acquisition and the SAP/Scrum practice are separate engagements. A client can use one or combine them, and the commercial terms stay with each engagement.</p>
+        </details>
 
-      <details class="group card p-5">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
-          What compliance checks are completed?
-          <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
-        </summary>
-        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">GCTT is an E-Verify employer. Right-to-work verification, Form I-9 and the checks agreed for the specific role are completed before placement. Background and credential checks are scoped with the client.</p>
-      </details>
+        <details class="group card p-5">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
+            What compliance checks are completed?
+            <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
+          </summary>
+          <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">GCTT is an E-Verify employer. Right-to-work verification, Form I-9 and the checks agreed for the specific role are completed before placement. Background and credential checks are scoped with the client.</p>
+        </details>
 
-      <details class="group card p-5">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
-          Can the Academy train an internal team?
-          <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
-        </summary>
-        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">Yes. Public cohorts run on a published schedule; corporate cohorts are scoped to the team's stack and delivery process. Both lead to a verifiable completion certificate.</p>
-      </details>
+        <details class="group card p-5">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold">
+            Can the Academy train an internal team?
+            <svg class="h-5 w-5 shrink-0 text-accent transition-transform group-open:rotate-180" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#chevron-down"></use></svg>
+          </summary>
+          <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted">Yes. Public cohorts run on a published schedule; corporate cohorts are scoped to the team's stack and delivery process. Both lead to a verifiable completion certificate.</p>
+        </details>
+      {% endfor %}
     </div>
   </div>
 </section>

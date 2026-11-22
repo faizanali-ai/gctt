@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Recruitment — GCTT{% endblock %}
-{% block description %}Retained and contingent search for senior technical practitioners, leads and delivery managers.{% endblock %}
+{% block title %}{{ page_content.title|default:"Recruitment — GCTT" }}{% endblock %}
+{% block description %}{{ page_content.meta_description|default:"Retained and contingent search for senior technical practitioners, leads and delivery managers." }}{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Talent Solutions · Practice 02" title="Search for senior technical roles." subtitle="Retained and contingent recruitment for the roles that are hard to fill and expensive to get wrong." %}
+{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"Talent Solutions · Practice 02" title=page_content.hero_title|default:"Search for senior technical roles." subtitle=page_content.hero_subtitle|default:"Retained and contingent recruitment for the roles that are hard to fill and expensive to get wrong." %}
 {% include "partials/_solutions_nav.html" %}
 
 <section class="section">
@@ -75,4 +75,6 @@
     </aside>
   </div>
 </section>
+
+{% include "partials/_page_faqs.html" %}
 {% endblock %}

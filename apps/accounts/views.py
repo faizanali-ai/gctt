@@ -22,7 +22,7 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
 from django.core.validators import validate_email
 from django.db import IntegrityError
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -53,6 +53,10 @@ from .audit import log_action
 from .decorators import staff_required
 from .email_otp import clear_issue_cooldown, issue_code, verify_code
 from .forms import (
+    MediaAssetForm,
+    NavigationItemForm,
+    PageContentForm,
+    PageFAQForm,
     ProfileForm,
     SignupForm,
     SiteSettingsForm,
@@ -61,8 +65,14 @@ from .forms import (
 )
 from .models import (
     DESIGNATION_CHOICES,
+    MENU_CHOICES,
+    PAGE_CHOICES,
     STAFF_SUBGROUPS,
     AuditLog,
+    MediaAsset,
+    NavigationItem,
+    PageContent,
+    PageFAQ,
     SiteSettings,
     TeamProfile,
     User,
@@ -1099,6 +1109,235 @@ def manage_audit(request):
             ),
         },
     )
+
+
+@login_required
+@staff_required
+def manage_pages(request):
+    _require_user_manager(request)
+    contents = {pc.page_slug: pc for pc in PageContent.objects.select_related("updated_by")}
+    faq_counts = {}
+    for item in PageFAQ.objects.values("page_slug").annotate(total=Count("id")):
+        faq_counts[item["page_slug"]] = item["total"]
+
+    pages_list = []
+    for slug, label in PAGE_CHOICES:
+        pc = contents.get(slug)
+        pages_list.append(
+            {
+                "slug": slug,
+                "label": label,
+                "has_content": bool(pc),
+                "updated_at": pc.updated_at if pc else None,
+                "updated_by": pc.updated_by if pc else None,
+                "hero_title": pc.hero_title if pc else "",
+                "faq_count": faq_counts.get(slug, 0),
+            }
+        )
+    return render(request, "portals/pages.html", {"pages_list": pages_list})
+
+
+@login_required
+@staff_required
+def manage_page_edit(request, page_slug):
+    _require_user_manager(request)
+    slug_dict = dict(PAGE_CHOICES)
+    if page_slug not in slug_dict:
+        messages.error(request, f"Unknown page slug: {page_slug}")
+        return redirect("manage_pages")
+
+    page_label = slug_dict[page_slug]
+    instance, _ = PageContent.objects.get_or_create(page_slug=page_slug)
+    form = PageContentForm(request.POST or None, instance=instance)
+    if request.method == "POST" and form.is_valid():
+        pc = form.save(commit=False)
+        pc.updated_by = request.user
+        pc.save()
+        log_action(request, "page.edit", page_slug, pc.hero_title)
+        messages.success(request, f"Content for '{page_label}' saved successfully.")
+        return redirect("manage_page_edit", page_slug=page_slug)
+
+    faqs = PageFAQ.objects.filter(page_slug=page_slug).order_by("order", "id")
+    faq_form = PageFAQForm(initial={"page_slug": page_slug, "order": faqs.count() + 1})
+
+    return render(
+        request,
+        "portals/page_edit.html",
+        {
+            "page_slug": page_slug,
+            "page_label": page_label,
+            "form": form,
+            "faqs": faqs,
+            "faq_form": faq_form,
+        },
+    )
+
+
+@login_required
+@staff_required
+@require_POST
+def manage_faq_create(request, page_slug):
+    _require_user_manager(request)
+    form = PageFAQForm(request.POST)
+    if form.is_valid():
+        faq = form.save()
+        log_action(request, "faq.create", faq.page_slug, faq.question)
+        messages.success(request, "FAQ added successfully.")
+    else:
+        messages.error(request, "Could not add FAQ. Please check all fields.")
+    return redirect("manage_page_edit", page_slug=page_slug)
+
+
+@login_required
+@staff_required
+def manage_faq_edit(request, pk):
+    _require_user_manager(request)
+    faq = get_object_or_404(PageFAQ, pk=pk)
+    form = PageFAQForm(request.POST or None, instance=faq)
+    if request.method == "POST" and form.is_valid():
+        faq = form.save()
+        log_action(request, "faq.edit", faq.page_slug, faq.question)
+        messages.success(request, "FAQ updated successfully.")
+        return redirect("manage_page_edit", page_slug=faq.page_slug)
+    return render(
+        request,
+        "portals/faq_edit.html",
+        {
+            "faq": faq,
+            "form": form,
+        },
+    )
+
+
+@login_required
+@staff_required
+@require_POST
+def manage_faq_delete(request, pk):
+    _require_user_manager(request)
+    faq = get_object_or_404(PageFAQ, pk=pk)
+    page_slug = faq.page_slug
+    question = faq.question
+    faq.delete()
+    log_action(request, "faq.delete", page_slug, question)
+    messages.success(request, f"FAQ '{question}' deleted.")
+    return redirect("manage_page_edit", page_slug=page_slug)
+
+
+@login_required
+@staff_required
+def manage_navigation(request):
+    _require_user_manager(request)
+    items = NavigationItem.objects.all().order_by("menu", "order", "id")
+    form = NavigationItemForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        nav_item = form.save()
+        log_action(request, "nav.create", nav_item.menu, f"{nav_item.label} -> {nav_item.url}")
+        messages.success(request, f"Navigation link '{nav_item.label}' added.")
+        return redirect("manage_navigation")
+
+    menus_dict = {key: [] for key, _ in MENU_CHOICES}
+    for item in items:
+        menus_dict.setdefault(item.menu, []).append(item)
+
+    menus = []
+    for key, label in MENU_CHOICES:
+        menus.append(
+            {
+                "key": key,
+                "label": label,
+                "items": menus_dict.get(key, []),
+            }
+        )
+
+    return render(
+        request,
+        "portals/navigation.html",
+        {
+            "menus": menus,
+            "form": form,
+            "menu_choices": MENU_CHOICES,
+        },
+    )
+
+
+@login_required
+@staff_required
+def manage_navigation_edit(request, pk):
+    _require_user_manager(request)
+    item = get_object_or_404(NavigationItem, pk=pk)
+    form = NavigationItemForm(request.POST or None, instance=item)
+    if request.method == "POST" and form.is_valid():
+        item = form.save()
+        log_action(request, "nav.edit", item.menu, f"{item.label} -> {item.url}")
+        messages.success(request, f"Navigation link '{item.label}' updated.")
+        return redirect("manage_navigation")
+    return render(
+        request,
+        "portals/navigation_edit.html",
+        {
+            "item": item,
+            "form": form,
+        },
+    )
+
+
+@login_required
+@staff_required
+@require_POST
+def manage_navigation_delete(request, pk):
+    _require_user_manager(request)
+    item = get_object_or_404(NavigationItem, pk=pk)
+    label = item.label
+    menu = item.menu
+    item.delete()
+    log_action(request, "nav.delete", menu, label)
+    messages.success(request, f"Navigation link '{label}' removed.")
+    return redirect("manage_navigation")
+
+
+@login_required
+@staff_required
+def manage_media(request):
+    _require_user_manager(request)
+    form = MediaAssetForm(request.POST or None, request.FILES or None)
+    if request.method == "POST" and form.is_valid():
+        asset = form.save(commit=False)
+        asset.uploaded_by = request.user
+        asset.save()
+        log_action(request, "media.upload", asset.title, asset.file.url)
+        messages.success(request, f"Asset '{asset.title}' uploaded successfully.")
+        return redirect("manage_media")
+
+    assets = MediaAsset.objects.all().order_by("-uploaded_at")
+    q = request.GET.get("q", "").strip()
+    if q:
+        assets = assets.filter(Q(title__icontains=q) | Q(alt_text__icontains=q))
+    page_obj = Paginator(assets, 24).get_page(request.GET.get("page"))
+
+    return render(
+        request,
+        "portals/media.html",
+        {
+            "page_obj": page_obj,
+            "form": form,
+            "q": q,
+        },
+    )
+
+
+@login_required
+@staff_required
+@require_POST
+def manage_media_delete(request, pk):
+    _require_user_manager(request)
+    asset = get_object_or_404(MediaAsset, pk=pk)
+    title = asset.title
+    if asset.file:
+        asset.file.delete(save=False)
+    asset.delete()
+    log_action(request, "media.delete", title)
+    messages.success(request, f"Asset '{title}' deleted.")
+    return redirect("manage_media")
 
 
 @login_required

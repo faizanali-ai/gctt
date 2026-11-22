@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Talent Acquisition — GCTT{% endblock %}
-{% block description %}Workforce mapping, compensation benchmarking and embedded recruiting support for technology teams.{% endblock %}
+{% block title %}{{ page_content.title|default:"Talent Acquisition — GCTT" }}{% endblock %}
+{% block description %}{{ page_content.meta_description|default:"Workforce mapping, compensation benchmarking and embedded recruiting support for technology teams." }}{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Talent Solutions · Practice 03" title="Talent acquisition advisory." subtitle="Workforce mapping, compensation benchmarks and embedded recruiting support for teams that are scaling deliberately." %}
+{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"Talent Solutions · Practice 03" title=page_content.hero_title|default:"Talent acquisition advisory." subtitle=page_content.hero_subtitle|default:"Workforce mapping, compensation benchmarks and embedded recruiting support for teams that are scaling deliberately." %}
 {% include "partials/_solutions_nav.html" %}
 
 <section class="section">
@@ -69,4 +69,6 @@
     </aside>
   </div>
 </section>
+
+{% include "partials/_page_faqs.html" %}
 {% endblock %}

@@ -2,7 +2,7 @@ from django.db import DatabaseError, connection
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from apps.accounts.models import TeamProfile
+from apps.accounts.models import PageContent, PageFAQ, TeamProfile
 
 
 def wake(request):
@@ -19,17 +19,32 @@ def healthz(request):
     return HttpResponse("ok", content_type="text/plain")
 
 
+def page_context(slug):
+    try:
+        content = PageContent.objects.filter(page_slug=slug).first()
+        faqs = list(
+            PageFAQ.objects.filter(page_slug=slug, is_published=True).order_by("order", "id")
+        )
+        return {
+            "page_content": content,
+            "page_faqs": faqs,
+        }
+    except DatabaseError:
+        return {"page_content": None, "page_faqs": []}
+
+
 def page(request, template):
-    return render(request, f"pages/{template}.html")
+    ctx = page_context(template)
+    return render(request, f"pages/{template}.html", ctx)
 
 
 def about(request):
     profiles = TeamProfile.objects.filter(published=True)
-    return render(
-        request,
-        "pages/about.html",
+    ctx = page_context("about")
+    ctx.update(
         {
             "team": profiles.filter(section=TeamProfile.Section.TEAM),
             "network": profiles.filter(section=TeamProfile.Section.NETWORK),
-        },
+        }
     )
+    return render(request, "pages/about.html", ctx)

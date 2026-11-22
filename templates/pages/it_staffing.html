@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}IT Staffing — GCTT{% endblock %}
-{% block description %}Contract, contract-to-hire and direct placement for engineering, cloud, data and infrastructure teams.{% endblock %}
+{% block title %}{{ page_content.title|default:"IT Staffing — GCTT" }}{% endblock %}
+{% block description %}{{ page_content.meta_description|default:"Contract, contract-to-hire and direct placement for engineering, cloud, data and infrastructure teams." }}{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Talent Solutions · Practice 01" title="IT staffing for delivery teams." subtitle="GCTT places engineers, cloud specialists and infrastructure practitioners into client teams across Texas and the United States." %}
+{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"Talent Solutions · Practice 01" title=page_content.hero_title|default:"IT staffing for delivery teams." subtitle=page_content.hero_subtitle|default:"GCTT places engineers, cloud specialists and infrastructure practitioners into client teams across Texas and the United States." %}
 {% include "partials/_solutions_nav.html" %}
 
 <section class="section">
@@ -74,4 +74,6 @@
     </aside>
   </div>
 </section>
+
+{% include "partials/_page_faqs.html" %}
 {% endblock %}

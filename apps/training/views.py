@@ -306,12 +306,16 @@ def pending_registration(request, token):
 
 
 def sap_scrum(request):
+    from config.views import page_context
+
     programmes = visible_programmes().filter(
         Q(category__name__icontains="SAP")
         | Q(category__name__icontains="Scrum")
         | Q(category__name__icontains="Agile")
     ).select_related("category")
-    return render(request, "pages/sap_scrum.html", {"programmes": programmes})
+    ctx = page_context("sap_scrum")
+    ctx["programmes"] = programmes
+    return render(request, "pages/sap_scrum.html", ctx)
 
 
 # shortcut: IP rate limit only; lengthen new certificate refs if enumeration becomes a concern.
