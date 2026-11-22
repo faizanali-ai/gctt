@@ -369,6 +369,10 @@ def staff_programmes(request):
     if published in ("true", "false"):
         programmes = programmes.filter(published=published == "true")
     page_obj = Paginator(programmes, 25).get_page(request.GET.get("page"))
+    from .linkedin import generate_programme_linkedin_post
+
+    for programme in page_obj:
+        programme.linkedin_post_text = generate_programme_linkedin_post(programme, request)
     return render(
         request,
         "staff/programmes.html",

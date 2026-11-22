@@ -17,10 +17,8 @@
 <header class="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur-md">
   <div class="container-site flex h-16 items-center justify-between gap-3 sm:gap-6">
     <a href="{% url 'home' %}" class="flex shrink-0 items-center" aria-label="{{ COMPANY.name }} home">
-      <span class="logo-plate logo-plate--horizontal inline-flex items-center rounded-md px-2 py-1">
-        <img src="{% static 'images/logo-horizontal.png' %}" alt="{{ COMPANY.name }}" width="700" height="106" class="logo-light h-6 w-auto sm:h-8">
-        <img src="{% static 'images/logo-horizontal-dark.png' %}" alt="" width="700" height="108" class="logo-dark h-6 w-auto sm:h-8">
-      </span>
+      <img src="{% static 'images/logo-horizontal.svg' %}" alt="{{ COMPANY.name }}" width="155" height="24" class="logo-light h-6 w-auto sm:h-8">
+      <img src="{% static 'images/logo-horizontal-dark.svg' %}" alt="" width="155" height="24" class="logo-dark h-6 w-auto sm:h-8">
     </a>
 
     <nav id="primary-nav" class="relative hidden items-center gap-7 lg:flex" aria-label="Main navigation">
@@ -49,9 +47,9 @@
 
 <dialog id="mobile-drawer" class="drawer" aria-label="Mobile navigation">
   <div class="drawer-head">
-    <a href="{% url 'home' %}" class="logo-plate logo-plate--horizontal inline-flex items-center rounded-md px-2 py-1" aria-label="{{ COMPANY.name }} home">
-      <img src="{% static 'images/logo-horizontal.png' %}" alt="{{ COMPANY.name }}" width="700" height="106" class="logo-light h-6 w-auto">
-      <img src="{% static 'images/logo-horizontal-dark.png' %}" alt="" width="700" height="108" class="logo-dark h-6 w-auto">
+    <a href="{% url 'home' %}" class="flex shrink-0 items-center" aria-label="{{ COMPANY.name }} home">
+      <img src="{% static 'images/logo-horizontal.svg' %}" alt="{{ COMPANY.name }}" width="155" height="24" class="logo-light h-6 w-auto">
+      <img src="{% static 'images/logo-horizontal-dark.svg' %}" alt="" width="155" height="24" class="logo-dark h-6 w-auto">
     </a>
     <button type="button" class="btn btn-ghost btn-sm" data-dialog-close aria-label="Close navigation">
       <svg class="h-5 w-5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#close"></use></svg>

@@ -303,6 +303,10 @@ def staff_jobs(request):
     if published in ("true", "false"):
         jobs = jobs.filter(published=published == "true")
     page_obj = Paginator(jobs, 25).get_page(request.GET.get("page"))
+    from .linkedin import generate_linkedin_post_text
+
+    for job in page_obj:
+        job.linkedin_post_text = generate_linkedin_post_text(job, request)
     return render(
         request,
         "staff/jobs.html",

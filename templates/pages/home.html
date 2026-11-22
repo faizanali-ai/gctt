@@ -227,20 +227,20 @@
       <p class="eyebrow eyebrow-accent">Contact</p>
       <h2 class="mt-3 text-display-2">Start a conversation.</h2>
       <p class="mt-4 max-w-md text-body-lg text-muted">Tell us what you need. A practice director reviews every enquiry.</p>
-      <dl class="mt-8 space-y-4 text-sm">
+      <div class="mt-8 space-y-4 text-sm">
         <div class="flex gap-3">
           <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#map-pin"></use></svg>
-          <div><dt class="font-semibold">Headquarters</dt><dd class="text-muted">{{ COMPANY.address }}</dd></div>
+          <div><p class="font-semibold">Headquarters</p><p class="text-muted">{{ COMPANY.address }}</p></div>
         </div>
         <div class="flex gap-3">
           <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#mail"></use></svg>
-          <div><dt class="font-semibold">Email</dt><dd><a href="mailto:{{ COMPANY.email }}" class="link">{{ COMPANY.email }}</a></dd></div>
+          <div><p class="font-semibold">Email</p><p><a href="mailto:{{ COMPANY.email }}" class="link">{{ COMPANY.email }}</a></p></div>
         </div>
         <div class="flex gap-3">
           <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#clock"></use></svg>
-          <div><dt class="font-semibold">Hours</dt><dd class="text-muted">Monday–Friday, 8:00–18:00 CST</dd></div>
+          <div><p class="font-semibold">Hours</p><p class="text-muted">Monday–Friday, 8:00–18:00 CST</p></div>
         </div>
-      </dl>
+      </div>
     </div>
     <div class="card p-6 sm:p-8">
       <h3 class="text-h3">Send an enquiry</h3>

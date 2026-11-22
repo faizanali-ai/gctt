@@ -84,11 +84,29 @@
         {% if perms.jobs.change_job %}<a href="{% url 'staff_job_edit' job.pk %}" class="btn btn-secondary w-full">Edit mandate details</a>{% endif %}
 
         {% if job.published %}
-          <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.scheme }}://{{ request.get_host }}{% url 'job_detail' job.slug %}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary w-full">Share on LinkedIn</a>
-          <form method="post" action="{% url 'staff_job_linkedin_post' job.pk %}" data-confirm="Publish “{{ job.title|escapejs }}” to the GCTT LinkedIn organisation page?" data-confirm-action="Publish">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-secondary w-full">Publish to LinkedIn</button>
-          </form>
+          <div class="rounded-field border border-line bg-raised p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-2xs uppercase tracking-[0.08em] text-accent font-semibold flex items-center gap-1.5">
+                <svg class="h-3.5 w-3.5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#linkedin"></use></svg>
+                LinkedIn Campaign Post
+              </span>
+              <button type="button" class="btn btn-secondary btn-sm" data-copy-target="job-post-{{ job.pk }}">
+                <svg class="h-3.5 w-3.5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#copy"></use></svg>
+                Copy Post Copy
+              </button>
+            </div>
+            <textarea id="job-post-{{ job.pk }}" readonly class="w-full h-36 font-mono text-xs rounded border border-line bg-surface p-2 text-muted select-all leading-relaxed">{{ job.linkedin_post_text }}</textarea>
+            <div class="grid gap-2 sm:grid-cols-2">
+              <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.scheme }}://{{ request.get_host }}{% url 'job_detail' job.slug %}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm text-center">
+                Open LinkedIn Share
+                <svg class="h-3.5 w-3.5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#external"></use></svg>
+              </a>
+              <form method="post" action="{% url 'staff_job_linkedin_post' job.pk %}" data-confirm="Publish “{{ job.title|escapejs }}” to the GCTT LinkedIn organisation page?" data-confirm-action="Publish">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary btn-sm w-full">API Publish</button>
+              </form>
+            </div>
+          </div>
         {% endif %}
 
         <form method="post" action="{% url 'staff_job_publish' job.pk %}" class="border-t border-line pt-5">

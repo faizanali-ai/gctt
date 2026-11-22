@@ -196,8 +196,8 @@ class MetadataTests(TestCase):
 
     def test_auth_header_uses_main_logo(self):
         response = self.client.get(reverse("login"))
-        self.assertContains(response, "images/logo-main.png")
-        self.assertContains(response, "images/logo-main-dark.png")
+        self.assertContains(response, "images/logo-main")
+        self.assertContains(response, "images/logo-main-dark")
 
     def test_404_is_not_indexed(self):
         response = self.client.get("/this-page-does-not-exist/")
@@ -207,10 +207,9 @@ class MetadataTests(TestCase):
         response = self.client.get(reverse("home"))
         html = response.content.decode()
         self.assertIn("images/og-gctt-v3.jpg", html)
-        self.assertIn("images/logo-horizontal.png", html)
-        self.assertIn("images/logo-horizontal-dark.png", html)
-        self.assertIn("images/logo-stacked.png", html)
-        self.assertIn("images/logo-stacked-dark.png", html)
+        self.assertIn("images/logo-horizontal", html)
+        self.assertIn("images/logo-horizontal-dark", html)
+        self.assertIn("images/logo-stacked-dark", html)
         self.assertIn("images/logo-icon-512.png", html)
         self.assertNotIn("og-gctt-v2", html)
         self.assertNotIn("logo-small.webp", html)

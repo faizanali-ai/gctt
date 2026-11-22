@@ -39,6 +39,45 @@ class AcademyProgrammesTest(TestCase):
             self.assertEqual(response.status_code, 200, f"Detail page failed for {slug}")
             self.assertContains(response, "Join this cohort")
             self.assertContains(response, "Share this programme")
+            self.assertContains(response, "Copy link")
+            self.assertNotContains(response, "Post to LinkedIn")
+            self.assertContains(response, "Target Roles")
+            self.assertContains(response, "Market Pay Benchmark")
+            self.assertContains(response, 'property="og:title"')
+            self.assertContains(response, 'property="og:description"')
+
+    def test_generate_programme_linkedin_post(self):
+        from apps.training.linkedin import generate_programme_linkedin_post
+        from apps.training.models import Programme
+
+        prog = Programme.objects.filter(slug="agile-training").first()
+        self.assertIsNotNone(prog)
+        post_text = generate_programme_linkedin_post(prog)
+        self.assertIn("Scrum Master", post_text)
+        self.assertIn("NO CODING REQUIRED", post_text)
+        self.assertIn("$115,875", post_text)
+        self.assertIn("https://gctekton.com/training/agile-training/", post_text)
+        self.assertIn("#GCTT", post_text)
+
+    def test_generate_job_linkedin_post(self):
+        from apps.jobs.linkedin import generate_linkedin_post_text
+        from apps.jobs.models import Job
+
+        job = Job.objects.first()
+        if job:
+            post_text = generate_linkedin_post_text(job)
+            self.assertIn("OPT / STEM OPT", post_text)
+            self.assertIn("H-4 EAD", post_text)
+            self.assertIn("Green Card (GC)", post_text)
+            self.assertIn("U.S. Citizens", post_text)
+            self.assertIn("#W2Jobs", post_text)
+
+    def test_home_page_contact_markup(self):
+        response = self.client.get(reverse("home"))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, '<dl class="mt-8 space-y-4 text-sm">')
+        self.assertContains(response, "Start a conversation.")
+        self.assertContains(response, "Headquarters")
 
     def test_ai_career_advisor_archetypes(self):
         # AI BA match

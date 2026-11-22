@@ -2,6 +2,8 @@
 {% load static %}
 {% block title %}{{ programme.title }} — Academy — GCTT{% endblock %}
 {% block description %}{{ programme.description|truncatewords:24 }}{% endblock %}
+{% block og_title %}{{ programme.title }} ({{ programme.duration }}) — GCTT Academy{% endblock %}
+{% block og_description %}{{ programme.get_delivery_mode_display }} cohort in {{ programme.category.name|default:"Enterprise Tech" }}. {{ programme.description|truncatewords:25 }}{% endblock %}
 
 {% block content %}
 {% include "partials/_hero.html" with eyebrow="Academy · Programme" title=programme.title intro=programme.description|truncatewords:25 %}
@@ -46,6 +48,86 @@
         {% endif %}
       </dl>
 
+      <div class="mt-8 rounded-card border border-line bg-raised p-6">
+        <p class="eyebrow eyebrow-accent">Career Trajectory &amp; Outcomes</p>
+        <h2 class="mt-2 text-h3">Industry Readiness &amp; Compensation</h2>
+        <p class="mt-2 text-sm text-muted">
+          Engineered for aspiring specialists and career transitioners looking to step into high-demand enterprise roles.
+        </p>
+        <div class="mt-5 grid gap-4 sm:grid-cols-2">
+          <div class="flex gap-3">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+              <svg class="h-4 w-4"><use href="{% static 'images/icons.svg' %}#briefcase"></use></svg>
+            </span>
+            <div>
+              <p class="text-xs font-mono uppercase tracking-[0.08em] text-muted">Target Roles</p>
+              <p class="mt-0.5 text-sm font-semibold">
+                {% if "Scrum" in programme.title or "Agile" in programme.title %}
+                  Scrum Master · Agile Coach · Delivery Lead
+                {% elif "Business Analyst" in programme.title %}
+                  Enterprise Business Analyst · Product Analyst · Systems BA
+                {% elif "DevOps" in programme.title %}
+                  Cloud DevOps Engineer · SRE · Systems Engineer
+                {% elif "BA SM" in programme.title %}
+                  Hybrid BA / Scrum Master · Agile Business Analyst
+                {% elif "AI" in programme.title %}
+                  AI Business Analyst · Product AI Specialist · Tech Consultant
+                {% else %}
+                  Functional Specialist · Consultant · Practice Lead
+                {% endif %}
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+              <svg class="h-4 w-4"><use href="{% static 'images/icons.svg' %}#graduation"></use></svg>
+            </span>
+            <div>
+              <p class="text-xs font-mono uppercase tracking-[0.08em] text-muted">Market Pay Benchmark</p>
+              <p class="mt-0.5 text-sm font-semibold">
+                {% if "Scrum" in programme.title or "Agile" in programme.title %}
+                  $105,000 – $125,000 / year (U.S. average)
+                {% elif "Business Analyst" in programme.title %}
+                  $95,000 – $120,000 / year
+                {% elif "DevOps" in programme.title %}
+                  $115,000 – $145,000 / year
+                {% elif "BA SM" in programme.title %}
+                  $110,000 – $135,000 / year
+                {% elif "AI" in programme.title %}
+                  $115,000 – $140,000 / year
+                {% else %}
+                  $90,000 – $125,000 / year
+                {% endif %}
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+              <svg class="h-4 w-4"><use href="{% static 'images/icons.svg' %}#check"></use></svg>
+            </span>
+            <div>
+              <p class="text-xs font-mono uppercase tracking-[0.08em] text-muted">Prerequisites</p>
+              <p class="mt-0.5 text-sm font-semibold">
+                {% if "DevOps" in programme.title %}
+                  Basic IT / OS familiarity; no prior DevOps required
+                {% else %}
+                  No prior coding background required; open to all degrees
+                {% endif %}
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-field bg-accent-soft text-accent" aria-hidden="true">
+              <svg class="h-4 w-4"><use href="{% static 'images/icons.svg' %}#shield"></use></svg>
+            </span>
+            <div>
+              <p class="text-xs font-mono uppercase tracking-[0.08em] text-muted">Certification</p>
+              <p class="mt-0.5 text-sm font-semibold">Verifiable completion credential with Texas E-Verify employer backing</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="mt-8">
         <h2 class="text-h2">Curriculum</h2>
         <div class="prose-site mt-4 whitespace-pre-line">{{ programme.description }}</div>
@@ -58,10 +140,6 @@
             <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#copy"></use></svg>
             Copy link
           </button>
-          <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
-            <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#linkedin"></use></svg>
-            Post to LinkedIn
-          </a>
         </div>
       </div>
     </div>

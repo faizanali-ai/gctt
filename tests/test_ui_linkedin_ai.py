@@ -29,7 +29,7 @@ class UIUXLinkedInAITests(TestCase):
         response = self.client.get(reverse("home"))
         self.assertEqual(response.status_code, 200)
         content = response.content.decode("utf-8")
-        self.assertIn("logo-horizontal.png", content)
+        self.assertIn("logo-horizontal", content)
         self.assertIn('aria-label="GCTT home"', content)
         self.assertIn("Talent Solutions", content)
         self.assertIn("Academy", content)

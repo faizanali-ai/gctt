@@ -9,10 +9,8 @@
 <div class="flex min-h-screen">
   <aside class="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-line bg-surface lg:flex">
     <a href="{% url 'dashboard' %}" class="flex h-16 items-center gap-3 border-b border-line px-5" aria-label="{{ COMPANY.name }} portal">
-      <span class="logo-plate logo-plate--main inline-flex items-center rounded-md px-1.5 py-1">
-        <img src="{% static 'images/logo-main.png' %}" alt="{{ COMPANY.name }}" width="520" height="176" class="logo-light h-7 w-auto">
-        <img src="{% static 'images/logo-main-dark.png' %}" alt="" width="520" height="174" class="logo-dark h-7 w-auto">
-      </span>
+      <img src="{% static 'images/logo-main.svg' %}" alt="{{ COMPANY.name }}" width="118" height="40" class="logo-light h-7 w-auto">
+      <img src="{% static 'images/logo-main-dark.svg' %}" alt="" width="118" height="40" class="logo-dark h-7 w-auto">
       <span class="font-mono text-3xs uppercase tracking-[0.1em] text-muted">Portal</span>
     </a>
 
