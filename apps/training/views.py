@@ -307,7 +307,9 @@ def pending_registration(request, token):
 
 def sap_scrum(request):
     programmes = visible_programmes().filter(
-        category__name__in=["SAP", "Scrum & Agile"]
+        Q(category__name__icontains="SAP")
+        | Q(category__name__icontains="Scrum")
+        | Q(category__name__icontains="Agile")
     ).select_related("category")
     return render(request, "pages/sap_scrum.html", {"programmes": programmes})
 

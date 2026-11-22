@@ -128,9 +128,357 @@
         </div>
       </div>
 
-      <div class="mt-8">
-        <h2 class="text-h2">Curriculum</h2>
-        <div class="prose-site mt-4 whitespace-pre-line">{{ programme.description }}</div>
+      <div class="mt-10">
+        <h2 class="text-h2">Curriculum &amp; Syllabus</h2>
+        <div class="mt-3 text-body-lg text-muted">
+          {{ programme.description }}
+        </div>
+
+        <div class="mt-6 flex flex-wrap items-center gap-2">
+          <span class="text-xs font-mono uppercase tracking-[0.08em] text-muted mr-1">Tools &amp; Stack:</span>
+          {% if "agile" in programme.slug or "scrum" in programme.slug %}
+            <span class="badge badge-accent">Jira Software</span>
+            <span class="badge badge-accent">Confluence</span>
+            <span class="badge badge-accent">Miro</span>
+            <span class="badge badge-accent">Slack</span>
+            <span class="badge badge-accent">Zoom</span>
+          {% elif "business-analyst" in programme.slug %}
+            <span class="badge badge-accent">Jira</span>
+            <span class="badge badge-accent">Confluence</span>
+            <span class="badge badge-accent">Lucidchart / BPMN</span>
+            <span class="badge badge-accent">MS Visio</span>
+            <span class="badge badge-accent">Excel / SQL</span>
+          {% elif "devops" in programme.slug %}
+            <span class="badge badge-accent">Linux / Bash</span>
+            <span class="badge badge-accent">Docker</span>
+            <span class="badge badge-accent">Kubernetes</span>
+            <span class="badge badge-accent">Jenkins / GitHub Actions</span>
+            <span class="badge badge-accent">AWS &amp; Terraform</span>
+          {% elif "ba-sm" in programme.slug %}
+            <span class="badge badge-accent">Jira</span>
+            <span class="badge badge-accent">Confluence</span>
+            <span class="badge badge-accent">Miro</span>
+            <span class="badge badge-accent">Lucidchart</span>
+            <span class="badge badge-accent">Agile Telemetry</span>
+          {% elif "ai-ba" in programme.slug %}
+            <span class="badge badge-accent">Generative AI / LLMs</span>
+            <span class="badge badge-accent">Prompt Engineering</span>
+            <span class="badge badge-accent">Jira &amp; Confluence</span>
+            <span class="badge badge-accent">Process Automation</span>
+            <span class="badge badge-accent">AI Governance</span>
+          {% else %}
+            <span class="badge badge-accent">Enterprise Tooling</span>
+            <span class="badge badge-accent">Hands-on Labs</span>
+            <span class="badge badge-accent">Cloud Systems</span>
+          {% endif %}
+        </div>
+
+        <div class="mt-8 space-y-4">
+          {% if "agile" in programme.slug or "scrum" in programme.slug %}
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">01</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Agile Foundations &amp; Scrum Theory</h3>
+                  <p class="mt-1 text-sm text-muted">Deep dive into Agile values, principles, and the Scrum 3-5-3 architecture (3 Roles, 3 Artifacts, 5 Events). Transitioning mindset from command-and-control to servant leadership.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">02</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Sprint Ceremonies &amp; Facilitation Mastery</h3>
+                  <p class="mt-1 text-sm text-muted">Mastering the mechanics and practical facilitation of Sprint Planning, Daily Scrums, Sprint Reviews, and high-impact Retrospectives with continuous improvement action items.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">03</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Backlog Grooming, User Stories &amp; Estimation</h3>
+                  <p class="mt-1 text-sm text-muted">Writing robust user stories using INVEST criteria, defining precise Acceptance Criteria, story point sizing (Fibonacci / Planning Poker), and managing backlog health.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">04</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Jira Software Administration &amp; Agile Telemetry</h3>
+                  <p class="mt-1 text-sm text-muted">Hands-on configuration of Scrum boards, sprint workflows, release versioning, burndown/burnup velocity tracking, cumulative flow diagrams, and stakeholder reporting.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">05</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Impediment Resolution &amp; Scaled Agile (SAFe)</h3>
+                  <p class="mt-1 text-sm text-muted">Shielding delivery squads, removing cross-team blockers, resolving conflicts, and navigating enterprise scaled agile environments (PI Planning, dependencies, and release trains).</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">06</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Capstone Simulation, Certification &amp; Career Coaching</h3>
+                  <p class="mt-1 text-sm text-muted">Live sprint simulation with real-world enterprise delivery scenarios, rigorous certification exam preparation, 1-on-1 interview rehearsal, and public certificate issuance.</p>
+                </div>
+              </div>
+            </div>
+          {% elif "business-analyst" in programme.slug %}
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">01</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Enterprise BA Fundamentals &amp; Scope Management</h3>
+                  <p class="mt-1 text-sm text-muted">The core role of the modern Business Analyst, SDLC models, business case formulation, stakeholder matrix mapping, and defining project scope boundaries.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">02</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Requirements Elicitation Techniques</h3>
+                  <p class="mt-1 text-sm text-muted">Conducting stakeholder interviews, Joint Application Development (JAD) workshops, document analysis, prototyping, and translating ambiguities into clear technical requirements.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">03</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">BRD, FRD &amp; Specification Authoring</h3>
+                  <p class="mt-1 text-sm text-muted">Writing enterprise Business Requirements Documents (BRD), Functional Requirement Documents (FRD), System Requirement Specifications (SRS), and Requirements Traceability Matrices (RTM).</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">04</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Process Modeling (BPMN 2.0) &amp; Gap Analysis</h3>
+                  <p class="mt-1 text-sm text-muted">Hands-on visual workflow modeling using BPMN 2.0 in Lucidchart/Visio: As-Is vs To-Be process architecture, swimlane diagrams, data flow diagrams, and gap identification.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">05</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Agile Story Mapping, Jira Backlog &amp; UAT</h3>
+                  <p class="mt-1 text-sm text-muted">Transforming functional specifications into Jira epics and user stories with Gherkin acceptance criteria. Designing User Acceptance Testing (UAT) test cases and signing off releases.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">06</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">End-to-End Enterprise Project &amp; Verifiable Credential</h3>
+                  <p class="mt-1 text-sm text-muted">Capstone project simulating an enterprise platform upgrade, executive stakeholder presentation review, mock technical interview calibration, and credential issuance.</p>
+                </div>
+              </div>
+            </div>
+          {% elif "devops" in programme.slug %}
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">01</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Linux Systems Administration &amp; Shell Automation</h3>
+                  <p class="mt-1 text-sm text-muted">Enterprise Linux fundamentals, user permissions, networking (DNS, SSH, firewalling), process monitoring, and writing Bash automation scripts.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">02</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Version Control &amp; Distributed Git Workflows</h3>
+                  <p class="mt-1 text-sm text-muted">Git architecture, trunk-based vs GitFlow branching, merge conflict resolution, pull request code review gates, and security hooks.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">03</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Docker Containerization &amp; Image Optimization</h3>
+                  <p class="mt-1 text-sm text-muted">Building containerized application environments, writing multi-stage Dockerfiles, managing container networks/volumes, and Docker Compose orchestration.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">04</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">CI/CD Pipeline Automation (Jenkins &amp; GitHub Actions)</h3>
+                  <p class="mt-1 text-sm text-muted">Designing automated build, test, and deployment pipelines. Declarative Jenkinsfiles, GitHub Actions workflows, secret management, and artifact publishing.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">05</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Cloud Infrastructure (AWS) &amp; Terraform (IaC)</h3>
+                  <p class="mt-1 text-sm text-muted">Core AWS services (EC2, VPC, S3, IAM, RDS), Infrastructure as Code with Terraform, state management, and immutable infrastructure patterns.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">06</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Kubernetes Orchestration &amp; Production Monitoring</h3>
+                  <p class="mt-1 text-sm text-muted">Deploying and managing Kubernetes clusters (Pods, Services, Ingress, Deployments), monitoring with Prometheus/Grafana, and verifiable certification issuance.</p>
+                </div>
+              </div>
+            </div>
+          {% elif "ba-sm" in programme.slug %}
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">01</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Hybrid Delivery Model Foundations</h3>
+                  <p class="mt-1 text-sm text-muted">The dual-discipline advantage: uniting Business Analysis (what to build) with Scrum Master facilitation (how to deliver with speed and quality).</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">02</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Requirements Decomposition into Agile Backlogs</h3>
+                  <p class="mt-1 text-sm text-muted">Eliciting high-level enterprise business requirements and decomposing them directly into actionable Jira epics, user stories, and acceptance test cases.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">03</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Sprint Planning &amp; Story Sizing Dynamics</h3>
+                  <p class="mt-1 text-sm text-muted">Leading cross-functional estimation sessions, balancing technical debt with functional features, and aligning developer capacity with product roadmaps.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">04</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Ceremony Leadership &amp; Conflict De-escalation</h3>
+                  <p class="mt-1 text-sm text-muted">Facilitating daily standups, backlog refinement, sprint demos, and retrospectives. Removing delivery bottlenecks and managing business expectations.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">05</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Delivery Telemetry &amp; Executive Reporting</h3>
+                  <p class="mt-1 text-sm text-muted">Tracking squad velocity, cycle time, burndown charts, and presenting sprint deliverables clearly to senior engineering and enterprise business directors.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">06</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Dual-Role Capstone &amp; Verifiable Credential</h3>
+                  <p class="mt-1 text-sm text-muted">End-to-end product delivery simulation acting as both BA and Scrum Master, career positioning coaching, and Texas E-Verify credential issuance.</p>
+                </div>
+              </div>
+            </div>
+          {% elif "ai-ba" in programme.slug %}
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">01</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Enterprise AI Foundations &amp; Applied LLMs</h3>
+                  <p class="mt-1 text-sm text-muted">Core concepts of Generative AI, LLM architectures, foundation models, and how AI is transforming traditional enterprise business analysis.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">02</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">AI-Assisted Requirements Elicitation &amp; Prompt Engineering</h3>
+                  <p class="mt-1 text-sm text-muted">Writing advanced structured prompts to extract requirements from transcripts, interviews, and legacy systems with zero hallucinations.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">03</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Automated Documentation &amp; User Story Generation</h3>
+                  <p class="mt-1 text-sm text-muted">Accelerating BRD/FRD authoring, synthetic persona simulation, edge case identification, and automated Jira user story formulation.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">04</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Process Re-engineering for Intelligent Automation</h3>
+                  <p class="mt-1 text-sm text-muted">Identifying high-ROI workflows for AI integration, designing human-in-the-loop validation checkpoints, and modeling automated process flows.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">05</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">AI Governance, Data Privacy &amp; Model Risk</h3>
+                  <p class="mt-1 text-sm text-muted">Ensuring enterprise compliance: data minimization, regulatory frameworks (EU AI Act / US frameworks), bias monitoring, and auditability.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">06</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">AI-Integrated Capstone &amp; Verifiable Credential</h3>
+                  <p class="mt-1 text-sm text-muted">Building an AI product specification prototype from scratch, presentation to enterprise advisors, and verifiable completion certification.</p>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">01</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Core Foundations &amp; Architecture</h3>
+                  <p class="mt-1 text-sm text-muted">Fundamental principles, enterprise architecture, and real-world system patterns.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">02</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Hands-on Configuration &amp; Delivery</h3>
+                  <p class="mt-1 text-sm text-muted">Practical exercises on enterprise systems with practitioner guidance.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-start gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-field bg-accent-soft font-mono text-xs font-bold text-accent">03</span>
+                <div>
+                  <h3 class="font-display font-semibold text-ink">Capstone &amp; Public Verification</h3>
+                  <p class="mt-1 text-sm text-muted">Completion project and issuance of a tamper-evident verifiable credential.</p>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
       </div>
 
       <div class="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6">

@@ -27,6 +27,11 @@
 
       <div class="card divide-y divide-line">
         <div class="p-6">
+          <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Telephone</p>
+          <a href="tel:{{ COMPANY.phone_raw }}" class="mt-2 block font-display text-lg font-semibold hover:text-accent">{{ COMPANY.phone }}</a>
+          <p class="mt-1 text-sm text-muted">Direct line for client operations and urgent talent queries.</p>
+        </div>
+        <div class="p-6">
           <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Client accounts</p>
           <a href="mailto:{{ COMPANY.email }}" class="mt-2 block font-display text-lg font-semibold hover:text-accent">{{ COMPANY.email }}</a>
           <p class="mt-1 text-sm text-muted">Staffing, search, advisory and corporate cohorts.</p>

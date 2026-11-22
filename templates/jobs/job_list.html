@@ -35,6 +35,42 @@
       </form>
     </div>
 
+    <div class="mt-8 rounded-card border border-line bg-raised p-6 sm:p-8">
+      <div class="grid gap-6 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+        <div>
+          <p class="eyebrow eyebrow-accent">Candidate Charter &amp; Work Authorizations</p>
+          <h2 class="mt-2 text-h2">Direct W2 &amp; Contract IT Placements</h2>
+          <p class="mt-2 text-sm leading-relaxed text-muted">
+            GCTT operates with statutory E-Verify compliance. Every submission is reviewed by an experienced practice lead, not auto-rejected by keyword scanners. Candidates are never charged placement or training fees.
+          </p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="badge badge-accent">OPT / STEM OPT</span>
+            <span class="badge badge-accent">H-4 EAD</span>
+            <span class="badge badge-accent">Green Card (GC)</span>
+            <span class="badge badge-accent">U.S. Citizens</span>
+            <span class="badge badge-secondary">$0 Candidate Fee</span>
+          </div>
+        </div>
+        <div class="card p-5 sm:p-6">
+          <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">General Candidate Intake</p>
+          <p class="mt-2 font-display text-base font-semibold">Don't see your specific stack?</p>
+          <p class="mt-1 text-xs leading-relaxed text-muted">
+            Send your updated résumé along with your target role, work authorization, and preferred location. We will route it directly to our practice recruiters.
+          </p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <a href="mailto:{{ COMPANY.jobs_email }}" class="btn btn-primary btn-sm">
+              <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#mail"></use></svg>
+              {{ COMPANY.jobs_email }}
+            </a>
+            <a href="tel:{{ COMPANY.phone_raw }}" class="btn btn-secondary btn-sm">
+              <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#phone"></use></svg>
+              {{ COMPANY.phone }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="mt-8 grid gap-3">
       {% for job in page_obj %}
         <a href="{% url 'job_detail' job.slug %}" class="card card-interactive group p-6">

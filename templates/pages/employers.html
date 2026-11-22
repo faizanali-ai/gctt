@@ -58,6 +58,9 @@
         <p class="eyebrow eyebrow-accent">Requisition</p>
         <h2 class="mt-2 text-h2">Submit the details</h2>
         <p class="mt-2 text-sm text-muted">Include the role, the stack, the engagement model and the target start date.</p>
+        <p class="mt-2 text-xs font-mono text-muted">
+          Urgent requirement? Call <a href="tel:{{ COMPANY.phone_raw }}" class="font-semibold text-accent hover:underline">{{ COMPANY.phone }}</a> or email <a href="mailto:{{ COMPANY.email }}" class="font-semibold text-accent hover:underline">{{ COMPANY.email }}</a>.
+        </p>
         <div class="mt-6">{% include "enquiries/_form.html" %}</div>
       </div>
     </aside>

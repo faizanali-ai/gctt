@@ -23,6 +23,10 @@
         <dd class="mt-1 font-display font-semibold">{{ COMPANY.address }}</dd>
       </div>
       <div class="p-5">
+        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Telephone</dt>
+        <dd class="mt-1"><a href="tel:{{ COMPANY.phone_raw }}" class="link">{{ COMPANY.phone }}</a></dd>
+      </div>
+      <div class="p-5">
         <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Company email</dt>
         <dd class="mt-1"><a href="mailto:{{ COMPANY.email }}" class="link">{{ COMPANY.email }}</a></dd>
       </div>
