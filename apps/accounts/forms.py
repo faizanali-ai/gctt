@@ -3,6 +3,7 @@ import re
 from pathlib import Path
 
 import defusedxml.ElementTree as ET
+from defusedxml.common import DefusedXmlException
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import ValidationError
@@ -365,15 +366,16 @@ class MediaAssetForm(forms.ModelForm):
                 root = ET.fromstring(content)
                 for elem in root.iter():
                     tag = elem.tag.lower()
-                    if tag.endswith("script") or tag == "script":
+                    if tag.endswith(("script", "foreignobject", "iframe", "object", "embed")):
                         raise ValidationError("SVG contains unsafe script elements or event handlers.")
                     for attr, val in elem.attrib.items():
                         attr_lower = attr.lower()
                         if attr_lower.startswith("on") or ":on" in attr_lower:
                             raise ValidationError("SVG contains unsafe script elements or event handlers.")
-                        if "javascript:" in val.lower().replace(" ", ""):
+                        cleaned_val = re.sub(r"[\s\x00-\x1f\x7f-\x9f]", "", val.lower())
+                        if "javascript:" in cleaned_val or "data:text/html" in cleaned_val:
                             raise ValidationError("SVG contains unsafe script elements or event handlers.")
-            except ET.DefusedXmlException:
+            except DefusedXmlException:
                 raise ValidationError("SVG contains unsafe XML entities or structure.")
             except ValidationError:
                 raise

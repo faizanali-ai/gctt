@@ -1356,15 +1356,22 @@ def media_asset_serve(request, pk):
         raise Http404("Media file not found")
     from django.core.files.storage import FileSystemStorage, default_storage
 
-    if isinstance(default_storage, FileSystemStorage):
+    is_svg = asset.file.name.lower().endswith(".svg")
+    # Always stream SVGs directly from the application origin so that Content-Security-Policy
+    # and nosniff headers are enforced in the browser, preventing active execution.
+    if is_svg or isinstance(default_storage, FileSystemStorage):
         try:
-            response = FileResponse(asset.file.open("rb"))
+            content_type = "image/svg+xml" if is_svg else None
+            response = FileResponse(asset.file.open("rb"), content_type=content_type)
         except (FileNotFoundError, ValueError):
-            raise Http404("Media file not found")
+            if not isinstance(default_storage, FileSystemStorage):
+                response = HttpResponseRedirect(asset.file.url)
+            else:
+                raise Http404("Media file not found")
     else:
         response = HttpResponseRedirect(asset.file.url)
 
-    if asset.file.name.lower().endswith(".svg"):
+    if is_svg:
         response["Content-Security-Policy"] = "default-src 'none'; style-src 'unsafe-inline'"
         response["X-Content-Type-Options"] = "nosniff"
     return response

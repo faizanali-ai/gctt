@@ -117,14 +117,7 @@
 
     <aside id="apply-wizard" class="lg:sticky lg:top-24">
       <div class="card p-6 sm:p-8">
-        {% if not COMPANY.allow_candidate_applications %}
-          <div class="alert alert-warning" role="status">
-            <div>
-              <p class="font-semibold">Applications are temporarily paused</p>
-              <p class="mt-1 text-muted">We are not accepting new candidate applications at this time. Please check back soon or contact us directly.</p>
-            </div>
-          </div>
-        {% elif applied %}
+        {% if applied %}
           <div class="alert alert-success" role="status">
             <div>
               <p class="font-semibold">You have already applied for this role.</p>
@@ -132,6 +125,13 @@
             </div>
           </div>
           <a href="{% url 'dashboard' %}" class="btn btn-primary mt-4 w-full">Open candidate dashboard</a>
+        {% elif not COMPANY.allow_candidate_applications %}
+          <div class="alert alert-warning" role="status">
+            <div>
+              <p class="font-semibold">Applications are temporarily paused</p>
+              <p class="mt-1 text-muted">We are not accepting new candidate applications at this time. Please check back soon or contact us directly.</p>
+            </div>
+          </div>
         {% else %}
           <form method="post" action="{% url 'job_apply' job.slug %}" enctype="multipart/form-data" class="form" data-stepper>
             {% csrf_token %}

@@ -68,6 +68,17 @@ class MediaAssetHardeningTests(TestCase):
         self.assertFalse(MediaAsset.objects.filter(title="Whitespace Handler SVG").exists())
         self.assertContains(response, "SVG contains unsafe script elements")
 
+    def test_svg_with_foreign_object_is_rejected(self):
+        svg_with_foreign = b'<svg xmlns="http://www.w3.org/2000/svg"><foreignObject><iframe src="https://evil.com"/></foreignObject></svg>'
+        upload = SimpleUploadedFile("foreign.svg", svg_with_foreign, content_type="image/svg+xml")
+        response = self.client.post(
+            reverse("manage_media"),
+            {"title": "Foreign Object SVG", "file": upload, "alt_text": "Test"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(MediaAsset.objects.filter(title="Foreign Object SVG").exists())
+        self.assertContains(response, "SVG contains unsafe script elements")
+
     def test_media_asset_serve_sets_csp_for_svg(self):
         safe_svg = b'<svg xmlns="http://www.w3.org/2000/svg"><circle r="10"/></svg>'
         asset = MediaAsset.objects.create(
@@ -78,6 +89,28 @@ class MediaAssetHardeningTests(TestCase):
         response = self.client.get(reverse("media_asset_serve", args=[asset.pk]))
         self.assertEqual(response["Content-Security-Policy"], "default-src 'none'; style-src 'unsafe-inline'")
         self.assertEqual(response["X-Content-Type-Options"], "nosniff")
+
+    def test_svg_with_encoded_tab_in_href_is_rejected(self):
+        svg_with_tab = b'<svg xmlns="http://www.w3.org/2000/svg"><a href="java&#x09;script:alert(1)"><text>x</text></a></svg>'
+        upload = SimpleUploadedFile("tab_exploit.svg", svg_with_tab, content_type="image/svg+xml")
+        response = self.client.post(
+            reverse("manage_media"),
+            {"title": "Tab Exploit SVG", "file": upload, "alt_text": "Test"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(MediaAsset.objects.filter(title="Tab Exploit SVG").exists())
+        self.assertContains(response, "SVG contains unsafe script elements")
+
+    def test_svg_with_xml_entity_is_rejected_without_500(self):
+        xxe_svg = b'<?xml version="1.0"?><!DOCTYPE foo [<!ENTITY xxe "test">]><svg xmlns="http://www.w3.org/2000/svg">&xxe;</svg>'
+        upload = SimpleUploadedFile("xxe.svg", xxe_svg, content_type="image/svg+xml")
+        response = self.client.post(
+            reverse("manage_media"),
+            {"title": "XXE SVG", "file": upload, "alt_text": "Test"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(MediaAsset.objects.filter(title="XXE SVG").exists())
+        self.assertContains(response, "SVG contains unsafe XML entities")
 
 
 class DynamicNavCachingTests(TestCase):
@@ -135,6 +168,23 @@ class IntakeGatingTests(TestCase):
         )
         self.assertRedirects(response, reverse("job_detail", args=[self.job.slug]))
         self.assertFalse(Application.objects.exists())
+
+    def test_applied_candidate_sees_dashboard_link_when_applications_paused(self):
+        Application.objects.create(
+            job=self.job,
+            applicant=self.candidate,
+        )
+        settings = SiteSettings.load()
+        settings.allow_candidate_applications = False
+        settings.save()
+        clear_company_cache()
+
+        self.client.force_login(self.candidate)
+        response = self.client.get(reverse("job_detail", args=[self.job.slug]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "You have already applied for this role.")
+        self.assertContains(response, "Open candidate dashboard")
+        self.assertNotContains(response, "Applications are temporarily paused")
 
     def test_student_registrations_toggle_pauses_register(self):
         settings = SiteSettings.load()
