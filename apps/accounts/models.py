@@ -203,6 +203,15 @@ class SiteSettings(models.Model):
     )
     hero_cta_label = models.CharField(max_length=60, default="Request talent")
     hero_cta_url = models.CharField(max_length=200, default="/employers/")
+    phone = models.CharField(max_length=40, default=COMPANY.get("phone", "+1 (786) 855-8859"), blank=True)
+    phone_raw = models.CharField(max_length=40, default=COMPANY.get("phone_raw", "+17868558859"), blank=True)
+    announcement_banner_enabled = models.BooleanField(default=False)
+    announcement_banner_text = models.CharField(max_length=255, blank=True)
+    announcement_banner_link = models.CharField(max_length=200, blank=True)
+    allow_candidate_applications = models.BooleanField(default=True)
+    allow_student_registrations = models.BooleanField(default=True)
+    logo_light_url = models.CharField(max_length=255, blank=True)
+    logo_dark_url = models.CharField(max_length=255, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -283,3 +292,136 @@ class AuditLog(models.Model):
 
     def __str__(self):
         return f"{self.actor or 'system'} · {self.action} · {self.target}"
+
+
+PAGE_CHOICES = (
+    ("home", "Home"),
+    ("about", "About Us"),
+    ("services", "Services / Talent Solutions"),
+    ("it_staffing", "IT Staffing"),
+    ("recruitment", "Recruitment"),
+    ("talent_acquisition", "Talent Acquisition"),
+    ("sap_scrum", "SAP & Scrum / Academy"),
+    ("career_restart", "Career Restart"),
+    ("employers", "For Employers"),
+    ("contact", "Contact Us"),
+    ("privacy", "Privacy Policy"),
+    ("terms", "Terms of Service"),
+)
+
+MENU_CHOICES = (
+    ("header", "Header Navigation"),
+    ("footer_talent", "Footer: Talent Solutions"),
+    ("footer_academy", "Footer: Academy"),
+    ("footer_company", "Footer: Company"),
+    ("footer_legal", "Footer: Legal & Policy"),
+)
+
+
+class PageContent(models.Model):
+    """Dynamic, owner-editable page content for each website page."""
+
+    page_slug = models.CharField(max_length=60, unique=True, db_index=True, choices=PAGE_CHOICES)
+    title = models.CharField(max_length=200, blank=True, help_text="Browser title / meta title")
+    meta_description = models.TextField(blank=True, help_text="Search engine meta description")
+    hero_eyebrow = models.CharField(max_length=120, blank=True)
+    hero_title = models.CharField(max_length=200, blank=True)
+    hero_subtitle = models.TextField(blank=True)
+    hero_cta_label = models.CharField(max_length=60, blank=True)
+    hero_cta_url = models.CharField(max_length=200, blank=True)
+    sections_data = models.JSONField(
+        default=dict, blank=True, help_text="Structured page sections (JSON)"
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+    updated_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
+
+    class Meta:
+        verbose_name = "page content"
+        verbose_name_plural = "page content"
+        ordering = ["page_slug"]
+
+    def __str__(self):
+        return f"Page: {self.get_page_slug_display() or self.page_slug}"
+
+
+class PageFAQ(models.Model):
+    """Owner-managed FAQs displayed on relevant pages."""
+
+    page_slug = models.CharField(
+        max_length=60, db_index=True, choices=PAGE_CHOICES, default="home"
+    )
+    question = models.CharField(max_length=255)
+    answer = models.TextField()
+    order = models.PositiveIntegerField(default=0)
+    is_published = models.BooleanField(default=True, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "page FAQ"
+        verbose_name_plural = "page FAQs"
+        ordering = ["order", "id"]
+
+    def __str__(self):
+        return f"{self.question} ({self.page_slug})"
+
+
+class NavigationItem(models.Model):
+    """Owner-managed navigation links in header and footer."""
+
+    menu = models.CharField(max_length=30, choices=MENU_CHOICES, default="header", db_index=True)
+    label = models.CharField(max_length=80)
+    url = models.CharField(max_length=200)
+    order = models.PositiveIntegerField(default=0)
+    is_published = models.BooleanField(default=True, db_index=True)
+    open_in_new_tab = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = "navigation item"
+        verbose_name_plural = "navigation items"
+        ordering = ["menu", "order", "id"]
+
+    def __str__(self):
+        return f"{self.label} -> {self.url} ({self.get_menu_display()})"
+
+
+class MediaAsset(models.Model):
+    """Uploaded marketing media, logos, and documents."""
+
+    title = models.CharField(max_length=160)
+    file = models.FileField(upload_to="uploads/%Y/%m/")
+    alt_text = models.CharField(max_length=200, blank=True)
+    file_size = models.PositiveIntegerField(default=0)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    uploaded_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
+
+    class Meta:
+        verbose_name = "media asset"
+        verbose_name_plural = "media assets"
+        ordering = ["-uploaded_at"]
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def is_image(self) -> bool:
+        if not self.file:
+            return False
+        import os
+        ext = os.path.splitext(self.file.name)[1].lower()
+        return ext in {".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif", ".avif", ".ico"}
+
+    @property
+    def public_url(self) -> str:
+        from django.urls import reverse
+        return reverse("media_asset_serve", kwargs={"pk": self.pk})
+
+    def save(self, *args, **kwargs):
+        if self.file and hasattr(self.file, "size") and not self.file_size:
+            self.file_size = self.file.size
+        super().save(*args, **kwargs)
+

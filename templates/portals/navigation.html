@@ -1,0 +1,101 @@
+{% extends "portals/base_portal.html" %}
+{% load static %}
+{% block title %}Navigation Menus — GCTT Portal{% endblock %}
+{% block portal_title %}Navigation menu builder{% endblock %}
+
+{% block portal_content %}
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <div>
+    <p class="eyebrow eyebrow-accent">Superadmin Command Hub</p>
+    <h1 class="mt-2 text-h1">Navigation menus.</h1>
+    <p class="mt-2 text-sm text-muted">Add, reorder, edit, and toggle links across the main header and deep dark footer with zero code.</p>
+  </div>
+</div>
+
+<div class="mt-8 grid grid-cols-1 items-start gap-8 lg:grid-cols-3">
+  <!-- Menu Items by Location (2 Cols) -->
+  <div class="lg:col-span-2 space-y-8">
+    {% for menu in menus %}
+      <section class="card overflow-hidden">
+        <div class="border-b border-line bg-surface-raised/40 px-6 py-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-h3">{{ menu.label }}</h2>
+            <span class="chip">{{ menu.items|length }} link{{ menu.items|length|pluralize }}</span>
+          </div>
+        </div>
+
+        {% if menu.items %}
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Label</th>
+                <th scope="col">Destination URL</th>
+                <th scope="col">Order</th>
+                <th scope="col">State</th>
+                <th scope="col" class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in menu.items %}
+                <tr>
+                  <td data-label="Label" class="font-semibold text-foreground">
+                    {{ item.label }}
+                    {% if item.open_in_new_tab %}
+                      <span class="text-2xs text-muted" title="Opens in new tab">&#x2197;</span>
+                    {% endif %}
+                  </td>
+                  <td data-label="Destination URL" class="font-mono text-2xs text-muted">
+                    {{ item.url }}
+                  </td>
+                  <td data-label="Order" class="text-xs">
+                    {{ item.order }}
+                  </td>
+                  <td data-label="State">
+                    {% if item.is_published %}
+                      <span class="chip chip-success">Live</span>
+                    {% else %}
+                      <span class="chip chip-warning">Hidden</span>
+                    {% endif %}
+                  </td>
+                  <td data-label="Actions" class="text-right">
+                    <div class="flex items-center justify-end gap-2">
+                      <a href="{% url 'manage_navigation_edit' item.pk %}" class="btn btn-secondary btn-xs">Edit</a>
+                      <form method="post" action="{% url 'manage_navigation_delete' item.pk %}" data-confirm="Delete this menu link? This cannot be undone." data-confirm-action="Delete">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-xs">Delete</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <div class="p-6 text-center text-sm text-muted">
+            No custom links configured for this menu. (Currently showing default site links).
+          </div>
+        {% endif %}
+      </section>
+    {% endfor %}
+  </div>
+
+  <!-- Add Link Form (1 Col) -->
+  <div class="card p-6">
+    <h2 class="text-h3">Add menu link</h2>
+    <p class="mt-1 text-2xs text-muted">Create a new link in the header or footer.</p>
+
+    <form method="post" class="form mt-4 space-y-3">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">{{ form.non_field_errors.0 }}</div>
+      {% endif %}
+
+      {% for field in form %}
+        {% include "partials/_field.html" %}
+      {% endfor %}
+
+      <button type="submit" class="btn btn-primary w-full mt-4">Add link</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

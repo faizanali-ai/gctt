@@ -33,6 +33,10 @@
     <a href="{% url 'staff_programme_create' %}" class="btn btn-secondary btn-sm">Create a programme</a>
   {% endif %}
   {% if can_manage_users %}
+    <a href="{% url 'manage_pages' %}" class="btn btn-secondary btn-sm">Edit page copy</a>
+    <a href="{% url 'manage_navigation' %}" class="btn btn-secondary btn-sm">Navigation menus</a>
+    <a href="{% url 'manage_media' %}" class="btn btn-secondary btn-sm">Media assets</a>
+    <a href="{% url 'manage_site_settings' %}" class="btn btn-secondary btn-sm">Site settings</a>
     <a href="{% url 'manage_user_create' %}" class="btn btn-secondary btn-sm">Invite a team member</a>
     <a href="{% url 'manage_audit' %}" class="btn btn-secondary btn-sm">Audit log</a>
   {% endif %}
@@ -74,6 +78,23 @@
         <p class="font-mono text-2xs uppercase tracking-[0.1em] text-muted">Registrations</p>
         <p class="mt-3 font-display text-display-2">{{ stats.registrations_total|default:0 }}</p>
         <p class="mt-1 text-sm text-muted">{{ stats.registrations_pending|default:0 }} pending</p>
+      </a>
+    {% endif %}
+    {% if can_manage_users %}
+      <a href="{% url 'manage_pages' %}" class="card card-interactive p-5">
+        <p class="font-mono text-2xs uppercase tracking-[0.1em] text-muted">Pages &amp; Copy</p>
+        <p class="mt-3 font-display text-display-2">12</p>
+        <p class="mt-1 text-sm text-accent">Total control over all pages</p>
+      </a>
+      <a href="{% url 'manage_navigation' %}" class="card card-interactive p-5">
+        <p class="font-mono text-2xs uppercase tracking-[0.1em] text-muted">Navigation</p>
+        <p class="mt-3 font-display text-display-2">5</p>
+        <p class="mt-1 text-sm text-muted">Header &amp; footer menus</p>
+      </a>
+      <a href="{% url 'manage_media' %}" class="card card-interactive p-5">
+        <p class="font-mono text-2xs uppercase tracking-[0.1em] text-muted">Media Library</p>
+        <p class="mt-3 font-display text-display-2">Assets</p>
+        <p class="mt-1 text-sm text-muted">Logos, banners &amp; files</p>
       </a>
     {% endif %}
   </div>

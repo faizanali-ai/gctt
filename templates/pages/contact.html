@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Contact — GCTT{% endblock %}
-{% block description %}Contact GCTT in Irving, Texas for staffing, recruitment, training and certificate enquiries.{% endblock %}
+{% block title %}{{ page_content.title|default:"Contact — GCTT" }}{% endblock %}
+{% block description %}{{ page_content.meta_description|default:"Contact GCTT in Irving, Texas for staffing, recruitment, training and certificate enquiries." }}{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Contact" title="Talk to the team." subtitle="For hiring, training, certification or general enquiries. A practice director reviews every message." %}
+{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"Contact" title=page_content.hero_title|default:"Talk to the team." subtitle=page_content.hero_subtitle|default:"For hiring, training, certification or general enquiries. A practice director reviews every message." cta_label=page_content.hero_cta_label cta_url=page_content.hero_cta_url %}
 
 <section class="section">
   <div class="container-site grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
@@ -26,11 +26,13 @@
       </div>
 
       <div class="card divide-y divide-line">
-        <div class="p-6">
-          <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Telephone</p>
-          <a href="tel:{{ COMPANY.phone_raw }}" class="mt-2 block font-display text-lg font-semibold hover:text-accent">{{ COMPANY.phone }}</a>
-          <p class="mt-1 text-sm text-muted">Direct line for client operations and urgent talent queries.</p>
-        </div>
+        {% if COMPANY.phone %}
+          <div class="p-6">
+            <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Telephone</p>
+            <a href="tel:{{ COMPANY.phone_raw|default:COMPANY.phone }}" class="mt-2 block font-display text-lg font-semibold hover:text-accent">{{ COMPANY.phone }}</a>
+            <p class="mt-1 text-sm text-muted">Direct line for client operations and urgent talent queries.</p>
+          </div>
+        {% endif %}
         <div class="p-6">
           <p class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Client accounts</p>
           <a href="mailto:{{ COMPANY.email }}" class="mt-2 block font-display text-lg font-semibold hover:text-accent">{{ COMPANY.email }}</a>
@@ -56,4 +58,6 @@
     </div>
   </div>
 </section>
+
+{% include "partials/_page_faqs.html" %}
 {% endblock %}

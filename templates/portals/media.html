@@ -1,0 +1,111 @@
+{% extends "portals/base_portal.html" %}
+{% load static %}
+{% block title %}Media &amp; Assets — GCTT Portal{% endblock %}
+{% block portal_title %}Media &amp; asset library{% endblock %}
+
+{% block portal_content %}
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <div>
+    <p class="eyebrow eyebrow-accent">Superadmin Command Hub</p>
+    <h1 class="mt-2 text-h1">Media &amp; assets.</h1>
+    <p class="mt-2 text-sm text-muted">Upload marketing graphics, logos, banners, and documents. Copy URLs with 1-click to embed anywhere on the site.</p>
+  </div>
+</div>
+
+<div class="mt-8 grid grid-cols-1 items-start gap-8 lg:grid-cols-3">
+  <!-- Asset Grid & Search (2 Cols) -->
+  <div class="lg:col-span-2 space-y-6">
+    <div class="card p-4">
+      <form method="get" class="form flex gap-3">
+        <div class="field flex-1">
+          <label for="media-q" class="sr-only">Search media</label>
+          <input id="media-q" type="search" name="q" value="{{ q }}" placeholder="Search by asset title or alt text...">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+        {% if q %}
+          <a href="{% url 'manage_media' %}" class="btn btn-secondary">Clear</a>
+        {% endif %}
+      </form>
+    </div>
+
+    {% if page_obj %}
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+        {% for item in page_obj %}
+          <div class="card flex flex-col justify-between overflow-hidden p-4">
+            <div>
+              <div class="flex h-36 items-center justify-center rounded-sm bg-surface-raised/40 p-2 border border-line">
+                {% if item.is_image %}
+                  <img src="{{ item.public_url }}" alt="{{ item.alt_text|default:item.title }}" class="max-h-full max-w-full object-contain" loading="lazy">
+                {% else %}
+                  <svg class="h-10 w-10 text-muted" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#file"></use></svg>
+                {% endif %}
+              </div>
+              <h3 class="mt-3 truncate text-sm font-semibold text-foreground" title="{{ item.title }}">{{ item.title }}</h3>
+              <p class="mt-0.5 text-2xs text-muted">{{ item.file_size|filesizeformat }} · {{ item.uploaded_at|date:"M j, Y" }}</p>
+              {% if item.alt_text %}
+                <p class="mt-1 truncate text-2xs text-muted" title="{{ item.alt_text }}">Alt: {{ item.alt_text }}</p>
+              {% endif %}
+            </div>
+
+            <div class="mt-4 flex items-center justify-between border-t border-line pt-3">
+              <button type="button" class="btn btn-secondary btn-xs flex items-center gap-1" data-copy="{{ item.public_url }}">
+                <svg class="h-3 w-3" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#copy"></use></svg>
+                <span>Copy URL</span>
+              </button>
+
+              <form method="post" action="{% url 'manage_media_delete' item.pk %}" data-confirm="Delete this media asset? This cannot be undone." data-confirm-action="Delete">
+                {% csrf_token %}
+                <button type="submit" class="text-xs font-semibold text-danger hover:underline">Delete</button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if page_obj.has_other_pages %}
+        <nav class="flex items-center justify-between border-t border-line pt-4" aria-label="Pagination">
+          <div>
+            {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}{% if q %}&amp;q={{ q|urlencode }}{% endif %}" class="btn btn-secondary btn-xs">&larr; Previous</a>
+            {% endif %}
+          </div>
+          <span class="text-xs text-muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+          <div>
+            {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}{% if q %}&amp;q={{ q|urlencode }}{% endif %}" class="btn btn-secondary btn-xs">Next &rarr;</a>
+            {% endif %}
+          </div>
+        </nav>
+      {% endif %}
+    {% else %}
+      <div class="card p-12 text-center">
+        <svg class="mx-auto h-12 w-12 text-muted" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#upload"></use></svg>
+        <p class="mt-3 text-base font-semibold">No media assets found</p>
+        <p class="mt-1 text-sm text-muted">Upload an image, logo, or document using the form on the right.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Upload Asset Form (1 Col) -->
+  <div class="card p-6">
+    <h2 class="text-h3">Upload new asset</h2>
+    <p class="mt-1 text-2xs text-muted">Supported: PNG, JPG, WebP, SVG, PDF, Word documents.</p>
+
+    <form method="post" enctype="multipart/form-data" class="form mt-4 space-y-3">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">{{ form.non_field_errors.0 }}</div>
+      {% endif %}
+
+      {% for field in form %}
+        {% include "partials/_field.html" %}
+      {% endfor %}
+
+      <button type="submit" class="btn btn-primary w-full mt-4 flex items-center justify-center gap-2">
+        <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#upload"></use></svg>
+        <span>Upload file</span>
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

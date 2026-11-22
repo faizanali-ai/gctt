@@ -1,0 +1,66 @@
+{% extends "portals/base_portal.html" %}
+{% load static %}
+{% block title %}Pages &amp; Content — GCTT Portal{% endblock %}
+{% block portal_title %}Pages and content manager{% endblock %}
+
+{% block portal_content %}
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <div>
+    <p class="eyebrow eyebrow-accent">Superadmin Command Hub</p>
+    <h1 class="mt-2 text-h1">Pages &amp; website copy.</h1>
+    <p class="mt-2 text-sm text-muted">Complete control over headlines, hero copy, FAQs, metadata, and custom sections across all pages with zero code required.</p>
+  </div>
+</div>
+
+<div class="mt-6 overflow-hidden rounded-card border border-line bg-surface">
+  <table class="data-table">
+    <caption class="sr-only">Editable website pages</caption>
+    <thead>
+      <tr>
+        <th scope="col">Page &amp; Route</th>
+        <th scope="col">Content Status</th>
+        <th scope="col">Current Hero Headline</th>
+        <th scope="col">FAQs</th>
+        <th scope="col">Last Modified</th>
+        <th scope="col" class="text-right">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in pages_list %}
+        <tr>
+          <td data-label="Page & Route">
+            <p class="font-semibold text-foreground">{{ item.label }}</p>
+            <p class="font-mono text-2xs text-muted">/{{ item.slug|slugify }}/</p>
+          </td>
+          <td data-label="Content Status">
+            {% if item.has_content %}
+              <span class="chip chip-success">Customised</span>
+            {% else %}
+              <span class="chip">Default text</span>
+            {% endif %}
+          </td>
+          <td data-label="Hero Headline">
+            <p class="max-w-xs truncate text-sm text-foreground">
+              {{ item.hero_title|default:"(Using default headline)" }}
+            </p>
+          </td>
+          <td data-label="FAQs">
+            <span class="text-sm font-medium">{{ item.faq_count }} FAQ{{ item.faq_count|pluralize }}</span>
+          </td>
+          <td data-label="Last Modified" class="text-2xs text-muted">
+            {% if item.updated_at %}
+              {{ item.updated_at|date:"M j, Y H:i" }}
+              {% if item.updated_by %}<br>by {{ item.updated_by.email }}{% endif %}
+            {% else %}
+              Untouched
+            {% endif %}
+          </td>
+          <td data-label="Action" class="text-right">
+            <a href="{% url 'manage_page_edit' item.slug %}" class="btn btn-secondary btn-sm">Edit Page</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

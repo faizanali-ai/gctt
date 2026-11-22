@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}GCTT — Technology Talent &amp; Training{% endblock %}
-{% block description %}GCTT provides technology staffing, recruitment and SAP/Agile training from Irving, Texas. Two divisions, one standard of delivery.{% endblock %}
+{% block title %}{{ page_content.title|default:"GCTT — Technology Talent & Training" }}{% endblock %}
+{% block description %}{{ page_content.meta_description|default:"GCTT provides technology staffing, recruitment and SAP/Agile training from Irving, Texas. Two divisions, one standard of delivery." }}{% endblock %}
 
 {% block content %}
 <section class="relative isolate overflow-hidden bg-night text-night-ink">
@@ -12,13 +12,13 @@
   <div class="container-site relative py-20 md:py-28">
     <div class="max-w-3xl">
       <div class="hero-enter">
-        <p class="eyebrow text-night-accent">{{ COMPANY.hero_eyebrow }}</p>
-        <h1 class="mt-5 text-display-1">{{ COMPANY.hero_title }}</h1>
-        <p class="mt-6 max-w-2xl text-body-lg text-night-muted">{{ COMPANY.hero_subtitle }}</p>
+        <p class="eyebrow text-night-accent">{{ page_content.hero_eyebrow|default:COMPANY.hero_eyebrow }}</p>
+        <h1 class="mt-5 text-display-1">{{ page_content.hero_title|default:COMPANY.hero_title }}</h1>
+        <p class="mt-6 max-w-2xl text-body-lg text-night-muted">{{ page_content.hero_subtitle|default:COMPANY.hero_subtitle }}</p>
       </div>
       <div class="hero-enter enter-1 mt-9 flex flex-col gap-3 sm:flex-row">
-        <a href="{{ COMPANY.hero_cta_url }}" class="btn btn-primary btn-lg">
-          {{ COMPANY.hero_cta_label }}
+        <a href="{{ page_content.hero_cta_url|default:COMPANY.hero_cta_url }}" class="btn btn-primary btn-lg">
+          {{ page_content.hero_cta_label|default:COMPANY.hero_cta_label }}
           <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
         </a>
         <a href="{% url 'careers' %}" class="btn btn-lg border border-night-ink/25 text-night-ink hover:bg-night-ink/10">
@@ -221,6 +221,8 @@
   </div>
 </section>
 
+{% include "partials/_page_faqs.html" %}
+
 <section class="section bg-raised">
   <div class="container-site grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
     <div>
@@ -232,10 +234,12 @@
           <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#map-pin"></use></svg>
           <div><p class="font-semibold">Headquarters</p><p class="text-muted">{{ COMPANY.address }}</p></div>
         </div>
-        <div class="flex gap-3">
-          <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#phone"></use></svg>
-          <div><p class="font-semibold">Telephone</p><p><a href="tel:{{ COMPANY.phone_raw }}" class="link">{{ COMPANY.phone }}</a></p></div>
-        </div>
+        {% if COMPANY.phone %}
+          <div class="flex gap-3">
+            <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#phone"></use></svg>
+            <div><p class="font-semibold">Telephone</p><p><a href="tel:{{ COMPANY.phone_raw|default:COMPANY.phone }}" class="link">{{ COMPANY.phone }}</a></p></div>
+          </div>
+        {% endif %}
         <div class="flex gap-3">
           <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#mail"></use></svg>
           <div><p class="font-semibold">Email</p><p><a href="mailto:{{ COMPANY.email }}" class="link">{{ COMPANY.email }}</a></p></div>

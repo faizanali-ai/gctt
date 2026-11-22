@@ -1,18 +1,24 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Career Restart — GCTT Academy{% endblock %}
-{% block description %}A structured route back into technical work after a career break, with retooling, interview preparation and employer introductions.{% endblock %}
+{% block title %}{{ page_content.title|default:"Career Restart — GCTT Academy" }}{% endblock %}
+{% block description %}{{ page_content.meta_description|default:"A structured route back into technical work after a career break, with retooling, interview preparation and employer introductions." }}{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Academy · Career Restart" title="Return to technical work." subtitle="A structured route back into technology roles after a planned break, caregiving leave, relocation or military transition." %}
+{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"Academy · Career Restart" title=page_content.hero_title|default:"Return to technical work." subtitle=page_content.hero_subtitle|default:"A structured route back into technology roles after a planned break, caregiving leave, relocation or military transition." cta_label=page_content.hero_cta_label cta_url=page_content.hero_cta_url %}
 {% include "partials/_academy_nav.html" %}
 
 <section class="section">
   <div class="container-site grid gap-12 lg:grid-cols-[1.1fr_1.1fr] lg:items-start">
     <div class="max-w-2xl">
-      <p class="text-body-lg text-muted">
-        A career gap is not a skills gap. The programme refreshes the tools and context that changed while you were away, then puts you in front of employers who are hiring for the experience you already have.
-      </p>
+      {% if page_content.sections_data.body %}
+        <div class="text-body-lg text-muted space-y-4">
+          {{ page_content.sections_data.body|linebreaks }}
+        </div>
+      {% else %}
+        <p class="text-body-lg text-muted">
+          {{ page_content.sections_data.intro|default:"A career gap is not a skills gap. The programme refreshes the tools and context that changed while you were away, then puts you in front of employers who are hiring for the experience you already have." }}
+        </p>
+      {% endif %}
 
       <div class="mt-10 space-y-4">
         <div class="card p-6">
@@ -65,4 +71,6 @@
     </aside>
   </div>
 </section>
+
+{% include "partials/_page_faqs.html" %}
 {% endblock %}

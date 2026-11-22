@@ -1,18 +1,24 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}IT Staffing — GCTT{% endblock %}
-{% block description %}Contract, contract-to-hire and direct placement for engineering, cloud, data and infrastructure teams.{% endblock %}
+{% block title %}{{ page_content.title|default:"IT Staffing — GCTT" }}{% endblock %}
+{% block description %}{{ page_content.meta_description|default:"Contract, contract-to-hire and direct placement for engineering, cloud, data and infrastructure teams." }}{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow="Talent Solutions · Practice 01" title="IT staffing for delivery teams." subtitle="GCTT places engineers, cloud specialists and infrastructure practitioners into client teams across Texas and the United States." %}
+{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"Talent Solutions · Practice 01" title=page_content.hero_title|default:"IT staffing for delivery teams." subtitle=page_content.hero_subtitle|default:"GCTT places engineers, cloud specialists and infrastructure practitioners into client teams across Texas and the United States." cta_label=page_content.hero_cta_label cta_url=page_content.hero_cta_url %}
 {% include "partials/_solutions_nav.html" %}
 
 <section class="section">
   <div class="container-site grid gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
     <div class="max-w-2xl">
-      <p class="text-body-lg text-muted">
-        Engagements are contract, contract-to-hire or direct placement. We calibrate the role with you first, then screen against that definition rather than a keyword list.
-      </p>
+      {% if page_content.sections_data.body %}
+        <div class="text-body-lg text-muted space-y-4">
+          {{ page_content.sections_data.body|linebreaks }}
+        </div>
+      {% else %}
+        <p class="text-body-lg text-muted">
+          {{ page_content.sections_data.intro|default:"Engagements are contract, contract-to-hire or direct placement. We calibrate the role with you first, then screen against that definition rather than a keyword list." }}
+        </p>
+      {% endif %}
 
       <h2 class="mt-12 text-h2">How we screen</h2>
       <ol class="mt-6 space-y-5">
@@ -74,4 +80,6 @@
     </aside>
   </div>
 </section>
+
+{% include "partials/_page_faqs.html" %}
 {% endblock %}
