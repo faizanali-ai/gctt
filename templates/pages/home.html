@@ -215,7 +215,7 @@
       <ul class="mt-4 space-y-3 text-sm text-muted">
         <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>Roles screened against your actual experience.</li>
         <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>Direct client teams, not layered subcontracts.</li>
-        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>A Texas-based team you can reach by email.</li>
+        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#check"></use></svg>A Texas-based team you can reach directly by phone or email.</li>
       </ul>
     </div>
   </div>
@@ -231,6 +231,10 @@
         <div class="flex gap-3">
           <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#map-pin"></use></svg>
           <div><p class="font-semibold">Headquarters</p><p class="text-muted">{{ COMPANY.address }}</p></div>
+        </div>
+        <div class="flex gap-3">
+          <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#phone"></use></svg>
+          <div><p class="font-semibold">Telephone</p><p><a href="tel:{{ COMPANY.phone_raw }}" class="link">{{ COMPANY.phone }}</a></p></div>
         </div>
         <div class="flex gap-3">
           <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#mail"></use></svg>

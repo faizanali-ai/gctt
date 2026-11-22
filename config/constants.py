@@ -5,6 +5,8 @@ COMPANY = {
     "email": "accounts@gctekton.com",
     "jobs_email": "jobs@gctekton.com",
     "jobsEmail": "jobs@gctekton.com",
+    "phone": "+1 (786) 855-8859",
+    "phone_raw": "+17868558859",
     "address": "2612 Laramie St, Irving TX 75062",
     "domain": "gctekton.com",
     "url": "https://gctekton.com",
