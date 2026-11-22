@@ -64,6 +64,11 @@ class AcademyProgrammesTest(TestCase):
     def test_ai_keyword_matches_only_as_a_standalone_term(self):
         self.assertEqual(analyze_career_trajectory("Agile Training")["programme"], "Agile Training")
         self.assertEqual(analyze_career_trajectory(interests="(AI)")["programme"], "AI BA")
+        result_agile = analyze_career_trajectory("", "", "Agile Training")
+        self.assertEqual(result_agile["programme"], "Agile Training")
+        self.assertNotEqual(result_agile["programme"], "AI BA")
+        result_ai = analyze_career_trajectory("", "", "AI")
+        self.assertEqual(result_ai["programme"], "AI BA")
 
     def test_api_career_advisor_endpoint(self):
         url = reverse("api_career_advisor")

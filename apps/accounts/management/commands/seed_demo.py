@@ -189,9 +189,9 @@ class Command(BaseCommand):
 
         for data in PROGRAMMES:
             category = Category.objects.get(name=data["category"])
-            fields = {k: v for k, v in data.items() if k != "category"}
+            fields = {k: v for k, v in data.items() if k not in ("category", "slug")}
             Programme.objects.get_or_create(
-                title=data["title"], defaults={**fields, "category": category}
+                slug=data["slug"], defaults={**fields, "category": category}
             )
 
         self.stdout.write(
