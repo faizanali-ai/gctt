@@ -28,6 +28,7 @@ from config.emails import (
     send_pending_registration,
     send_welcome_if_first_login,
 )
+from config.site import company
 
 from .ai_advisor import analyze_career_trajectory
 from .certificates import generate_certificate_pdf
@@ -141,9 +142,8 @@ def api_career_advisor(request):
 @ratelimit(key="ip", rate="30/h", method="POST", block=True)
 def programme_register(request, slug):
     programme = get_object_or_404(Programme, slug=slug, published=True)
-    site_settings = SiteSettings.load()
-    if not site_settings.allow_student_registrations:
-        messages.error(request, "Student registrations are currently paused.")
+    if not company().get("allow_student_registrations", True):
+        messages.error(request, "Student registrations are currently paused by the administrator.")
         return redirect("programme_detail", slug=programme.slug)
     if not programme.registration_open:
         messages.error(request, "Registration for this programme is closed.")

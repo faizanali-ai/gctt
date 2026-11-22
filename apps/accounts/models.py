@@ -1,3 +1,6 @@
+import uuid
+from pathlib import Path
+
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager as DjangoUserManager
 from django.db import models, transaction
@@ -386,12 +389,30 @@ class NavigationItem(models.Model):
     def __str__(self):
         return f"{self.label} -> {self.url} ({self.get_menu_display()})"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        from config.context_processors import clear_navigation_cache
+
+        clear_navigation_cache()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        from config.context_processors import clear_navigation_cache
+
+        clear_navigation_cache()
+
+
+def media_upload_to(instance, filename):
+    # Opaque UUID filenames: prevents S3 overwrite collisions and directory enumeration.
+    ext = Path(filename).suffix.lower()[:10]
+    return f"media/{uuid.uuid4().hex}{ext}"
+
 
 class MediaAsset(models.Model):
     """Uploaded marketing media, logos, and documents."""
 
     title = models.CharField(max_length=160)
-    file = models.FileField(upload_to="uploads/%Y/%m/")
+    file = models.FileField(upload_to=media_upload_to)
     alt_text = models.CharField(max_length=200, blank=True)
     file_size = models.PositiveIntegerField(default=0)
     uploaded_at = models.DateTimeField(auto_now_add=True)

@@ -1,3 +1,5 @@
+import time
+
 from django.conf import settings
 from django.db import DatabaseError
 
@@ -6,26 +8,43 @@ from apps.enquiries.forms import EnquiryForm
 from .constants import DIVISIONS, NAV_ITEMS, SERVICES
 from .site import company
 
+_NAV_CACHE: dict[str, object] = {"value": None, "expires_at": 0.0}
+
+
+def clear_navigation_cache() -> None:
+    _NAV_CACHE["value"] = None
+    _NAV_CACHE["expires_at"] = 0.0
+
 
 def _is_active(path, prefixes):
     return any(path.startswith(prefix) for prefix in prefixes)
 
 
 def _get_dynamic_nav():
+    now = time.monotonic()
+    cached = _NAV_CACHE["value"]
+    if cached is not None and now < float(_NAV_CACHE["expires_at"]):
+        return cached
+
     try:
         from apps.accounts.models import NavigationItem
 
         items = list(NavigationItem.objects.filter(is_published=True).order_by("order", "id"))
         if not items:
-            return None, None
-        header = [i for i in items if i.menu == "header"]
-        footer = {
-            "talent": [i for i in items if i.menu == "footer_talent"],
-            "academy": [i for i in items if i.menu == "footer_academy"],
-            "company": [i for i in items if i.menu == "footer_company"],
-            "legal": [i for i in items if i.menu == "footer_legal"],
-        }
-        return (header or None), footer
+            result = (None, None)
+        else:
+            header = [i for i in items if i.menu == "header"]
+            footer = {
+                "talent": [i for i in items if i.menu == "footer_talent"],
+                "academy": [i for i in items if i.menu == "footer_academy"],
+                "company": [i for i in items if i.menu == "footer_company"],
+                "legal": [i for i in items if i.menu == "footer_legal"],
+            }
+            result = ((header or None), footer)
+
+        _NAV_CACHE["value"] = result
+        _NAV_CACHE["expires_at"] = now + 30.0
+        return result
     except DatabaseError:
         return None, None
 

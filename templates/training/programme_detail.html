@@ -506,6 +506,15 @@
           </div>
           <a href="{% url 'dashboard' %}" class="btn btn-primary mt-4 w-full">Open student portal</a>
 
+        {% elif not COMPANY.allow_student_registrations %}
+          <div class="alert alert-warning mt-4" role="status">
+            <div>
+              <p class="font-semibold">Registrations are temporarily paused.</p>
+              <p class="mt-1 text-muted">We are not accepting new student registrations at this time. Please contact the Academy for future cohort schedules.</p>
+            </div>
+          </div>
+          <a href="{% url 'contact' %}" class="btn btn-secondary mt-4 w-full">Contact the Academy</a>
+
         {% elif not programme.registration_open %}
           <div class="alert alert-warning mt-4">
             <div>
