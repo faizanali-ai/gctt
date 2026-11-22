@@ -45,30 +45,79 @@ JOBS = [
 
 PROGRAMMES = [
     {
-        "title": "SAP MM Fundamentals",
-        "category": "SAP",
+        "title": "Agile Training",
+        "slug": "agile-training",
+        "category": "Agile & Scrum",
         "duration": "6 weeks",
-        "schedule": "Evening & Weekend Batches",
+        "schedule": "Weekend & Evening Cohorts",
         "description": (
-            "Comprehensive, hands-on enterprise workforce accelerator in SAP S/4HANA Materials Management. "
-            "Covers master data governance, purchasing configurations, inventory valuation, MRP algorithms, and "
-            "live enterprise sandbox simulations. Culminates in a tamper-evident verifiable digital credential."
+            "Practical Scaled Agile and Scrum masterclass engineered for aspiring Scrum Masters, "
+            "Product Owners, and delivery leads. Deep dive into sprint telemetry, backlog grooming, "
+            "impediment resolution, and cross-functional squad leadership with formal verifiable certification."
         ),
         "registration_open": True,
         "published": True,
+        "order": 1,
     },
     {
-        "title": "Scrum & Agile Foundations",
-        "category": "Scrum & Agile",
-        "duration": "4 weeks",
-        "schedule": "Flexible Cohorts",
+        "title": "Business Analyst",
+        "slug": "business-analyst",
+        "category": "Business Analysis",
+        "duration": "8 weeks",
+        "schedule": "Flexible Evening Cohorts",
         "description": (
-            "Practical Scaled Agile and Scrum masterclass engineered for aspiring Scrum Masters, Product Owners, "
-            "and delivery managers. Deep dive into sprint telemetry, backlog grooming, impediment resolution, "
-            "and cross-functional squad leadership with formal verifiable certification."
+            "Comprehensive enterprise business analysis programme covering requirements elicitation, "
+            "BRD/FRD authoring, process mapping (BPMN), stakeholder alignment, gap analysis, and "
+            "user acceptance testing (UAT) with hands-on enterprise case studies."
         ),
         "registration_open": True,
         "published": True,
+        "order": 2,
+    },
+    {
+        "title": "DevOps",
+        "slug": "devops",
+        "category": "Cloud & DevOps",
+        "duration": "10 weeks",
+        "schedule": "Weekend Immersive",
+        "description": (
+            "Enterprise cloud and systems engineering intensive covering modern CI/CD pipelines, "
+            "Docker containerization, Kubernetes orchestration, Linux administration, Infrastructure as Code, "
+            "and production observability."
+        ),
+        "registration_open": True,
+        "published": True,
+        "order": 3,
+    },
+    {
+        "title": "BA SM",
+        "slug": "ba-sm",
+        "category": "Hybrid Delivery",
+        "duration": "8 weeks",
+        "schedule": "Weekend & Evening Batches",
+        "description": (
+            "High-impact dual specialization bridging Business Analysis and Scrum Master competencies. "
+            "Master requirements translation into agile epics, user story decomposition, sprint backlog grooming, "
+            "sprint facilitation, and end-to-end product delivery governance."
+        ),
+        "registration_open": True,
+        "published": True,
+        "order": 4,
+    },
+    {
+        "title": "AI BA",
+        "slug": "ai-ba",
+        "category": "AI & Emerging Tech",
+        "duration": "8 weeks",
+        "schedule": "Evening Live Sessions",
+        "description": (
+            "Modern enterprise business analysis accelerated with artificial intelligence. Learn AI/ML project scoping, "
+            "prompt engineering for rapid requirements discovery, automated documentation generation, predictive workflow modeling, "
+            "and managing AI-driven digital transformations."
+        ),
+        "registration_open": True,
+        "published": True,
+        "order": 5,
     },
 ]
 
@@ -122,17 +171,27 @@ class Command(BaseCommand):
             )
             return
 
-        for name in ("SAP", "Scrum & Agile"):
-            Category.objects.get_or_create(name=name, defaults={"published": True})
+        categories_info = [
+            ("Agile & Scrum", 1),
+            ("Business Analysis", 2),
+            ("Cloud & DevOps", 3),
+            ("Hybrid Delivery", 4),
+            ("AI & Emerging Tech", 5),
+            ("SAP", 6),
+        ]
+        for name, order in categories_info:
+            Category.objects.get_or_create(
+                name=name, defaults={"published": True, "order": order}
+            )
 
         for data in JOBS:
             Job.objects.get_or_create(title=data["title"], defaults=data)
 
         for data in PROGRAMMES:
             category = Category.objects.get(name=data["category"])
-            fields = {k: v for k, v in data.items() if k != "category"}
+            fields = {k: v for k, v in data.items() if k not in ("category", "slug")}
             Programme.objects.get_or_create(
-                title=data["title"], defaults={**fields, "category": category}
+                slug=data["slug"], defaults={**fields, "category": category}
             )
 
         self.stdout.write(

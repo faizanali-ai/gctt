@@ -1,91 +1,157 @@
+import re
+
 CAREER_ARCHETYPES = [
     {
-        "keywords": ["financ", "account", "cpa", "audit", "banking", "invoic", "ledger", "bookkeep", "fico", "erp"],
-        "track": "SAP S/4HANA Financial Accounting (FI/CO) Consultant",
-        "programme": "SAP S/4HANA Financial Accounting Certification",
+        "keywords": [
+            "ai ba",
+            "ai",
+            "artificial intelligence",
+            "llm",
+            "genai",
+            "prompt",
+            "prompting",
+            "machine learning",
+            "data",
+        ],
+        "track": "AI-Powered Business Analyst (AI BA)",
+        "programme": "AI BA",
         "fit_score": 96,
-        "timeline": "8 to 10 Weeks",
+        "timeline": "8 Weeks",
         "market_comp": "$115,000 – $145,000 / year ($65 – $85/hr W2)",
-        "summary": "Your financial background gives you an immense analytical advantage in enterprise ERP. Fortune 500 enterprises are aggressively migrating to SAP S/4HANA and pay top compensation for consultants who understand real accounting rules alongside system ledger configurations.",
+        "summary": "AI is redefining enterprise business analysis. Combining traditional requirement elicitation with generative AI tools, prompt engineering, and automated modeling places you at the leading edge of technology transformations.",
         "milestones": [
-            "Week 1–3: SAP General Ledger, Accounts Payable/Receivable & Asset Accounting",
-            "Week 4–6: Controlling (CO-CCA, CO-PCA, Internal Orders) & S/4HANA Universal Journal",
-            "Week 7–8: End-to-End Enterprise Migration Simulation & Practice Cert Exam",
-            "Week 9+: Direct GCTT Placement Interviews with Dallas-Fort Worth & Nationwide Mandates"
-        ]
+            "Week 1–2: Enterprise BA Foundations & AI-Augmented Requirement Elicitation",
+            "Week 3–4: Prompt Engineering for BRD/FRD Authoring & User Story Generation",
+            "Week 5–6: Data Modeling, Predictive Analytics Translation & Workflow Automation",
+            "Week 7–8: Capstone AI Enterprise Case Study & Client Placement Preparation",
+        ],
     },
     {
-        "keywords": ["logistic", "supply", "procure", "inventor", "warehouse", "materi", "manufactur", "sourcing", "mm", "sd"],
-        "track": "SAP S/4HANA Sourcing, Procurement & Materials Management (MM/SD)",
-        "programme": "SAP S/4HANA Sourcing & Procurement Certification",
-        "fit_score": 94,
-        "timeline": "8 to 10 Weeks",
-        "market_comp": "$110,000 – $140,000 / year ($60 – $80/hr W2)",
-        "summary": "Supply chain and procurement professionals are prime candidates for SAP MM/SD specialization. You already grasp inventory flows and vendor procurement—learning S/4HANA procurement configuration bridges your domain knowledge directly into high-paying enterprise contracts.",
-        "milestones": [
-            "Week 1–3: Enterprise Structure, Material Master & Purchasing Configuration",
-            "Week 4–6: Inventory Management, Physical Inventory & Automatic Account Determination",
-            "Week 7–8: Integration with Sales (SD) & Finance (FI) + Real-world SOW Scenario",
-            "Week 9+: Placement Marketing via GCTT Client Network"
-        ]
-    },
-    {
-        "keywords": ["scrum", "agile", "project", "pmp", "coordinator", "business analyst", "operations", "lead"],
-        "track": "Enterprise Agile Scrum Master & Delivery Lead",
-        "programme": "Professional Scrum Master (PSM I) & Scaled Agile Delivery",
+        "keywords": ["ba sm", "dual", "hybrid", "product owner", "po", "epic", "squad lead"],
+        "track": "Dual Business Analyst & Scrum Master (BA SM)",
+        "programme": "BA SM",
         "fit_score": 95,
-        "timeline": "6 to 8 Weeks",
+        "timeline": "8 Weeks",
+        "market_comp": "$110,000 – $140,000 / year ($60 – $80/hr W2)",
+        "summary": "The dual BA/SM skillset is among the most sought-after profiles in modern agile enterprises. You bridge the gap between executive business requirements and daily agile delivery squads.",
+        "milestones": [
+            "Week 1–2: Requirements Engineering, Gap Analysis & Enterprise Process Mapping",
+            "Week 3–4: Agile User Story Decomposition, Acceptance Criteria & Backlog Refinement",
+            "Week 5–6: Scrum Ceremonies, Impediment Removal & Velocity Metrics in Jira",
+            "Week 7–8: End-to-End Enterprise Sprint Simulation & Interview Acceleration",
+        ],
+    },
+    {
+        "keywords": [
+            "business analyst",
+            "ba",
+            "requirements",
+            "requirement",
+            "brd",
+            "frd",
+            "bpmn",
+            "stakeholder",
+            "stakeholders",
+            "gap analysis",
+            "systems analyst",
+        ],
+        "track": "Enterprise Business Analyst (Business Analyst)",
+        "programme": "Business Analyst",
+        "fit_score": 95,
+        "timeline": "8 Weeks",
+        "market_comp": "$105,000 – $135,000 / year ($55 – $75/hr W2)",
+        "summary": "Analytical thinking and stakeholder communication are the core pillars of business analysis. Our curriculum prepares you to lead enterprise elicitation workshops, craft unambiguous specifications, and govern UAT cycles.",
+        "milestones": [
+            "Week 1–2: Requirements Discovery, Stakeholder Management & Scope Definition",
+            "Week 3–4: Process Modeling (BPMN), Use Cases & Technical Specification",
+            "Week 5–6: User Acceptance Testing (UAT), Traceability & Change Governance",
+            "Week 7–8: Real-World Enterprise SOW Delivery & Executive Mock Interviews",
+        ],
+    },
+    {
+        "keywords": ["scrum", "agile", "agile_leadership", "project", "pmp", "coordinator", "lead", "delivery", "master"],
+        "track": "Enterprise Agile & Scrum Master (Agile Training)",
+        "programme": "Agile Training",
+        "fit_score": 94,
+        "timeline": "6 Weeks",
         "market_comp": "$110,000 – $135,000 / year ($55 – $75/hr W2)",
-        "summary": "Cross-functional communication and stakeholder management are the most critical skills for modern Agile delivery leads. Our enterprise curriculum prepares you for SAFe and Scrum.org certifications with practical sprint delivery simulations.",
+        "summary": "Cross-functional communication and servant leadership drive high-velocity engineering teams. Our enterprise curriculum prepares you for Scaled Agile and Scrum leadership with practical sprint delivery simulations.",
         "milestones": [
-            "Week 1–2: Scrum Framework, Artifacts, Events & Team Dynamics",
-            "Week 3–4: Scaled Agile Framework (SAFe), PI Planning & Cross-Team Dependencies",
-            "Week 5–6: Jira Enterprise Configuration, Velocity Metrics & Mock Audits",
-            "Week 7+: Dedicated Recruiter Placement for Direct W2 Corporate Roles"
-        ]
+            "Week 1–2: Scrum Framework, Team Dynamics, Artifacts & Ceremony Facilitation",
+            "Week 3–4: Scaled Agile Framework (SAFe), PI Planning & Dependency Resolution",
+            "Week 5–6: Jira Enterprise Telemetry, Velocity Analytics & Production Mock Audits",
+        ],
     },
     {
-        "keywords": ["qa", "test", "quality", "support", "developer", "engineer", "python", "java", "sql", "code", "cloud", "devops"],
-        "track": "Enterprise Cloud Architecture & DevOps Integration Lead",
-        "programme": "Enterprise Cloud Engineering & SAP Integration",
-        "fit_score": 92,
-        "timeline": "10 to 12 Weeks",
+        "keywords": ["cloud_engineering", "cloud", "devops", "qa", "test", "docker", "kubernetes", "linux", "ci/cd", "infra", "engineer", "python", "developer"],
+        "track": "Enterprise DevOps & Cloud Engineering (DevOps)",
+        "programme": "DevOps",
+        "fit_score": 93,
+        "timeline": "10 Weeks",
         "market_comp": "$125,000 – $160,000 / year ($70 – $95/hr W2)",
-        "summary": "Having technical or analytical foundational skills positions you perfectly to step into enterprise systems integration. GCTT connects technical specialists with high-value SOW engineering teams.",
+        "summary": "High-throughput cloud engineering and resilient deployment pipelines are essential to enterprise modern architectures. Master CI/CD automation, container orchestration, and Infrastructure as Code.",
         "milestones": [
-            "Week 1–4: Modern Cloud Infrastructure, Linux & CI/CD Pipelines",
-            "Week 5–8: API Integrations, SAP BTP / Cloud Connectors & Microservices",
-            "Week 9–10: High Availability & Disaster Recovery Enterprise Scenarios",
-            "Week 11+: Candidate Presentation to Hiring Fortune 500 Clients"
-        ]
+            "Week 1–3: Linux Systems Engineering, Shell Automation & GitOps Workflows",
+            "Week 4–6: Docker Containerization & Multi-Cluster Kubernetes Orchestration",
+            "Week 7–8: Infrastructure as Code (Terraform) & Cloud Architecture (AWS/GCP)",
+            "Week 9–10: Production Observability, Chaos Resilience & Hiring Presentation",
+        ],
     },
     {
-        "keywords": ["restart", "career break", "parent", "return", "transition", "non-tech", "admin", "sales", "teacher"],
-        "track": "GCTT Career Restart: Accelerated Enterprise Tech Pathway",
-        "programme": "Career Restart: Functional Systems & Agile Certification",
-        "fit_score": 90,
-        "timeline": "10 to 12 Weeks",
-        "market_comp": "$85,000 – $115,000 / year ($45 – $65/hr W2)",
-        "summary": "Our Career Restart programme is tailored specifically for professionals returning after a career break or switching industries. We combine zero-fluff foundational tech training with direct enterprise resume rebuilding and guaranteed placement interviews.",
+        "keywords": [
+            "high_paying_erp",
+            "sap",
+            "erp",
+            "finance",
+            "financial",
+            "accounting",
+            "accounts",
+            "fico",
+            "mm",
+            "procurement",
+            "procure",
+        ],
+        "track": "Enterprise ERP & SAP S/4HANA Integration",
+        "programme": "SAP S/4HANA Fundamentals",
+        "fit_score": 92,
+        "timeline": "8 Weeks",
+        "market_comp": "$115,000 – $145,000 / year ($65 – $85/hr W2)",
+        "summary": "Fortune 500 enterprises rely on modern ERP architectures for core operations. Learn how enterprise processes integrate seamlessly with enterprise accounting and procurement ledgers.",
         "milestones": [
-            "Week 1–3: Enterprise Technology Foundations & Professional Confidence Rebuild",
-            "Week 4–7: Functional ERP / Agile Specialization & Guided Project Capstone",
-            "Week 8–9: Industry Certification Preparation (Scrum / SAP Associate)",
-            "Week 10+: 1-on-1 Executive Interview Coaching & GCTT Corporate Representation"
-        ]
-    }
+            "Week 1–3: Enterprise Master Data & Business Process Architecture",
+            "Week 4–6: Functional Configuration, Ledger Workflows & System Integration",
+            "Week 7–8: End-to-End Migration Simulation & Certification Practice",
+        ],
+    },
+    {
+        "keywords": ["career_restart", "restart", "career break", "parent", "return", "transition", "non-tech", "admin", "sales", "teacher"],
+        "track": "GCTT Career Restart: Accelerated Enterprise Tech Pathway",
+        "programme": "Business Analyst",
+        "fit_score": 90,
+        "timeline": "8 to 10 Weeks",
+        "market_comp": "$85,000 – $115,000 / year ($45 – $65/hr W2)",
+        "summary": "Our Career Restart pathway is tailored specifically for professionals returning after a career break or transitioning industries. We combine practical enterprise business fundamentals with structured interview preparation.",
+        "milestones": [
+            "Week 1–3: Enterprise Technology Foundations & Core Communication Mastery",
+            "Week 4–6: Business Analysis & Agile Delivery Specialization",
+            "Week 7–8: Capstone Portfolio Building & 1-on-1 Executive Placement Coaching",
+        ],
+    },
 ]
 
 
 def analyze_career_trajectory(current_role="", experience_years="", interests=""):
     combined = f"{current_role} {interests} {experience_years}".lower()
 
-    # Score each archetype based on keyword matches
     best_match = CAREER_ARCHETYPES[-1]  # Default to Career Restart
     max_matches = 0
+    has_standalone_ai = re.search(r"\bai\b", combined) is not None
 
     for archetype in CAREER_ARCHETYPES:
-        matches = sum(1 for kw in archetype["keywords"] if kw in combined)
+        matches = sum(
+            has_standalone_ai if kw == "ai" else kw in combined
+            for kw in archetype["keywords"]
+        )
         if matches > max_matches:
             max_matches = matches
             best_match = archetype
