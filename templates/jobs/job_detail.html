@@ -2,6 +2,8 @@
 {% load static %}
 {% block title %}{{ job.title }} — GCTT Careers{% endblock %}
 {% block description %}{{ job.description|truncatewords:24 }}{% endblock %}
+{% block og_title %}{{ job.title }} ({{ job.get_employment_type_display }}) — GCTT Careers{% endblock %}
+{% block og_description %}{{ job.location }} · W2 opportunity. {{ job.description|truncatewords:25 }}{% endblock %}
 
 {% block content %}
 <script type="application/ld+json" nonce="{{ request.csp_nonce }}">
@@ -92,6 +94,14 @@
           </li>
         </ul>
         <p class="mt-4 text-sm text-muted">No candidate fees. Questions: <a href="mailto:{{ COMPANY.jobs_email }}" class="link">{{ COMPANY.jobs_email }}</a>.</p>
+      </div>
+
+      <div class="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6">
+        <p class="text-sm text-muted">Share this opening</p>
+        <button type="button" class="btn btn-secondary btn-sm" data-copy="{{ request.build_absolute_uri }}">
+          <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#copy"></use></svg>
+          Copy link
+        </button>
       </div>
     </div>
 

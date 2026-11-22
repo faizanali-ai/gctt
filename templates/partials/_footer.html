@@ -1,56 +1,55 @@
 {% load static %}
-<footer class="ink-band">
+<footer class="bg-night text-night-ink border-t border-night-muted/15" data-theme="dark">
   <div class="container-site py-14">
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-12">
       <div class="lg:col-span-5">
-        <a href="{% url 'home' %}" class="logo-plate logo-plate--stacked inline-flex items-center rounded-xl p-3" aria-label="{{ COMPANY.name }} home">
-          <img src="{% static 'images/logo-stacked.png' %}" alt="{{ COMPANY.name }}" width="360" height="321" class="logo-light h-28 w-auto sm:h-32" loading="lazy">
-          <img src="{% static 'images/logo-stacked-dark.png' %}" alt="" width="360" height="322" class="logo-dark h-28 w-auto sm:h-32" loading="lazy">
+        <a href="{% url 'home' %}" class="inline-flex items-center" aria-label="{{ COMPANY.name }} home">
+          <img src="{% static 'images/logo-stacked-dark.svg' %}" alt="{{ COMPANY.name }}" width="160" height="143" class="h-24 w-auto sm:h-28">
         </a>
-        <p class="mt-5 max-w-sm text-sm leading-relaxed text-canvas/70">
+        <p class="mt-5 max-w-sm text-sm leading-relaxed text-night-muted">
           Headquartered in Irving, Texas, with statutory E-Verify compliance.
         </p>
-        <address class="mt-5 space-y-1 font-mono text-2xs uppercase not-italic tracking-[0.08em] text-canvas/60">
+        <address class="mt-5 space-y-1 font-mono text-2xs uppercase not-italic tracking-[0.08em] text-night-muted">
           <p>{{ COMPANY.address }}</p>
           <p>E-Verify ID: 198420-TX</p>
-          <p><a href="mailto:{{ COMPANY.email }}" class="underline underline-offset-4 hover:text-canvas">{{ COMPANY.email }}</a></p>
+          <p><a href="mailto:{{ COMPANY.email }}" class="underline underline-offset-4 hover:text-night-ink">{{ COMPANY.email }}</a></p>
         </address>
       </div>
 
       <nav class="lg:col-span-2" aria-label="Talent Solutions">
-        <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-canvas/60">Talent Solutions</h2>
-        <ul class="mt-4 space-y-2.5 text-sm text-canvas/75">
-          <li><a href="{% url 'it_staffing' %}" class="transition-colors hover:text-canvas">IT Staffing</a></li>
-          <li><a href="{% url 'recruitment' %}" class="transition-colors hover:text-canvas">Recruitment</a></li>
-          <li><a href="{% url 'talent_acquisition' %}" class="transition-colors hover:text-canvas">Talent Acquisition</a></li>
-          <li><a href="{% url 'sap_scrum' %}" class="transition-colors hover:text-canvas">SAP &amp; Scrum</a></li>
-          <li><a href="{% url 'employers' %}" class="transition-colors hover:text-canvas">Request talent</a></li>
+        <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-night-muted">Talent Solutions</h2>
+        <ul class="mt-4 space-y-2.5 text-sm text-night-muted">
+          <li><a href="{% url 'it_staffing' %}" class="transition-colors hover:text-night-ink">IT Staffing</a></li>
+          <li><a href="{% url 'recruitment' %}" class="transition-colors hover:text-night-ink">Recruitment</a></li>
+          <li><a href="{% url 'talent_acquisition' %}" class="transition-colors hover:text-night-ink">Talent Acquisition</a></li>
+          <li><a href="{% url 'sap_scrum' %}" class="transition-colors hover:text-night-ink">SAP &amp; Scrum</a></li>
+          <li><a href="{% url 'employers' %}" class="transition-colors hover:text-night-ink">Request talent</a></li>
         </ul>
       </nav>
 
       <nav class="lg:col-span-2" aria-label="Academy">
-        <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-canvas/60">Academy</h2>
-        <ul class="mt-4 space-y-2.5 text-sm text-canvas/75">
-          <li><a href="{% url 'training' %}" class="transition-colors hover:text-canvas">Programmes</a></li>
-          <li><a href="{% url 'career_restart' %}" class="transition-colors hover:text-canvas">Career Restart</a></li>
-          <li><a href="{% url 'verify_certificate_form' %}" class="transition-colors hover:text-canvas">Verify certificate</a></li>
+        <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-night-muted">Academy</h2>
+        <ul class="mt-4 space-y-2.5 text-sm text-night-muted">
+          <li><a href="{% url 'training' %}" class="transition-colors hover:text-night-ink">Programmes</a></li>
+          <li><a href="{% url 'career_restart' %}" class="transition-colors hover:text-night-ink">Career Restart</a></li>
+          <li><a href="{% url 'verify_certificate_form' %}" class="transition-colors hover:text-night-ink">Verify certificate</a></li>
         </ul>
       </nav>
 
       <nav class="lg:col-span-3" aria-label="Company">
-        <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-canvas/60">Company</h2>
-        <ul class="mt-4 space-y-2.5 text-sm text-canvas/75">
-          <li><a href="{% url 'about' %}" class="transition-colors hover:text-canvas">About {{ COMPANY.name }}</a></li>
-          <li><a href="{% url 'careers' %}" class="transition-colors hover:text-canvas">Open mandates</a></li>
-          <li><a href="{% url 'contact' %}" class="transition-colors hover:text-canvas">Contact</a></li>
-          <li><a href="{% url 'privacy' %}" class="transition-colors hover:text-canvas">Privacy</a></li>
-          <li><a href="{% url 'terms' %}" class="transition-colors hover:text-canvas">Terms</a></li>
-          <li><a href="{% url 'login' %}" class="transition-colors hover:text-canvas">Portal sign in</a></li>
+        <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-night-muted">Company</h2>
+        <ul class="mt-4 space-y-2.5 text-sm text-night-muted">
+          <li><a href="{% url 'about' %}" class="transition-colors hover:text-night-ink">About {{ COMPANY.name }}</a></li>
+          <li><a href="{% url 'careers' %}" class="transition-colors hover:text-night-ink">Open mandates</a></li>
+          <li><a href="{% url 'contact' %}" class="transition-colors hover:text-night-ink">Contact</a></li>
+          <li><a href="{% url 'privacy' %}" class="transition-colors hover:text-night-ink">Privacy</a></li>
+          <li><a href="{% url 'terms' %}" class="transition-colors hover:text-night-ink">Terms</a></li>
+          <li><a href="{% url 'login' %}" class="transition-colors hover:text-night-ink">Portal sign in</a></li>
         </ul>
       </nav>
     </div>
 
-    <div class="mt-12 flex flex-col gap-4 border-t border-canvas/15 pt-6 font-mono text-3xs uppercase tracking-[0.08em] text-canvas/50 sm:flex-row sm:items-center sm:justify-between">
+    <div class="mt-12 flex flex-col gap-4 border-t border-night-muted/20 pt-6 font-mono text-3xs uppercase tracking-[0.08em] text-night-muted sm:flex-row sm:items-center sm:justify-between">
       <p>© {% now "Y" %} {{ COMPANY.legal_name }}. All rights reserved.</p>
       <p class="flex flex-wrap items-center gap-x-3 gap-y-1">
         <span>$0 candidate fee</span>

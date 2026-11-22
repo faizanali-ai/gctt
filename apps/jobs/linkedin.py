@@ -18,11 +18,17 @@ def generate_linkedin_post_text(job, request=None):
         f"🚀 NEW DIRECT MANDATE: {job.title}\n\n"
         f"📍 Location: {job.location}\n"
         f"💼 Engagement Type: {job.get_employment_type_display()}\n"
-        f"🏢 Organization: Global Center for Technology & Training (GCTT)\n\n"
-        f"We are actively vetting and placing qualified technical professionals for this enterprise engagement. "
-        f"Direct W2 / SOW engagement with verified corporate enterprise partners.\n\n"
-        f"👉 Review full mandate requirements and apply directly: {job_url}\n\n"
-        f"#TechJobs #Hiring #ITStaffing #EnterpriseTech #Careers #GCTT #Recruitment"
+        f"🏢 Employer: Global Center for Technology & Training (GCTT) · E-Verify Registered\n\n"
+        f"We are actively connecting with talented technical professionals for this enterprise mandate. "
+        f"Direct W2 employment with verified corporate enterprise partners.\n\n"
+        f"✅ We welcome candidate profiles with the following work authorizations:\n"
+        f"• OPT / STEM OPT\n"
+        f"• H-4 EAD\n"
+        f"• Green Card (GC)\n"
+        f"• U.S. Citizens\n\n"
+        f"👉 Review full mandate requirements & apply directly ($0 candidate fee):\n{job_url}\n\n"
+        f"📧 Share your updated resume: jobs@gctekton.com\n\n"
+        f"#GCTT #W2Jobs #ITJobs #TechCareers #Hiring #OPT #STEMOPT #H4EAD #GreenCard #USCitizens #Recruitment"
     )
     return text
 

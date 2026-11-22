@@ -235,9 +235,17 @@
   }
 
   document.addEventListener("click", function (event) {
-    var button = event.target.closest("[data-copy]");
+    var button = event.target.closest("[data-copy], [data-copy-target]");
     if (!button) return;
-    copyText(button.getAttribute("data-copy") || "").then(
+    var targetId = button.getAttribute("data-copy-target");
+    var textPromise;
+    if (targetId) {
+      var targetEl = document.getElementById(targetId);
+      textPromise = copyText(targetEl ? (targetEl.value || targetEl.innerText) : "");
+    } else {
+      textPromise = copyText(button.getAttribute("data-copy") || "");
+    }
+    textPromise.then(
       function () {
         toast("Copied to clipboard");
       },

@@ -7,10 +7,8 @@
 <header class="border-b border-line bg-surface">
   <div class="container-site flex h-16 items-center justify-between">
     <a href="{% url 'home' %}" class="flex items-center gap-3" aria-label="{{ COMPANY.name }} portal">
-      <span class="logo-plate logo-plate--main inline-flex items-center rounded-md px-2 py-1">
-        <img src="{% static 'images/logo-main.png' %}" alt="{{ COMPANY.name }}" width="520" height="176" class="logo-light h-7 w-auto sm:h-8">
-        <img src="{% static 'images/logo-main-dark.png' %}" alt="" width="520" height="174" class="logo-dark h-7 w-auto sm:h-8">
-      </span>
+      <img src="{% static 'images/logo-main.svg' %}" alt="{{ COMPANY.name }}" width="118" height="40" class="logo-light h-7 w-auto sm:h-8">
+      <img src="{% static 'images/logo-main-dark.svg' %}" alt="" width="118" height="40" class="logo-dark h-7 w-auto sm:h-8">
       <span class="hidden border-l border-line pl-3 font-mono text-3xs uppercase tracking-[0.12em] text-muted sm:inline">Portal</span>
     </a>
     <div class="flex items-center gap-3">
