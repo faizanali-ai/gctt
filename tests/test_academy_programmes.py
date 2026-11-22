@@ -61,6 +61,10 @@ class AcademyProgrammesTest(TestCase):
         result = analyze_career_trajectory("Linux Admin", "3-5", "cloud engineering and devops docker")
         self.assertEqual(result["programme"], "DevOps")
 
+    def test_ai_keyword_matches_only_as_a_standalone_term(self):
+        self.assertEqual(analyze_career_trajectory("Agile Training")["programme"], "Agile Training")
+        self.assertEqual(analyze_career_trajectory(interests="(AI)")["programme"], "AI BA")
+
     def test_api_career_advisor_endpoint(self):
         url = reverse("api_career_advisor")
         response = self.client.post(

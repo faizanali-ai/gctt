@@ -122,7 +122,6 @@ def seed_programmes(apps, schema_editor):
 
         fields = {
             "title": prog_data["title"],
-            "slug": slug,
             "category": cat,
             "delivery_mode": prog_data["delivery_mode"],
             "duration": prog_data["duration"],
@@ -138,14 +137,7 @@ def seed_programmes(apps, schema_editor):
                 setattr(prog, k, v)
             prog.save()
         else:
-            Programme.objects.create(**fields)
-
-
-def reverse_seed(apps, schema_editor):
-    Programme = apps.get_model("training", "Programme")
-    Programme.objects.filter(
-        slug__in=["agile-training", "business-analyst", "devops", "ba-sm", "ai-ba"]
-    ).update(published=False)
+            Programme.objects.create(slug=slug, **fields)
 
 
 class Migration(migrations.Migration):
@@ -155,5 +147,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(seed_programmes, reverse_seed),
+        # Previous publication flags were never saved, so rollback cannot restore them.
+        migrations.RunPython(seed_programmes),
     ]

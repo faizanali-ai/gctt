@@ -1,3 +1,5 @@
+import re
+
 CAREER_ARCHETYPES = [
     {
         "keywords": ["ai ba", "ai", "artificial intelligence", "llm", "genai", "prompt", "machine learning", "data"],
@@ -109,9 +111,13 @@ def analyze_career_trajectory(current_role="", experience_years="", interests=""
 
     best_match = CAREER_ARCHETYPES[-1]  # Default to Career Restart
     max_matches = 0
+    has_standalone_ai = re.search(r"\bai\b", combined) is not None
 
     for archetype in CAREER_ARCHETYPES:
-        matches = sum(1 for kw in archetype["keywords"] if kw in combined)
+        matches = sum(
+            has_standalone_ai if kw == "ai" else kw in combined
+            for kw in archetype["keywords"]
+        )
         if matches > max_matches:
             max_matches = matches
             best_match = archetype
