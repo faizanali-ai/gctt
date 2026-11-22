@@ -15,11 +15,13 @@
   <div class="container-site flex h-9 items-center justify-between gap-4 font-mono text-2xs uppercase tracking-[0.12em] text-muted">
     <div class="flex items-center gap-3">
       <span>Irving, TX · E-Verify</span>
-      <span aria-hidden="true" class="hidden sm:inline">·</span>
-      <a href="tel:{{ COMPANY.phone_raw }}" class="hidden sm:inline-flex items-center gap-1.5 transition-colors hover:text-ink">
-        <svg class="h-3 w-3 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#phone"></use></svg>
-        {{ COMPANY.phone }}
-      </a>
+      {% if COMPANY.phone %}
+        <span aria-hidden="true" class="hidden sm:inline">·</span>
+        <a href="tel:{{ COMPANY.phone_raw|default:COMPANY.phone }}" class="hidden sm:inline-flex items-center gap-1.5 transition-colors hover:text-ink">
+          <svg class="h-3 w-3 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#phone"></use></svg>
+          {{ COMPANY.phone }}
+        </a>
+      {% endif %}
     </div>
     <div class="flex items-center gap-3">
       <a href="{% url 'verify_certificate_form' %}" class="transition-colors hover:text-ink">Verify a certificate</a>
@@ -115,7 +117,7 @@
       {% endif %}
       <p class="mt-4 font-mono text-3xs uppercase leading-relaxed tracking-[0.1em] text-muted">
         2612 Laramie St, Irving TX 75062<br>
-        E-Verify ID: 198420-TX · <a href="tel:{{ COMPANY.phone_raw }}" class="underline hover:text-ink">{{ COMPANY.phone }}</a>
+        E-Verify ID: 198420-TX{% if COMPANY.phone %} · <a href="tel:{{ COMPANY.phone_raw|default:COMPANY.phone }}" class="underline hover:text-ink">{{ COMPANY.phone }}</a>{% endif %}
       </p>
     </div>
   </div>

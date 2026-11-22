@@ -16,7 +16,7 @@ from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.audit import log_action
 from apps.accounts.decorators import staff_required
-from apps.accounts.models import User
+from apps.accounts.models import SiteSettings, User
 from apps.accounts.pending import expiry, hash_token, make_token
 from config.emails import (
     notify_application,
@@ -129,6 +129,10 @@ def job_detail(request, slug):
 @ratelimit(key="ip", rate="30/h", method="POST", block=True)
 def job_apply(request, slug):
     job = get_object_or_404(Job, slug=slug, published=True)
+    site_settings = SiteSettings.load()
+    if not site_settings.allow_candidate_applications:
+        messages.error(request, "Candidate applications are currently paused.")
+        return redirect("job_detail", slug=job.slug)
     is_auth = request.user.is_authenticated
     form = ApplicationForm(request.POST, request.FILES, is_authenticated=is_auth)
     if form.is_valid():
@@ -235,6 +239,10 @@ def pending_application(request, token):
     if not user.is_candidate:
         messages.error(request, "Use a candidate account to apply for roles.")
         return redirect("login")
+    site_settings = SiteSettings.load()
+    if not site_settings.allow_candidate_applications:
+        messages.error(request, "Candidate applications are currently paused.")
+        return redirect("dashboard")
     if not request.user.is_authenticated:
         login(request, user, backend="django.contrib.auth.backends.ModelBackend")
         send_welcome_if_first_login(user)

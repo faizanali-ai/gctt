@@ -102,7 +102,7 @@
         </ul>
         <div class="mt-5 border-t border-line pt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-muted">
           <span>Zero candidate placement or training deductions.</span>
-          <span>Questions? Call <a href="tel:{{ COMPANY.phone_raw }}" class="font-semibold text-accent hover:underline">{{ COMPANY.phone }}</a> or email <a href="mailto:{{ COMPANY.jobs_email }}" class="font-semibold text-accent hover:underline">{{ COMPANY.jobs_email }}</a></span>
+          <span>Questions? {% if COMPANY.phone %}Call <a href="tel:{{ COMPANY.phone_raw|default:COMPANY.phone }}" class="font-semibold text-accent hover:underline">{{ COMPANY.phone }}</a> or email{% else %}Email{% endif %} <a href="mailto:{{ COMPANY.jobs_email }}" class="font-semibold text-accent hover:underline">{{ COMPANY.jobs_email }}</a></span>
         </div>
       </div>
 

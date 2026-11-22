@@ -28,6 +28,34 @@ def clear_company_cache() -> None:
     _CACHE["expires_at"] = 0.0
 
 
+def _resolve_logo_url(raw_url: str) -> str:
+    """Resolve a durable public URL or fresh signed URL for saved logo overrides."""
+    val = (raw_url or "").strip()
+    if not val:
+        return ""
+    if "/media/asset/" in val:
+        import re
+
+        m = re.search(r"/media/asset/(\d+)", val)
+        if m:
+            from apps.accounts.models import MediaAsset
+
+            asset = MediaAsset.objects.filter(pk=int(m.group(1))).first()
+            if asset and asset.file:
+                return asset.file.url
+    elif "uploads/" in val:
+        import re
+
+        m = re.search(r"(uploads/[^?#]+)", val)
+        if m:
+            from apps.accounts.models import MediaAsset
+
+            asset = MediaAsset.objects.filter(file__contains=m.group(1)).first()
+            if asset and asset.file:
+                return asset.file.url
+    return val
+
+
 def company() -> dict[str, str]:
     """Company identity with database values merged over the constants."""
     now = time.monotonic()
@@ -48,12 +76,16 @@ def company() -> dict[str, str]:
         ("email", record.email),
         ("jobs_email", record.jobs_email),
         ("address", record.address),
-        ("phone", getattr(record, "phone", "")),
-        ("phone_raw", getattr(record, "phone_raw", "")),
         ("url", record.url.rstrip("/")),
     ):
         if value:
             merged[key] = value
+
+    if hasattr(record, "phone"):
+        merged["phone"] = record.phone
+    if hasattr(record, "phone_raw"):
+        merged["phone_raw"] = record.phone_raw
+
     merged["jobsEmail"] = merged["jobs_email"]
     merged["domain"] = urlparse(merged["url"]).netloc or COMPANY["domain"]
     merged.update(
@@ -68,8 +100,8 @@ def company() -> dict[str, str]:
             "announcement_banner_link": getattr(record, "announcement_banner_link", ""),
             "allow_candidate_applications": getattr(record, "allow_candidate_applications", True),
             "allow_student_registrations": getattr(record, "allow_student_registrations", True),
-            "logo_light_url": getattr(record, "logo_light_url", ""),
-            "logo_dark_url": getattr(record, "logo_dark_url", ""),
+            "logo_light_url": _resolve_logo_url(getattr(record, "logo_light_url", "")),
+            "logo_dark_url": _resolve_logo_url(getattr(record, "logo_dark_url", "")),
         }
     )
     _CACHE["value"] = merged

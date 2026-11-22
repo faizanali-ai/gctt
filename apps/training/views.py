@@ -17,7 +17,7 @@ from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.audit import log_action
 from apps.accounts.decorators import staff_required
-from apps.accounts.models import User
+from apps.accounts.models import SiteSettings, User
 from apps.accounts.pending import expiry, hash_token, make_token
 from config.emails import (
     notify_certificate,
@@ -141,6 +141,10 @@ def api_career_advisor(request):
 @ratelimit(key="ip", rate="30/h", method="POST", block=True)
 def programme_register(request, slug):
     programme = get_object_or_404(Programme, slug=slug, published=True)
+    site_settings = SiteSettings.load()
+    if not site_settings.allow_student_registrations:
+        messages.error(request, "Student registrations are currently paused.")
+        return redirect("programme_detail", slug=programme.slug)
     if not programme.registration_open:
         messages.error(request, "Registration for this programme is closed.")
         return redirect("programme_detail", slug=programme.slug)
@@ -264,6 +268,13 @@ def pending_registration(request, token):
     if not user.is_student:
         messages.error(request, "Use a student account to register for training.")
         return redirect("login")
+    site_settings = SiteSettings.load()
+    if not site_settings.allow_student_registrations:
+        messages.error(request, "Student registrations are currently paused.")
+        return redirect("dashboard")
+    if not pending.programme.registration_open:
+        messages.error(request, "Registration for this programme is closed.")
+        return redirect("dashboard")
     if not request.user.is_authenticated:
         login(request, user, backend="django.contrib.auth.backends.ModelBackend")
         send_welcome_if_first_login(user)

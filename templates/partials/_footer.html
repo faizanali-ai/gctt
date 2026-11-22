@@ -2,7 +2,7 @@
 <footer class="bg-night text-night-ink border-t border-night-muted/15" data-theme="dark">
   <div class="container-site py-14">
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-12">
-      <div class="lg:col-span-5">
+      <div class="lg:col-span-4">
         <a href="{% url 'home' %}" class="inline-flex items-center" aria-label="{{ COMPANY.name }} home">
           <img src="{% if COMPANY.logo_dark_url %}{{ COMPANY.logo_dark_url }}{% else %}{% static 'images/logo-stacked-dark.svg' %}{% endif %}" alt="{{ COMPANY.name }}" width="160" height="143" class="h-24 w-auto sm:h-28">
         </a>
@@ -12,7 +12,9 @@
         <address class="mt-5 space-y-1 font-mono text-2xs uppercase not-italic tracking-[0.08em] text-night-muted">
           <p>{{ COMPANY.address }}</p>
           <p>E-Verify ID: 198420-TX</p>
-          <p><a href="tel:{{ COMPANY.phone_raw }}" class="underline underline-offset-4 hover:text-night-ink">{{ COMPANY.phone }}</a></p>
+          {% if COMPANY.phone %}
+            <p><a href="tel:{{ COMPANY.phone_raw|default:COMPANY.phone }}" class="underline underline-offset-4 hover:text-night-ink">{{ COMPANY.phone }}</a></p>
+          {% endif %}
           <p><a href="mailto:{{ COMPANY.email }}" class="underline underline-offset-4 hover:text-night-ink">{{ COMPANY.email }}</a></p>
         </address>
       </div>
@@ -49,7 +51,7 @@
         </ul>
       </nav>
 
-      <nav class="lg:col-span-3" aria-label="Company">
+      <nav class="lg:col-span-2" aria-label="Company">
         <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-night-muted">Company</h2>
         <ul class="mt-4 space-y-2.5 text-sm text-night-muted">
           {% if DYNAMIC_NAV_FOOTER.company %}
@@ -60,9 +62,21 @@
             <li><a href="{% url 'about' %}" class="transition-colors hover:text-night-ink">About {{ COMPANY.name }}</a></li>
             <li><a href="{% url 'careers' %}" class="transition-colors hover:text-night-ink">Open mandates</a></li>
             <li><a href="{% url 'contact' %}" class="transition-colors hover:text-night-ink">Contact</a></li>
+            <li><a href="{% url 'login' %}" class="transition-colors hover:text-night-ink">Portal sign in</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+
+      <nav class="lg:col-span-2" aria-label="Legal">
+        <h2 class="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-night-muted">Legal</h2>
+        <ul class="mt-4 space-y-2.5 text-sm text-night-muted">
+          {% if DYNAMIC_NAV_FOOTER.legal %}
+            {% for item in DYNAMIC_NAV_FOOTER.legal %}
+              <li><a href="{{ item.url }}" class="transition-colors hover:text-night-ink" {% if item.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ item.label }}</a></li>
+            {% endfor %}
+          {% else %}
             <li><a href="{% url 'privacy' %}" class="transition-colors hover:text-night-ink">Privacy</a></li>
             <li><a href="{% url 'terms' %}" class="transition-colors hover:text-night-ink">Terms</a></li>
-            <li><a href="{% url 'login' %}" class="transition-colors hover:text-night-ink">Portal sign in</a></li>
           {% endif %}
         </ul>
       </nav>

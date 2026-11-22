@@ -23,7 +23,7 @@ from django.core.paginator import Paginator
 from django.core.validators import validate_email
 from django.db import IntegrityError
 from django.db.models import Count, Q
-from django.http import HttpResponse
+from django.http import FileResponse, Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -1338,6 +1338,21 @@ def manage_media_delete(request, pk):
     log_action(request, "media.delete", title)
     messages.success(request, f"Asset '{title}' deleted.")
     return redirect("manage_media")
+
+
+def media_asset_serve(request, pk):
+    """Public serving endpoint for marketing media assets."""
+    asset = get_object_or_404(MediaAsset, pk=pk)
+    if not asset.file:
+        raise Http404("Media file not found")
+    from django.core.files.storage import FileSystemStorage, default_storage
+
+    if isinstance(default_storage, FileSystemStorage):
+        try:
+            return FileResponse(asset.file.open("rb"))
+        except (FileNotFoundError, ValueError):
+            raise Http404("Media file not found")
+    return HttpResponseRedirect(asset.file.url)
 
 
 @login_required

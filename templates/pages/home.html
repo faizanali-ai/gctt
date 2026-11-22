@@ -234,10 +234,12 @@
           <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#map-pin"></use></svg>
           <div><p class="font-semibold">Headquarters</p><p class="text-muted">{{ COMPANY.address }}</p></div>
         </div>
-        <div class="flex gap-3">
-          <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#phone"></use></svg>
-          <div><p class="font-semibold">Telephone</p><p><a href="tel:{{ COMPANY.phone_raw }}" class="link">{{ COMPANY.phone }}</a></p></div>
-        </div>
+        {% if COMPANY.phone %}
+          <div class="flex gap-3">
+            <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#phone"></use></svg>
+            <div><p class="font-semibold">Telephone</p><p><a href="tel:{{ COMPANY.phone_raw|default:COMPANY.phone }}" class="link">{{ COMPANY.phone }}</a></p></div>
+          </div>
+        {% endif %}
         <div class="flex gap-3">
           <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#mail"></use></svg>
           <div><p class="font-semibold">Email</p><p><a href="mailto:{{ COMPANY.email }}" class="link">{{ COMPANY.email }}</a></p></div>

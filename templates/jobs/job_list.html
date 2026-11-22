@@ -62,10 +62,12 @@
               <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#mail"></use></svg>
               {{ COMPANY.jobs_email }}
             </a>
-            <a href="tel:{{ COMPANY.phone_raw }}" class="btn btn-secondary btn-sm">
-              <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#phone"></use></svg>
-              {{ COMPANY.phone }}
-            </a>
+            {% if COMPANY.phone %}
+              <a href="tel:{{ COMPANY.phone_raw|default:COMPANY.phone }}" class="btn btn-secondary btn-sm">
+                <svg class="h-4 w-4" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#phone"></use></svg>
+                {{ COMPANY.phone }}
+              </a>
+            {% endif %}
           </div>
         </div>
       </div>

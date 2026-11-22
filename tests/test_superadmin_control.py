@@ -1,3 +1,5 @@
+import json
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
@@ -11,6 +13,8 @@ from apps.accounts.models import (
     SiteSettings,
     User,
 )
+from apps.jobs.models import Application, Job
+from apps.training.models import Programme, Registration
 from config.site import clear_company_cache
 
 
@@ -92,6 +96,32 @@ class SuperadminTotalControlTests(TestCase):
             AuditLog.objects.filter(action="page.edit", target="home").exists()
         )
 
+        # Verify strict JSON cleaner rejects non-finite numbers like NaN or Infinity
+        from apps.accounts.forms import PageContentForm
+
+        invalid_form = PageContentForm(data={"title": "Test", "sections_json": '{"stat": NaN}'})
+        self.assertFalse(invalid_form.is_valid())
+        self.assertIn("sections_json", invalid_form.errors)
+
+        # Verify page hero CTA and narrative copy rendering on About page
+        about_edit_url = reverse("manage_page_edit", kwargs={"page_slug": "about"})
+        self.client.post(
+            about_edit_url,
+            {
+                "title": "About GCTT Custom",
+                "hero_title": "Pioneering Technical Excellence",
+                "hero_eyebrow": "Texas Staffing",
+                "hero_subtitle": "Delivering across the state.",
+                "hero_cta_label": "Discover Roles",
+                "hero_cta_url": "/careers/",
+                "sections_json": json.dumps({"p1": "Customized narrative story for our firm."}),
+            },
+        )
+        about_resp = self.client.get(reverse("about"))
+        self.assertContains(about_resp, "Discover Roles")
+        self.assertContains(about_resp, "/careers/")
+        self.assertContains(about_resp, "Customized narrative story for our firm.")
+
     def test_page_faq_lifecycle(self):
         self.client.force_login(self.admin)
 
@@ -139,13 +169,19 @@ class SuperadminTotalControlTests(TestCase):
         self.assertRedirects(response, reverse("manage_page_edit", kwargs={"page_slug": "about"}))
         self.assertFalse(PageFAQ.objects.filter(pk=faq.pk).exists())
 
+    def _get_primary_nav_html(self, response):
+        content = response.content.decode("utf-8")
+        self.assertIn('id="primary-nav"', content)
+        return content.split('id="primary-nav"')[1].split("</nav>")[0]
+
     def test_navigation_builder_lifecycle_and_fallback(self):
         self.client.force_login(self.admin)
 
         # Initial state: header has default divisions
         home_resp = self.client.get(reverse("home"))
-        self.assertContains(home_resp, "Talent Solutions")
-        self.assertContains(home_resp, "Academy")
+        nav_html = self._get_primary_nav_html(home_resp)
+        self.assertIn("Talent Solutions", nav_html)
+        self.assertIn("Academy", nav_html)
 
         # Create custom navigation link
         nav_url = reverse("manage_navigation")
@@ -165,9 +201,10 @@ class SuperadminTotalControlTests(TestCase):
         nav_item = NavigationItem.objects.get(url="/custom-portal/")
         self.assertEqual(nav_item.label, "Custom Executive Portal")
 
-        # Verify public site header renders custom dynamic nav item
+        # Verify public site header renders custom dynamic nav item inside primary-nav
         home_resp = self.client.get(reverse("home"))
-        self.assertContains(home_resp, "Custom Executive Portal")
+        nav_html = self._get_primary_nav_html(home_resp)
+        self.assertIn("Custom Executive Portal", nav_html)
 
         # Edit navigation item
         edit_url = reverse("manage_navigation_edit", kwargs={"pk": nav_item.pk})
@@ -192,9 +229,10 @@ class SuperadminTotalControlTests(TestCase):
         self.assertRedirects(response, nav_url)
         self.assertFalse(NavigationItem.objects.filter(pk=nav_item.pk).exists())
 
-        # When table is empty, falls back safely to default navigation
+        # When table is empty, falls back safely to default navigation inside primary-nav
         home_resp = self.client.get(reverse("home"))
-        self.assertContains(home_resp, "Talent Solutions")
+        nav_html = self._get_primary_nav_html(home_resp)
+        self.assertIn("Talent Solutions", nav_html)
 
     def test_media_asset_library_upload_and_delete(self):
         self.client.force_login(self.admin)
@@ -220,7 +258,12 @@ class SuperadminTotalControlTests(TestCase):
         self.assertEqual(asset.alt_text, "GCTT Spring Cohorts Banner")
         self.assertEqual(asset.uploaded_by, self.admin)
         self.assertTrue(asset.file_size > 0)
-        self.assertTrue(asset.file.url.startswith("/media/"))
+        self.assertTrue(asset.is_image)
+        self.assertEqual(asset.public_url, reverse("media_asset_serve", kwargs={"pk": asset.pk}))
+
+        # Public serving path serves file
+        serve_resp = self.client.get(asset.public_url)
+        self.assertIn(serve_resp.status_code, (200, 302))
 
         # Delete asset
         del_url = reverse("manage_media_delete", kwargs={"pk": asset.pk})
@@ -266,3 +309,100 @@ class SuperadminTotalControlTests(TestCase):
         home_resp = self.client.get(reverse("home"))
         self.assertContains(home_resp, "Spring 2027 Cohorts Now Open for Registration")
         self.assertContains(home_resp, "+1 (800) 555-0199")
+
+        # Now test empty phone override removes phone from company dict and public pages
+        self.client.post(
+            settings_url,
+            {
+                "company_name": "GCTT",
+                "legal_name": "Global Center for Technology & Training",
+                "tagline": "Technology talent and training for enterprise teams.",
+                "email": "accounts@gctekton.com",
+                "jobs_email": "jobs@gctekton.com",
+                "phone": "",
+                "phone_raw": "",
+                "address": "2612 Laramie St, Irving TX 75062",
+                "url": "https://gctekton.com",
+                "hero_eyebrow": "Irving, Texas",
+                "hero_title": "Enterprise Talent",
+                "hero_subtitle": "Delivering across Texas.",
+                "hero_cta_label": "Request talent",
+                "hero_cta_url": "/employers/",
+            },
+        )
+        clear_company_cache()
+        from config.site import company
+
+        self.assertEqual(company()["phone"], "")
+        home_no_phone = self.client.get(reverse("home"))
+        self.assertNotContains(home_no_phone, "tel:")
+
+    def test_application_and_registration_intake_toggles(self):
+        settings_row = SiteSettings.load()
+        settings_row.allow_candidate_applications = False
+        settings_row.allow_student_registrations = False
+        settings_row.save()
+        clear_company_cache()
+
+        # Job apply should reject when paused
+        job = Job.objects.create(
+            title="Senior Architect",
+            slug="senior-architect",
+            location="Irving, TX",
+            employment_type=Job.EmploymentType.FULL_TIME,
+            description="Leading cloud architectures.",
+            requirements="10+ years experience.",
+            published=True,
+        )
+        fake_resume = SimpleUploadedFile("resume.pdf", b"%PDF-1.4 test resume", content_type="application/pdf")
+        apply_resp = self.client.post(
+            reverse("job_apply", kwargs={"slug": job.slug}),
+            {
+                "first_name": "Jane",
+                "last_name": "Doe",
+                "email": "jane@example.com",
+                "phone": "+1234567890",
+                "resume": fake_resume,
+                "work_authorization": "US Citizen",
+            },
+        )
+        self.assertRedirects(apply_resp, reverse("job_detail", kwargs={"slug": job.slug}))
+        self.assertFalse(Application.objects.filter(job=job).exists())
+
+        # Programme registration should reject when paused
+        programme = Programme.objects.create(
+            title="Executive Scrum",
+            slug="executive-scrum",
+            duration="4 weeks",
+            description="Curriculum details.",
+            published=True,
+            registration_open=True,
+        )
+        reg_resp = self.client.post(
+            reverse("programme_register", kwargs={"slug": programme.slug}),
+            {
+                "full_name": "John Doe",
+                "email": "john@example.com",
+                "phone": "+1234567890",
+            },
+        )
+        self.assertRedirects(reg_resp, reverse("programme_detail", kwargs={"slug": programme.slug}))
+        self.assertFalse(Registration.objects.filter(programme=programme).exists())
+
+    def test_footer_legal_nav(self):
+        # By default, footer renders Privacy and Terms fallback
+        home_resp = self.client.get(reverse("home"))
+        self.assertContains(home_resp, "Privacy")
+        self.assertContains(home_resp, "Terms")
+
+        # Add custom legal link
+        NavigationItem.objects.create(
+            menu="footer_legal",
+            label="Accessibility Statement",
+            url="/accessibility/",
+            order=1,
+            is_published=True,
+        )
+        home_resp_custom = self.client.get(reverse("home"))
+        self.assertContains(home_resp_custom, "Accessibility Statement")
+        self.assertContains(home_resp_custom, "/accessibility/")

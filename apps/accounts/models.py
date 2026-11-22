@@ -407,6 +407,19 @@ class MediaAsset(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def is_image(self) -> bool:
+        if not self.file:
+            return False
+        import os
+        ext = os.path.splitext(self.file.name)[1].lower()
+        return ext in {".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif", ".avif", ".ico"}
+
+    @property
+    def public_url(self) -> str:
+        from django.urls import reverse
+        return reverse("media_asset_serve", kwargs={"pk": self.pk})
+
     def save(self, *args, **kwargs):
         if self.file and hasattr(self.file, "size") and not self.file_size:
             self.file_size = self.file.size

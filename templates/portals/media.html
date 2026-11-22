@@ -34,8 +34,8 @@
           <div class="card flex flex-col justify-between overflow-hidden p-4">
             <div>
               <div class="flex h-36 items-center justify-center rounded-sm bg-surface-raised/40 p-2 border border-line">
-                {% if item.file.url %}
-                  <img src="{{ item.file.url }}" alt="{{ item.alt_text|default:item.title }}" class="max-h-full max-w-full object-contain" loading="lazy">
+                {% if item.is_image %}
+                  <img src="{{ item.public_url }}" alt="{{ item.alt_text|default:item.title }}" class="max-h-full max-w-full object-contain" loading="lazy">
                 {% else %}
                   <svg class="h-10 w-10 text-muted" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#file"></use></svg>
                 {% endif %}
@@ -48,7 +48,7 @@
             </div>
 
             <div class="mt-4 flex items-center justify-between border-t border-line pt-3">
-              <button type="button" class="btn btn-secondary btn-xs flex items-center gap-1" data-copy="{{ item.file.url }}">
+              <button type="button" class="btn btn-secondary btn-xs flex items-center gap-1" data-copy="{{ item.public_url }}">
                 <svg class="h-3 w-3" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#copy"></use></svg>
                 <span>Copy URL</span>
               </button>
@@ -66,13 +66,13 @@
         <nav class="flex items-center justify-between border-t border-line pt-4" aria-label="Pagination">
           <div>
             {% if page_obj.has_previous %}
-              <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}" class="btn btn-secondary btn-xs">&larr; Previous</a>
+              <a href="?page={{ page_obj.previous_page_number }}{% if q %}&amp;q={{ q|urlencode }}{% endif %}" class="btn btn-secondary btn-xs">&larr; Previous</a>
             {% endif %}
           </div>
           <span class="text-xs text-muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
           <div>
             {% if page_obj.has_next %}
-              <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}" class="btn btn-secondary btn-xs">Next &rarr;</a>
+              <a href="?page={{ page_obj.next_page_number }}{% if q %}&amp;q={{ q|urlencode }}{% endif %}" class="btn btn-secondary btn-xs">Next &rarr;</a>
             {% endif %}
           </div>
         </nav>

@@ -77,6 +77,7 @@ urlpatterns = [
     path("manage/navigation/<int:pk>/delete/", accounts_views.manage_navigation_delete, name="manage_navigation_delete"),
     path("manage/media/", accounts_views.manage_media, name="manage_media"),
     path("manage/media/<int:pk>/delete/", accounts_views.manage_media_delete, name="manage_media_delete"),
+    path("media/asset/<int:pk>/", accounts_views.media_asset_serve, name="media_asset_serve"),
     path("manage/settings/", accounts_views.manage_site_settings, name="manage_site_settings"),
     path("manage/audit/", accounts_views.manage_audit, name="manage_audit"),
     path("staff/enquiries/", enquiries_views.staff_enquiries, name="staff_enquiries"),

@@ -4,14 +4,18 @@
 {% block description %}{{ page_content.meta_description|default:"GCTT is a technology staffing and training company headquartered in Irving, Texas." }}{% endblock %}
 
 {% block content %}
-{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"Company" title=page_content.hero_title|default:"A Texas technology workforce company." subtitle=page_content.hero_subtitle|default:"GCTT staffs technology teams and trains the people who join them. We are headquartered in Irving, Texas and work with employers, candidates and students." %}
+{% include "partials/_hero.html" with eyebrow=page_content.hero_eyebrow|default:"Company" title=page_content.hero_title|default:"A Texas technology workforce company." subtitle=page_content.hero_subtitle|default:"GCTT staffs technology teams and trains the people who join them. We are headquartered in Irving, Texas and work with employers, candidates and students." cta_label=page_content.hero_cta_label cta_url=page_content.hero_cta_url %}
 
 <section class="section border-b border-line">
   <div class="container-site grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
     <div class="max-w-2xl space-y-4 text-body-lg text-muted">
-      <p>GCTT works with three groups: employers looking for technology talent, candidates looking for their next role, and students building technical skills.</p>
-      <p>Training runs online and in person. Certificates are issued on successful completion and can be verified through a public reference.</p>
-      <p>Our staffing work covers contract, contract-to-hire and direct placement. Every engagement starts with a defined role and an agreed process.</p>
+      {% if page_content.sections_data.body %}
+        {{ page_content.sections_data.body|linebreaks }}
+      {% else %}
+        <p>{{ page_content.sections_data.p1|default:"GCTT works with three groups: employers looking for technology talent, candidates looking for their next role, and students building technical skills." }}</p>
+        <p>{{ page_content.sections_data.p2|default:"Training runs online and in person. Certificates are issued on successful completion and can be verified through a public reference." }}</p>
+        <p>{{ page_content.sections_data.p3|default:"Our staffing work covers contract, contract-to-hire and direct placement. Every engagement starts with a defined role and an agreed process." }}</p>
+      {% endif %}
       <div class="pt-4">
         <a href="{% url 'contact' %}" class="btn btn-primary">Contact the team</a>
       </div>
@@ -22,10 +26,12 @@
         <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Headquarters</dt>
         <dd class="mt-1 font-display font-semibold">{{ COMPANY.address }}</dd>
       </div>
-      <div class="p-5">
-        <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Telephone</dt>
-        <dd class="mt-1"><a href="tel:{{ COMPANY.phone_raw }}" class="link">{{ COMPANY.phone }}</a></dd>
-      </div>
+      {% if COMPANY.phone %}
+        <div class="p-5">
+          <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Telephone</dt>
+          <dd class="mt-1"><a href="tel:{{ COMPANY.phone_raw|default:COMPANY.phone }}" class="link">{{ COMPANY.phone }}</a></dd>
+        </div>
+      {% endif %}
       <div class="p-5">
         <dt class="font-mono text-2xs uppercase tracking-[0.12em] text-muted">Company email</dt>
         <dd class="mt-1"><a href="mailto:{{ COMPANY.email }}" class="link">{{ COMPANY.email }}</a></dd>

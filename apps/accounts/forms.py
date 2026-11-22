@@ -242,9 +242,13 @@ class PageContentForm(forms.ModelForm):
             parsed = json.loads(raw)
             if not isinstance(parsed, dict):
                 raise ValidationError("Must be a valid JSON object (key-value pairs).")
+            # Strict serialization check to reject non-finite numbers (NaN, Infinity) that Postgres cannot store
+            json.dumps(parsed, allow_nan=False)
             return parsed
         except json.JSONDecodeError as err:
             raise ValidationError(f"Invalid JSON format: {err}")
+        except (ValueError, TypeError) as err:
+            raise ValidationError(f"Invalid JSON value: {err}")
 
     def clean_hero_cta_url(self):
         val = (self.cleaned_data.get("hero_cta_url") or "").strip()
