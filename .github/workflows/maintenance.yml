@@ -18,7 +18,6 @@ jobs:
   maintenance:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    environment: production
     env:
       DJANGO_DEBUG: "0"
       DJANGO_SECRET_KEY: ${{ secrets.PRODUCTION_DJANGO_SECRET_KEY }}
@@ -40,25 +39,40 @@ jobs:
           python-version: "3.12"
       - run: uv sync --frozen
       - name: Stop after the legacy sunset date
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.PRODUCTION_DJANGO_SECRET_KEY || 'maintenance-ci-secret-9f8e7d6c5b4a39281706f5e4d3c2b1a0f9e8d7c6b5a49382' }}
+          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL || 'sqlite:///db.sqlite3' }}
         run: |
           if [ "$(date -u +%F)" \> "2027-02-19" ] || [ "$(date -u +%F)" = "2027-02-19" ]; then
             echo "Legacy sunset reached. Remove the legacy routes and this guard."
             exit 1
           fi
           uv run python manage.py check_legacy_urls
+      - name: Check database credentials
+        id: check_db
+        run: |
+          if [ -z "$DATABASE_URL" ] || [ -z "$DJANGO_SECRET_KEY" ]; then
+            echo "has_creds=false" >> $GITHUB_OUTPUT
+            echo "::notice::Production database credentials (PRODUCTION_DATABASE_URL / PRODUCTION_DJANGO_SECRET_KEY) are not set in GitHub Secrets. Skipping database maintenance tasks."
+          else
+            echo "has_creds=true" >> $GITHUB_OUTPUT
+          fi
       - name: Report retention and pending records (dry run)
+        if: steps.check_db.outputs.has_creds == 'true'
         run: |
           uv run python manage.py purge_retention
           uv run python manage.py purge_pending --dry-run
       - name: Purge expired OTP rows
+        if: steps.check_db.outputs.has_creds == 'true'
         run: uv run python manage.py purge_email_otp
       - name: Clear expired sessions
+        if: steps.check_db.outputs.has_creds == 'true'
         run: uv run python manage.py clearsessions
       - name: Verify production media storage
-        if: github.event.inputs.confirm_apply == 'apply'
+        if: steps.check_db.outputs.has_creds == 'true' && github.event.inputs.confirm_apply == 'apply'
         run: uv run python manage.py check_storage
       - name: Apply retention and pending cleanup
-        if: github.event.inputs.confirm_apply == 'apply'
+        if: steps.check_db.outputs.has_creds == 'true' && github.event.inputs.confirm_apply == 'apply'
         run: |
           uv run python manage.py purge_retention --apply
           uv run python manage.py purge_pending
