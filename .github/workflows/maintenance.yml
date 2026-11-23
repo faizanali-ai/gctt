@@ -41,6 +41,7 @@ jobs:
       - name: Stop after the legacy sunset date
         env:
           DJANGO_SECRET_KEY: ${{ secrets.PRODUCTION_DJANGO_SECRET_KEY || 'maintenance-ci-secret-9f8e7d6c5b4a39281706f5e4d3c2b1a0f9e8d7c6b5a49382' }}
+          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL || 'sqlite:///db.sqlite3' }}
         run: |
           if [ "$(date -u +%F)" \> "2027-02-19" ] || [ "$(date -u +%F)" = "2027-02-19" ]; then
             echo "Legacy sunset reached. Remove the legacy routes and this guard."
@@ -50,7 +51,7 @@ jobs:
       - name: Check database credentials
         id: check_db
         run: |
-          if [ -z "${{ secrets.PRODUCTION_DATABASE_URL }}" ] || [ -z "${{ secrets.PRODUCTION_DJANGO_SECRET_KEY }}" ]; then
+          if [ -z "$DATABASE_URL" ] || [ -z "$DJANGO_SECRET_KEY" ]; then
             echo "has_creds=false" >> $GITHUB_OUTPUT
             echo "::notice::Production database credentials (PRODUCTION_DATABASE_URL / PRODUCTION_DJANGO_SECRET_KEY) are not set in GitHub Secrets. Skipping database maintenance tasks."
           else
