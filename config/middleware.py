@@ -41,14 +41,15 @@ class SecurityHeadersMiddleware:
         response["X-Content-Type-Options"] = "nosniff"
         response["Referrer-Policy"] = "strict-origin-when-cross-origin"
         response["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
-        response["Content-Security-Policy"] = (
-            "default-src 'self'; "
-            f"script-src 'self' 'nonce-{request.csp_nonce}'; "
-            f"style-src 'self' 'nonce-{request.csp_nonce}'; "
-            "font-src 'self' data:; "
-            "img-src 'self' data: https:; "
-            "frame-ancestors 'none';"
-        )
+        if "Content-Security-Policy" not in response:
+            response["Content-Security-Policy"] = (
+                "default-src 'self'; "
+                f"script-src 'self' 'nonce-{request.csp_nonce}'; "
+                f"style-src 'self' 'nonce-{request.csp_nonce}'; "
+                "font-src 'self' data:; "
+                "img-src 'self' data: https:; "
+                "frame-ancestors 'none';"
+            )
         if getattr(request, "user", None) and request.user.is_authenticated:
             response["Cache-Control"] = "no-store"
         return response
