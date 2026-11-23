@@ -433,6 +433,26 @@
     }
 
     function validStep() {
+      var fileFields = $$('input[type="file"]', steps[index]);
+      for (var j = 0; j < fileFields.length; j += 1) {
+        var fileInput = fileFields[j];
+        if (fileInput.files && fileInput.files[0]) {
+          var file = fileInput.files[0];
+          var maxSize = parseInt(fileInput.getAttribute("data-max-size") || "5242880", 10);
+          if (file.size > maxSize) {
+            fileInput.setCustomValidity("Resume must be 5 MB or smaller.");
+            fileInput.reportValidity();
+            return false;
+          }
+          if (fileInput.accept && !/\.pdf$/i.test(file.name)) {
+            fileInput.setCustomValidity("Upload a valid PDF resume.");
+            fileInput.reportValidity();
+            return false;
+          }
+          fileInput.setCustomValidity("");
+        }
+      }
+
       var fields = $$("input, select, textarea", steps[index]).filter(function (field) {
         return field.willValidate && field.required;
       });
@@ -444,6 +464,27 @@
       }
       return true;
     }
+
+    root.addEventListener("change", function (event) {
+      var input = event.target;
+      if (input && input.type === "file") {
+        if (input.files && input.files[0]) {
+          var selectedFile = input.files[0];
+          var maxAllowed = parseInt(input.getAttribute("data-max-size") || "5242880", 10);
+          if (selectedFile.size > maxAllowed) {
+            input.setCustomValidity("Resume must be 5 MB or smaller.");
+            input.reportValidity();
+          } else if (input.accept && !/\.pdf$/i.test(selectedFile.name)) {
+            input.setCustomValidity("Upload a valid PDF resume.");
+            input.reportValidity();
+          } else {
+            input.setCustomValidity("");
+          }
+        } else {
+          input.setCustomValidity("");
+        }
+      }
+    });
 
     root.addEventListener("click", function (event) {
       if (event.target.closest("[data-step-next]") && validStep()) show(index + 1);
@@ -591,6 +632,81 @@
     };
     roleSelect.addEventListener("change", syncRole);
     syncRole();
+  }
+
+  /* --------------------------------------------------- floating apply bar */
+  var floatingBar = document.querySelector("[data-floating-apply]");
+  var heroCta = document.querySelector("[data-apply-hero-cta]");
+  var applyWizard = document.getElementById("apply-wizard");
+
+  if (floatingBar && heroCta && applyWizard && "IntersectionObserver" in window) {
+    var heroVisible = true;
+    var wizardVisible = false;
+
+    var syncInert = function (element, isInert) {
+      if ("inert" in element) {
+        element.inert = isInert;
+      } else if (isInert) {
+        element.setAttribute("inert", "");
+      } else {
+        element.removeAttribute("inert");
+      }
+    };
+    syncInert(floatingBar, true);
+
+    var updateFloatingBar = function () {
+      var shouldShow = !heroVisible && !wizardVisible;
+      floatingBar.classList.toggle("translate-y-0", shouldShow);
+      floatingBar.classList.toggle("opacity-100", shouldShow);
+      floatingBar.classList.toggle("pointer-events-auto", shouldShow);
+
+      floatingBar.classList.toggle("translate-y-full", !shouldShow);
+      floatingBar.classList.toggle("opacity-0", !shouldShow);
+      floatingBar.classList.toggle("pointer-events-none", !shouldShow);
+      syncInert(floatingBar, !shouldShow);
+    };
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.target === heroCta) {
+            heroVisible = entry.isIntersecting;
+          } else if (entry.target === applyWizard) {
+            wizardVisible = entry.isIntersecting;
+          }
+        });
+        updateFloatingBar();
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(heroCta);
+    observer.observe(applyWizard);
+
+    var floatingBtn = floatingBar.querySelector("a[href='#apply-wizard']");
+    if (floatingBtn) {
+      floatingBtn.addEventListener("click", function (event) {
+        event.preventDefault();
+        applyWizard.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+        var activeStep = applyWizard.querySelector("[data-step]:not([hidden])") || applyWizard;
+        var target = activeStep.querySelector(
+          "input:not([type='hidden']):not([disabled]), select:not([disabled]), textarea:not([disabled])"
+        );
+        if (!target) {
+          target = activeStep.querySelector("[data-step-next], h2, h3");
+        }
+        if (target) {
+          setTimeout(function () {
+            if (target.hasAttribute("tabindex") || /^(input|select|textarea|button|a)$/i.test(target.tagName)) {
+              target.focus({ preventScroll: true });
+            } else {
+              target.setAttribute("tabindex", "-1");
+              target.focus({ preventScroll: true });
+            }
+          }, reduceMotion ? 10 : 350);
+        }
+      });
+    }
   }
 
   /* ------------------------------------------------- submit busy state */
