@@ -643,6 +643,17 @@
     var heroVisible = true;
     var wizardVisible = false;
 
+    var syncInert = function (element, isInert) {
+      if ("inert" in element) {
+        element.inert = isInert;
+      } else if (isInert) {
+        element.setAttribute("inert", "");
+      } else {
+        element.removeAttribute("inert");
+      }
+    };
+    syncInert(floatingBar, true);
+
     var updateFloatingBar = function () {
       var shouldShow = !heroVisible && !wizardVisible;
       floatingBar.classList.toggle("translate-y-0", shouldShow);
@@ -652,6 +663,7 @@
       floatingBar.classList.toggle("translate-y-full", !shouldShow);
       floatingBar.classList.toggle("opacity-0", !shouldShow);
       floatingBar.classList.toggle("pointer-events-none", !shouldShow);
+      syncInert(floatingBar, !shouldShow);
     };
 
     var observer = new IntersectionObserver(
@@ -676,12 +688,21 @@
       floatingBtn.addEventListener("click", function (event) {
         event.preventDefault();
         applyWizard.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-        var firstInput = applyWizard.querySelector(
-          "input:not([type='hidden']):not([disabled]), select:not([disabled])"
+        var activeStep = applyWizard.querySelector("[data-step]:not([hidden])") || applyWizard;
+        var target = activeStep.querySelector(
+          "input:not([type='hidden']):not([disabled]), select:not([disabled]), textarea:not([disabled])"
         );
-        if (firstInput) {
+        if (!target) {
+          target = activeStep.querySelector("[data-step-next], h2, h3");
+        }
+        if (target) {
           setTimeout(function () {
-            firstInput.focus({ preventScroll: true });
+            if (target.hasAttribute("tabindex") || /^(input|select|textarea|button|a)$/i.test(target.tagName)) {
+              target.focus({ preventScroll: true });
+            } else {
+              target.setAttribute("tabindex", "-1");
+              target.focus({ preventScroll: true });
+            }
           }, reduceMotion ? 10 : 350);
         }
       });
