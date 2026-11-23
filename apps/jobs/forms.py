@@ -75,18 +75,25 @@ class ApplicationForm(forms.ModelForm):
         model = Application
         fields = ("resume", "message")
         widgets = {
+            "resume": forms.FileInput(
+                attrs={
+                    "accept": ".pdf,application/pdf",
+                    "data-max-size": "5242880",
+                }
+            ),
             "message": forms.Textarea(
                 attrs={
                     "rows": 4,
                     "placeholder": "Briefly describe your experience, key specializations, and earliest start date.",
                 }
-            )
+            ),
         }
 
     def __init__(self, *args, is_authenticated=False, **kwargs):
         super().__init__(*args, **kwargs)
         self.is_authenticated = is_authenticated
         self.fields["message"].required = True
+        self.fields["resume"].help_text = "PDF document only, maximum 5 MB."
         if not self.is_authenticated:
             self.fields["first_name"].required = True
             self.fields["last_name"].required = True
