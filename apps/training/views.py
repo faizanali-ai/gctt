@@ -340,21 +340,24 @@ def _normalize_certificate_ref(raw_ref: str) -> str:
 
     # If input contains URL components, inspect path and accepted query parameters
     if "?" in val or "://" in val or val.startswith("/"):
-        parsed = urlparse(val if "://" in val else f"https://dummy{val if val.startswith('/') else '/' + val}")
-        path = parsed.path.rstrip("/")
-        path_token = ""
-        if "verify/" in path:
-            path_token = path.split("verify/")[-1].strip("/")
-        elif "certificate/" in path:
-            path_token = path.split("certificate/")[-1].strip("/")
+        try:
+            parsed = urlparse(val if "://" in val else f"https://dummy{val if val.startswith('/') else '/' + val}")
+            path = parsed.path.rstrip("/")
+            path_token = ""
+            if "verify/" in path:
+                path_token = path.split("verify/")[-1].strip("/")
+            elif "certificate/" in path:
+                path_token = path.split("certificate/")[-1].strip("/")
 
-        if path_token:
-            return path_token
+            if path_token:
+                return path_token
 
-        qs = parse_qs(parsed.query)
-        for key in ("ref", "code", "certificate_id", "q"):
-            if key in qs and qs[key] and qs[key][0].strip():
-                return qs[key][0].strip()
+            qs = parse_qs(parsed.query)
+            for key in ("ref", "code", "certificate_id", "q"):
+                if key in qs and qs[key] and qs[key][0].strip():
+                    return qs[key][0].strip()
+        except ValueError:
+            pass
 
     # Plain text or path fallback: strip query string and fragments first
     val = val.split("?")[0].split("#")[0].strip("/")
