@@ -141,3 +141,9 @@ class CertificateVerificationResilienceTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Not found")
         self.assertContains(response, "GCTT-DOES-NOT-EXIST")
+
+    def test_verify_certificate_malformed_url_does_not_error(self):
+        malformed = "https://[/training/verify/GCTT-1A2B3C4D/"
+        response = self.client.get(reverse("verify_certificate_form") + f"?ref={malformed}")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Not found")
