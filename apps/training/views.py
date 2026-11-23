@@ -1,5 +1,6 @@
 import json
 import logging
+from urllib.parse import parse_qs, urlparse
 
 from django.conf import settings
 from django.contrib import messages
@@ -336,7 +337,26 @@ def _normalize_certificate_ref(raw_ref: str) -> str:
     if not raw_ref:
         return ""
     val = raw_ref.strip()
-    # Strip query parameters and fragments before path token evaluation
+
+    # If input contains URL components, inspect path and accepted query parameters
+    if "?" in val or "://" in val or val.startswith("/"):
+        parsed = urlparse(val if "://" in val else f"https://dummy{val if val.startswith('/') else '/' + val}")
+        path = parsed.path.rstrip("/")
+        path_token = ""
+        if "verify/" in path:
+            path_token = path.split("verify/")[-1].strip("/")
+        elif "certificate/" in path:
+            path_token = path.split("certificate/")[-1].strip("/")
+
+        if path_token:
+            return path_token
+
+        qs = parse_qs(parsed.query)
+        for key in ("ref", "code", "certificate_id", "q"):
+            if key in qs and qs[key] and qs[key][0].strip():
+                return qs[key][0].strip()
+
+    # Plain text or path fallback: strip query string and fragments first
     val = val.split("?")[0].split("#")[0].strip("/")
     if "verify/" in val:
         val = val.split("verify/")[-1]

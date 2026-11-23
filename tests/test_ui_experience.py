@@ -112,6 +112,13 @@ class CertificateVerificationResilienceTests(TestCase):
         self.assertContains(response, "Valid certificate")
         self.assertContains(response, self.ref)
 
+    def test_verify_certificate_normalizes_pasted_query_url(self):
+        pasted_url = f"https://gctekton.com/training/verify/?ref={self.ref}"
+        response = self.client.get(reverse("verify_certificate_form") + f"?ref={pasted_url}")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Valid certificate")
+        self.assertContains(response, self.ref)
+
     def test_verify_certificate_is_case_insensitive(self):
         lowercase_ref = self.ref.lower()
         response = self.client.get(reverse("verify_certificate_form") + f"?ref={lowercase_ref}")
@@ -122,9 +129,9 @@ class CertificateVerificationResilienceTests(TestCase):
     def test_verify_certificate_empty_ref_does_not_render_not_found(self):
         from unittest.mock import patch
 
-        with patch("apps.training.views.Registration.objects.filter") as mock_filter:
+        with patch("apps.training.views.Registration.objects.select_related") as mock_select_related:
             response = self.client.get(reverse("verify_certificate_form"))
-            mock_filter.assert_not_called()
+            mock_select_related.assert_not_called()
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, "Not found")
         self.assertContains(response, "Enter a certificate reference")
