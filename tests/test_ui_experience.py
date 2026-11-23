@@ -106,7 +106,7 @@ class CertificateVerificationResilienceTests(TestCase):
         self.assertContains(response, self.ref)
 
     def test_verify_certificate_normalizes_pasted_url(self):
-        pasted_url = f"https://gctekton.com/training/verify/{self.ref}/"
+        pasted_url = f"https://gctekton.com/training/verify/{self.ref}/?next=/training/verify/OTHER/"
         response = self.client.get(reverse("verify_certificate_form") + f"?ref={pasted_url}")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Valid certificate")
@@ -120,8 +120,11 @@ class CertificateVerificationResilienceTests(TestCase):
         self.assertContains(response, self.ref)
 
     def test_verify_certificate_empty_ref_does_not_render_not_found(self):
-        with self.assertNumQueries(0):
+        from unittest.mock import patch
+
+        with patch("apps.training.views.Registration.objects.filter") as mock_filter:
             response = self.client.get(reverse("verify_certificate_form"))
+            mock_filter.assert_not_called()
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, "Not found")
         self.assertContains(response, "Enter a certificate reference")

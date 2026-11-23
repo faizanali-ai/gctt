@@ -336,12 +336,13 @@ def _normalize_certificate_ref(raw_ref: str) -> str:
     if not raw_ref:
         return ""
     val = raw_ref.strip()
+    # Strip query parameters and fragments before path token evaluation
+    val = val.split("?")[0].split("#")[0].strip("/")
     if "verify/" in val:
         val = val.split("verify/")[-1]
     elif "certificate/" in val:
         val = val.split("certificate/")[-1]
-    val = val.split("?")[0].split("#")[0].strip("/")
-    return val
+    return val.strip("/")
 
 
 # shortcut: IP rate limit only; lengthen new certificate refs if enumeration becomes a concern.
