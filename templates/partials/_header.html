@@ -65,7 +65,7 @@
           <svg aria-hidden="true"><use href="{% static 'images/icons.svg' %}#arrow-right"></use></svg>
         </a>
       {% endif %}
-      <button type="button" class="btn btn-ghost btn-sm lg:hidden" data-dialog-open="mobile-drawer" aria-label="Open navigation" aria-controls="mobile-drawer">
+      <button id="mobile-menu-btn" type="button" class="btn btn-ghost min-h-11 min-w-11 lg:hidden" data-dialog-open="mobile-drawer" aria-label="Open navigation" aria-controls="mobile-drawer">
         <svg class="h-5 w-5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#menu"></use></svg>
       </button>
     </div>
@@ -78,7 +78,7 @@
       <img src="{% if COMPANY.logo_light_url %}{{ COMPANY.logo_light_url }}{% else %}{% static 'images/logo-horizontal.svg' %}{% endif %}" alt="{{ COMPANY.name }}" width="155" height="24" class="logo-light h-6 w-auto">
       <img src="{% if COMPANY.logo_dark_url %}{{ COMPANY.logo_dark_url }}{% else %}{% static 'images/logo-horizontal-dark.svg' %}{% endif %}" alt="" width="155" height="24" class="logo-dark h-6 w-auto">
     </a>
-    <button type="button" class="btn btn-ghost btn-sm" data-dialog-close aria-label="Close navigation">
+    <button type="button" class="btn btn-ghost min-h-11 min-w-11" data-dialog-close aria-label="Close navigation">
       <svg class="h-5 w-5" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#close"></use></svg>
     </button>
   </div>
