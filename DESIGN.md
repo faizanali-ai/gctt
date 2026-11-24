@@ -1,22 +1,16 @@
-# GCT (GC Tekton) Design System — World 1: Admiralty Hydrography
+# GCTT Design System
 
-This is the single source of truth for the GCT (GC Tekton) digital experience and user interface.
+This is the single source of truth for the GCTT interface and user experience.
 
 ---
 
 ## 1. Direction & Institutional Identity
 
-**World 1: Admiralty Hydrography** is GCT's permanent institutional design system.
-
-The physical and philosophical grounding draws from 20th-century British Admiralty nautical charts, NOAA bathymetric depth surveys, and precision brass-caliper maritime instrumentation. The aesthetic register embodies an elite technical search and industrial staffing institution executed with luxury digital craft: neither SaaS gradient-marketing, nor playful bento grids, nor raw neo-brutalism.
-
-The design system fuses natively with GCT's dual vectorized brand identity:
-- **Light Logo (`logo-horizontal.svg` / `logo-main.png`):** Deep oceanic navy (`#092853`, `#1A375E`), nautical cobalt (`#158CC9`), and vibrant hydro cyan (`#0FB1E5`, `#26ADDC`).
-- **Dark Logo (`logo-horizontal-dark.svg` / `logo-main-dark.png`):** Crisp platinum-ink (`#ECECEC`, `#E3E3E3`), abyssal navy plate (`#153461`), and luminous cyan signal (`#2CD1EE`, `#35B7DF`).
+Warm institutional modernism. Ink neutrals, warm paper, a single copper signal, editorial grid discipline, hairline rules, and abstract line geometry instead of photography. The aesthetic register embodies an executive search and technical staffing institution executed with luxury digital craft: neither SaaS gradient-marketing, nor playful bento grids, nor raw neo-brutalism.
 
 ### Core Design Principles
 1. **Divide by capability, not audience:** Clear architectural modules over marketing fluff.
-2. **One accent, used as a disciplined signal:** High-contrast marine cobalt in light mode and luminous hydro cyan in dark mode guide action without visual fatigue.
+2. **One accent, used as a disciplined signal:** High-contrast copper in light mode and luminous warm amber in dark mode guide action without visual fatigue.
 3. **Typography and hairline rules do the work:** Spatial restraint and typographic hierarchy convey institutional authority without decorative clutter.
 4. **Nothing product-level above the fold:** Uncompromised clarity and immediate executive reassurance.
 5. **Motion reveals structure; it never delays reading:** Micro-interactions feel physical and instantaneous, respecting reduced-motion settings unconditionally.
@@ -33,49 +27,48 @@ Defined in `static/css/input.css` using CSS custom properties. Runtime tokens li
 
 | Token | Light Mode | Dark Mode | Role & Material Origin |
 | :--- | :--- | :--- | :--- |
-| `--canvas` | `#F4F7FA` | `#071426` | Page ground (cool hydrographic chart rag / abyssal bathysphere navy) |
-| `--surface` | `#FFFFFF` | `#0D1F38` | Card & header plate (mirrors dark logo `#153461` tone) |
-| `--raised` | `#E8EFF6` | `#142B4B` | Secondary elevation / table header bands |
-| `--ink` | `#091E3A` | `#ECF1F6` | Primary typography (deep oceanic navy / crisp platinum) |
-| `--muted` | `#364B63` | `#A9BFD6` | Secondary body copy |
-| `--subtle` | `#4D6278` | `#87A3C0` | Captions & metadata |
-| `--line` | `#CEDAE6` | `#1E3758` | Structural hairline rule |
-| `--line-strong` | `#768BA0` | `#5D7B9D` | Interactive boundary & input border (≥ 3:1 UI contrast) |
-| `--accent` | `#005F91` | `#35C9EA` | Primary interactive CTA signal (marine cobalt / hydro cyan) |
-| `--accent-hover` | `#004970` | `#62DAF3` | Interactive hover & pressed state |
-| `--accent-soft` | `#E1F2FA` | `#103552` | Tinted badge / chip wash |
-| `--on-accent` | `#FFFFFF` | `#06182B` | Foreground text on accent buttons |
-| `--warning` | `#9A5700` | `#F0B429` | Maritime brass ochre alert |
-| `--danger` | `#B42318` | `#F87171` | Signal buoy crimson alert |
-| `--success` | `#0D6E48` | `#34D399` | Soundings emerald confirmation |
-| `--focus` | `#005F91` | `#35C9EA` | Primary focus indicator |
-| `--overlay` | `rgb(9 30 58 / 0.18)` | `rgb(0 0 0 / 0.5)` | Modal and drawer backdrop wash |
-| `--night` | `#081C38` | `#05101F` | Fixed dark hero ground |
-| `--night-ink` | `#F2F6FA` | `#F2F6FA` | Fixed dark hero display text |
-| `--night-muted` | `#A8C0D8` | `#A8C0D8` | Fixed dark hero supporting copy |
-| `--night-accent` | `#2CD1EE` | `#2CD1EE` | Fixed dark hero luminous cyan signal |
+| `--canvas` | `#FAF9F7` | `#0B0C0E` | Page ground (warm rag paper / deep charcoal night) |
+| `--surface` | `#FFFFFF` | `#14161A` | Cards, header, and form plates |
+| `--raised` | `#F2EFE9` | `#1C1F24` | Alternate bands, table headers |
+| `--ink` | `#14161A` | `#F4F3F0` | Primary typography |
+| `--muted` | `#4A4F57` | `#C3C7CD` | Secondary body copy |
+| `--subtle` | `#6B7078` | `#949AA3` | Captions & metadata |
+| `--line` | `#E2DED6` | `#2A2E34` | Hairline borders |
+| `--line-strong` | `#8C867D` | `#666D7C` | Interactive boundaries & input borders (≥ 3:1 contrast) |
+| `--accent` | `#A84A06` | `#E9A85C` | Primary interactive CTA signal (burnished copper / luminous amber) |
+| `--accent-hover` | `#8A3B05` | `#F3C088` | Interactive hover & pressed state |
+| `--accent-soft` | `#F8EDE1` | `rgba(233, 168, 92, 0.12)` | Badges and callouts |
+| `--on-accent` | `#FFFFFF` | `#14161A` | Foreground text on accent buttons |
+| `--warning` | `#9A3412` | `#F0A45C` | Warning alerts |
+| `--danger` | `#B42318` | `#F0776C` | Destructive alerts & errors |
+| `--success` | `#1B6B45` | `#57C08A` | Verified and completed status |
+| `--focus` | `#A84A06` | `#E9A85C` | Primary focus indicator |
+| `--overlay` | `rgb(0 0 0 / 0.18)` | `rgb(0 0 0 / 0.5)` | Modal and drawer backdrop wash |
+| `--night` | `#14161A` | `#14161A` | Fixed dark hero ground |
+| `--night-ink` | `#FAF9F7` | `#FAF9F7` | Fixed dark hero display text |
+| `--night-muted` | `#C9C4BB` | `#C9C4BB` | Fixed dark hero supporting copy |
+| `--night-accent` | `#E9A85C` | `#E9A85C` | Fixed dark hero luminous amber signal |
 
 ### Contrast & Legibility Benchmarks (WCAG 2.2 AA/AAA)
 
 Every pair is mathematically verified to exceed standard requirements:
-- `ink` on `canvas`: Light `15.52:1` (AAA) / Dark `16.25:1` (AAA)
-- `ink` on `surface`: Light `16.69:1` (AAA) / Dark `14.55:1` (AAA)
-- `ink` on `raised`: Light `14.39:1` (AAA) / Dark `12.51:1` (AAA)
-- `muted` on `surface`: Light `8.96:1` (AAA) / Dark `8.75:1` (AAA)
-- `muted` on `raised`: Light `7.73:1` (AAA) / Dark `7.52:1` (AAA)
-- `subtle` on `surface`: Light `6.30:1` (AA) / Dark `6.32:1` (AA)
-- `subtle` on `raised`: Light `5.43:1` (AA) / Dark `5.44:1` (AA)
-- `accent` on `surface`: Light `6.89:1` (AA) / Dark `8.42:1` (AAA)
-- `accent` on `canvas`: Light `6.41:1` (AA) / Dark `9.40:1` (AAA)
-- `accent` on `raised`: Light `5.95:1` (AA) / Dark `7.24:1` (AAA)
-- `on-accent` on `accent`: Light `6.89:1` (AA) / Dark `9.11:1` (AAA)
-- `line-strong` on `surface`: Light `3.52:1` (UI Component ≥ 3:1) / Dark `3.77:1` (UI Component ≥ 3:1)
-- `warning` on `surface`: Light `5.62:1` (AA) / Dark `8.87:1` (AAA)
-- `danger` on `surface`: Light `6.57:1` (AA) / Dark `5.98:1` (AA)
-- `success` on `surface`: Light `6.29:1` (AA) / Dark `8.60:1` (AAA)
-- `night-ink` on `night`: Light `15.68:1` (AAA) / Dark `17.57:1` (AAA)
-- `night-muted` on `night`: Light `9.08:1` (AAA) / Dark `10.18:1` (AAA)
-- `night-accent` on `night`: Light `9.29:1` (AAA) / Dark `10.42:1` (AAA)
+- `ink` on `canvas`: Light `17.21:1` (AAA) / Dark `17.63:1` (AAA)
+- `ink` on `surface`: Light `18.11:1` (AAA) / Dark `16.32:1` (AAA)
+- `ink` on `raised`: Light `15.78:1` (AAA) / Dark `14.89:1` (AAA)
+- `muted` on `surface`: Light `8.24:1` (AAA) / Dark `10.67:1` (AAA)
+- `muted` on `raised`: Light `7.18:1` (AAA) / Dark `9.73:1` (AAA)
+- `subtle` on `surface`: Light `4.98:1` (AA) / Dark `6.39:1` (AA)
+- `accent` on `surface`: Light `5.76:1` (AA) / Dark `8.81:1` (AAA)
+- `accent` on `canvas`: Light `5.47:1` (AA) / Dark `9.52:1` (AAA)
+- `accent` on `raised`: Light `5.02:1` (AA) / Dark `8.04:1` (AAA)
+- `on-accent` on `accent`: Light `5.76:1` (AA) / Dark `8.81:1` (AAA)
+- `line-strong` on `surface`: Light `3.61:1` (UI Component ≥ 3:1) / Dark `3.49:1` (UI Component ≥ 3:1)
+- `warning` on `surface`: Light `7.31:1` (AAA) / Dark `8.77:1` (AAA)
+- `danger` on `surface`: Light `6.57:1` (AA) / Dark `6.52:1` (AA)
+- `success` on `surface`: Light `6.49:1` (AA) / Dark `8.03:1` (AAA)
+- `night-ink` on `night`: Light `17.21:1` (AAA) / Dark `17.21:1` (AAA)
+- `night-muted` on `night`: Light `10.43:1` (AAA) / Dark `10.43:1` (AAA)
+- `night-accent` on `night`: Light `8.81:1` (AAA) / Dark `8.81:1` (AAA)
 
 ---
 
@@ -101,16 +94,16 @@ Self-hosted WOFF2 in `static/fonts/` (SIL OFL licences included):
 ## 4. Browser Surface Craft Floor & Tier-1 Detail
 
 ### 1. Impeccable Surface Floor
-- **Selection:** Light mode uses `rgba(0, 95, 145, 0.18)` with ink `#091E3A`; Dark mode uses `rgba(53, 201, 234, 0.26)` with ink `#ECF1F6`.
+- **Selection:** `background: color-mix(in oklab, var(--accent) 26%, transparent)` across all surfaces.
 - **Caret Color:** Form inputs, selects, and textareas adopt `caret-color: var(--accent)`.
-- **Multi-Layer Diffuse Focus Ring:** On `:focus-visible`, an inner 1px surface boundary, 3px accent ring, and outer 6–7px hydrocyan bloom eliminate harsh browser default outlines while preserving high visibility.
+- **Multi-Layer Diffuse Focus Ring:** On `:focus-visible`, an inner 1px surface boundary, 3px accent ring, and outer 6–7px diffuse bloom (`color-mix(in oklab, var(--accent) 30%, transparent)`) eliminate harsh browser default outlines while preserving high visibility.
 - **Forced Colors Resilience:** When `@media (forced-colors: active)` is detected, focus outlines automatically revert to `2px solid Highlight`.
 
 ### 2. Physical Micro-Tactility & Lighting
 - **Button Active Compression:** Primary and secondary buttons compress by `transform: scale(0.982)` on `:active:not(:disabled)` with a 120ms cubic-bezier transition.
 - **Top-Edge Specular Bevel Lighting:** Primary buttons receive top-edge specular lighting (`inset 0 1px 0 rgba(255, 255, 255, 0.22)` in Light Mode; `inset 0 1px 0 rgba(255, 255, 255, 0.35)` in Dark Mode). Dark cards feature a hairline top specular rim (`inset 0 1px 0 rgba(255, 255, 255, 0.06)`).
-- **Ambient Elevation Blooms:** Elevated `.card-interactive` surfaces lift `translateY(-2px)` on hover, with a deep navy ambient bloom in Light Mode (`0 4px 12px -2px rgba(9, 30, 58, 0.08), 0 12px 28px -6px rgba(0, 95, 145, 0.10)`) and an abyssal cyan bloom in Dark Mode (`0 6px 16px -2px rgba(0, 0, 0, 0.45), 0 14px 32px -6px rgba(53, 201, 234, 0.12)`).
-- **Physical Inset Recess on Inputs:** Text fields, selects, and textareas feature a subtle physical inset recess (`box-shadow: inset 0 1px 2px rgba(9, 30, 58, 0.07)` in Light Mode; `box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.32)` in Dark Mode).
+- **Ambient Elevation Blooms:** Elevated `.card-interactive` surfaces lift `translateY(-2px)` on hover, with a warm ambient bloom in Light Mode (`0 4px 12px -2px rgb(0 0 0 / 0.08), 0 12px 28px -6px color-mix(in oklab, var(--accent) 15%, transparent)`) and in Dark Mode (`0 6px 16px -2px rgba(0, 0, 0, 0.45), 0 14px 32px -6px color-mix(in oklab, var(--accent) 18%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.08)`).
+- **Physical Inset Recess on Inputs:** Text fields, selects, and textareas feature a subtle physical inset recess (`box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.04)` in Light Mode; `box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.32)` in Dark Mode).
 - **iOS Safari 16px Minimum Input Floor:** On viewports `<= 640px`, text inputs enforce `font-size: 1rem` to defeat iOS auto-zoom without sacrificing desktop typography.
 
 ---
