@@ -535,13 +535,21 @@
         var parsed = JSON.parse(saved);
         var restored = false;
         Object.keys(parsed).forEach(function (name) {
-          var field = root.querySelector('[name="' + name + '"]');
-          if (field && !field.value && parsed[name]) {
-            if (field.type === "checkbox" || field.type === "radio") {
-              field.checked = field.value === parsed[name];
-            } else {
-              field.value = parsed[name];
-            }
+          var savedVal = parsed[name];
+          if (savedVal === undefined || savedVal === null) return;
+          var escapedName = name.replace(/["\\]/g, "\\$&");
+          var fields = $$('[name="' + escapedName + '"]', root);
+          if (!fields.length) return;
+          var first = fields[0];
+          if (first.type === "radio" || first.type === "checkbox") {
+            fields.forEach(function (f) {
+              if (f.value === savedVal) {
+                f.checked = true;
+                restored = true;
+              }
+            });
+          } else if (!first.value && savedVal) {
+            first.value = savedVal;
             restored = true;
           }
         });
@@ -569,6 +577,7 @@
     root.addEventListener("input", saveDraft);
     root.addEventListener("change", saveDraft);
     root.addEventListener("submit", function () {
+      if (root.hasAttribute("data-confirm") && root.dataset.confirmed !== "true") return;
       try {
         sessionStorage.removeItem(storageKey);
       } catch (_) {}
@@ -735,7 +744,7 @@
           if (matches) visibleCount += 1;
         });
         if (countEl) {
-          countEl.textContent = "Showing " + visibleCount + " of " + cards.length + " positions";
+          countEl.textContent = "Showing " + visibleCount + " of " + cards.length + " loaded positions";
         }
         if (emptyEl) {
           emptyEl.classList.toggle("hidden", visibleCount > 0);

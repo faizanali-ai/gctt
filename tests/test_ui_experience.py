@@ -183,3 +183,4 @@ class CertificateVerificationResilienceTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "shimmer-badge")
         self.assertContains(response, f'data-copy="{self.ref}"')
+        self.assertContains(response, '<button type="button" class="shimmer-badge')
