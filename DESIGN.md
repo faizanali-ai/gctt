@@ -34,7 +34,7 @@ Defined in `static/css/input.css` using CSS custom properties. Runtime tokens li
 | `--muted` | `#4A4F57` | `#C3C7CD` | Secondary body copy |
 | `--subtle` | `#6B7078` | `#949AA3` | Captions & metadata |
 | `--line` | `#E2DED6` | `#2A2E34` | Hairline borders |
-| `--line-strong` | `#C9C3B8` | `#3A3F47` | Interactive boundaries & input borders |
+| `--line-strong` | `#8C867D` | `#666D7C` | Interactive boundaries & input borders (≥ 3:1 contrast) |
 | `--accent` | `#A84A06` | `#E9A85C` | Primary interactive CTA signal (burnished copper / luminous amber) |
 | `--accent-hover` | `#8A3B05` | `#F3C088` | Interactive hover & pressed state |
 | `--accent-soft` | `#F8EDE1` | `rgba(233, 168, 92, 0.12)` | Badges and callouts |
@@ -62,6 +62,7 @@ Every pair is mathematically verified to exceed standard requirements:
 - `accent` on `canvas`: Light `5.47:1` (AA) / Dark `9.52:1` (AAA)
 - `accent` on `raised`: Light `5.02:1` (AA) / Dark `8.04:1` (AAA)
 - `on-accent` on `accent`: Light `5.76:1` (AA) / Dark `8.81:1` (AAA)
+- `line-strong` on `surface`: Light `3.61:1` (UI Component ≥ 3:1) / Dark `3.49:1` (UI Component ≥ 3:1)
 - `warning` on `surface`: Light `7.31:1` (AAA) / Dark `8.77:1` (AAA)
 - `danger` on `surface`: Light `6.57:1` (AA) / Dark `6.52:1` (AA)
 - `success` on `surface`: Light `6.49:1` (AA) / Dark `8.03:1` (AAA)
