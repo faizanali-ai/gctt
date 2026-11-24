@@ -217,9 +217,22 @@
     }
   }
 
-  .bg-night ::selection {
+  .bg-night ::selection,
+  .ink-band ::selection {
     background-color: rgba(53, 201, 234, 0.35);
     color: #F2F6FA;
+  }
+
+  :root[data-theme="dark"] .ink-band ::selection {
+    background-color: rgba(0, 95, 145, 0.22);
+    color: #091E3A;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .ink-band ::selection {
+      background-color: rgba(0, 95, 145, 0.22);
+      color: #091E3A;
+    }
   }
 
   /* Caret */
