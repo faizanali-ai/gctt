@@ -36,7 +36,7 @@ PAIRS = (
 
 
 def read_tokens(block: str) -> dict[str, str]:
-    return {name: value.strip() for name, value in TOKEN_RE.findall(block)}
+    return {name.removeprefix("--"): value.strip() for name, value in TOKEN_RE.findall(block)}
 
 
 def channels(value: str) -> tuple[float, float, float]:
