@@ -12,7 +12,7 @@
       <form method="get" class="form flex flex-col gap-3 sm:flex-row sm:items-end">
         <div class="field flex-1">
           <label for="job-search">Search</label>
-          <input id="job-search" type="search" name="q" value="{{ q }}" placeholder="Role, skill or location">
+          <input id="job-search" type="search" name="q" value="{{ q }}" placeholder="Role, skill or location" data-live-filter-input>
         </div>
         <div class="field sm:w-56">
           <label for="job-type">Placement type</label>
@@ -74,8 +74,15 @@
     </div>
 
     <div class="mt-8 grid gap-3">
+      <div class="flex items-center justify-between">
+        <p class="font-mono text-2xs uppercase tracking-[0.08em] text-muted" data-filter-count>Showing {{ page_obj|length }} positions</p>
+      </div>
+      <div data-filter-empty class="hidden card p-8 text-center text-muted">
+        <p class="font-semibold text-ink">No matching openings found</p>
+        <p class="mt-1 text-sm">Try adjusting your search terms or filter criteria.</p>
+      </div>
       {% for job in page_obj %}
-        <a href="{% url 'job_detail' job.slug %}" class="card card-interactive group p-6">
+        <a href="{% url 'job_detail' job.slug %}" class="card card-interactive group p-6" data-filterable-card data-search="{{ job.title }} {{ job.location }} {{ job.get_employment_type_display }} {{ job.description|striptags }}">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex flex-wrap items-center gap-2">
               <span class="chip chip-accent">{{ job.get_employment_type_display }}</span>
