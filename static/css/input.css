@@ -217,6 +217,11 @@
     }
   }
 
+  .bg-night ::selection {
+    background-color: rgba(53, 201, 234, 0.35);
+    color: #F2F6FA;
+  }
+
   /* Caret */
   input,
   textarea,
@@ -224,34 +229,38 @@
     caret-color: var(--accent);
   }
 
-  /* Multi-layer diffuse focus ring */
+  /* Multi-layer diffuse focus ring (elevated to components layer to override button and field box-shadows) */
+  .btn:focus-visible,
+  .form input:not([type="checkbox"]):not([type="radio"]):focus-visible,
+  .form select:focus-visible,
+  .form textarea:focus-visible,
   :is(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
     outline: none;
     box-shadow:
       0 0 0 1px var(--surface),
       0 0 0 3px var(--accent),
-      0 0 0 6px rgba(15, 177, 229, 0.22);
+      0 0 0 6px rgba(15, 177, 229, 0.22) !important;
   }
 
-  :root[data-theme="dark"] :is(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  :root[data-theme="dark"] :is(.btn, .form input, .form select, .form textarea, a, button, input, textarea, select, summary, [tabindex]):focus-visible {
     box-shadow:
       0 0 0 1px var(--surface),
       0 0 0 3px var(--accent),
-      0 0 0 7px rgba(44, 209, 238, 0.20);
+      0 0 0 7px rgba(44, 209, 238, 0.20) !important;
   }
 
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) :is(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+    :root:not([data-theme="light"]) :is(.btn, .form input, .form select, .form textarea, a, button, input, textarea, select, summary, [tabindex]):focus-visible {
       box-shadow:
         0 0 0 1px var(--surface),
         0 0 0 3px var(--accent),
-        0 0 0 7px rgba(44, 209, 238, 0.20);
+        0 0 0 7px rgba(44, 209, 238, 0.20) !important;
     }
   }
 
   @media (forced-colors: active) {
-    :is(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
-      outline: 2px solid Highlight;
+    :is(.btn, .form input, .form select, .form textarea, a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+      outline: 2px solid Highlight !important;
     }
   }
 
