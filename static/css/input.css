@@ -594,6 +594,27 @@
     }
   }
 
+  .dropzone-box {
+    position: relative;
+    border: 2px dashed var(--line-strong);
+    border-radius: var(--radius-card);
+    padding: 1.5rem 1rem;
+    text-align: center;
+    background-color: var(--surface);
+    transition:
+      border-color 140ms ease,
+      background-color 140ms ease;
+  }
+  .dropzone-box.is-dragover {
+    border-color: var(--accent);
+    background-color: var(--accent-soft);
+  }
+  .dropzone-box:focus-within {
+    border-color: var(--accent);
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
   /* tables */
   .data-table {
     width: 100%;
@@ -852,6 +873,8 @@
     width: min(24rem, calc(100vw - 2rem));
   }
   .toast {
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -863,6 +886,24 @@
     background-color: var(--surface);
     box-shadow: var(--shadow-overlay);
     font-size: 0.875rem;
+  }
+  .toast-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: var(--accent);
+    width: 100%;
+    transform-origin: left;
+    animation: toastDrain var(--toast-delay, 6000ms) linear forwards;
+  }
+  @keyframes toastDrain {
+    from {
+      transform: scaleX(1);
+    }
+    to {
+      transform: scaleX(0);
+    }
   }
   .toast-success {
     border-left-color: var(--success);
@@ -1005,6 +1046,39 @@
       radial-gradient(ellipse 60% 40% at 100% 30%, rgb(200 134 50 / 0.04), transparent 100%);
   }
 }
+@keyframes errorShake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20%, 60% {
+    transform: translateX(-6px);
+  }
+  40%, 80% {
+    transform: translateX(6px);
+  }
+}
+.is-shaking {
+  animation: errorShake 320ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes credentialShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.shimmer-badge {
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    color-mix(in oklab, var(--accent) 18%, transparent) 50%,
+    transparent 80%
+  );
+  background-size: 200% 100%;
+  animation: credentialShimmer 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -1037,6 +1111,11 @@
     animation: none;
   }
   [data-step]:not([hidden]) {
+    animation: none;
+  }
+  .is-shaking,
+  .shimmer-badge,
+  .toast-progress-bar {
     animation: none;
   }
   ::view-transition-group(*),
