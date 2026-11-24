@@ -170,7 +170,32 @@
 
             <div data-step class="mt-5 space-y-4">
               <h2 class="text-h3">2. Résumé</h2>
-              {% include "partials/_field.html" with field=form.resume %}
+              <div data-dropzone class="dropzone-box">
+                <div data-drop-prompt class="flex flex-col items-center justify-center gap-2 py-4">
+                  <svg class="h-8 w-8 text-accent shrink-0" aria-hidden="true"><use href="{% static 'images/icons.svg' %}#file"></use></svg>
+                  <p class="text-sm font-semibold text-ink">Drag &amp; drop your résumé here, or <label for="{{ form.resume.id_for_label }}" class="cursor-pointer text-accent underline">browse</label></p>
+                  <p class="text-xs text-muted">PDF format only, up to 5 MB</p>
+                </div>
+                <div data-drop-preview class="hidden flex items-center justify-between gap-3 rounded-field border border-line bg-raised p-3 text-left">
+                  <div class="flex items-center gap-2.5 min-w-0">
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-accent-soft font-mono text-2xs font-bold text-accent">PDF</span>
+                    <div class="min-w-0">
+                      <p data-drop-filename class="truncate text-sm font-semibold text-ink"></p>
+                      <p class="text-2xs text-muted flex items-center gap-1.5"><span class="font-semibold text-success">✓ Ready</span> · <span data-drop-filesize></span></p>
+                    </div>
+                  </div>
+                  <button type="button" data-drop-remove class="btn btn-ghost btn-sm text-danger hover:bg-danger/10" aria-label="Remove resume">Remove</button>
+                </div>
+                <div class="field mt-2 {% if form.resume.errors %}field-error{% endif %}">
+                  <label for="{{ form.resume.id_for_label }}" class="sr-only">{{ form.resume.label }}</label>
+                  {{ form.resume }}
+                  {% if form.resume.errors %}
+                    <ul class="errorlist" id="{{ form.resume.id_for_label }}-error">
+                      {% for error in form.resume.errors %}<li>{{ error }}</li>{% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+              </div>
               {% include "partials/_field.html" with field=form.work_authorization %}
               {% include "partials/_field.html" with field=form.message %}
               <div class="flex gap-2">

@@ -119,7 +119,7 @@
   });
 
   /* --------------------------------------------------------------- toasts */
-  function toast(message, tone) {
+  function toast(message, tone, delay) {
     var stack =
       document.querySelector(".toast-stack") ||
       document.getElementById("toast-stack");
@@ -145,12 +145,21 @@
       item.remove();
     });
     item.append(text, dismiss);
-    stack.append(item);
-    if (tone !== "danger") {
+
+    var toastDelay = typeof delay === "number" ? delay : 6000;
+    if (tone !== "danger" && toastDelay > 0) {
+      var progress = document.createElement("div");
+      progress.className = "toast-progress-bar";
+      progress.setAttribute("aria-hidden", "true");
+      progress.style.setProperty("--toast-delay", toastDelay + "ms");
+      item.appendChild(progress);
+
       window.setTimeout(function () {
         item.remove();
-      }, 6000);
+      }, toastDelay);
     }
+
+    stack.append(item);
   }
   window.gcttToast = toast;
 
@@ -163,6 +172,11 @@
 
   $$("[data-autodismiss]").forEach(function (item) {
     var delay = parseInt(item.getAttribute("data-autodismiss"), 10) || 6000;
+    var progress = document.createElement("div");
+    progress.className = "toast-progress-bar";
+    progress.setAttribute("aria-hidden", "true");
+    progress.style.setProperty("--toast-delay", delay + "ms");
+    item.appendChild(progress);
     window.setTimeout(function () {
       item.remove();
     }, delay);
@@ -433,6 +447,23 @@
     }
 
     function validStep() {
+      var activeStepEl = steps[index];
+      var triggerShake = function () {
+        if (activeStepEl) {
+          activeStepEl.classList.remove("is-shaking");
+          void activeStepEl.offsetWidth;
+          activeStepEl.classList.add("is-shaking");
+          window.setTimeout(function () {
+            activeStepEl.classList.remove("is-shaking");
+          }, 350);
+        }
+        if ("vibrate" in navigator && typeof navigator.vibrate === "function") {
+          try {
+            navigator.vibrate(20);
+          } catch (_) {}
+        }
+      };
+
       var fileFields = $$('input[type="file"]', steps[index]);
       for (var j = 0; j < fileFields.length; j += 1) {
         var fileInput = fileFields[j];
@@ -442,11 +473,13 @@
           if (file.size > maxSize) {
             fileInput.setCustomValidity("Resume must be 5 MB or smaller.");
             fileInput.reportValidity();
+            triggerShake();
             return false;
           }
           if (fileInput.accept && !/\.pdf$/i.test(file.name)) {
             fileInput.setCustomValidity("Upload a valid PDF resume.");
             fileInput.reportValidity();
+            triggerShake();
             return false;
           }
           fileInput.setCustomValidity("");
@@ -459,6 +492,7 @@
       for (var i = 0; i < fields.length; i += 1) {
         if (!fields[i].checkValidity()) {
           fields[i].reportValidity();
+          triggerShake();
           return false;
         }
       }
@@ -491,6 +525,64 @@
       if (event.target.closest("[data-step-prev]")) show(index - 1);
     });
 
+    /* Draft Auto-Save in sessionStorage */
+    var formId = root.getAttribute("id") || root.getAttribute("action") || window.location.pathname;
+    var storageKey = "gctt_draft_" + formId;
+
+    try {
+      var saved = sessionStorage.getItem(storageKey);
+      if (saved) {
+        var parsed = JSON.parse(saved);
+        var restored = false;
+        Object.keys(parsed).forEach(function (name) {
+          var savedVal = parsed[name];
+          if (savedVal === undefined || savedVal === null) return;
+          var escapedName = name.replace(/["\\]/g, "\\$&");
+          var fields = $$('[name="' + escapedName + '"]', root);
+          if (!fields.length) return;
+          var first = fields[0];
+          if (first.type === "radio" || first.type === "checkbox") {
+            fields.forEach(function (f) {
+              if (f.value === savedVal) {
+                f.checked = true;
+                restored = true;
+              }
+            });
+          } else if (!first.value && savedVal) {
+            first.value = savedVal;
+            restored = true;
+          }
+        });
+        if (restored) {
+          toast("Restored your draft application.");
+        }
+      }
+    } catch (_) {}
+
+    var saveDraft = function () {
+      try {
+        var draft = {};
+        $$("input, select, textarea", root).forEach(function (field) {
+          if (!field.name || field.type === "password" || field.type === "file" || field.type === "hidden" || field.name === "csrfmiddlewaretoken") return;
+          if (field.type === "checkbox" || field.type === "radio") {
+            if (field.checked) draft[field.name] = field.value;
+          } else {
+            draft[field.name] = field.value;
+          }
+        });
+        sessionStorage.setItem(storageKey, JSON.stringify(draft));
+      } catch (_) {}
+    };
+
+    root.addEventListener("input", saveDraft);
+    root.addEventListener("change", saveDraft);
+    root.addEventListener("submit", function () {
+      if (root.hasAttribute("data-confirm") && root.dataset.confirmed !== "true") return;
+      try {
+        sessionStorage.removeItem(storageKey);
+      } catch (_) {}
+    });
+
     var errorField = root.querySelector(".field-error");
     var startStep = 0;
     if (errorField) {
@@ -504,6 +596,162 @@
       if (firstError) firstError.focus({ preventScroll: true });
     }
   });
+
+  /* ------------------------------------------------------------- dropzone */
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  }
+
+  $$("[data-dropzone]").forEach(function (container) {
+    var fileInput = container.querySelector('input[type="file"]');
+    if (!fileInput) return;
+
+    var promptEl = container.querySelector("[data-drop-prompt]");
+    var previewEl = container.querySelector("[data-drop-preview]");
+    var nameEl = container.querySelector("[data-drop-filename]");
+    var sizeEl = container.querySelector("[data-drop-filesize]");
+    var removeBtn = container.querySelector("[data-drop-remove]");
+
+    function updateView(file) {
+      if (file) {
+        if (promptEl) promptEl.classList.add("hidden");
+        if (previewEl) previewEl.classList.remove("hidden");
+        if (nameEl) nameEl.textContent = file.name;
+        if (sizeEl) sizeEl.textContent = formatBytes(file.size);
+      } else {
+        if (promptEl) promptEl.classList.remove("hidden");
+        if (previewEl) previewEl.classList.add("hidden");
+        if (nameEl) nameEl.textContent = "";
+        if (sizeEl) sizeEl.textContent = "";
+      }
+    }
+
+    function triggerShake() {
+      container.classList.remove("is-shaking");
+      void container.offsetWidth;
+      container.classList.add("is-shaking");
+      window.setTimeout(function () {
+        container.classList.remove("is-shaking");
+      }, 350);
+      if ("vibrate" in navigator && typeof navigator.vibrate === "function") {
+        try {
+          navigator.vibrate(20);
+        } catch (_) {}
+      }
+    }
+
+    function validateAndSet(file) {
+      var maxSize = parseInt(fileInput.getAttribute("data-max-size") || "5242880", 10);
+      if (!/\.pdf$/i.test(file.name)) {
+        triggerShake();
+        toast("Resume must be a valid PDF file.", "danger");
+        fileInput.value = "";
+        updateView(null);
+        return false;
+      }
+      if (file.size > maxSize) {
+        triggerShake();
+        toast("Resume must be 5 MB or smaller.", "danger");
+        fileInput.value = "";
+        updateView(null);
+        return false;
+      }
+      updateView(file);
+      return true;
+    }
+
+    if (removeBtn) {
+      removeBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        fileInput.value = "";
+        updateView(null);
+        fileInput.dispatchEvent(new Event("change", { bubbles: true }));
+      });
+    }
+
+    fileInput.addEventListener("change", function () {
+      if (fileInput.files && fileInput.files[0]) {
+        validateAndSet(fileInput.files[0]);
+      } else {
+        updateView(null);
+      }
+    });
+
+    ["dragenter", "dragover"].forEach(function (eventName) {
+      container.addEventListener(
+        eventName,
+        function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          container.classList.add("is-dragover");
+        },
+        false
+      );
+    });
+
+    ["dragleave", "drop"].forEach(function (eventName) {
+      container.addEventListener(
+        eventName,
+        function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          container.classList.remove("is-dragover");
+        },
+        false
+      );
+    });
+
+    container.addEventListener("drop", function (e) {
+      var dt = e.dataTransfer;
+      if (dt && dt.files && dt.files.length) {
+        var droppedFile = dt.files[0];
+        if (validateAndSet(droppedFile)) {
+          try {
+            var dataTransfer = new DataTransfer();
+            dataTransfer.items.add(droppedFile);
+            fileInput.files = dataTransfer.files;
+          } catch (_) {}
+          fileInput.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      }
+    });
+
+    if (fileInput.files && fileInput.files[0]) {
+      updateView(fileInput.files[0]);
+    }
+  });
+
+  /* ---------------------------------------------------------- live filter */
+  var filterInput = $("[data-live-filter-input]");
+  if (filterInput) {
+    var cards = $$("[data-filterable-card]");
+    var countEl = $("[data-filter-count]");
+    var emptyEl = $("[data-filter-empty]");
+    var debounceTimer = null;
+
+    filterInput.addEventListener("input", function () {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function () {
+        var query = filterInput.value.trim().toLowerCase();
+        var visibleCount = 0;
+        cards.forEach(function (card) {
+          var text = (card.getAttribute("data-search") || card.textContent).toLowerCase();
+          var matches = !query || text.indexOf(query) !== -1;
+          card.hidden = !matches;
+          if (matches) visibleCount += 1;
+        });
+        if (countEl) {
+          countEl.textContent = "Showing " + visibleCount + " of " + cards.length + " loaded positions";
+        }
+        if (emptyEl) {
+          emptyEl.classList.toggle("hidden", visibleCount > 0);
+        }
+      }, 150);
+    });
+  }
 
   /* --------------------------------------------------------- career advisor */
   var advisor = document.querySelector("[data-advisor-form]");

@@ -34,7 +34,7 @@
               <p class="text-sm font-semibold">Valid certificate</p>
             </div>
           </div>
-          <span class="rounded-field border border-night-ink/20 px-3 py-1 font-mono text-xs">{{ registration.certificate_ref }}</span>
+          <button type="button" class="shimmer-badge rounded-field border border-night-ink/20 px-3 py-1 font-mono text-xs cursor-pointer hover:border-night-ink/40 transition-colors" data-copy="{{ registration.certificate_ref }}" title="Click to copy reference">{{ registration.certificate_ref }}</button>
         </div>
 
         <div class="p-6 sm:p-8">

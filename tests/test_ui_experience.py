@@ -63,6 +63,36 @@ class ResumeClientValidationTests(TestCase):
         self.assertEqual(resume_widget.attrs.get("data-max-size"), "5242880")
         self.assertIn("5 MB", form.fields["resume"].help_text)
 
+    def test_job_detail_renders_dropzone_and_preview_markup(self):
+        job = Job.objects.create(
+            title="Senior DevOps Engineer",
+            location="Remote",
+            description="Manage Kubernetes clusters.",
+            published=True,
+        )
+        response = self.client.get(reverse("job_detail", args=[job.slug]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "data-dropzone")
+        self.assertContains(response, "data-drop-prompt")
+        self.assertContains(response, "data-drop-preview")
+        self.assertContains(response, "data-drop-remove")
+
+
+class JobListLiveFilterTests(TestCase):
+    def test_job_list_renders_live_filter_attributes(self):
+        Job.objects.create(
+            title="Cloud Architect",
+            location="Irving, TX",
+            description="Design AWS cloud infrastructure.",
+            published=True,
+        )
+        response = self.client.get(reverse("careers"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "data-live-filter-input")
+        self.assertContains(response, "data-filter-count")
+        self.assertContains(response, "data-filter-empty")
+        self.assertContains(response, "data-filterable-card")
+
 
 class CertificateVerificationResilienceTests(TestCase):
     def setUp(self):
@@ -147,3 +177,10 @@ class CertificateVerificationResilienceTests(TestCase):
         response = self.client.get(reverse("verify_certificate_form") + f"?ref={malformed}")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Not found")
+
+    def test_verify_certificate_renders_shimmer_badge_and_copy_action(self):
+        response = self.client.get(reverse("verify_certificate_form") + f"?ref={self.ref}")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "shimmer-badge")
+        self.assertContains(response, f'data-copy="{self.ref}"')
+        self.assertContains(response, '<button type="button" class="shimmer-badge')
