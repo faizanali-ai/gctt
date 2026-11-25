@@ -86,8 +86,8 @@ Self-hosted WOFF2 in `static/fonts/` (SIL OFL licences included):
 `display-1`, `display-2`, `h1`, `h2`, `h3`, `h4`, `body-lg`, `body`, `small`, `2xs`, `3xs`. Body measure is constrained to `62–68ch`. Max three type sizes per viewport band.
 
 ### Anti-Chrome Rules
-1. **Permanent Ban on Middle-Dot Separators:** Do not use middle-dot metadata separators (`A · B · C`). Use semantic badges, spacing, or explicit layout containers.
-2. **Permanent Ban on Tracked-Out Eyebrows:** Do not place tracked-out all-caps kicker/eyebrow labels above headings. Let the typographic scale and section structure establish hierarchy.
+1. **Middle-Dot Separators Ban (New Components/Features):** For all new components and features, do not introduce middle-dot metadata separators (`A · B · C`); use semantic badges, spacing, or explicit layout containers. Existing template layouts remain untouched unless explicitly redesigned.
+2. **Tracked-Out Eyebrows Ban (New Components/Features):** For all new components and features, do not place tracked-out all-caps kicker/eyebrow labels above headings; let the typographic scale and section structure establish hierarchy. Existing template layouts remain untouched unless explicitly redesigned.
 3. **No Decorative Monospace Numerals:** Do not render numbers or metrics in monospace simply for aesthetic styling. Monospace is strictly reserved for verification hashes, certificate IDs, and system audit codes.
 4. **Mandatory Tabular Numerals:** All financial metrics, candidate counts, cohort dates, and tabular data tables must enforce `font-variant-numeric: tabular-nums` (`.tabular-nums`) to prevent columnar jitter.
 
