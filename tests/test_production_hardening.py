@@ -1,6 +1,11 @@
+import fcntl
 import os
 import stat
+import subprocess
+import sys
 import tempfile
+import threading
+import time
 from io import StringIO
 from unittest.mock import patch
 
@@ -337,3 +342,200 @@ class SmallCorrectnessTests(TestCase):
         )
         self.assertFalse(form.is_valid())
         self.assertIn("hero_cta_url", form.errors)
+
+
+class PipelineHardeningTests(TestCase):
+    def test_wake_is_exempt_from_ssl_redirect(self):
+        with override_settings(
+            SECURE_SSL_REDIRECT=True,
+            SECURE_REDIRECT_EXEMPT=[r"^wake/$"],
+        ):
+            wake_resp = self.client.get(reverse("wake"))
+            health_resp = self.client.get(reverse("healthz"))
+        self.assertEqual(wake_resp.status_code, 200)
+        self.assertEqual(wake_resp.content, b"ok")
+        self.assertEqual(health_resp.status_code, 301)
+
+    def test_production_settings_define_wake_redirect_exempt(self):
+        env = {
+            k: v
+            for k, v in os.environ.items()
+            if k not in {"DATABASE_URL", "RENDER"}
+        }
+        env.update(
+            {
+                "DJANGO_DEBUG": "0",
+                "DJANGO_SECRET_KEY": "ci-only-secret-9f8e7d6c5b4a39281706f5e4d3c2b1a0f9e8d7c6b5a49382",
+                "DATABASE_URL": "sqlite:///db.sqlite3",
+                "EMAIL_BACKEND": "config.email_backends.ResendEmailBackend",
+            }
+        )
+        proc = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                (
+                    "import os; os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings'); "
+                    "from django.conf import settings; print(settings.SECURE_REDIRECT_EXEMPT)"
+                ),
+            ],
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn("^wake/$", proc.stdout)
+
+    def test_collectstatic_succeeds_without_runtime_db_or_storage(self):
+        env = {
+            k: v
+            for k, v in os.environ.items()
+            if k
+            not in {
+                "DATABASE_URL",
+                "R2_BUCKET",
+                "R2_ENDPOINT",
+                "R2_ACCESS_KEY_ID",
+                "R2_SECRET_ACCESS_KEY",
+                "SUPABASE_URL",
+                "SUPABASE_BUCKET",
+                "SUPABASE_REGION",
+                "SUPABASE_ACCESS_KEY_ID",
+                "SUPABASE_SECRET_ACCESS_KEY",
+            }
+        }
+        env.update(
+            {
+                "DJANGO_DEBUG": "0",
+                "DJANGO_SECRET_KEY": "ci-only-secret-9f8e7d6c5b4a39281706f5e4d3c2b1a0f9e8d7c6b5a49382",
+                "RENDER": "1",
+                "EMAIL_BACKEND": "config.email_backends.ResendEmailBackend",
+            }
+        )
+        proc = subprocess.run(
+            [
+                sys.executable,
+                "manage.py",
+                "collectstatic",
+                "--noinput",
+                "--dry-run",
+                "--ignore=input.css",
+            ],
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+
+    def test_non_collectstatic_production_still_fails_without_db_and_storage(self):
+        base_env = {
+            k: v
+            for k, v in os.environ.items()
+            if k
+            not in {
+                "DATABASE_URL",
+                "R2_BUCKET",
+                "SUPABASE_URL",
+                "RENDER",
+            }
+        }
+        base_env.update(
+            {
+                "DJANGO_DEBUG": "0",
+                "DJANGO_SECRET_KEY": "ci-only-secret-9f8e7d6c5b4a39281706f5e4d3c2b1a0f9e8d7c6b5a49382",
+                "EMAIL_BACKEND": "config.email_backends.ResendEmailBackend",
+            }
+        )
+        no_db = subprocess.run(
+            [sys.executable, "manage.py", "check"],
+            env=base_env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertNotEqual(no_db.returncode, 0)
+        self.assertIn("DATABASE_URL is required", no_db.stderr)
+
+        no_storage_env = {
+            **base_env,
+            "DATABASE_URL": "sqlite:///db.sqlite3",
+            "RENDER": "1",
+        }
+        no_storage = subprocess.run(
+            [sys.executable, "manage.py", "check"],
+            env=no_storage_env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertNotEqual(no_storage.returncode, 0)
+        self.assertIn("Production media storage is not configured", no_storage.stderr)
+
+    def test_generate_certificate_pdf_serializes_with_flock_and_unlocks_on_error(self):
+        from apps.training.certificates import generate_certificate_pdf
+        from apps.training.models import Programme, Registration
+
+        student = User.objects.create_user(
+            email="cert-lock@example.com",
+            password="test-pass-12345",
+            account_type=User.AccountType.STUDENT,
+        )
+        programme = Programme.objects.create(
+            title="Lock Test", description="x", published=True
+        )
+        reg = Registration.objects.create(programme=programme, student=student)
+
+        active = 0
+        max_active = 0
+        counter_lock = threading.Lock()
+
+        class FakeHTML:
+            def __init__(self, string, base_url):
+                self.string = string
+
+            def write_pdf(self, target):
+                nonlocal active, max_active
+                with counter_lock:
+                    active += 1
+                    max_active = max(max_active, active)
+                time.sleep(0.05)
+                target.write(b"%PDF-1.4")
+                with counter_lock:
+                    active -= 1
+
+        with patch("apps.training.certificates.HTML", FakeHTML):
+            threads = [
+                threading.Thread(target=generate_certificate_pdf, args=(reg,))
+                for _ in range(2)
+            ]
+            for thread in threads:
+                thread.start()
+            for thread in threads:
+                thread.join()
+
+        self.assertEqual(max_active, 1)
+
+        flock_ops = []
+        real_flock = fcntl.flock
+
+        def recording_flock(fd, op):
+            flock_ops.append(op)
+            return real_flock(fd, op)
+
+        class FailingHTML:
+            def __init__(self, string, base_url):
+                pass
+
+            def write_pdf(self, target):
+                raise RuntimeError("weasyprint boom")
+
+        with (
+            patch("apps.training.certificates.HTML", FailingHTML),
+            patch("apps.training.certificates.fcntl.flock", recording_flock),
+            self.assertRaises(RuntimeError),
+        ):
+            generate_certificate_pdf(reg)
+
+        self.assertEqual(flock_ops, [fcntl.LOCK_EX, fcntl.LOCK_UN])

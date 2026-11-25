@@ -80,7 +80,8 @@ class ResumeUploadAndCleanupTests(TestCase):
         file_path = application.resume.name
         self.assertTrue(default_storage.exists(file_path))
 
-        application.delete()
+        with self.captureOnCommitCallbacks(execute=True):
+            application.delete()
         self.assertFalse(default_storage.exists(file_path))
 
     def test_withdraw_application_removes_file_from_storage(self):
@@ -94,7 +95,8 @@ class ResumeUploadAndCleanupTests(TestCase):
         self.assertTrue(default_storage.exists(file_path))
 
         self.client.force_login(self.user)
-        response = self.client.post(reverse("withdraw_application", args=[application.uuid]))
+        with self.captureOnCommitCallbacks(execute=True):
+            response = self.client.post(reverse("withdraw_application", args=[application.uuid]))
         self.assertRedirects(response, reverse("dashboard"))
         self.assertFalse(default_storage.exists(file_path))
 

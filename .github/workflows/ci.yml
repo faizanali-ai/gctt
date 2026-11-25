@@ -2,6 +2,13 @@ name: CI
 
 on: [push, pull_request]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   DJANGO_DEBUG: "0"
   DJANGO_SECRET_KEY: ci-only-secret-9f8e7d6c5b4a39281706f5e4d3c2b1a0f9e8d7c6b5a49382
@@ -12,6 +19,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     services:
       postgres:
         image: postgres:16
@@ -27,14 +35,18 @@ jobs:
           --health-timeout 5s
           --health-retries 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
         with:
           python-version: "3.12"
       - run: uv sync --frozen
       - name: CSS is current
         run: |
-          curl -sLo tailwindcss https://github.com/tailwindlabs/tailwindcss/releases/download/v4.3.5/tailwindcss-linux-x64
+          set -euo pipefail
+          curl -fsSLo tailwindcss https://github.com/tailwindlabs/tailwindcss/releases/download/v4.3.5/tailwindcss-linux-x64
+          curl -fsSL https://github.com/tailwindlabs/tailwindcss/releases/download/v4.3.5/sha256sums.txt \
+            | awk '/  \.\/tailwindcss-linux-x64$/ {print $1 "  tailwindcss"}' \
+            | sha256sum -c -
           chmod +x tailwindcss
           ./tailwindcss -i static/css/input.css -o static/css/output.css --minify
           git diff --exit-code -- static/css/output.css
@@ -44,6 +56,7 @@ jobs:
       - run: uv run ruff check .
       - run: uv run python manage.py check
       - run: uv run python manage.py makemigrations --check --dry-run
+      - run: uv run python manage.py check_legacy_urls
       - name: Dependency audit
         run: uv run pip-audit
       - name: Tests with coverage

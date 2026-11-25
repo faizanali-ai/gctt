@@ -118,16 +118,22 @@ class PendingApplication(models.Model):
         return f"{self.email} → {self.job}"
 
 
+def _delete_file_from_storage(storage, name, label):
+    try:
+        storage.delete(name)
+    except Exception:
+        logger.exception("Failed to remove %s %s on delete", label, name)
+
+
 @receiver(post_delete, sender=Application)
 def delete_resume_file(sender, instance, **kwargs):
-    if instance.resume:
-        try:
-            instance.resume.delete(save=False)
-        except Exception:
-            logger.exception(
-                "Failed to remove resume file %s on application delete",
-                instance.resume.name,
-            )
+    if not instance.resume:
+        return
+    storage = instance.resume.storage
+    name = instance.resume.name
+    transaction.on_commit(
+        lambda: _delete_file_from_storage(storage, name, "resume file")
+    )
 
 
 @receiver(post_delete, sender=PendingApplication)
@@ -138,11 +144,9 @@ def delete_pending_resume_file(sender, instance, **kwargs):
     # created. Never delete a file still referenced by a real application.
     if Application.objects.filter(resume=instance.resume.name).exists():
         return
-    try:
-        instance.resume.delete(save=False)
-    except Exception:
-        logger.exception(
-            "Failed to remove pending resume %s on pending delete",
-            instance.resume.name,
-        )
+    storage = instance.resume.storage
+    name = instance.resume.name
+    transaction.on_commit(
+        lambda: _delete_file_from_storage(storage, name, "pending resume")
+    )
 

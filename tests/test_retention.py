@@ -5,6 +5,7 @@ from datetime import timedelta
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
+from django.db import transaction
 from django.test import TestCase, override_settings
 from django.utils import timezone
 
@@ -66,7 +67,8 @@ class PurgeRetentionTests(TestCase):
 
     def test_apply_deletes_and_clears_as_recorded(self):
         resume_path = self.old_application.resume.path
-        call_command("purge_retention", "--apply")
+        with self.captureOnCommitCallbacks(execute=True):
+            call_command("purge_retention", "--apply")
 
         self.assertFalse(Application.objects.filter(pk=self.old_application.pk).exists())
         self.assertFalse(Registration.objects.filter(pk=self.old_uncertified.pk).exists())
@@ -74,6 +76,20 @@ class PurgeRetentionTests(TestCase):
         self.assertEqual(certified.message, "")
         self.assertTrue(AuditLog.objects.filter(pk=self.old_audit.pk).exists())
         self.assertFalse(os.path.exists(resume_path))
+
+    def test_rolled_back_delete_preserves_resume_file(self):
+        app_id = self.old_application.pk
+        resume_path = self.old_application.resume.path
+        with self.captureOnCommitCallbacks(execute=True) as callbacks:
+            try:
+                with transaction.atomic():
+                    self.old_application.delete()
+                    raise RuntimeError("force rollback")
+            except RuntimeError:
+                pass
+        self.assertEqual(callbacks, [])
+        self.assertTrue(Application.objects.filter(pk=app_id).exists())
+        self.assertTrue(os.path.exists(resume_path))
 
     def test_recent_records_survive(self):
         recent = Application.objects.create(
