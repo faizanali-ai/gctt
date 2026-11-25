@@ -204,16 +204,13 @@
   }
   /* Selection */
   ::selection {
-    background-color: color-mix(in oklab, var(--accent) 22%, transparent);
-    color: var(--ink);
+    background-color: var(--accent);
+    color: var(--on-accent);
   }
+  .bg-night::selection,
   .bg-night ::selection {
-    background-color: color-mix(in oklab, var(--night-accent) 30%, transparent);
-    color: var(--night-ink);
-  }
-  .ink-band ::selection {
-    background-color: color-mix(in oklab, var(--accent) 22%, transparent);
-    color: var(--canvas);
+    background-color: var(--night-accent);
+    color: #181A1D;
   }
 
   /* Caret */

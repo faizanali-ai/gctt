@@ -96,7 +96,7 @@ Self-hosted WOFF2 in `static/fonts/` (SIL OFL licences included):
 ## 4. Browser Surface Craft Floor & Tier-1 Detail
 
 ### 1. Impeccable Surface Floor
-- **Selection:** `color-mix(in oklab, var(--accent) 22%, transparent)` with `var(--ink)` (and `color-mix(in oklab, var(--night-accent) 30%, transparent)` with `var(--night-ink)` inside `.bg-night`).
+- **Selection:** Opaque `--accent` background with `--on-accent` foreground (`6.59:1` Light / `9.21:1` Dark), and `--night-accent` with `#181A1D` inside `.bg-night` (`9.21:1`), ensuring accessible contrast across all surfaces including `.bg-ink` and `.btn-solid`.
 - **Caret Color:** Form inputs, selects, and textareas adopt `caret-color: var(--accent)`.
 - **Multi-Layer Diffuse Focus Ring:** On `:focus-visible`, an inner 1px surface boundary, 3px accent ring, and outer 6–7px diffuse bloom (`color-mix(in oklab, var(--accent) 24%, transparent)`) eliminate harsh browser default outlines while preserving high visibility.
 - **Forced Colors Resilience:** When `@media (forced-colors: active)` is detected, focus outlines automatically revert to `2px solid Highlight`.
