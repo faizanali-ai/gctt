@@ -419,6 +419,38 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.45),
       0 4px 14px -2px rgba(223, 181, 135, 0.28);
   }
+  .bg-night .btn-secondary {
+    background-color: transparent;
+    color: var(--night-ink);
+    border-color: rgb(248 246 242 / 0.28);
+  }
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-night .btn-secondary {
+      border-color: color-mix(in oklab, var(--night-ink) 28%, transparent);
+    }
+  }
+  .bg-night .btn-secondary:hover:not(:disabled) {
+    background-color: rgb(248 246 242 / 0.1);
+    border-color: rgb(248 246 242 / 0.5);
+  }
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-night .btn-secondary:hover:not(:disabled) {
+      background-color: color-mix(in oklab, var(--night-ink) 10%, transparent);
+      border-color: color-mix(in oklab, var(--night-ink) 50%, transparent);
+    }
+  }
+  .bg-night .btn-ghost {
+    background-color: transparent;
+    color: var(--night-ink);
+  }
+  .bg-night .btn-ghost:hover:not(:disabled) {
+    background-color: rgb(248 246 242 / 0.1);
+  }
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-night .btn-ghost:hover:not(:disabled) {
+      background-color: color-mix(in oklab, var(--night-ink) 10%, transparent);
+    }
+  }
   .btn-solid {
     background-color: var(--ink);
     color: var(--canvas);
@@ -581,7 +613,8 @@
 
   /* chips */
   .chip,
-  .badge {
+  .badge,
+  .badge-secondary {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
@@ -600,11 +633,6 @@
     background-color: var(--accent-soft);
     border-color: color-mix(in oklab, var(--accent) 28%, transparent);
     color: var(--accent);
-  }
-  .badge-secondary {
-    border-color: var(--line);
-    background-color: transparent;
-    color: var(--muted);
   }
   .chip-success {
     background-color: color-mix(in oklab, var(--success) 12%, transparent);
@@ -775,10 +803,12 @@
     border-color: var(--accent);
     background-color: var(--accent-soft);
   }
-  .dropzone-box:focus-within {
+  .dropzone-box:has(:focus-visible) {
     border-color: var(--accent);
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
+    box-shadow:
+      0 0 0 1px var(--surface),
+      0 0 0 3px var(--accent),
+      0 0 0 6px color-mix(in oklab, var(--accent) 24%, transparent);
   }
 
   /* tables */
@@ -1260,6 +1290,16 @@
   );
   background-size: 200% 100%;
   animation: credentialShimmer 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.bg-night .shimmer-badge {
+  background: linear-gradient(105deg, transparent 20%, rgb(223 181 135 / 0.22) 50%, transparent 80%);
+  background-size: 200% 100%;
+}
+@supports (color: color-mix(in lab, red, red)) {
+  .bg-night .shimmer-badge {
+    background: linear-gradient(105deg, transparent 20%, color-mix(in oklab, var(--night-accent) 22%, transparent) 50%, transparent 80%);
+    background-size: 200% 100%;
+  }
 }
 
 @keyframes marquee {
