@@ -29,8 +29,8 @@ body {
 }
 
 body {
-  background: #f3f1ec;
-  color: #14161a;
+  background: #ECE6DE;
+  color: #1A1D21;
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -40,7 +40,7 @@ body {
   width: 297mm;
   height: 210mm;
   padding: 12mm;
-  background: #fffdf9;
+  background: #FAF8F5;
 }
 
 .certificate-frame {
@@ -48,7 +48,7 @@ body {
   width: 100%;
   height: 100%;
   padding: 16mm 24mm;
-  border: 0.6mm solid #a84a06;
+  border: 0.6mm solid #7E5429;
   text-align: center;
 }
 
@@ -57,7 +57,7 @@ body {
   font-size: 30px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: #14161a;
+  color: #1A1D21;
 }
 
 .certificate-legal {
@@ -65,14 +65,14 @@ body {
   font-size: 9px;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: #6b7078;
+  color: #5D646C;
 }
 
 .certificate-rule {
   width: 72px;
   height: 2px;
   margin: 18px auto;
-  background: #a84a06;
+  background: #7E5429;
 }
 
 .certificate-title {
@@ -87,14 +87,14 @@ body {
   font-size: 10px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #6b7078;
+  color: #5D646C;
 }
 
 .certificate-name {
   display: inline-block;
   min-width: 320px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #e2ded6;
+  border-bottom: 1px solid #DDD6CC;
   font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   font-size: 38px;
   font-weight: 700;
@@ -105,7 +105,7 @@ body {
   font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   font-size: 20px;
   font-weight: 600;
-  color: #a84a06;
+  color: #7E5429;
 }
 
 .certificate-footer {
@@ -117,10 +117,10 @@ body {
   align-items: flex-end;
   justify-content: space-between;
   padding-top: 10px;
-  border-top: 1px solid #e2ded6;
+  border-top: 1px solid #DDD6CC;
   font-size: 9px;
   line-height: 1.7;
-  color: #6b7078;
+  color: #5D646C;
 }
 
 .certificate-col-left {
@@ -135,7 +135,7 @@ body {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 10px;
   font-weight: 600;
-  color: #14161a;
+  color: #1A1D21;
 }
 
 @media print {

@@ -1,6 +1,6 @@
 {% load static %}
 {% if ANNOUNCEMENT_BANNER.enabled and ANNOUNCEMENT_BANNER.text %}
-  <div class="bg-primary px-4 py-2 text-center text-xs font-semibold text-white">
+  <div class="bg-accent px-4 py-2 text-center text-xs font-semibold text-on-accent">
     {% if ANNOUNCEMENT_BANNER.link %}
       <a href="{{ ANNOUNCEMENT_BANNER.link }}" class="inline-flex items-center gap-1.5 hover:underline">
         <span>{{ ANNOUNCEMENT_BANNER.text }}</span>
