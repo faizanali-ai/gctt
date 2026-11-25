@@ -29,27 +29,27 @@
 :root {
   color-scheme: light dark;
 
-  --canvas: #faf9f7;
-  --surface: #ffffff;
-  --raised: #f2efe9;
-  --ink: #14161a;
-  --muted: #4a4f57;
-  --subtle: #6b7078;
-  --line: #e2ded6;
-  --line-strong: #8c867d;
-  --accent: #a84a06;
-  --accent-hover: #8a3b05;
-  --accent-soft: #f8ede1;
-  --on-accent: #ffffff;
-  --success: #1b6b45;
-  --warning: #9a3412;
-  --danger: #b42318;
-  --focus: #a84a06;
-  --overlay: rgb(0 0 0 / 0.18);
-  --night: #14161a;
-  --night-ink: #faf9f7;
-  --night-muted: #c9c4bb;
-  --night-accent: #e9a85c;
+  --canvas: #F8F6F2;
+  --surface: #FFFFFF;
+  --raised: #ECE6DE;
+  --ink: #1A1D21;
+  --muted: #454C54;
+  --subtle: #5D646C;
+  --line: #DDD6CC;
+  --line-strong: #7D766D;
+  --accent: #7E5429;
+  --accent-hover: #64411E;
+  --accent-soft: #F4ECE2;
+  --on-accent: #FFFFFF;
+  --warning: #7A5C00;
+  --danger: #B42318;
+  --success: #16653E;
+  --focus: #7E5429;
+  --overlay: rgb(26 29 33 / 0.22);
+  --night: #2E3740;
+  --night-ink: #F8F6F2;
+  --night-muted: #CED5DC;
+  --night-accent: #DFB587;
 }
 
 :root[data-theme="light"] {
@@ -59,27 +59,27 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --canvas: #0b0c0e;
-  --surface: #14161a;
-  --raised: #1c1f24;
-  --ink: #f4f3f0;
-  --muted: #c3c7cd;
-  --subtle: #949aa3;
-  --line: #2a2e34;
-  --line-strong: #666d7c;
-  --accent: #e9a85c;
-  --accent-hover: #f3c088;
-  --accent-soft: rgb(233 168 92 / 0.12);
-  --on-accent: #14161a;
-  --success: #57c08a;
-  --warning: #f0a45c;
-  --danger: #f0776c;
-  --focus: #e9a85c;
-  --overlay: rgb(0 0 0 / 0.5);
-  --night: #14161a;
-  --night-ink: #faf9f7;
-  --night-muted: #c9c4bb;
-  --night-accent: #e9a85c;
+  --canvas: #131619;
+  --surface: #1B2025;
+  --raised: #242B32;
+  --ink: #F5F2ED;
+  --muted: #BDC3CA;
+  --subtle: #949CA5;
+  --line: #2E353D;
+  --line-strong: #6A737D;
+  --accent: #DFB587;
+  --accent-hover: #EBC79E;
+  --accent-soft: #2D261F;
+  --on-accent: #181A1D;
+  --warning: #EAB308;
+  --danger: #F87171;
+  --success: #4ADE80;
+  --focus: #DFB587;
+  --overlay: rgb(0 0 0 / 0.55);
+  --night: #252D35;
+  --night-ink: #F8F6F2;
+  --night-muted: #CED5DC;
+  --night-accent: #DFB587;
 }
 
 /* OS default until the visitor makes an explicit choice. */
@@ -87,27 +87,27 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
 
-    --canvas: #0b0c0e;
-    --surface: #14161a;
-    --raised: #1c1f24;
-    --ink: #f4f3f0;
-    --muted: #c3c7cd;
-    --subtle: #949aa3;
-    --line: #2a2e34;
-    --line-strong: #666d7c;
-    --accent: #e9a85c;
-    --accent-hover: #f3c088;
-    --accent-soft: rgb(233 168 92 / 0.12);
-    --on-accent: #14161a;
-    --success: #57c08a;
-    --warning: #f0a45c;
-    --danger: #f0776c;
-    --focus: #e9a85c;
-    --overlay: rgb(0 0 0 / 0.5);
-    --night: #14161a;
-    --night-ink: #faf9f7;
-    --night-muted: #c9c4bb;
-    --night-accent: #e9a85c;
+    --canvas: #131619;
+    --surface: #1B2025;
+    --raised: #242B32;
+    --ink: #F5F2ED;
+    --muted: #BDC3CA;
+    --subtle: #949CA5;
+    --line: #2E353D;
+    --line-strong: #6A737D;
+    --accent: #DFB587;
+    --accent-hover: #EBC79E;
+    --accent-soft: #2D261F;
+    --on-accent: #181A1D;
+    --warning: #EAB308;
+    --danger: #F87171;
+    --success: #4ADE80;
+    --focus: #DFB587;
+    --overlay: rgb(0 0 0 / 0.55);
+    --night: #252D35;
+    --night-ink: #F8F6F2;
+    --night-muted: #CED5DC;
+    --night-accent: #DFB587;
   }
 }
 
@@ -134,6 +134,9 @@
   --color-night-ink: var(--night-ink);
   --color-night-muted: var(--night-muted);
   --color-night-accent: var(--night-accent);
+  --color-primary: var(--accent);
+  --color-foreground: var(--ink);
+  --color-surface-raised: var(--raised);
 
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
@@ -166,9 +169,9 @@
   --text-3xs: 0.625rem;
   --text-3xs--line-height: 1.4;
 
-  --radius-field: 0.375rem;
-  --radius-card: 0.625rem;
-  --radius-media: 0.875rem;
+  --radius-field: 0.125rem;
+  --radius-card: 0.125rem;
+  --radius-media: 0.25rem;
 
   --ease-out-quart: cubic-bezier(0.22, 1, 0.36, 1);
   --shadow-overlay: 0 24px 48px rgb(0 0 0 / 0.18);
@@ -201,7 +204,16 @@
   }
   /* Selection */
   ::selection {
-    background: color-mix(in oklab, var(--accent) 26%, transparent);
+    background-color: color-mix(in oklab, var(--accent) 22%, transparent);
+    color: var(--ink);
+  }
+  .bg-night ::selection {
+    background-color: color-mix(in oklab, var(--night-accent) 30%, transparent);
+    color: var(--night-ink);
+  }
+  .ink-band ::selection {
+    background-color: color-mix(in oklab, var(--accent) 22%, transparent);
+    color: var(--canvas);
   }
 
   /* Caret */
@@ -221,14 +233,14 @@
     box-shadow:
       0 0 0 1px var(--surface),
       0 0 0 3px var(--accent),
-      0 0 0 6px color-mix(in oklab, var(--accent) 30%, transparent) !important;
+      0 0 0 6px color-mix(in oklab, var(--accent) 24%, transparent) !important;
   }
 
   :root[data-theme="dark"] :is(.btn, .form input, .form select, .form textarea, a, button, input, textarea, select, summary, [tabindex]):focus-visible {
     box-shadow:
       0 0 0 1px var(--surface),
       0 0 0 3px var(--accent),
-      0 0 0 7px color-mix(in oklab, var(--accent) 30%, transparent) !important;
+      0 0 0 7px color-mix(in oklab, var(--accent) 24%, transparent) !important;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -236,7 +248,7 @@
       box-shadow:
         0 0 0 1px var(--surface),
         0 0 0 3px var(--accent),
-        0 0 0 7px color-mix(in oklab, var(--accent) 30%, transparent) !important;
+        0 0 0 7px color-mix(in oklab, var(--accent) 24%, transparent) !important;
     }
   }
 
@@ -359,8 +371,8 @@
     background-color: var(--accent);
     color: var(--on-accent);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.22),
-      0 1px 2px rgba(0, 0, 0, 0.12);
+      inset 0 1px 0 rgb(255 255 255 / 0.22),
+      0 1px 2px rgb(0 0 0 / 0.12);
     transition:
       transform 120ms cubic-bezier(0.2, 0, 0, 1),
       background-color 150ms ease,
@@ -371,30 +383,44 @@
   .btn-primary:hover:not(:disabled) {
     background-color: var(--accent-hover);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      inset 0 1px 0 rgb(255 255 255 / 0.28),
       0 4px 12px -2px color-mix(in oklab, var(--accent) 30%, transparent);
   }
   :root[data-theme="dark"] .btn-primary {
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.35),
-      0 1px 3px rgba(0, 0, 0, 0.38);
+      inset 0 1px 0 rgb(255 255 255 / 0.35),
+      0 1px 3px rgb(0 0 0 / 0.38);
   }
   :root[data-theme="dark"] .btn-primary:hover:not(:disabled) {
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.42),
+      inset 0 1px 0 rgb(255 255 255 / 0.42),
       0 4px 14px -2px color-mix(in oklab, var(--accent) 35%, transparent);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) .btn-primary {
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.35),
-        0 1px 3px rgba(0, 0, 0, 0.38);
+        inset 0 1px 0 rgb(255 255 255 / 0.35),
+        0 1px 3px rgb(0 0 0 / 0.38);
     }
     :root:not([data-theme="light"]) .btn-primary:hover:not(:disabled) {
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.42),
+        inset 0 1px 0 rgb(255 255 255 / 0.42),
         0 4px 14px -2px color-mix(in oklab, var(--accent) 35%, transparent);
     }
+  }
+  .bg-night .btn-primary {
+    background-color: var(--night-accent);
+    color: #181A1D;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      0 1px 3px rgba(0, 0, 0, 0.28);
+  }
+  .bg-night .btn-primary:hover:not(:disabled) {
+    background-color: #EBC79E;
+    color: #181A1D;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.45),
+      0 4px 14px -2px rgba(223, 181, 135, 0.28);
   }
   .btn-solid {
     background-color: var(--ink);
@@ -419,6 +445,14 @@
   .btn-ghost:hover {
     background-color: var(--raised);
   }
+  .btn-danger {
+    background-color: #B42318;
+    color: #FFFFFF;
+  }
+  .btn-danger:hover:not(:disabled) {
+    background-color: #991B1B;
+    color: #FFFFFF;
+  }
   .btn-link {
     height: auto;
     padding: 0;
@@ -430,6 +464,11 @@
   }
   .btn-link:hover {
     color: var(--accent-hover);
+  }
+  .btn-xs {
+    height: 1.875rem;
+    padding-inline: 0.625rem;
+    font-size: 0.75rem;
   }
   .btn-sm {
     height: 2.25rem;
@@ -544,7 +583,8 @@
   }
 
   /* chips */
-  .chip {
+  .chip,
+  .badge {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
@@ -558,10 +598,16 @@
     text-transform: uppercase;
     color: var(--muted);
   }
-  .chip-accent {
+  .chip-accent,
+  .badge-accent {
     background-color: var(--accent-soft);
     border-color: color-mix(in oklab, var(--accent) 28%, transparent);
     color: var(--accent);
+  }
+  .badge-secondary {
+    border-color: var(--line);
+    background-color: transparent;
+    color: var(--muted);
   }
   .chip-success {
     background-color: color-mix(in oklab, var(--success) 12%, transparent);
@@ -1164,14 +1210,14 @@
 
 :root[data-theme="dark"] section.bg-night {
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgb(233 168 92 / 0.07), transparent 100%),
-    radial-gradient(ellipse 60% 40% at 100% 30%, rgb(200 134 50 / 0.04), transparent 100%);
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgb(223 181 135 / 0.06), transparent 100%),
+    radial-gradient(ellipse 60% 40% at 100% 30%, rgb(248 246 242 / 0.03), transparent 100%);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) section.bg-night {
     background-image:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgb(233 168 92 / 0.07), transparent 100%),
-      radial-gradient(ellipse 60% 40% at 100% 30%, rgb(200 134 50 / 0.04), transparent 100%);
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgb(223 181 135 / 0.06), transparent 100%),
+      radial-gradient(ellipse 60% 40% at 100% 30%, rgb(248 246 242 / 0.03), transparent 100%);
   }
 }
 @keyframes errorShake {
