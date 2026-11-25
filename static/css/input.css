@@ -1292,8 +1292,14 @@
   animation: credentialShimmer 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 .bg-night .shimmer-badge {
-  background: linear-gradient(105deg, transparent 20%, color-mix(in oklab, var(--night-accent) 22%, transparent) 50%, transparent 80%);
+  background: linear-gradient(105deg, transparent 20%, rgb(223 181 135 / 0.22) 50%, transparent 80%);
   background-size: 200% 100%;
+}
+@supports (color: color-mix(in lab, red, red)) {
+  .bg-night .shimmer-badge {
+    background: linear-gradient(105deg, transparent 20%, color-mix(in oklab, var(--night-accent) 22%, transparent) 50%, transparent 80%);
+    background-size: 200% 100%;
+  }
 }
 
 @keyframes marquee {
