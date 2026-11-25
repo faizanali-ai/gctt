@@ -7,6 +7,7 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 TESTING = "test" in sys.argv
+_collectstatic = len(sys.argv) > 1 and sys.argv[1] == "collectstatic"
 
 # Safe default: debug is OFF unless explicitly enabled for local development.
 DEBUG = os.environ.get("DJANGO_DEBUG", "").lower() in ("1", "true", "yes")
@@ -116,7 +117,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
-if not DEBUG and not TESTING and not DATABASE_URL:
+if not DEBUG and not TESTING and not _collectstatic and not DATABASE_URL:
     # Never fall back to ephemeral SQLite in production.
     raise RuntimeError("DATABASE_URL is required when DJANGO_DEBUG is off")
 
@@ -225,6 +226,7 @@ _render_process = bool(os.environ.get("RENDER")) or "gunicorn" in Path(
 if (
     not DEBUG
     and not TESTING
+    and not _collectstatic
     and "FileSystemStorage" in STORAGES["default"]["BACKEND"]
     and _render_process
 ):
@@ -353,6 +355,7 @@ if SENTRY_DSN:
 if not DEBUG and not TESTING:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_SSL_REDIRECT = True
+    SECURE_REDIRECT_EXEMPT = [r"^wake/$"]
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 31536000

@@ -4,9 +4,11 @@ import shutil
 import tempfile
 from datetime import timedelta
 from io import StringIO
+from unittest.mock import patch
 
 from django.core import mail
 from django.core.cache import cache
+from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
 from django.test import TestCase, override_settings
@@ -152,10 +154,43 @@ class PendingSubmissionTests(TestCase):
             expires_at=timezone.now() - timedelta(minutes=1),
         )
         path = pending.resume.path
+        name = pending.resume.name
         self.assertTrue(os.path.exists(path))
-        call_command("purge_pending", stdout=StringIO())
+        out = StringIO()
+        with (
+            patch.object(
+                default_storage, "delete", wraps=default_storage.delete
+            ) as mock_delete,
+            self.captureOnCommitCallbacks(execute=True),
+        ):
+            call_command("purge_pending", stdout=out)
         self.assertFalse(PendingApplication.objects.filter(pk=pending.pk).exists())
         self.assertFalse(os.path.exists(path))
+        mock_delete.assert_called_once_with(name)
+        self.assertIn("Purged 1 pending application(s), 0 pending registration(s), 1 temp resume(s).", out.getvalue())
+
+    def test_purge_pending_preserves_file_referenced_by_application(self):
+        pending = PendingApplication.objects.create(
+            job=self.job,
+            email=self.candidate.email,
+            resume=SimpleUploadedFile("cv.pdf", b"%PDF-1.4"),
+            message="x",
+            token_hash=hash_token("shared-token"),
+            expires_at=timezone.now() - timedelta(minutes=1),
+        )
+        Application.objects.create(
+            job=self.job,
+            applicant=self.candidate,
+            resume=pending.resume.name,
+            message="confirmed",
+        )
+        path = pending.resume.path
+        out = StringIO()
+        with self.captureOnCommitCallbacks(execute=True):
+            call_command("purge_pending", stdout=out)
+        self.assertFalse(PendingApplication.objects.filter(pk=pending.pk).exists())
+        self.assertTrue(os.path.exists(path))
+        self.assertIn("0 temp resume(s).", out.getvalue())
 
     def test_missing_subgroup_does_not_email_admin(self):
         admin = User.objects.create_superuser(

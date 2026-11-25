@@ -6,19 +6,28 @@ on:
     - cron: '*/10 * * * *'
   workflow_dispatch: # Allows manual trigger from GitHub Actions tab
 
+permissions: {}
+
+concurrency:
+  group: keepalive
+  cancel-in-progress: true
+
 jobs:
   ping:
     name: Keepalive Ping
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Ping Wake Endpoint
+        env:
+          KEEPALIVE_URL: ${{ vars.KEEPALIVE_URL || 'https://gctekton.com/wake/' }}
         run: |
           set -euo pipefail
-          echo "Pinging https://gctekton.com/wake/ to keep the instance awake..."
-          RESPONSE=$(curl --silent --show-error --fail --max-time 20 \
+          echo "Pinging ${KEEPALIVE_URL} to keep the instance awake..."
+          RESPONSE=$(curl --silent --show-error --fail --max-time 60 \
             --retry 2 --retry-delay 5 \
             -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}s\n" \
-            "https://gctekton.com/wake/")
+            "${KEEPALIVE_URL}")
           echo "$RESPONSE"
           if ! echo "$RESPONSE" | grep -q "HTTP_STATUS:200"; then
             echo "::error::Keepalive failed: /wake/ did not return HTTP 200."

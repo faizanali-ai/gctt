@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.db import transaction
 from django.utils import timezone
 
 from apps.jobs.models import Application, PendingApplication
@@ -39,16 +40,16 @@ class Command(BaseCommand):
 
         applications = 0
         deleted_files = 0
-        for pending in expired_applications:
-            if pending.resume and not Application.objects.filter(
-                resume=pending.resume.name
-            ).exists():
-                pending.resume.delete(save=False)
-                deleted_files += 1
-            pending.delete()
-            applications += 1
+        with transaction.atomic():
+            for pending in expired_applications:
+                if pending.resume and not Application.objects.filter(
+                    resume=pending.resume.name
+                ).exists():
+                    deleted_files += 1
+                pending.delete()
+                applications += 1
 
-        registrations, _ = expired_registrations.delete()
+            registrations, _ = expired_registrations.delete()
         self.stdout.write(
             self.style.SUCCESS(
                 f"Purged {applications} pending application(s), "
