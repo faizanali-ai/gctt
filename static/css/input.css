@@ -422,13 +422,22 @@
   .bg-night .btn-secondary {
     background-color: transparent;
     color: var(--night-ink);
-    border-color: color-mix(in oklab, var(--night-ink) 28%, transparent);
+    border-color: rgb(248 246 242 / 0.28);
+  }
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-night .btn-secondary {
+      border-color: color-mix(in oklab, var(--night-ink) 28%, transparent);
+    }
   }
   .bg-night .btn-secondary:hover:not(:disabled) {
     background-color: rgb(248 246 242 / 0.1);
-    background-color: color-mix(in oklab, var(--night-ink) 10%, transparent);
     border-color: rgb(248 246 242 / 0.5);
-    border-color: color-mix(in oklab, var(--night-ink) 50%, transparent);
+  }
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-night .btn-secondary:hover:not(:disabled) {
+      background-color: color-mix(in oklab, var(--night-ink) 10%, transparent);
+      border-color: color-mix(in oklab, var(--night-ink) 50%, transparent);
+    }
   }
   .bg-night .btn-ghost {
     background-color: transparent;
@@ -436,7 +445,11 @@
   }
   .bg-night .btn-ghost:hover:not(:disabled) {
     background-color: rgb(248 246 242 / 0.1);
-    background-color: color-mix(in oklab, var(--night-ink) 10%, transparent);
+  }
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-night .btn-ghost:hover:not(:disabled) {
+      background-color: color-mix(in oklab, var(--night-ink) 10%, transparent);
+    }
   }
   .btn-solid {
     background-color: var(--ink);
@@ -620,11 +633,6 @@
     background-color: var(--accent-soft);
     border-color: color-mix(in oklab, var(--accent) 28%, transparent);
     color: var(--accent);
-  }
-  .badge-secondary {
-    border-color: var(--line);
-    background-color: transparent;
-    color: var(--muted);
   }
   .chip-success {
     background-color: color-mix(in oklab, var(--success) 12%, transparent);
