@@ -159,7 +159,12 @@ class SecurityAndInputHardeningTests(TestCase):
         )
 
     def test_admin_password_reset_clears_existing_user_sessions(self):
+        from unittest.mock import patch
+
+        from django.contrib.sessions.models import Session
         from django.test import Client
+
+        from apps.accounts.views import _invalidate_user_sessions
 
         target = User.objects.create_user(
             email="session-target@example.com",
@@ -170,21 +175,58 @@ class SecurityAndInputHardeningTests(TestCase):
         victim_client.force_login(target)
         self.assertEqual(victim_client.get(reverse("dashboard")).status_code, 200)
 
+        otp_client = Client()
+        otp_session = otp_client.session
+        otp_session["email_otp_user_id"] = target.pk
+        otp_session["email_otp_email"] = target.email
+        otp_session.save()
+        otp_session_key = otp_session.session_key
+
         self.client.force_login(self.owner)
-        self.client.post(
-            reverse("manage_user_edit", args=[target.pk]),
-            {
-                "email": target.email,
-                "first_name": "Target",
-                "last_name": "User",
-                "designation": "candidate",
-                "is_active": "on",
-                "password": "Zx7!mQ2#vL9$pR4",
-            },
-        )
+        with patch(
+            "apps.accounts.views._invalidate_user_sessions",
+            wraps=_invalidate_user_sessions,
+        ) as spy_invalidate:
+            self.client.post(
+                reverse("manage_user_edit", args=[target.pk]),
+                {
+                    "email": target.email,
+                    "first_name": "Target",
+                    "last_name": "User",
+                    "designation": "candidate",
+                    "is_active": "on",
+                    "password": "Zx7!mQ2#vL9$pR4",
+                },
+            )
+        spy_invalidate.assert_called_once_with(target.pk)
         resp = victim_client.get(reverse("dashboard"))
         self.assertEqual(resp.status_code, 302)
         self.assertTrue(resp.url.startswith(reverse("login")))
+        self.assertFalse(Session.objects.filter(session_key=otp_session_key).exists())
+
+    def test_account_delete_continues_when_audit_log_fails(self):
+        from unittest.mock import patch
+
+        from django.db import DatabaseError
+
+        victim = User.objects.create_user(
+            email="audit-fail-del@example.com",
+            password="test-pass-12345",
+            account_type=User.AccountType.CANDIDATE,
+        )
+        self.client.force_login(victim)
+        with (
+            patch(
+                "apps.accounts.audit.AuditLog.objects.create",
+                side_effect=DatabaseError("audit table unavailable"),
+            ),
+            self.captureOnCommitCallbacks(execute=True),
+        ):
+            response = self.client.post(
+                reverse("account_delete"), {"password": "test-pass-12345"}
+            )
+        self.assertRedirects(response, reverse("home"))
+        self.assertFalse(User.objects.filter(pk=victim.pk).exists())
 
     def test_site_settings_logo_urls_reject_unsafe_schemes(self):
         from apps.accounts.forms import SiteSettingsForm
@@ -203,7 +245,16 @@ class SecurityAndInputHardeningTests(TestCase):
             "hero_cta_label": "Go",
             "hero_cta_url": "/careers/",
         }
-        for bad_url in ("javascript:alert(1)", "http://example.com/a.png", "//evil.com/a.png"):
+        for bad_url in (
+            "javascript:alert(1)",
+            "http://example.com/a.png",
+            "//evil.com/a.png",
+            "\\\\evil.com/a.png",
+            "/\\evil.com/a.png",
+            "/\t/evil.com/a.png",
+            "/\n/evil.com/a.png",
+            "/\r/evil.com/a.png",
+        ):
             form = SiteSettingsForm(
                 data={**base_data, "logo_light_url": bad_url, "logo_dark_url": bad_url}
             )
