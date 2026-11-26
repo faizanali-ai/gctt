@@ -1,6 +1,8 @@
 from datetime import timedelta
 from io import StringIO
+from unittest.mock import patch
 
+from django.conf import settings
 from django.core.cache import cache
 from django.core.management import call_command
 from django.test import TestCase, override_settings
@@ -78,3 +80,15 @@ class EmailOTPTests(TestCase):
     def test_unknown_email_and_empty_input_fail(self):
         self.assertFalse(verify_code("nobody@example.com", "000000"))
         self.assertIsNone(issue_code(""))
+
+    def test_default_otp_ttl_is_300_seconds_and_verify_locks_row(self):
+        self.assertEqual(settings.EMAIL_OTP_TTL_SECONDS, 300)
+        otp, code = issue_code("locked@example.com")
+        remaining = (otp.expires_at - otp.created_at).total_seconds()
+        self.assertAlmostEqual(remaining, 300, delta=2)
+
+        with patch.object(
+            EmailOTP.objects, "select_for_update", wraps=EmailOTP.objects.select_for_update
+        ) as mock_lock:
+            self.assertTrue(verify_code("locked@example.com", code))
+        mock_lock.assert_called_once()

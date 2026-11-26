@@ -53,9 +53,9 @@ def submit_enquiry(request):
     else:
         # Keep what the visitor typed so a validation error never wipes their message.
         request.session["enquiry_initial"] = {
-            key: value
+            key: str(value)[:4000]
             for key, value in request.POST.items()
-            if key not in ("csrfmiddlewaretoken", "website", "next")
+            if key in form.fields and key != "website"
         }
         first_errors = [
             f"{field}: {errors[0]}" for field, errors in form.errors.items()

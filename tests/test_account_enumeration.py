@@ -5,7 +5,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from apps.accounts.models import User
-from apps.jobs.models import Application, Job
+from apps.jobs.models import Application, Job, PendingApplication
 from apps.training.models import PendingRegistration, Programme, Registration
 
 LOCMEM = "django.core.mail.backends.locmem.EmailBackend"
@@ -68,7 +68,12 @@ class EnumerationTests(TestCase):
         self.assertEqual(existing_response.url, reverse("job_detail", args=[job_existing.slug]))
         self.assertEqual(new_response.url, reverse("job_detail", args=[job_new.slug]))
         self.assertFalse(Application.objects.filter(applicant=self.existing).exists())
-        self.assertTrue(Application.objects.filter(applicant__email="brand-new@example.com").exists())
+        self.assertFalse(
+            Application.objects.filter(applicant__email="brand-new@example.com").exists()
+        )
+        self.assertTrue(
+            PendingApplication.objects.filter(email="brand-new@example.com").exists()
+        )
         self.assertNotIn("_auth_user_id", self.client.session)
 
     def test_guest_registration_response_is_identical_for_existing_email(self):

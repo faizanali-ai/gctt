@@ -304,7 +304,7 @@ def send_password_setup(user):
 
 
 def send_login_otp(email, code):
-    minutes = max(1, int(getattr(settings, "EMAIL_OTP_TTL_SECONDS", 600)) // 60)
+    minutes = max(1, int(getattr(settings, "EMAIL_OTP_TTL_SECONDS", 300)) // 60)
     return bool(
         send(
             email,

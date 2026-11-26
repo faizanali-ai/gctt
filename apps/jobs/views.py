@@ -180,12 +180,17 @@ def job_apply(request, slug):
                 user.save()
             except IntegrityError:
                 existing_user = User.objects.filter(email__iexact=email).first()
-                if existing_user:
+                if existing_user and existing_user.is_candidate:
                     _create_pending_application(
                         job, existing_user.email, resume, message
                     )
                 messages.info(request, generic_message)
                 return redirect("job_detail", slug=job.slug)
+
+            # New accounts confirm by email before an application is created.
+            _create_pending_application(job, email, resume, message)
+            messages.info(request, generic_message)
+            return redirect("job_detail", slug=job.slug)
 
         application = Application(
             job=job,
@@ -213,12 +218,8 @@ def job_apply(request, slug):
         _notify_safely(
             "staff application", lambda: notify_staff_new_application(application)
         )
-        if is_auth:
-            messages.success(request, "Your application has been received by GCTT technical recruitment directors.")
-            return redirect("dashboard")
-        _notify_safely("password setup", lambda: send_password_setup(user))
-        messages.info(request, generic_message)
-        return redirect("job_detail", slug=job.slug)
+        messages.success(request, "Your application has been received by GCTT technical recruitment directors.")
+        return redirect("dashboard")
     return render(
         request,
         "jobs/job_detail.html",
@@ -246,11 +247,13 @@ def pending_application(request, token):
     if not site_settings.allow_candidate_applications:
         messages.error(request, "Candidate applications are currently paused.")
         return redirect("dashboard")
-    if not request.user.is_authenticated:
-        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-        send_welcome_if_first_login(user)
-
     if request.method == "POST":
+        if not request.user.is_authenticated:
+            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+        if not user.email_verified:
+            user.email_verified = True
+            user.save(update_fields=["email_verified"])
+        send_welcome_if_first_login(user)
         if Application.objects.filter(job=pending.job, applicant=user).exists():
             pending.consumed_at = timezone.now()
             pending.save(update_fields=["consumed_at"])
@@ -274,6 +277,8 @@ def pending_application(request, token):
         _notify_safely(
             "staff application", lambda: notify_staff_new_application(application)
         )
+        if not user.has_usable_password():
+            _notify_safely("password setup", lambda: send_password_setup(user))
         messages.success(
             request,
             "Your application has been received by GCTT technical recruitment directors.",
