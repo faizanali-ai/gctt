@@ -207,18 +207,23 @@ class SecurityAndInputHardeningTests(TestCase):
     def test_account_delete_continues_when_audit_log_fails(self):
         from unittest.mock import patch
 
-        from django.db import DatabaseError
+        from django.db import DatabaseError, transaction
 
         victim = User.objects.create_user(
             email="audit-fail-del@example.com",
             password="test-pass-12345",
             account_type=User.AccountType.CANDIDATE,
         )
+
+        def fail_audit(*args, **kwargs):
+            transaction.set_rollback(True)
+            raise DatabaseError("audit table unavailable")
+
         self.client.force_login(victim)
         with (
             patch(
                 "apps.accounts.audit.AuditLog.objects.create",
-                side_effect=DatabaseError("audit table unavailable"),
+                side_effect=fail_audit,
             ),
             self.captureOnCommitCallbacks(execute=True),
         ):

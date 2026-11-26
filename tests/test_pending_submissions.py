@@ -341,3 +341,24 @@ class PendingSubmissionTests(TestCase):
             ).exists()
         )
         self.assertIsNone(cache.get(cooldown_key))
+
+    def test_pending_application_email_prep_exception_releases_cooldown_and_retries(self):
+        email = "prep.boom@example.com"
+        cooldown_key = f"pending-application:{self.job.pk}:{email}"
+        with patch(
+            "apps.jobs.views.send_pending_application",
+            side_effect=RuntimeError("template render boom"),
+        ):
+            response = self._apply(email=email)
+        self.assertRedirects(response, reverse("job_detail", args=[self.job.slug]))
+        self.assertTrue(
+            PendingApplication.objects.filter(job=self.job, email=email).exists()
+        )
+        self.assertIsNone(cache.get(cooldown_key))
+
+        retry_resp = self._apply(email=email)
+        self.assertRedirects(retry_resp, reverse("job_detail", args=[self.job.slug]))
+        self.assertEqual(
+            PendingApplication.objects.filter(job=self.job, email=email).count(), 2
+        )
+        self.assertIsNotNone(cache.get(cooldown_key))

@@ -73,7 +73,12 @@ def _create_pending_application(job, email, resume, message):
     except Exception:
         cache.delete(cooldown_key)
         raise
-    if not send_pending_application(pending, token):
+    try:
+        delivered = send_pending_application(pending, token)
+    except Exception:
+        cache.delete(cooldown_key)
+        raise
+    if not delivered:
         cache.delete(cooldown_key)
     return pending
 
