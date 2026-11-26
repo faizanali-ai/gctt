@@ -61,16 +61,36 @@ def _create_pending_application(job, email, resume, message):
     if not cache.add(cooldown_key, True, 300):
         return None
     token, token_hash = make_token()
-    pending = PendingApplication.objects.create(
-        job=job,
-        email=email,
-        resume=resume,
-        message=message,
-        token_hash=token_hash,
-        expires_at=expiry(),
-    )
-    send_pending_application(pending, token)
+    try:
+        pending = PendingApplication.objects.create(
+            job=job,
+            email=email,
+            resume=resume,
+            message=message,
+            token_hash=token_hash,
+            expires_at=expiry(),
+        )
+    except Exception:
+        cache.delete(cooldown_key)
+        raise
+    if not send_pending_application(pending, token):
+        cache.delete(cooldown_key)
     return pending
+
+
+def _submit_pending_application(request, job, email, resume, message, generic_message):
+    try:
+        _create_pending_application(job, email, resume, message)
+    except Exception:
+        logger.exception("Pending application submission failed for job %s", job.pk)
+        messages.error(
+            request,
+            "We couldn't store your application just now. Please try again in a "
+            "moment, or email jobs@gctekton.com.",
+        )
+        return redirect("job_detail", slug=job.slug)
+    messages.info(request, generic_message)
+    return redirect("job_detail", slug=job.slug)
 
 
 def job_list(request):
@@ -162,8 +182,13 @@ def job_apply(request, slug):
             existing_user = User.objects.filter(email__iexact=email).first()
             if existing_user:
                 if existing_user.is_candidate:
-                    _create_pending_application(
-                        job, existing_user.email, resume, message
+                    return _submit_pending_application(
+                        request,
+                        job,
+                        existing_user.email,
+                        resume,
+                        message,
+                        generic_message,
                     )
                 messages.info(request, generic_message)
                 return redirect("job_detail", slug=job.slug)
@@ -181,16 +206,21 @@ def job_apply(request, slug):
             except IntegrityError:
                 existing_user = User.objects.filter(email__iexact=email).first()
                 if existing_user and existing_user.is_candidate:
-                    _create_pending_application(
-                        job, existing_user.email, resume, message
+                    return _submit_pending_application(
+                        request,
+                        job,
+                        existing_user.email,
+                        resume,
+                        message,
+                        generic_message,
                     )
                 messages.info(request, generic_message)
                 return redirect("job_detail", slug=job.slug)
 
             # New accounts confirm by email before an application is created.
-            _create_pending_application(job, email, resume, message)
-            messages.info(request, generic_message)
-            return redirect("job_detail", slug=job.slug)
+            return _submit_pending_application(
+                request, job, email, resume, message, generic_message
+            )
 
         application = Application(
             job=job,
