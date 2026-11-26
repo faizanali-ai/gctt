@@ -52,25 +52,30 @@ class EmailOTPLoginTests(TestCase):
     def setUp(self):
         cache.clear()
 
-    def request_code(self, email, next_url=""):
-        return self.client.post(
-            reverse("email_otp_request"),
-            {"email": email, "next": next_url},
-        )
+    def start_otp_via_password(self, email, next_url=""):
+        payload = {"username": email, "password": "test-pass-12345"}
+        if next_url:
+            payload["next"] = next_url
+        return self.client.post(reverse("login"), payload)
 
     def code(self):
         return re.search(r"\b(\d{6})\b", mail.outbox[-1].body).group(1)
 
-    def test_request_page_and_login_link_render(self):
-        self.assertEqual(
-            self.client.get(reverse("email_otp_request")).status_code, 200
+    def test_passwordless_email_otp_request_is_disabled_and_redirects_to_login(self):
+        login_page = self.client.get(reverse("login"))
+        self.assertNotContains(login_page, "one-time sign-in code")
+        self.assertRedirects(
+            self.client.get(reverse("email_otp_request")), reverse("login")
         )
-        self.assertContains(
-            self.client.get(reverse("login")), "one-time sign-in code"
+        post_response = self.client.post(
+            reverse("email_otp_request"), {"email": self.staff.email}
         )
+        self.assertRedirects(post_response, reverse("login"))
+        self.assertEqual(len(mail.outbox), 0)
+        self.assertFalse(EmailOTP.objects.exists())
 
-    def test_staff_email_gets_code_but_not_in_response(self):
-        response = self.request_code(self.staff.email)
+    def test_staff_email_gets_code_after_password_but_not_in_response(self):
+        response = self.start_otp_via_password(self.staff.email)
         self.assertRedirects(response, reverse("email_otp_verify"))
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, [self.staff.email])
@@ -80,36 +85,27 @@ class EmailOTPLoginTests(TestCase):
             AuditLog.objects.filter(action="auth.email_otp_request").exists()
         )
 
-    def test_unknown_email_gets_same_response_without_email(self):
-        response = self.request_code("nobody@example.com")
-        self.assertRedirects(response, reverse("email_otp_verify"))
-        self.assertEqual(len(mail.outbox), 0)
-        self.assertFalse(User.objects.filter(email="nobody@example.com").exists())
-        self.assertTrue(
-            AuditLog.objects.filter(
-                action="auth.email_otp_request_unknown"
-            ).exists()
-        )
-
-    def test_candidate_and_student_cannot_get_otp(self):
+    def test_candidate_and_student_do_not_trigger_otp_or_passwordless_request(self):
         for email in (self.candidate.email, self.student.email):
             mail.outbox.clear()
-            response = self.request_code(email)
-            self.assertRedirects(response, reverse("email_otp_verify"))
+            response = self.client.post(
+                reverse("email_otp_request"), {"email": email}
+            )
+            self.assertRedirects(response, reverse("login"))
             self.assertEqual(len(mail.outbox), 0)
             self.client.post(reverse("email_otp_resend"))
             self.assertEqual(len(mail.outbox), 0)
 
-    def test_admin_otp_logs_in_directly(self):
-        self.request_code(self.admin.email)
+    def test_admin_otp_logs_in_after_password(self):
+        self.start_otp_via_password(self.admin.email)
         response = self.client.post(
             reverse("email_otp_verify"), {"code": self.code()}
         )
         self.assertRedirects(response, reverse("dashboard"))
         self.assertIn("_auth_user_id", self.client.session)
 
-    def test_staff_otp_logs_in_directly(self):
-        self.request_code(self.staff.email)
+    def test_staff_otp_logs_in_after_password(self):
+        self.start_otp_via_password(self.staff.email)
         response = self.client.post(
             reverse("email_otp_verify"), {"code": self.code()}
         )
@@ -154,11 +150,26 @@ class EmailOTPLoginTests(TestCase):
         self.assertIsNotNone(issued)
         session = self.client.session
         session["email_otp_email"] = self.candidate.email
+        session["email_otp_user_id"] = self.candidate.pk
         session.save()
         response = self.client.post(
             reverse("email_otp_verify"), {"code": issued[1]}
         )
         self.assertEqual(response.status_code, 200)
+        self.assertNotIn("_auth_user_id", self.client.session)
+
+    def test_verify_without_preauth_user_id_redirects_to_login(self):
+        from apps.accounts.email_otp import issue_code
+
+        issued = issue_code(self.staff.email)
+        self.assertIsNotNone(issued)
+        session = self.client.session
+        session["email_otp_email"] = self.staff.email
+        session.save()
+        response = self.client.post(
+            reverse("email_otp_verify"), {"code": issued[1]}
+        )
+        self.assertRedirects(response, reverse("login"))
         self.assertNotIn("_auth_user_id", self.client.session)
 
     def test_otp_login_sends_welcome_once(self):
@@ -197,7 +208,7 @@ class EmailOTPLoginTests(TestCase):
         )
 
     def test_wrong_code_does_not_log_in(self):
-        self.request_code(self.staff.email)
+        self.start_otp_via_password(self.staff.email)
         response = self.client.post(
             reverse("email_otp_verify"), {"code": "000000"}
         )
@@ -208,21 +219,23 @@ class EmailOTPLoginTests(TestCase):
         )
 
     def test_safe_next_is_respected(self):
-        self.request_code(self.staff.email, next_url="/profile/")
+        self.start_otp_via_password(self.staff.email, next_url="/profile/")
         response = self.client.post(
             reverse("email_otp_verify"), {"code": self.code()}
         )
         self.assertRedirects(response, "/profile/")
 
     def test_unsafe_next_is_ignored(self):
-        self.request_code(self.staff.email, next_url="https://evil.example/")
+        self.start_otp_via_password(
+            self.staff.email, next_url="https://evil.example/"
+        )
         response = self.client.post(
             reverse("email_otp_verify"), {"code": self.code()}
         )
         self.assertRedirects(response, reverse("dashboard"))
 
     def test_resend_respects_cooldown(self):
-        self.request_code(self.staff.email)
+        self.start_otp_via_password(self.staff.email)
         self.assertEqual(len(mail.outbox), 1)
         self.client.post(reverse("email_otp_resend"))
         self.assertEqual(len(mail.outbox), 1)
@@ -232,7 +245,7 @@ class EmailOTPLoginTests(TestCase):
 
     def test_send_failure_is_audited(self):
         with patch("apps.accounts.views.send_login_otp", return_value=False):
-            response = self.request_code(self.staff.email)
+            response = self.start_otp_via_password(self.staff.email)
         self.assertRedirects(response, reverse("email_otp_verify"))
         self.assertTrue(
             AuditLog.objects.filter(
@@ -242,9 +255,9 @@ class EmailOTPLoginTests(TestCase):
         self.assertFalse(EmailOTP.objects.filter(email=self.staff.email).exists())
 
     def test_reused_code_is_not_valid_after_session_clear(self):
-        self.request_code(self.staff.email)
+        self.start_otp_via_password(self.staff.email)
         code = self.code()
         self.client.post(reverse("email_otp_verify"), {"code": code})
         self.client.logout()
         response = self.client.post(reverse("email_otp_verify"), {"code": code})
-        self.assertRedirects(response, reverse("email_otp_request"))
+        self.assertRedirects(response, reverse("login"))

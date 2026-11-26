@@ -406,11 +406,25 @@ class AccountSecurityEmailTests(TestCase):
 
     def test_account_deletion_sends_confirmation_before_delete(self):
         self.client.force_login(self.user)
-        response = self.client.post(
-            reverse("account_delete"), {"password": "test-pass-12345"}
-        )
+        with self.captureOnCommitCallbacks(execute=True):
+            response = self.client.post(
+                reverse("account_delete"), {"password": "test-pass-12345"}
+            )
         self.assertRedirects(response, reverse("home"))
         self.assertFalse(User.objects.filter(pk=self.user.pk).exists())
         self.assertTrue(
             any("account was deleted" in message.subject.lower() for message in mail.outbox)
         )
+
+    def test_account_deletion_rollback_skips_email(self):
+        self.client.force_login(self.user)
+        with (
+            patch.object(User, "delete", side_effect=RuntimeError("db down")),
+            self.captureOnCommitCallbacks(execute=True),
+            self.assertRaises(RuntimeError),
+        ):
+            self.client.post(
+                reverse("account_delete"), {"password": "test-pass-12345"}
+            )
+        self.assertTrue(User.objects.filter(pk=self.user.pk).exists())
+        self.assertEqual(mail.outbox, [])

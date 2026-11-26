@@ -4,6 +4,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.cache import cache
+from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
 
@@ -41,7 +42,7 @@ def issue_code(email):
         email=email,
         code_hash=make_password(code),
         expires_at=now
-        + timedelta(seconds=int(getattr(settings, "EMAIL_OTP_TTL_SECONDS", 600))),
+        + timedelta(seconds=int(getattr(settings, "EMAIL_OTP_TTL_SECONDS", 300))),
     )
     return otp, code
 
@@ -50,32 +51,33 @@ def verify_code(email, code):
     """Consume a valid OTP. Invalid, expired, used, or exhausted codes return False."""
     email = _email(email)
     code = (code or "").strip()
-    otp = (
-        EmailOTP.objects.filter(
-            email=email, consumed_at__isnull=True, expires_at__gt=timezone.now()
+    now = timezone.now()
+    with transaction.atomic():
+        otp = (
+            EmailOTP.objects.select_for_update()
+            .filter(email=email, consumed_at__isnull=True, expires_at__gt=now)
+            .order_by("-created_at")
+            .first()
         )
-        .order_by("-created_at")
-        .first()
-    )
-    if otp is None:
+        if otp is None:
+            return False
+
+        max_attempts = int(getattr(settings, "EMAIL_OTP_MAX_ATTEMPTS", 5))
+        if otp.attempts >= max_attempts:
+            otp.consumed_at = now
+            otp.save(update_fields=["consumed_at"])
+            return False
+
+        if check_password(code, otp.code_hash):
+            otp.consumed_at = now
+            otp.save(update_fields=["consumed_at"])
+            return True
+
+        otp.attempts += 1
+        if otp.attempts >= max_attempts:
+            otp.consumed_at = now
+        otp.save(update_fields=["attempts", "consumed_at"])
         return False
-
-    max_attempts = int(getattr(settings, "EMAIL_OTP_MAX_ATTEMPTS", 5))
-    if otp.attempts >= max_attempts:
-        otp.consumed_at = timezone.now()
-        otp.save(update_fields=["consumed_at"])
-        return False
-
-    if check_password(code, otp.code_hash):
-        otp.consumed_at = timezone.now()
-        otp.save(update_fields=["consumed_at"])
-        return True
-
-    otp.attempts += 1
-    if otp.attempts >= max_attempts:
-        otp.consumed_at = timezone.now()
-    otp.save(update_fields=["attempts", "consumed_at"])
-    return False
 
 
 def purge_expired():

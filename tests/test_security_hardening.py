@@ -144,3 +144,100 @@ class AccountDeletionTests(TestCase):
         )
         self.assertEqual(response.status_code, 403)
         self.assertTrue(User.objects.filter(email="owner-del@example.com").exists())
+
+
+class SecurityAndInputHardeningTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        assign_permissions()
+        cls.owner = User.objects.create_user(
+            email="owner-sec@example.com",
+            password="test-pass-12345",
+            role=User.Role.ADMIN,
+            is_staff=True,
+            is_superuser=True,
+        )
+
+    def test_admin_password_reset_clears_existing_user_sessions(self):
+        from django.test import Client
+
+        target = User.objects.create_user(
+            email="session-target@example.com",
+            password="test-pass-12345",
+            account_type=User.AccountType.CANDIDATE,
+        )
+        victim_client = Client()
+        victim_client.force_login(target)
+        self.assertEqual(victim_client.get(reverse("dashboard")).status_code, 200)
+
+        self.client.force_login(self.owner)
+        self.client.post(
+            reverse("manage_user_edit", args=[target.pk]),
+            {
+                "email": target.email,
+                "first_name": "Target",
+                "last_name": "User",
+                "designation": "candidate",
+                "is_active": "on",
+                "password": "Zx7!mQ2#vL9$pR4",
+            },
+        )
+        resp = victim_client.get(reverse("dashboard"))
+        self.assertEqual(resp.status_code, 302)
+        self.assertTrue(resp.url.startswith(reverse("login")))
+
+    def test_site_settings_logo_urls_reject_unsafe_schemes(self):
+        from apps.accounts.forms import SiteSettingsForm
+
+        base_data = {
+            "company_name": "GCTT",
+            "legal_name": "GCTT",
+            "tagline": "x",
+            "email": "a@example.com",
+            "jobs_email": "jobs@example.com",
+            "address": "x",
+            "url": "https://example.com",
+            "hero_eyebrow": "x",
+            "hero_title": "x",
+            "hero_subtitle": "x",
+            "hero_cta_label": "Go",
+            "hero_cta_url": "/careers/",
+        }
+        for bad_url in ("javascript:alert(1)", "http://example.com/a.png", "//evil.com/a.png"):
+            form = SiteSettingsForm(
+                data={**base_data, "logo_light_url": bad_url, "logo_dark_url": bad_url}
+            )
+            self.assertFalse(form.is_valid())
+            self.assertIn("logo_light_url", form.errors)
+            self.assertIn("logo_dark_url", form.errors)
+
+        valid_form = SiteSettingsForm(
+            data={
+                **base_data,
+                "logo_light_url": "/static/images/logo-light.svg",
+                "logo_dark_url": "https://cdn.example.com/logo-dark.svg",
+            }
+        )
+        self.assertTrue(valid_form.is_valid(), valid_form.errors)
+
+    def test_enquiry_initial_filters_non_form_keys_and_bounds_length(self):
+        response = self.client.post(
+            reverse("submit_enquiry"),
+            {
+                "name": "A" * 5000,
+                "email": "not-an-email",
+                "message": "",
+                "next": "contact",
+                "csrfmiddlewaretoken": "tok",
+                "website": "",
+                "arbitrary_injected_key": "X" * 10000,
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        saved = self.client.session.get("enquiry_initial", {})
+        self.assertEqual(set(saved.keys()), {"name", "email", "message"})
+        self.assertEqual(len(saved["name"]), 4000)
+        self.assertNotIn("arbitrary_injected_key", saved)
+        self.assertNotIn("csrfmiddlewaretoken", saved)
+        self.assertNotIn("next", saved)
+        self.assertNotIn("website", saved)

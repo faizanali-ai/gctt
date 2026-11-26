@@ -1,10 +1,13 @@
+import re
+
+from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from apps.accounts.apps import assign_permissions
 from apps.accounts.models import User
-from apps.jobs.models import Application, Job
+from apps.jobs.models import Application, Job, PendingApplication
 
 
 class UIUXLinkedInAITests(TestCase):
@@ -52,6 +55,7 @@ class UIUXLinkedInAITests(TestCase):
         self.assertGreaterEqual(data["data"]["fit_score"], 90)
         self.assertIn("milestones", data["data"])
 
+    @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
     def test_unauthenticated_candidate_can_apply_directly_from_linkedin(self):
         # Fake valid PDF file (starts with %PDF)
         pdf_content = b"%PDF-1.4 sample content for resume"
@@ -73,13 +77,22 @@ class UIUXLinkedInAITests(TestCase):
         self.assertEqual(response.url, reverse("job_detail", args=[self.job.slug]))
         self.assertNotIn("_auth_user_id", self.client.session)
 
-        # Verify candidate account was auto-provisioned
+        # Verify candidate account was auto-provisioned and awaits confirmation
         candidate = User.objects.get(email="jane.doe.candidate@example.com")
         self.assertEqual(candidate.first_name, "Jane")
         self.assertEqual(candidate.last_name, "Doe")
         self.assertEqual(candidate.phone, "+1 (555) 234-5678")
+        self.assertFalse(Application.objects.filter(job=self.job, applicant=candidate).exists())
+        self.assertTrue(
+            PendingApplication.objects.filter(job=self.job, email=candidate.email).exists()
+        )
 
-        # Verify application was recorded
+        # Confirm via pending link to finalize the application
+        pending_mail = next(m for m in mail.outbox if "/careers/pending/" in m.body)
+        token = re.search(r"/careers/pending/([^\s/]+)/", pending_mail.body).group(1)
+        confirm_resp = self.client.post(reverse("pending_application", args=[token]))
+        self.assertRedirects(confirm_resp, reverse("dashboard"))
+
         app = Application.objects.get(job=self.job, applicant=candidate)
         self.assertEqual(app.status, Application.Status.SUBMITTED)
         self.assertIn("[Work Auth:", app.message)

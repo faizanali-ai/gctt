@@ -31,8 +31,5 @@
 
 {% block auth_footer %}
 <p>New to GCTT? <a href="{% url 'signup' %}" class="link">Create an account</a></p>
-{% if EMAIL_OTP_ENABLED %}
-  <p class="mt-2"><a href="{% url 'email_otp_request' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}" class="link">Email me a one-time sign-in code</a></p>
-{% endif %}
 <p class="mt-2"><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
 {% endblock %}

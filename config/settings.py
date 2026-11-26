@@ -300,7 +300,7 @@ EMAIL_SEND_RETRIES = int(os.environ.get("EMAIL_SEND_RETRIES", "1"))
 EMAIL_RETRY_DELAY_SECONDS = float(os.environ.get("EMAIL_RETRY_DELAY_SECONDS", "0.5"))
 
 # Email OTP login
-EMAIL_OTP_TTL_SECONDS = int(os.environ.get("EMAIL_OTP_TTL_SECONDS", "600"))
+EMAIL_OTP_TTL_SECONDS = int(os.environ.get("EMAIL_OTP_TTL_SECONDS", "300"))
 EMAIL_OTP_MAX_ATTEMPTS = int(os.environ.get("EMAIL_OTP_MAX_ATTEMPTS", "5"))
 EMAIL_OTP_RESEND_SECONDS = int(os.environ.get("EMAIL_OTP_RESEND_SECONDS", "60"))
 

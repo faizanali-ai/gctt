@@ -193,21 +193,40 @@ class SiteSettingsForm(forms.ModelForm):
             if f in self.fields:
                 self.fields[f].required = False
 
+    @staticmethod
+    def _validate_safe_url(value, *, allow_contact_schemes=False):
+        val = (value or "").strip()
+        if val.startswith("//"):
+            raise ValidationError(
+                "Protocol-relative URLs starting with '//' are not allowed."
+            )
+        allowed = ("/", "https://", "mailto:", "tel:") if allow_contact_schemes else ("/", "https://")
+        if val and not val.startswith(allowed):
+            if allow_contact_schemes:
+                raise ValidationError(
+                    "URL must be a relative path (/path/) or secure absolute URL (https://...)."
+                )
+            raise ValidationError(
+                "Logo URL must be a relative path (/path/) or secure absolute URL (https://...)."
+            )
+        return val
+
     def clean_hero_cta_url(self):
-        value = (self.cleaned_data.get("hero_cta_url") or "").strip()
-        if value.startswith("//"):
-            raise ValidationError("Protocol-relative URLs starting with '//' are not allowed.")
-        if value and not value.startswith(("/", "https://", "mailto:", "tel:")):
-            raise ValidationError("URL must be a relative path (/path/) or secure absolute URL (https://...).")
-        return value
+        return self._validate_safe_url(
+            self.cleaned_data.get("hero_cta_url"), allow_contact_schemes=True
+        )
 
     def clean_announcement_banner_link(self):
-        val = (self.cleaned_data.get("announcement_banner_link") or "").strip()
-        if val.startswith("//"):
-            raise ValidationError("Protocol-relative URLs starting with '//' are not allowed.")
-        if val and not val.startswith(("/", "https://", "mailto:", "tel:")):
-            raise ValidationError("URL must be a relative path (/path/) or secure absolute URL (https://...).")
-        return val
+        return self._validate_safe_url(
+            self.cleaned_data.get("announcement_banner_link"),
+            allow_contact_schemes=True,
+        )
+
+    def clean_logo_light_url(self):
+        return self._validate_safe_url(self.cleaned_data.get("logo_light_url"))
+
+    def clean_logo_dark_url(self):
+        return self._validate_safe_url(self.cleaned_data.get("logo_dark_url"))
 
 
 class PageContentForm(forms.ModelForm):

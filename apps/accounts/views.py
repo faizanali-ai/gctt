@@ -17,11 +17,12 @@ from django.contrib.auth.views import (
     PasswordChangeView,
     PasswordResetConfirmView,
 )
+from django.contrib.sessions.models import Session
 from django.core import signing
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
 from django.core.validators import validate_email
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.db.models import Count, Q
 from django.http import FileResponse, Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
@@ -190,6 +191,7 @@ def _start_email_otp(request, user, next_url=None):
     """Send a code to a known/authenticated user without asking for email again."""
     email = user.email.strip().lower()
     request.session["email_otp_email"] = email
+    request.session["email_otp_user_id"] = user.pk
     next_url = _safe_next(request, next_url)
     if next_url:
         request.session["email_otp_next"] = next_url
@@ -226,47 +228,20 @@ def _complete_email_otp_login(request, user):
     return redirect("dashboard")
 
 
-@ratelimit(key="ip", rate="10/m", method="POST", block=True)
 def email_otp_request(request):
+    """Standalone passwordless OTP sign-in is disabled; require password or OAuth first."""
     if request.user.is_authenticated:
         return redirect("dashboard")
-    if not settings.REQUIRE_EMAIL_OTP:
-        messages.info(request, "Email code sign-in is currently disabled.")
-        return redirect("login")
-
-    if request.method == "POST":
-        email = request.POST.get("email", "").strip().lower()
-        next_url = _safe_next(request, request.POST.get("next", ""))
-
-        user = (
-            User.objects.filter(email__iexact=email, is_active=True)
-            .filter(Q(is_staff=True) | Q(role=User.Role.ADMIN))
-            .first()
-        )
-        if user:
-            return _start_email_otp(request, user, next_url)
-
-        request.session["email_otp_email"] = email
-        if next_url:
-            request.session["email_otp_next"] = next_url
-        else:
-            request.session.pop("email_otp_next", None)
-
-        log_action(
-            request, "auth.email_otp_request_unknown", _mask_email(email)
-        )
-
+    request.session.pop("email_otp_email", None)
+    request.session.pop("email_otp_user_id", None)
+    if settings.REQUIRE_EMAIL_OTP:
         messages.info(
             request,
-            "If this email can be used, check your inbox for a sign-in code.",
+            "Sign in with your email and password first; we will then email your verification code.",
         )
-        return redirect("email_otp_verify")
-
-    return render(
-        request,
-        "accounts/login_email_otp.html",
-        {"next": _safe_next(request, request.GET.get("next", "")) or ""},
-    )
+    else:
+        messages.info(request, "Email code sign-in is currently disabled.")
+    return redirect("login")
 
 
 @ratelimit(key="ip", rate="10/m", method="POST", block=True)
@@ -277,14 +252,17 @@ def email_otp_verify(request):
         return redirect("login")
 
     email = request.session.get("email_otp_email", "")
-    if not email:
-        return redirect("email_otp_request")
+    preauth_user_id = request.session.get("email_otp_user_id")
+    if not email or not preauth_user_id:
+        return redirect("login")
 
     if request.method == "POST":
         code = request.POST.get("code", "").strip()
         if verify_code(email, code):
             user = (
-                User.objects.filter(email__iexact=email, is_active=True)
+                User.objects.filter(
+                    pk=preauth_user_id, email__iexact=email, is_active=True
+                )
                 .filter(Q(is_staff=True) | Q(role=User.Role.ADMIN))
                 .first()
             )
@@ -293,6 +271,7 @@ def email_otp_verify(request):
                     user.email_verified = True
                     user.save(update_fields=["email_verified"])
                 request.session.pop("email_otp_email", None)
+                request.session.pop("email_otp_user_id", None)
                 log_action(request, "auth.email_otp", user.email)
                 return _complete_email_otp_login(request, user)
             messages.error(request, "That code is invalid or expired.")
@@ -314,11 +293,14 @@ def email_otp_resend(request):
         return redirect("login")
 
     email = request.session.get("email_otp_email", "")
-    if not email:
-        return redirect("email_otp_request")
+    preauth_user_id = request.session.get("email_otp_user_id")
+    if not email or not preauth_user_id:
+        return redirect("login")
 
     user = (
-        User.objects.filter(email__iexact=email, is_active=True)
+        User.objects.filter(
+            pk=preauth_user_id, email__iexact=email, is_active=True
+        )
         .filter(Q(is_staff=True) | Q(role=User.Role.ADMIN))
         .first()
     )
@@ -569,30 +551,50 @@ def _staff_dashboard(request):
     stats = {}
 
     if user.is_admin:
+        user_stats = User.objects.aggregate(
+            accounts_total=Count("id"),
+            admins_total=Count("id", filter=Q(role=User.Role.ADMIN, is_active=True)),
+            staff_total=Count("id", filter=Q(role=User.Role.STAFF, is_staff=True)),
+            candidates_total=Count(
+                "id",
+                filter=Q(account_type=User.AccountType.CANDIDATE, is_staff=False),
+            ),
+            students_total=Count(
+                "id",
+                filter=Q(account_type=User.AccountType.STUDENT, is_staff=False),
+            ),
+        )
+        enquiry_stats = Enquiry.objects.aggregate(
+            enquiries_new=Count("id", filter=Q(status=Enquiry.Status.NEW)),
+            enquiries_total=Count("id"),
+        )
+        job_stats = Job.objects.aggregate(
+            jobs_active=Count("id", filter=Q(published=True)),
+            jobs_drafts=Count("id", filter=Q(published=False)),
+        )
+        application_stats = Application.objects.aggregate(
+            applications_total=Count("id"),
+            applications_submitted=Count(
+                "id", filter=Q(status=Application.Status.SUBMITTED)
+            ),
+        )
+        programme_stats = Programme.objects.aggregate(
+            programmes_total=Count("id"),
+            programmes_drafts=Count("id", filter=Q(published=False)),
+        )
+        registration_stats = Registration.objects.aggregate(
+            registrations_total=Count("id"),
+            registrations_pending=Count(
+                "id", filter=Q(status=Registration.Status.SUBMITTED)
+            ),
+        )
         stats = {
-            "accounts_total": User.objects.count(),
-            "admins_total": User.objects.filter(role=User.Role.ADMIN, is_active=True).count(),
-            "staff_total": User.objects.filter(role=User.Role.STAFF, is_staff=True).count(),
-            "candidates_total": User.objects.filter(
-                account_type=User.AccountType.CANDIDATE, is_staff=False
-            ).count(),
-            "students_total": User.objects.filter(
-                account_type=User.AccountType.STUDENT, is_staff=False
-            ).count(),
-            "enquiries_new": Enquiry.objects.filter(status=Enquiry.Status.NEW).count(),
-            "enquiries_total": Enquiry.objects.count(),
-            "jobs_active": Job.objects.filter(published=True).count(),
-            "jobs_drafts": Job.objects.filter(published=False).count(),
-            "applications_total": Application.objects.count(),
-            "applications_submitted": Application.objects.filter(
-                status=Application.Status.SUBMITTED
-            ).count(),
-            "programmes_total": Programme.objects.count(),
-            "programmes_drafts": Programme.objects.filter(published=False).count(),
-            "registrations_total": Registration.objects.count(),
-            "registrations_pending": Registration.objects.filter(
-                status=Registration.Status.SUBMITTED
-            ).count(),
+            **user_stats,
+            **enquiry_stats,
+            **job_stats,
+            **application_stats,
+            **programme_stats,
+            **registration_stats,
         }
 
     recent_applications = []
@@ -827,6 +829,18 @@ def manage_user_create(request):
     )
 
 
+def _invalidate_user_sessions(user_id):
+    """Delete all active Django sessions belonging to the given user id."""
+    target_id = str(user_id)
+    stale_keys = []
+    for session in Session.objects.filter(expire_date__gte=timezone.now()).iterator():
+        data = session.get_decoded()
+        if str(data.get("_auth_user_id")) == target_id:
+            stale_keys.append(session.session_key)
+    if stale_keys:
+        Session.objects.filter(session_key__in=stale_keys).delete()
+
+
 @login_required
 @staff_required
 def manage_user_edit(request, pk):
@@ -916,6 +930,7 @@ def manage_user_edit(request, pk):
             if new_password:
                 target.set_password(new_password)
                 target.save(update_fields=["password"])
+                _invalidate_user_sessions(target.pk)
             if email_changed:
                 _notify_safely(
                     "email change",
@@ -1363,11 +1378,10 @@ def media_asset_serve(request, pk):
         try:
             content_type = "image/svg+xml" if is_svg else None
             response = FileResponse(asset.file.open("rb"), content_type=content_type)
-        except (FileNotFoundError, ValueError):
-            if not isinstance(default_storage, FileSystemStorage):
-                response = HttpResponseRedirect(asset.file.url)
-            else:
-                raise Http404("Media file not found")
+        except (FileNotFoundError, ValueError) as exc:
+            if is_svg or isinstance(default_storage, FileSystemStorage):
+                raise Http404("Media file not found") from exc
+            response = HttpResponseRedirect(asset.file.url)
     else:
         response = HttpResponseRedirect(asset.file.url)
 
@@ -1395,12 +1409,15 @@ def account_delete(request):
 
     email = request.user.email
     display_name = request.user.display_name
-    _notify_safely(
-        "account deletion",
-        lambda: send_account_deleted(email, display_name),
-    )
-    log_action(request, "account.delete", email)
-    request.user.delete()
+    with transaction.atomic():
+        log_action(request, "account.delete", email)
+        request.user.delete()
+        transaction.on_commit(
+            lambda: _notify_safely(
+                "account deletion",
+                lambda: send_account_deleted(email, display_name),
+            )
+        )
     auth_logout(request)
     messages.success(request, "Your account and data have been permanently deleted.")
     return redirect("home")

@@ -279,11 +279,13 @@ def pending_registration(request, token):
     if not pending.programme.registration_open:
         messages.error(request, "Registration for this programme is closed.")
         return redirect("dashboard")
-    if not request.user.is_authenticated:
-        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-        send_welcome_if_first_login(user)
-
     if request.method == "POST":
+        if not request.user.is_authenticated:
+            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+        if not user.email_verified:
+            user.email_verified = True
+            user.save(update_fields=["email_verified"])
+        send_welcome_if_first_login(user)
         if Registration.objects.filter(
             programme=pending.programme, student=user
         ).exists():

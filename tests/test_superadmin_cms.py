@@ -90,6 +90,24 @@ class MediaAssetHardeningTests(TestCase):
         self.assertEqual(response["Content-Security-Policy"], "default-src 'none'; style-src 'unsafe-inline'")
         self.assertEqual(response["X-Content-Type-Options"], "nosniff")
 
+    def test_media_asset_serve_missing_svg_returns_404_on_remote_storage(self):
+        from unittest.mock import MagicMock, patch
+
+        safe_svg = b'<svg xmlns="http://www.w3.org/2000/svg"><circle r="10"/></svg>'
+        asset = MediaAsset.objects.create(
+            title="Remote SVG",
+            file=SimpleUploadedFile("remote.svg", safe_svg, content_type="image/svg+xml"),
+            uploaded_by=self.admin,
+        )
+        fake_storage = MagicMock()
+        fake_storage.open.side_effect = FileNotFoundError("missing on S3")
+        with (
+            patch("django.core.files.storage.default_storage", fake_storage),
+            patch("django.db.models.fields.files.FieldFile.open", side_effect=FileNotFoundError("missing on S3")),
+        ):
+            response = self.client.get(reverse("media_asset_serve", args=[asset.pk]))
+        self.assertEqual(response.status_code, 404)
+
     def test_svg_with_encoded_tab_in_href_is_rejected(self):
         svg_with_tab = b'<svg xmlns="http://www.w3.org/2000/svg"><a href="java&#x09;script:alert(1)"><text>x</text></a></svg>'
         upload = SimpleUploadedFile("tab_exploit.svg", svg_with_tab, content_type="image/svg+xml")
