@@ -196,7 +196,13 @@ class SiteSettingsForm(forms.ModelForm):
     @staticmethod
     def _validate_safe_url(value, *, allow_contact_schemes=False):
         val = (value or "").strip()
-        if val.startswith("//"):
+        normalized = (
+            val.replace("\\", "/")
+            .replace("\t", "")
+            .replace("\n", "")
+            .replace("\r", "")
+        )
+        if normalized.startswith("//"):
             raise ValidationError(
                 "Protocol-relative URLs starting with '//' are not allowed."
             )

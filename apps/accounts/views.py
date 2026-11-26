@@ -835,7 +835,10 @@ def _invalidate_user_sessions(user_id):
     stale_keys = []
     for session in Session.objects.filter(expire_date__gte=timezone.now()).iterator():
         data = session.get_decoded()
-        if str(data.get("_auth_user_id")) == target_id:
+        if (
+            str(data.get("_auth_user_id")) == target_id
+            or str(data.get("email_otp_user_id")) == target_id
+        ):
             stale_keys.append(session.session_key)
     if stale_keys:
         Session.objects.filter(session_key__in=stale_keys).delete()

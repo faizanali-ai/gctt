@@ -300,3 +300,65 @@ class PendingSubmissionTests(TestCase):
         )
         pending.refresh_from_db()
         self.assertIsNotNone(pending.consumed_at)
+
+    def test_pending_application_storage_failure_releases_cooldown_and_retries(self):
+        cooldown_key = f"pending-application:{self.job.pk}:guest.retry@example.com"
+        payload = {
+            "first_name": "A",
+            "last_name": "B",
+            "email": "guest.retry@example.com",
+            "message": "I am keen",
+        }
+        with patch.object(
+            PendingApplication.objects, "create", side_effect=OSError("storage down")
+        ):
+            response = self.client.post(
+                reverse("job_apply", args=[self.job.slug]),
+                {**payload, "resume": SimpleUploadedFile("cv.pdf", b"%PDF-1.4")},
+                follow=True,
+            )
+        self.assertRedirects(response, reverse("job_detail", args=[self.job.slug]))
+        self.assertIsNone(cache.get(cooldown_key))
+        self.assertContains(response, "store your application just now")
+
+        retry_resp = self._apply(email="guest.retry@example.com")
+        self.assertRedirects(retry_resp, reverse("job_detail", args=[self.job.slug]))
+        self.assertTrue(
+            PendingApplication.objects.filter(
+                job=self.job, email="guest.retry@example.com"
+            ).exists()
+        )
+        self.assertIsNotNone(cache.get(cooldown_key))
+
+    def test_pending_application_email_failure_clears_cooldown_but_keeps_row(self):
+        cooldown_key = f"pending-application:{self.job.pk}:mail.fail@example.com"
+        with patch("config.emails.send", return_value=0):
+            response = self._apply(email="mail.fail@example.com")
+        self.assertRedirects(response, reverse("job_detail", args=[self.job.slug]))
+        self.assertTrue(
+            PendingApplication.objects.filter(
+                job=self.job, email="mail.fail@example.com"
+            ).exists()
+        )
+        self.assertIsNone(cache.get(cooldown_key))
+
+    def test_pending_application_email_prep_exception_releases_cooldown_and_retries(self):
+        email = "prep.boom@example.com"
+        cooldown_key = f"pending-application:{self.job.pk}:{email}"
+        with patch(
+            "apps.jobs.views.send_pending_application",
+            side_effect=RuntimeError("template render boom"),
+        ):
+            response = self._apply(email=email)
+        self.assertRedirects(response, reverse("job_detail", args=[self.job.slug]))
+        self.assertTrue(
+            PendingApplication.objects.filter(job=self.job, email=email).exists()
+        )
+        self.assertIsNone(cache.get(cooldown_key))
+
+        retry_resp = self._apply(email=email)
+        self.assertRedirects(retry_resp, reverse("job_detail", args=[self.job.slug]))
+        self.assertEqual(
+            PendingApplication.objects.filter(job=self.job, email=email).count(), 2
+        )
+        self.assertIsNotNone(cache.get(cooldown_key))

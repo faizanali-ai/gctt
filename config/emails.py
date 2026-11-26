@@ -347,13 +347,15 @@ def send_pending_application(pending, token):
         f"{getattr(settings, 'SITE_URL', 'https://gctekton.com').rstrip('/')}"
         f"{reverse('pending_application', args=[token])}"
     )
-    send(
-        pending.email,
-        f"Continue your application: {pending.job.title}",
-        "Use the single-use link below to sign in and confirm your application. "
-        "It expires in 24 hours.\n\n"
-        f"{link}\n\n"
-        f"{_legal()}",
+    return bool(
+        send(
+            pending.email,
+            f"Continue your application: {pending.job.title}",
+            "Use the single-use link below to sign in and confirm your application. "
+            "It expires in 24 hours.\n\n"
+            f"{link}\n\n"
+            f"{_legal()}",
+        )
     )
 
 
